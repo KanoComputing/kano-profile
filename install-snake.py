@@ -28,9 +28,11 @@ snake_editor = os.path.abspath('snake-editor')
 run_term_on_error('rm -rf /usr/share/make-snake/snake-editor')
 run_term_on_error('ln -s {} /usr/share/make-snake/'.format(snake_editor))
 
-snake_bash = os.path.abspath('bin/make-snake')
-run_term_on_error('rm -rf /usr/bin/make-snake')
-run_term_on_error('ln -s {} /usr/bin'.format(snake_bash))
+binfiles = ['make-snake', 'make-video', 'youtube']
+for binfile in binfiles:
+    fullpath = os.path.abspath('bin/' + binfile)
+    run_term_on_error('rm -rf /usr/bin/' + binfile)
+    run_term_on_error('ln -s {} /usr/bin'.format(fullpath))
 
 kanoprofile_python = os.path.abspath('kanoprofile')
 run_term_on_error('rm -rf /usr/lib/python2.7/kanoprofile')

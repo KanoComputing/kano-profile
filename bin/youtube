@@ -1,0 +1,74 @@
+#! /usr/bin/python
+
+# youtube
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# This is Kano youtube frontend - It checks for Youtube network availability,
+# if it fails, a local video file will be played instead, otherwise pi-yt runs.
+#
+# Export the variable PIYT-LOCALVIDEO if you want to play a custom local video file
+#
+# youtube -t will test youtube availability interactively and return.
+# youtube -n will play the local video directly
+#
+
+import httplib
+import sys
+import os
+
+DEFAULT_VIDEO_FILE = '/usr/share/doc/kano-youtube/monkey.flv'
+
+
+def is_youtube_reachable():
+    contacted = False
+    youtube_retries = 2
+
+    for tries in range(0, youtube_retries):
+        try:
+            conn = httplib.HTTPConnection('www.youtube.com', 80, timeout=1)
+            conn.request("GET", "/")
+            r1 = conn.getresponse()
+            if r1.status == 200 and r1.reason == 'OK':
+                data1 = r1.read()
+                if len(data1) > 0 and data1.find('google') != -1:
+                    contacted = True
+        except:
+            pass
+
+    return contacted
+
+
+def main(internet):
+    rc = -1
+
+    # The local video file can be forced by exporting an environment variable
+    local_video_file = os.getenv('PIYT-LOCALVIDEO')
+    if not local_video_file or not os.access(local_video_file, os.F_OK):
+        local_video_file = DEFAULT_VIDEO_FILE
+
+    # Try to contact youtube, load pi-yt python module and launch console frontend
+    # If any error occurs, silently load and play a local video instead.
+    if internet is False or is_youtube_reachable() is False:
+        # -o local forces omxplayer to use the local audio device (it defaults to HDMI)
+        # This means if we ever start omxplayer by hand, we need to tell -o local to have analog audio.
+        rc = os.system('omxplayer -o local %s > /dev/null 2>&1' % local_video_file)
+    else:
+        # Import the original yt module
+        import yt
+
+        # Invoke the pi-yt with omxplayer for RaspberryPI
+        rc = yt.main_with_omxplayer()
+
+    sys.exit(rc)
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == '-t':
+        isyoutube = is_youtube_reachable()
+        print 'Youtube availability:', isyoutube
+        sys.exit(isyoutube)
+    elif len(sys.argv) > 1 and sys.argv[1] == '-n':
+        sys.exit(main(False))
+    else:
+        sys.exit(main(True))

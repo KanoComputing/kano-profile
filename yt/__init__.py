@@ -18,8 +18,6 @@ import os
 MPLAYER_MODE="mplayer"
 OMXPLAYER_MODE="omxplayer"
 
-sys.exit("test")
-
 def main():
     """
     Launch yt, allowing user to specify player.

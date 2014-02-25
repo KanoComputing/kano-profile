@@ -42,3 +42,6 @@ kanoprofile_cli = os.path.abspath('kano-profile-cli/kano-profile-cli')
 run_term_on_error('rm -rf /usr/bin/kano-profile-cli')
 run_term_on_error('ln -s {} /usr/bin'.format(kanoprofile_cli))
 
+yt = os.path.abspath('yt')
+run_term_on_error('rm -rf /usr/lib/pyshared/yt')
+run_term_on_error('ln -s {} /usr/lib/pyshared/yt'.format(yt))

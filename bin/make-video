@@ -24,9 +24,7 @@ echo_header()
 
 check_internet()
 {
-   ping -qc 1 255.255.255.0 > /dev/null 2>&1
-   #ping -qc 1 8.8.8.8 > /dev/null 2>&1
-
+   ping -qc 1 8.8.8.8 > /dev/null 2>&1
    return $?
 }
 

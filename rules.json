@@ -1,0 +1,20 @@
+{
+    "make-snake": {
+        "level": {
+            "2": 3,
+            "3": 6,
+            "4": 9,
+            "5": 12,
+            "6": 15,
+            "7": 18,
+            "8": 24
+        },
+        "multipliers": {
+            "highest_score": 0.01,
+            "longest_snake": 10,
+            "total_length": 0.02,
+            "total_number_of_apples": 0.1,
+            "total_score": 0.0001
+        }
+    }
+}

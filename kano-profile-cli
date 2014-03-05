@@ -1,0 +1,67 @@
+#! /usr/bin/env python
+
+# kano-profile-cli
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+import sys
+import kano.profile as kp
+
+variable_not_found_str = "VARIABLE_NOT_FOUND"
+
+
+def check_arg_len(number):
+    if len(sys.argv) != number + 1:
+        print 'Command entered was {}'.format(sys.argv)
+        sys.exit("Wrong usage, need {} arguments".format(number))
+
+
+if __name__ != '__main__':
+    sys.exit("This is a script, do not import it as a module!")
+
+
+if len(sys.argv) == 1:
+    sys.exit("Wrong usage, needs an argument")
+
+
+# usage get_app_data_dir app_name
+if sys.argv[1] == 'get_app_data_dir':
+    check_arg_len(2)
+
+    app_name = sys.argv[2]
+    sys.stdout.write(kp.get_app_data_dir(app_name))
+
+
+# usage load_app_state_variable app_name variable
+elif sys.argv[1] == 'load_app_state_variable':
+    check_arg_len(3)
+
+    app_name = sys.argv[2]
+    variable = sys.argv[3]
+
+    data = kp.load_app_state(app_name)
+
+    if variable in data:
+        sys.stdout.write(data[variable])
+    else:
+        sys.stdout.write(variable_not_found_str)
+
+
+# usage load_app_state_variable app_name variable
+elif sys.argv[1] == 'save_app_state_variable':
+    check_arg_len(4)
+
+    app_name = sys.argv[2]
+    variable = sys.argv[3]
+    value = sys.argv[4]
+
+    data = kp.load_app_state(app_name)
+    data[variable] = value
+    kp.save_app_state(app_name, data)
+
+
+# mistyped command
+else:
+    sys.exit("wrong usage")

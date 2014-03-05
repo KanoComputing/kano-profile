@@ -150,7 +150,7 @@ try:
     kanogrp = grp.getgrnam('kanousers')
     kanomembers = kanogrp.gr_mem
 except KeyError:
-    sys.exit("kanousers group doesn't exist")
+    sys.exit("kanousers group doesn't exist\nrun 'groupadd kanousers' first")
 
 # getting linux variables
 linux_user = ku.get_user_environ()
@@ -160,7 +160,7 @@ module_dir = os.path.dirname(module_file)
 
 # check if run under kanouser (or sudo-ed kanouser)
 if linux_user not in kanomembers:
-    sys.exit("You are not member of kanousers group")
+    sys.exit("You are not member of kanousers group\nrun `usermod -a -G kanousers {}` first".format(linux_user))
 
 # constructing paths of directories, files
 kanoprofile_dir_str = '.kanoprofile'

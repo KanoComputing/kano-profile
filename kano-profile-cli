@@ -7,7 +7,7 @@
 #
 
 import sys
-import kanoprofile as kp
+import kano.profile as kp
 
 variable_not_found_str = "VARIABLE_NOT_FOUND"
 

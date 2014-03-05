@@ -1,6 +1,10 @@
-kano-profile (1.0-2) UNRELEASED; urgency=low
+kano-profile (1.0-3) unstable; urgency=low
 
+  [ root ]
   * Initial release. (Closes: #XXXXXX)
   * text
 
- -- root <root@debian>  Wed, 05 Mar 2014 17:12:25 +0000
+  [ Team Kano ]
+  * Package rebuilt, updated to revision 32f2bd2e.
+
+ -- Team Kano <dev@kano.me>  Wed, 05 Mar 2014 18:22:47 +0000

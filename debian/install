@@ -1,4 +1,4 @@
-kano-profile-cli /usr/bin/kano-profile-cli
+kano-profile-cli /usr/bin
 profile.py /usr/lib
 rules.json /usr/share/kano-profile
 

@@ -1,3 +1,7 @@
 kano-profile-cli /usr/bin
+
 profile.py /usr/lib/python2.7/dist-packages/kano
+api/web_api.py /usr/lib/python2.7/dist-packages/kano
+api/web_cli.py /usr/lib/python2.7/dist-packages/kano
+
 rules.json /usr/share/kano-profile

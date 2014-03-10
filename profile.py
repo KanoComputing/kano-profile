@@ -154,7 +154,7 @@ except KeyError:
 
 # getting linux variables
 linux_user = ku.get_user_environ()
-home_directory = ku.get_home_directory(linux_user)
+home_directory = ku.get_home_by_username(linux_user)
 module_file = os.path.realpath(__file__)
 module_dir = os.path.dirname(module_file)
 

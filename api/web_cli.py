@@ -8,16 +8,21 @@
 
 import os
 import subprocess
+import pwd
+import datetime
+import parser
 from optparse import OptionParser
 from requests.compat import json
 
 from web_api import ApiClient as api
 
 
+# TODO change to kano.utils
 def run(cmd):
     return subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
 
 
+# TODO change to kano.utils
 def read_file_contents_as_lines(path):
     if os.path.exists(path):
         with open(path) as infile:
@@ -26,6 +31,7 @@ def read_file_contents_as_lines(path):
             return lines
 
 
+# TODO change to kano.utils
 def get_user_environ():
     if 'SUDO_USER' in os.environ:
         return os.environ['SUDO_USER']
@@ -33,14 +39,17 @@ def get_user_environ():
         return os.environ['LOGNAME']
 
 
+# TODO change to kano.utils
 def get_home_directory(username):
     return pwd.getpwnam(username).pw_dirs
 
 
+# TODO change to kano.utils
 def get_date_now():
     return datetime.datetime.utcnow().isoformat()
 
 
+# TODO change to kano.utils
 def get_device_id():
     cpuinfo_file = '/proc/cpuinfo'
     lines = read_file_contents_as_lines(cpuinfo_file)
@@ -54,6 +63,7 @@ def get_device_id():
             return parts[1].upper()
 
 
+# TODO change to kano.utils, CAREFUL!
 def get_mac_address():
     cmd = '/sbin/ifconfig -a eth0 | grep HWaddr'
     o, _ = run(cmd)

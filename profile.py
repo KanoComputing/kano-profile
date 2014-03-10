@@ -87,12 +87,24 @@ def load_app_state(app_name):
     return data
 
 
+def load_app_state_variable(app_name, variable):
+    data = load_app_state(app_name)
+    if variable in data:
+        return data[variable]
+
+
 def save_app_state(app_name, data):
     app_state_file = get_app_state_file(app_name)
 
     data['last_save_date'] = ku.get_date_now()
     with open(app_state_file, 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
+
+
+def save_app_state_variable(app_name, variable, value):
+    data = load_app_state(app_name)
+    data[variable] = value
+    save_app_state(app_name, data)
 
 
 def calculate_xp():

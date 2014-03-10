@@ -41,10 +41,10 @@ elif sys.argv[1] == 'load_app_state_variable':
     app_name = sys.argv[2]
     variable = sys.argv[3]
 
-    data = kp.load_app_state(app_name)
+    value = kp.load_app_state_variable(app_name, variable)
 
-    if variable in data:
-        sys.stdout.write(data[variable])
+    if value:
+        sys.stdout.write(value)
     else:
         sys.stdout.write(variable_not_found_str)
 
@@ -57,9 +57,7 @@ elif sys.argv[1] == 'save_app_state_variable':
     variable = sys.argv[3]
     value = sys.argv[4]
 
-    data = kp.load_app_state(app_name)
-    data[variable] = value
-    kp.save_app_state(app_name, data)
+    kp.save_app_state_variable(app_name, variable, value)
 
 
 # mistyped command

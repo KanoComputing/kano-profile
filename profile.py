@@ -111,6 +111,7 @@ def calculate_xp():
     try:
         allrules = json.loads(ku.read_file_contents(rules_file))
     except Exception:
+        print "Problem with opening the rules file!"
         return 0
 
     points = 0

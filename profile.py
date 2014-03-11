@@ -117,6 +117,10 @@ def calculate_xp():
 
     for app, groups in allrules.iteritems():
         appstate = load_app_state(app)
+
+        if not appstate:
+            continue
+
         for group, rules in groups.iteritems():
 
             # calculating points based on level

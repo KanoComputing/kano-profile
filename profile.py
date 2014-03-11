@@ -6,6 +6,8 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+from __future__ import division
+
 import sys
 import os
 import grp
@@ -107,23 +109,29 @@ def save_app_state_variable(app_name, variable, value):
     save_app_state(app_name, data)
 
 
-def calculate_xp():
+def read_rules_file():
     try:
-        allrules = json.loads(ku.read_file_contents(rules_file))
+        return json.loads(ku.read_file_contents(rules_file))
     except Exception:
         print "Problem with opening the rules file!"
-        return 0
+
+
+def calculate_xp():
+    allrules = read_rules_file()
+    if not allrules:
+        return -1
 
     points = 0
 
     for app, groups in allrules.iteritems():
-        appstate = load_app_state(app)
+        if app == 'kano_level':
+            continue
 
+        appstate = load_app_state(app)
         if not appstate:
             continue
 
         for group, rules in groups.iteritems():
-
             # calculating points based on level
             if group == 'level':
                 maxlevel = int(appstate['level'])
@@ -143,6 +151,32 @@ def calculate_xp():
                         points += value * appstate[thing]
 
     return points
+
+
+def calculate_kano_level():
+    allrules = read_rules_file()
+    if not allrules or 'kano_level' not in allrules:
+        return -1
+
+    level_rules = allrules['kano_level']
+    max_level = max([int(n) for n in level_rules.keys()])
+
+    xp_now = calculate_xp()
+    xp_now = 55
+
+    for level in xrange(1, max_level + 1):
+        level_min = level_rules[str(level)]
+
+        if level != max_level:
+            level_max = level_rules[str(level + 1)] - 1
+        else:
+            level_max = float("inf")
+
+        if level_min <= xp_now <= level_max:
+            reached_level = level
+            reached_percentage = (xp_now - level_min) / (level_max - level_min)
+
+            return reached_level, reached_percentage
 
 
 def get_gamestate_variables(app_name):

@@ -167,7 +167,7 @@ def calculate_kano_level():
 
         if level_min <= xp_now <= level_max:
             reached_level = level
-            reached_percentage = (xp_now - level_min) / (level_max - level_min)
+            reached_percentage = (xp_now - level_min) / (level_max + 1 - level_min)
 
             return reached_level, reached_percentage
 

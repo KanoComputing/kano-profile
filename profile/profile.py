@@ -14,11 +14,6 @@ import grp
 import json
 import kano.utils as ku
 
-__version__ = '0.1'
-
-
-# kanoprofile functions
-
 
 def load_profile():
     if not os.path.exists(profile_file):
@@ -46,7 +41,6 @@ def load_profile():
 
 def save_profile(data):
     data['last_save_date'] = ku.get_date_now()
-    data['last_save_version'] = __version__
     with open(profile_file, 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
 

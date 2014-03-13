@@ -84,3 +84,15 @@ class Client():
 
     def post(self, endpoint, api_version=None, **kwargs):
         return self._request('post', endpoint, api_version, **kwargs)
+
+    def patch(self, endpoint, api_version=None, **kwargs):
+        return self._request('patch', endpoint, api_version, **kwargs)
+
+    def put(self, endpoint, api_version=None, **kwargs):
+        return self._request('put', endpoint, api_version, **kwargs)
+
+    def delete(self, endpoint, api_version=None, **kwargs):
+        return self._request('delete', endpoint, api_version, **kwargs)
+
+    def head(self, endpoint, api_version=None, **kwargs):
+        return self._request('head', endpoint, api_version, **kwargs)

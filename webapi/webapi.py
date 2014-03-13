@@ -21,6 +21,10 @@ class AuthError(Error):
     pass
 
 
+class VersionError(Error):
+    pass
+
+
 class ClientError(Error):
     pass
 
@@ -31,7 +35,7 @@ class ServerError(Error):
 
 class Client():
     API_HOST = 'https://api.kano.me'
-    API_VERSION = '0'
+    API_VERSION = '0.0'
 
     def __init__(self):
         self._session = requests.session()
@@ -39,11 +43,19 @@ class Client():
         if 'KANO_API_HOST' in os.environ:
             self.API_HOST = os.environ['KANO_API_HOST']
 
-    def _request(self, method, endpoint, **kwargs):
+    def _request(self, method, endpoint, api_version, **kwargs):
+        if not api_version:
+            api_version = self.API_VERSION
+
         url = urljoin(self.API_HOST, endpoint)
 
+        headers = kwargs.pop('headers', {})
+        headers.update({
+            'Accept': 'application/vnd.kano+json; version={}'.format(api_version)
+        })
+
         action = getattr(self._session, method)
-        response = action(url, **kwargs)
+        response = action(url, headers=headers, **kwargs)
 
         try:
             response.raise_for_status()
@@ -56,7 +68,9 @@ class Client():
 
             if response.status_code in (401, 403):
                 raise AuthError(error)
-            elif response.status_code in (400, 404, 405):
+            elif response.status_code in (406, 410):
+                raise VersionError(error)
+            elif response.status_code >= 400 and response.status_code < 500:
                 raise ClientError(error)
             elif response.status_code >= 500:
                 raise ServerError(error)
@@ -65,8 +79,8 @@ class Client():
 
         return response
 
-    def get(self, endpoint, **kwargs):
-        return self._request("get", endpoint, **kwargs)
+    def get(self, endpoint, api_version=None, **kwargs):
+        return self._request('get', endpoint, api_version, **kwargs)
 
-    def post(self, endpoint, **kwargs):
-        return self._request("post", endpoint, **kwargs)
+    def post(self, endpoint, api_version=None, **kwargs):
+        return self._request('post', endpoint, api_version, **kwargs)

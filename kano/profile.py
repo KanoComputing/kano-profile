@@ -197,7 +197,7 @@ except KeyError:
     sys.exit("kanousers group doesn't exist\nrun 'groupadd kanousers' first")
 
 # getting linux variables
-linux_user = ku.get_user_unsudoed()
+linux_user = ku.get_user()
 home_directory = ku.get_home_by_username(linux_user)
 module_file = os.path.realpath(__file__)
 module_dir = os.path.dirname(module_file)

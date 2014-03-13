@@ -52,14 +52,14 @@ def get_email_from_disk():
 
 def get_app_dir(app_name):
     app_dir = os.path.join(apps_dir, app_name)
-    ku.ensuredir(app_dir)
+    ku.ensure_dir(app_dir)
     return app_dir
 
 
 def get_app_data_dir(app_name):
     data_str = 'data'
     app_data_dir = os.path.join(get_app_dir(app_name), data_str)
-    ku.ensuredir(app_data_dir)
+    ku.ensure_dir(app_data_dir)
     return app_data_dir
 
 
@@ -197,7 +197,7 @@ except KeyError:
     sys.exit("kanousers group doesn't exist\nrun 'groupadd kanousers' first")
 
 # getting linux variables
-linux_user = ku.get_user_environ()
+linux_user = ku.get_user_unsudoed()
 home_directory = ku.get_home_by_username(linux_user)
 module_file = os.path.realpath(__file__)
 module_dir = os.path.dirname(module_file)
@@ -226,7 +226,7 @@ rules_file = os.path.join(module_dir, rules_file_str)
 profile = load_profile()
 
 if not os.path.exists(profile_file):
-    ku.ensuredir(profile_dir)
+    ku.ensure_dir(profile_dir)
     save_profile(profile)
 
 

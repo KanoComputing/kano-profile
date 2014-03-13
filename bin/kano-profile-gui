@@ -13,8 +13,9 @@ if __name__ == '__main__' and __package__ is None:
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from gi.repository import Gtk
-import kano_profile_gui
-import kano.utils as ku
+
+import kano_profile_gui.home as home
+import kano_profile_gui.badges as badges
 
 
 class MainWindow(Gtk.Window):
@@ -71,6 +72,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print ku.get_username()
-
     main()

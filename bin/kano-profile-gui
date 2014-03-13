@@ -16,6 +16,8 @@ from gi.repository import Gtk
 
 import kano_profile_gui.home as home
 import kano_profile_gui.badges as badges
+import kano_profile_gui.projects as projects
+import kano_profile_gui.swag as swag
 
 
 class MainWindow(Gtk.Window):
@@ -47,7 +49,6 @@ class MainWindow(Gtk.Window):
         # Badges Button
         bBadges = Gtk.Button(label="Badges", halign=Gtk.Align.CENTER)
         bBadges.connect("clicked", self.goto, 'badges')
-        # bPrev.connect("clicked", self.on_prev)
         self.table.attach(bBadges, 1, 2, 2, 3)
 
         # Projects Button
@@ -61,7 +62,15 @@ class MainWindow(Gtk.Window):
         self.table.attach(bSwag, 3, 4, 2, 3)
 
     def goto(self, button, page):
-        getattr(page, 'activate')()
+        refs = {
+            'home': home,
+            'badges': badges,
+            'projects': projects,
+            'swag': swag,
+        }
+
+        module = refs[page]
+        module.activate(self)
 
 
 def main():

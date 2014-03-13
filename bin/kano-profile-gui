@@ -22,6 +22,7 @@ import kano_profile_gui.swag as swag
 class MainWindow(Gtk.Window):
     table = None
     box = None
+    label = None
 
     def __init__(self):
         # Create main window
@@ -34,13 +35,13 @@ class MainWindow(Gtk.Window):
         self.add(self.table)
 
         # Title
-        label = Gtk.Label()
-        label.set_text('Kano Profile')
-        self.table.attach(label, 0, 4, 0, 1)
+        self.label = Gtk.Label()
+        self.label.set_text('Kano Profile')
+        self.table.attach(self.label, 0, 4, 0, 1)
 
         # Dynamic box
         self.box = Gtk.Box(spacing=6)
-        self.table.attach(self.box, 0, 3, 1, 2)
+        self.table.attach(self.box, 0, 4, 1, 2)
 
         # Home Button
         bHome = Gtk.Button(label='Home', halign=Gtk.Align.CENTER)
@@ -78,7 +79,7 @@ class MainWindow(Gtk.Window):
         for i in self.box.get_children():
             self.box.remove(i)
 
-        module.activate(self, self.table, self.box)
+        module.activate(self, self.box, self.label)
         self.show_all()
 
 

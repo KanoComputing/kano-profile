@@ -7,17 +7,22 @@
 #
 
 from gi.repository import Gtk
+import kano.profile as kp
 
 
-def activate(_win, _table, _box):
-    print __name__
+def activate(_win, _box, _label):
+    _label.set_text('Home')
 
-    # Table
-    table = Gtk.Table(4, 1, True)
-    _box.add(table)
+    profile = kp.load_profile()
 
-    # Label
+    xp = kp.calculate_xp()
+    level, progress = kp.calculate_kano_level()
+    name = profile['username_linux']
+
+    msg = 'name: {}\nXP: {}\nLevel: {}\nProgress to next level: {:.0%}'.format(name, xp, level, progress)
+
     label = Gtk.Label()
-    label.set_text('Home')
-    table.attach(label, 0, 1, 0, 1)
+    label.set_text(msg)
+    _box.add(label)
+
 

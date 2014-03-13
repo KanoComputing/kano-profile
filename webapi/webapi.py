@@ -8,6 +8,7 @@
 
 import requests
 
+from urlparse import urljoin
 from requests.compat import json
 
 
@@ -28,20 +29,15 @@ class ServerError(Error):
 
 
 class Client():
-    API_TEMPLATE = '{host}/v{version}/{endpoint}'
     API_HOST = 'https://api.kano.me'
     API_VERSION = '0'
 
     def __init__(self):
         self._session = requests.session()
 
-    def _formatUrl(self, endpoint):
-        return self.API_TEMPLATE.format(host=self.API_HOST,
-                                        version=self.API_VERSION,
-                                        endpoint=endpoint.strip("/"))
 
     def _request(self, method, endpoint, **kwargs):
-        url = self._formatUrl(endpoint)
+        url = urljoin(self.API_HOST, endpoint)
 
         action = getattr(self._session, method)
         response = action(url, **kwargs)

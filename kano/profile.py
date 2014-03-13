@@ -185,6 +185,25 @@ def get_gamestate_variables(app_name):
             return [str(key) for key in rules.keys()]
 
 
+def get_app_list(include_empty=False):
+    apps = []
+    allrules = read_rules_file()
+    if not allrules:
+        return apps
+
+    for app, groups in allrules.iteritems():
+        if app == 'kano_level':
+            continue
+
+        appstate = load_app_state(app)
+        if not appstate and not include_empty:
+            continue
+        else:
+            apps.append(app)
+
+    return apps
+
+
 # start
 if __name__ == "__main__":
     sys.exit("Should be imported as module")

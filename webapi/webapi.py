@@ -6,6 +6,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+import os
 import requests
 
 from urlparse import urljoin
@@ -35,6 +36,8 @@ class Client():
     def __init__(self):
         self._session = requests.session()
 
+        if 'KANO_API_HOST' in os.environ:
+            self.API_HOST = os.environ['KANO_API_HOST']
 
     def _request(self, method, endpoint, **kwargs):
         url = urljoin(self.API_HOST, endpoint)

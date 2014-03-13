@@ -12,7 +12,6 @@ from gi.repository import Gtk
 
 if __name__ == '__main__' and __package__ is None:
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    print sys.path
 
 import kano_profile_gui.home as home
 import kano_profile_gui.badges as badges
@@ -26,7 +25,7 @@ class MainWindow(Gtk.Window):
 
     def __init__(self):
         # Create main window
-        Gtk.Window.__init__(self, title="Kano-Settings")
+        Gtk.Window.__init__(self, title='Kano-Settings')
         self.set_size_request(450, 550)
 
         # Create common elements
@@ -36,7 +35,7 @@ class MainWindow(Gtk.Window):
 
         # Title
         label = Gtk.Label()
-        label.set_text("Kano Profile")
+        label.set_text('Kano Profile')
         self.table.attach(label, 0, 4, 0, 1)
 
         # Dynamic box
@@ -44,24 +43,27 @@ class MainWindow(Gtk.Window):
         self.table.attach(self.box, 0, 3, 1, 2)
 
         # Home Button
-        bHome = Gtk.Button(label="Home", halign=Gtk.Align.CENTER)
-        bHome.connect("clicked", self.goto, 'home')
+        bHome = Gtk.Button(label='Home', halign=Gtk.Align.CENTER)
+        bHome.connect('clicked', self.goto, 'home')
         self.table.attach(bHome, 0, 1, 2, 3)
 
         # Badges Button
-        bBadges = Gtk.Button(label="Badges", halign=Gtk.Align.CENTER)
-        bBadges.connect("clicked", self.goto, 'badges')
+        bBadges = Gtk.Button(label='Badges', halign=Gtk.Align.CENTER)
+        bBadges.connect('clicked', self.goto, 'badges')
         self.table.attach(bBadges, 1, 2, 2, 3)
 
         # Projects Button
-        bProjects = Gtk.Button(label="Projects", halign=Gtk.Align.CENTER)
-        bProjects.connect("clicked", self.goto, 'projects')
+        bProjects = Gtk.Button(label='Projects', halign=Gtk.Align.CENTER)
+        bProjects.connect('clicked', self.goto, 'projects')
         self.table.attach(bProjects, 2, 3, 2, 3)
 
         # Swag Button
-        bSwag = Gtk.Button(label="Swag", halign=Gtk.Align.CENTER)
-        bSwag.connect("clicked", self.goto, 'swag')
+        bSwag = Gtk.Button(label='Swag', halign=Gtk.Align.CENTER)
+        bSwag.connect('clicked', self.goto, 'swag')
         self.table.attach(bSwag, 3, 4, 2, 3)
+
+        # init home screen
+        self.goto(bHome, 'home')
 
     def goto(self, button, page):
         refs = {
@@ -82,10 +84,10 @@ class MainWindow(Gtk.Window):
 
 def main():
     win = MainWindow()
-    win.connect("delete-event", Gtk.main_quit)
+    win.connect('delete-event', Gtk.main_quit)
     win.show_all()
     Gtk.main()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

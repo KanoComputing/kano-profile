@@ -11,12 +11,13 @@ from gi.repository import Gtk
 
 def activate(_win, _table, _box):
     print __name__
+
     # Table
     table = Gtk.Table(4, 1, True)
     _box.add(table)
 
     # Label
     label = Gtk.Label()
-    label.set_text("Home")
+    label.set_text('Home')
     table.attach(label, 0, 1, 0, 1)
 

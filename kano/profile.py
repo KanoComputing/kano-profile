@@ -144,7 +144,7 @@ def calculate_xp():
                     if thing in appstate:
                         points += value * appstate[thing]
 
-    return points
+    return int(points)
 
 
 def calculate_kano_level():
@@ -169,7 +169,7 @@ def calculate_kano_level():
             reached_level = level
             reached_percentage = (xp_now - level_min) / (level_max + 1 - level_min)
 
-            return reached_level, reached_percentage
+            return int(reached_level), reached_percentage
 
 
 def get_gamestate_variables(app_name):

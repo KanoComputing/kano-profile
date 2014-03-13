@@ -60,8 +60,8 @@ class MainWindow(Gtk.Window):
         bSwag.connect("clicked", self.goto, 'swag')
         self.table.attach(bSwag, 3, 4, 2, 3)
 
-    def goto(self, button, arg):
-        print arg
+    def goto(self, button, page):
+        getattr(page, 'activate')()
 
 
 def main():

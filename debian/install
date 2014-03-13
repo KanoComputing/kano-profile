@@ -1,5 +1,8 @@
-profile/kano-profile-cli /usr/bin
-profile/profile.py /usr/lib/python2.7/dist-packages/kano
-profile/rules.json /usr/share/kano-profile
+bin/kano-profile-cli /usr/bin
+bin/kano-profile-gui /usr/bin
 
+kano/profile.py /usr/lib/python2.7/dist-packages/kano
 webapi/webapi.py /usr/lib/python2.7/dist-packages/kano
+
+rules/rules.json /usr/share/kano-profile
+

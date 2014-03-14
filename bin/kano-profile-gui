@@ -11,7 +11,9 @@ import sys
 from gi.repository import Gtk
 
 if __name__ == '__main__' and __package__ is None:
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.append(dir_path)
 
 import kano_profile_gui.home as home
 import kano_profile_gui.badges as badges

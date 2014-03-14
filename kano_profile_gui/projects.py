@@ -27,8 +27,7 @@ def activate(_win, _box, _label):
         'make-snake': ''
     }
 
-    msg = ''
-
+    projects_list = []
     for app in apps:
         if app_dirs[app] == 'kanoprofile':
             app_dir = kp.get_app_data_dir(app)
@@ -38,13 +37,42 @@ def activate(_win, _box, _label):
         files = os.listdir(app_dir)
         files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_ext[app]]
 
-        msg += 'app: {}\n'.format(app)
-        msg += 'dir: {}\n'.format(app_dir)
-        msg += 'files: {}\n\n'.format(', '.join(files_filtered))
+        for filename in files_filtered:
+            project = dict()
+            project['app'] = app
+            project['dir'] = app_dir
+            project['file'] = filename
+            project['display_name'] = os.path.splitext(filename)[0]
+            projects_list.append(project)
 
-    label = Gtk.Label()
-    label.set_text(msg)
-    _box.add(label)
+    table = Gtk.Table(4, len(projects_list), True)
+    _box.add(table)
+
+    for i, project in enumerate(projects_list):
+        label = Gtk.Label()
+        label.set_text(project['app'])
+        table.attach(label, 0, 1, i, i + 1)
+
+        label = Gtk.Label()
+        label.set_text(project['display_name'])
+        table.attach(label, 1, 2, i, i + 1)
+
+        btn = Gtk.Button(label='Load', halign=Gtk.Align.CENTER)
+        btn.connect('clicked', load, project['app'], project['file'])
+        table.attach(btn, 2, 3, i, i + 1)
+
+        btn = Gtk.Button(label='Share', halign=Gtk.Align.CENTER)
+        btn.connect('clicked', share, project['app'], project['file'])
+        table.attach(btn, 3, 4, i, i + 1)
+
+        print project
 
 
+def load(_button, app, file):
+    print 'load', app, file
+    pass
 
+
+def share(_button, app, file):
+    print 'share', app, file
+    pass

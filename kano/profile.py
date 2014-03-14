@@ -89,7 +89,7 @@ def load_app_state_variable(app_name, variable):
         return data[variable]
 
 
-def save_app_state(app_name, data, levelUpDialogue=False):
+def save_app_state(app_name, data, levelUpDialogue=True):
     app_state_file = get_app_state_file(app_name)
     data['last_save_date'] = ku.get_date_now()
 
@@ -106,7 +106,7 @@ def save_app_state(app_name, data, levelUpDialogue=False):
             ku.run_cmd('zenity --info --text "{}"'.format(msg))
 
 
-def save_app_state_variable(app_name, variable, value, levelUpDialogue=False):
+def save_app_state_variable(app_name, variable, value, levelUpDialogue=True):
     data = load_app_state(app_name)
     data[variable] = value
     save_app_state(app_name, data, levelUpDialogue)

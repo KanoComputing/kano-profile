@@ -89,18 +89,27 @@ def load_app_state_variable(app_name, variable):
         return data[variable]
 
 
-def save_app_state(app_name, data):
+def save_app_state(app_name, data, levelUpDialogue=False):
     app_state_file = get_app_state_file(app_name)
-
     data['last_save_date'] = ku.get_date_now()
+
+    if levelUpDialogue:
+        old_level, _ = calculate_kano_level()
+
     with open(app_state_file, 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
 
+    if levelUpDialogue:
+        new_level, _ = calculate_kano_level()
+        if old_level != new_level:
+            msg = "Congratulations, you've leveled up to level {}!".format(new_level)
+            ku.run_cmd('zenity --info --text "{}"'.format(msg))
 
-def save_app_state_variable(app_name, variable, value):
+
+def save_app_state_variable(app_name, variable, value, levelUpDialogue=False):
     data = load_app_state(app_name)
     data[variable] = value
-    save_app_state(app_name, data)
+    save_app_state(app_name, data, levelUpDialogue)
 
 
 def read_rules_file():

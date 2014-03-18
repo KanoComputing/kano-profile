@@ -136,7 +136,7 @@ def calculate_xp():
 
         for group, rules in groups.iteritems():
             # calculating points based on level
-            if group == 'level':
+            if group == 'level' and 'level' in appstate:
                 maxlevel = int(appstate['level'])
 
                 for level, value in rules.iteritems():

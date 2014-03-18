@@ -45,6 +45,9 @@ def activate(_win, _box, _label):
             project['display_name'] = os.path.splitext(filename)[0]
             projects_list.append(project)
 
+    if len(projects_list) == 0:
+        return
+
     table = Gtk.Table(4, len(projects_list), True)
     _box.add(table)
 

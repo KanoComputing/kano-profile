@@ -15,7 +15,7 @@ import kano.profile as kp
 def activate(_win, _box, _label):
     _label.set_text('swags')
 
-    swags = kp.calculate_swags()
+    swags = kp.calculate_badges_swags('swags')
     if not swags:
         return
 

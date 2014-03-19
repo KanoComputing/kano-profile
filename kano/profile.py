@@ -170,40 +170,28 @@ def calculate_kano_level():
             return int(reached_level), reached_percentage
 
 
-def calculate_badges():
-    badge_rules = read_json(badges_file)
-    if not badge_rules:
+def calculate_badges_swags(what):
+    if what == 'badges':
+        rules = read_json(badges_file)
+    elif what == 'swags':
+        rules = read_json(swags_file)
+
+    if not rules:
         return
 
-    badges = dict()
-    for badge, rule in badge_rules.iteritems():
-        appstate = load_app_state(rule['app'])
-        variable_name = rule['variable']
+    kano_level, _ = calculate_kano_level()
+
+    things = dict()
+    for thing, rule in rules.iteritems():
         minvalue = float(rule['min'])
-        if (appstate and variable_name in appstate and
-                appstate[variable_name] >= minvalue):
-            badges[badge] = True
+        if rule['app'] == 'kano_level':
+            things[thing] = kano_level >= minvalue
         else:
-            badges[badge] = False
-    return badges
-
-
-def calculate_swags():
-    swag_rules = read_json(swags_file)
-    if not swag_rules:
-        return
-
-    swags = dict()
-    for swag, rule in swag_rules.iteritems():
-        appstate = load_app_state(rule['app'])
-        variable_name = rule['variable']
-        minvalue = float(rule['min'])
-        if (appstate and variable_name in appstate and
-                appstate[variable_name] >= minvalue):
-            swags[swag] = True
-        else:
-            swags[swag] = False
-    return swags
+            appstate = load_app_state(rule['app'])
+            variable_name = rule['variable']
+            things[thing] = (appstate and variable_name in appstate and
+                             appstate[variable_name] >= minvalue)
+    return things
 
 
 def get_gamestate_variables(app_name):

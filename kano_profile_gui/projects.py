@@ -72,8 +72,6 @@ def activate(_win, _box, _label):
         btn.connect('clicked', share, project['app'], project['file'])
         table.attach(btn, 3, 4, i, i + 1)
 
-        print project
-
 
 def load(_button, app, filename):
     print 'load', app, filename

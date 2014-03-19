@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Badges.py
+# badges.py
 #
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -15,7 +15,7 @@ import kano.profile as kp
 def activate(_win, _box, _label):
     _label.set_text('Badges')
 
-    badges = kp.calculate_badge()
+    badges = kp.calculate_badges()
     if not badges:
         return
     print badges
@@ -30,5 +30,9 @@ def activate(_win, _box, _label):
     _box.add(table)
 
     for i, badge in enumerate(badges):
-        print i, badge, badges[badge]
+        x = i % dim
+        y = i / dim
 
+        btn = Gtk.Button(label=badge, halign=Gtk.Align.CENTER)
+        btn.set_sensitive(badges[badge])
+        table.attach(btn, x, x + 1, y, y + 1)

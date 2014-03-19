@@ -210,9 +210,14 @@ def calculate_badges_swags(what):
             things[thing] = kano_level >= minvalue
         else:
             appstate = load_app_state(rule['app'])
-            variable_name = rule['variable']
-            things[thing] = (appstate and variable_name in appstate and
-                             appstate[variable_name] >= minvalue)
+            if appstate:
+                variable_name = rule['variable']
+                if variable_name in appstate:
+                    variable_val = float(appstate[variable_name])
+                    if variable_val >= minvalue:
+                        things[thing] = True
+                        continue
+            things[thing] = False
     return things
 
 

@@ -18,7 +18,6 @@ def activate(_win, _box, _label):
     badges = kp.calculate_badges()
     if not badges:
         return
-    print badges
 
     total_number = len(badges)
     dim = int(math.ceil(math.sqrt(total_number)))

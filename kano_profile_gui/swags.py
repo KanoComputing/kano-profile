@@ -18,7 +18,6 @@ def activate(_win, _box, _label):
     swags = kp.calculate_swags()
     if not swags:
         return
-    print swags
 
     total_number = len(swags)
     dim = int(math.ceil(math.sqrt(total_number)))

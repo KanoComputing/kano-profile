@@ -76,10 +76,8 @@ def activate(_win, _box, _label):
 def load(_button, app, filename):
     print 'load', app, filename
     cmd = app_profiles[app]['cmd'].format(filename)
-    print cmd
     ku.run_print_output_error(cmd)
 
 
 def share(_button, app, filename):
     print 'share', app, filename
-    pass

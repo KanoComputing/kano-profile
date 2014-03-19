@@ -10,6 +10,20 @@ import os
 from gi.repository import Gtk
 
 import kano.profile as kp
+import kano.utils as ku
+
+app_profiles = {
+    'make-pong': {
+        'dir': '~/Pong-content',
+        'ext': 'xml',
+        'cmd': 'echo {}'
+    },
+    'make-snake': {
+        'dir': 'kanoprofile',
+        'ext': '',
+        'cmd': 'kano-launcher "rxvt -title \'Make Snake\' -e python /usr/share/make-snake -t custom" "make-snake"'
+    }
+}
 
 
 def activate(_win, _box, _label):
@@ -17,25 +31,15 @@ def activate(_win, _box, _label):
 
     apps = kp.get_app_list(include_empty=False)
 
-    app_dirs = {
-        'make-pong': '~/Pong-content',
-        'make-snake': 'kanoprofile'
-    }
-
-    app_ext = {
-        'make-pong': 'xml',
-        'make-snake': ''
-    }
-
     projects_list = []
     for app in apps:
-        if app_dirs[app] == 'kanoprofile':
+        if app_profiles[app]['dir'] == 'kanoprofile':
             app_dir = kp.get_app_data_dir(app)
         else:
-            app_dir = os.path.expanduser(app_dirs[app])
+            app_dir = os.path.expanduser(app_profiles[app]['dir'])
 
         files = os.listdir(app_dir)
-        files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_ext[app]]
+        files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_profiles[app]['ext']]
 
         for filename in files_filtered:
             project = dict()
@@ -45,7 +49,7 @@ def activate(_win, _box, _label):
             project['display_name'] = os.path.splitext(filename)[0]
             projects_list.append(project)
 
-    if len(projects_list) == 0:
+    if not projects_list:
         return
 
     table = Gtk.Table(4, len(projects_list), True)
@@ -71,11 +75,13 @@ def activate(_win, _box, _label):
         print project
 
 
-def load(_button, app, file):
-    print 'load', app, file
-    pass
+def load(_button, app, filename):
+    print 'load', app, filename
+    cmd = app_profiles[app]['cmd'].format(filename)
+    print cmd
+    ku.run_print_output_error(cmd)
 
 
-def share(_button, app, file):
-    print 'share', app, file
+def share(_button, app, filename):
+    print 'share', app, filename
     pass

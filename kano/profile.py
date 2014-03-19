@@ -116,10 +116,10 @@ def save_app_state(app_name, data):
         ku.run_cmd('zenity --info --text "{}"'.format(msg))
 
 
-def save_app_state_variable(app_name, variable, value, levelUpDialogue=True):
+def save_app_state_variable(app_name, variable, value):
     data = load_app_state(app_name)
     data[variable] = value
-    save_app_state(app_name, data, levelUpDialogue)
+    save_app_state(app_name, data)
 
 
 def read_json(filepath, print_warning=False):

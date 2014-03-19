@@ -182,6 +182,12 @@ def calculate_swags():
         appstate = load_app_state(rule['app'])
         variable_name = rule['variable']
         minvalue = float(rule['min'])
+        if swag == 'pong_hat':
+            print appstate
+            print rule
+            print variable_name
+            print type(appstate[variable_name])
+            print type(minvalue)
         if appstate and variable_name in appstate:
             if appstate[variable_name] >= minvalue:
                 enabled.append(swag)
@@ -256,11 +262,9 @@ levels_file = '/usr/share/kano-profile/levels.json'
 rules_file = '/usr/share/kano-profile/rules.json'
 swags_file = '/usr/share/kano-profile/swags.json'
 
-# initializing profile
-#profile = load_profile()
-
-# if not os.path.exists(profile_file):
-#     ku.ensure_dir(profile_dir)
-#     save_profile(profile)
+if not os.path.exists(profile_file):
+    profile = load_profile()
+    ku.ensure_dir(profile_dir)
+    save_profile(profile)
 
 

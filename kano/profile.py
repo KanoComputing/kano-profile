@@ -78,20 +78,42 @@ def load_app_state_variable(app_name, variable):
         return data[variable]
 
 
-def save_app_state(app_name, data, levelUpDialogue=True):
+def save_app_state(app_name, data):
     app_state_file = get_app_state_file(app_name)
     data['last_save_date'] = ku.get_date_now()
 
-    if levelUpDialogue:
-        old_level, _ = calculate_kano_level()
+    old_level, _ = calculate_kano_level()
+    old_badges = calculate_badges_swags('badges')
+    old_swags = calculate_badges_swags('swags')
 
     write_json(app_state_file, data)
 
-    if levelUpDialogue:
-        new_level, _ = calculate_kano_level()
-        if old_level != new_level:
-            msg = "Congratulations, you've leveled up to level {}!".format(new_level)
-            ku.run_cmd('zenity --info --text "{}"'.format(msg))
+    new_level, _ = calculate_kano_level()
+    new_badges = calculate_badges_swags('badges')
+    new_swags = calculate_badges_swags('swags')
+
+    # New level dialog
+    if old_level != new_level:
+        msg = "Congratulations, you've leveled up to level {}!".format(new_level)
+        ku.run_cmd('zenity --info --text "{}"'.format(msg))
+
+    # New badges dialog
+    if old_badges != new_badges:
+        chg_badges = []
+        for badge in old_badges:
+            if old_badges[badge] != new_badges[badge]:
+                chg_badges.append(badge)
+        msg = "Congratulations, you've got new badges:\n{}".format(' '.join(chg_badges))
+        ku.run_cmd('zenity --info --text "{}"'.format(msg))
+
+    # New swags dialog
+    if old_swags != new_swags:
+        chg_swags = []
+        for swag in old_swags:
+            if old_swags[swag] != new_swags[swag]:
+                chg_swags.append(swag)
+        msg = "Congratulations, you've got new swags:\n{}".format(' '.join(chg_swags))
+        ku.run_cmd('zenity --info --text "{}"'.format(msg))
 
 
 def save_app_state_variable(app_name, variable, value, levelUpDialogue=True):

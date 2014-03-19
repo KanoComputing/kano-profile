@@ -16,13 +16,9 @@ import kano.utils as ku
 
 
 def load_profile():
-    if not os.path.exists(profile_file):
+    data = read_json(profile_file)
+    if not data:
         data = dict()
-    else:
-        try:
-            data = json.loads(ku.read_file_contents(profile_file))
-        except Exception:
-            data = dict()
 
     if 'username_linux' not in data:
         data['username_linux'] = linux_user
@@ -71,16 +67,10 @@ def get_app_state_file(app_name):
 
 def load_app_state(app_name):
     app_state_file = get_app_state_file(app_name)
-
-    if not os.path.exists(app_state_file):
-        data = dict()
-    else:
-        try:
-            data = json.loads(ku.read_file_contents(app_state_file))
-        except Exception:
-            data = dict()
-
-    return data
+    app_state = read_json(app_state_file)
+    if not app_state:
+        app_state = dict()
+    return app_state
 
 
 def load_app_state_variable(app_name, variable):
@@ -112,24 +102,22 @@ def save_app_state_variable(app_name, variable, value, levelUpDialogue=True):
     save_app_state(app_name, data, levelUpDialogue)
 
 
-def read_rules_file():
+def read_json(filepath, print_warning=False):
     try:
-        return json.loads(ku.read_file_contents(rules_file))
+        return json.loads(ku.read_file_contents(filepath))
     except Exception:
-        print "Problem with opening the rules file!"
+        if print_warning:
+            print "Problem with opening: {}".format(filepath)
 
 
 def calculate_xp():
-    allrules = read_rules_file()
+    allrules = read_json(rules_file)
     if not allrules:
         return -1
 
     points = 0
 
     for app, groups in allrules.iteritems():
-        if app == 'kano_level':
-            continue
-
         appstate = load_app_state(app)
         if not appstate:
             continue
@@ -157,13 +145,11 @@ def calculate_xp():
 
 
 def calculate_kano_level():
-    allrules = read_rules_file()
-    if not allrules or 'kano_level' not in allrules:
+    level_rules = read_json(levels_file)
+    if not level_rules:
         return -1
 
-    level_rules = allrules['kano_level']
     max_level = max([int(n) for n in level_rules.keys()])
-
     xp_now = calculate_xp()
 
     for level in xrange(1, max_level + 1):
@@ -182,9 +168,8 @@ def calculate_kano_level():
 
 
 def get_gamestate_variables(app_name):
-    try:
-        allrules = json.loads(ku.read_file_contents(rules_file))
-    except Exception:
+    allrules = read_json(rules_file)
+    if not allrules:
         return list()
 
     groups = allrules[app_name]
@@ -196,14 +181,11 @@ def get_gamestate_variables(app_name):
 
 def get_app_list(include_empty=False):
     apps = []
-    allrules = read_rules_file()
+    allrules = read_json(rules_file)
     if not allrules:
         return apps
 
     for app, groups in allrules.iteritems():
-        if app == 'kano_level':
-            continue
-
         appstate = load_app_state(app)
         if not appstate and not include_empty:
             continue
@@ -212,6 +194,11 @@ def get_app_list(include_empty=False):
 
     return apps
 
+
+def calculate_swags():
+    level_rules = read_json(levels_file)
+    if not level_rules:
+        return -1
 
 # start
 if __name__ == "__main__":
@@ -247,14 +234,20 @@ apps_dir = os.path.join(kanoprofile_dir, apps_dir_str)
 profile_file_str = 'profile.json'
 profile_file = os.path.join(profile_dir, profile_file_str)
 
+levels_file_str = 'levels.json'
+levels_file = os.path.join(profile_dir, levels_file_str)
+
+swags_file_str = 'swags.json'
+swags_file = os.path.join(profile_dir, swags_file_str)
+
 rules_file_str = '/usr/share/kano-profile/rules.json'
 rules_file = os.path.join(module_dir, rules_file_str)
 
 # initializing profile
-profile = load_profile()
+#profile = load_profile()
 
-if not os.path.exists(profile_file):
-    ku.ensure_dir(profile_dir)
-    save_profile(profile)
+# if not os.path.exists(profile_file):
+#     ku.ensure_dir(profile_dir)
+#     save_profile(profile)
 
 

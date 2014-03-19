@@ -18,7 +18,7 @@ if __name__ == '__main__' and __package__ is None:
 import kano_profile_gui.home as home
 import kano_profile_gui.badges as badges
 import kano_profile_gui.projects as projects
-import kano_profile_gui.swag as swag
+import kano_profile_gui.swags as swags
 
 
 class MainWindow(Gtk.Window):
@@ -60,10 +60,10 @@ class MainWindow(Gtk.Window):
         bProjects.connect('clicked', self.goto, 'projects')
         self.table.attach(bProjects, 2, 3, 2, 3)
 
-        # Swag Button
-        bSwag = Gtk.Button(label='Swag', halign=Gtk.Align.CENTER)
-        bSwag.connect('clicked', self.goto, 'swag')
-        self.table.attach(bSwag, 3, 4, 2, 3)
+        # Swags Button
+        bSwags = Gtk.Button(label='Swags', halign=Gtk.Align.CENTER)
+        bSwags.connect('clicked', self.goto, 'swags')
+        self.table.attach(bSwags, 3, 4, 2, 3)
 
         # init home screen
         self.goto(bHome, 'home')
@@ -73,7 +73,7 @@ class MainWindow(Gtk.Window):
             'home': home,
             'badges': badges,
             'projects': projects,
-            'swag': swag,
+            'swags': swags,
         }
 
         module = refs[page]

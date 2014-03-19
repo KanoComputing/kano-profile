@@ -170,30 +170,22 @@ def calculate_kano_level():
             return int(reached_level), reached_percentage
 
 
-def calculate_swags():
-    enabled = list()
-    disabled = list()
+def calculate_badges():
+    badge_rules = read_json(badges_file)
+    if not badge_rules:
+        return
 
-    swag_rules = read_json(swags_file)
-    if not swag_rules:
-        return enabled, disabled
-
-    for swag, rule in swag_rules.iteritems():
+    badges = dict()
+    for badge, rule in badge_rules.iteritems():
         appstate = load_app_state(rule['app'])
         variable_name = rule['variable']
         minvalue = float(rule['min'])
-        if swag == 'pong_hat':
-            print appstate
-            print rule
-            print variable_name
-            print type(appstate[variable_name])
-            print type(minvalue)
         if appstate and variable_name in appstate:
             if appstate[variable_name] >= minvalue:
-                enabled.append(swag)
+                badges[badge] = False
                 continue
-        disabled.append(swag)
-    return enabled, disabled
+        badges[badge] = True
+    return badges
 
 
 def get_gamestate_variables(app_name):
@@ -260,7 +252,7 @@ profile_file = os.path.join(profile_dir, profile_file_str)
 
 levels_file = '/usr/share/kano-profile/levels.json'
 rules_file = '/usr/share/kano-profile/rules.json'
-swags_file = '/usr/share/kano-profile/swags.json'
+badges_file = '/usr/share/kano-profile/badges.json'
 
 if not os.path.exists(profile_file):
     profile = load_profile()

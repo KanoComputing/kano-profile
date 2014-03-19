@@ -37,8 +37,7 @@ def load_profile():
 
 def save_profile(data):
     data['last_save_date'] = ku.get_date_now()
-    with open(profile_file, 'w') as outfile:
-        json.dump(data, outfile, indent=4, sort_keys=True)
+    write_json(profile_file, data)
 
 
 def get_email_from_disk():
@@ -86,8 +85,7 @@ def save_app_state(app_name, data, levelUpDialogue=True):
     if levelUpDialogue:
         old_level, _ = calculate_kano_level()
 
-    with open(app_state_file, 'w') as outfile:
-        json.dump(data, outfile, indent=4, sort_keys=True)
+    write_json(app_state_file, data)
 
     if levelUpDialogue:
         new_level, _ = calculate_kano_level()
@@ -108,6 +106,11 @@ def read_json(filepath, print_warning=False):
     except Exception:
         if print_warning:
             print "Problem with opening: {}".format(filepath)
+
+
+def write_json(filepath, data):
+    with open(filepath, 'w') as outfile:
+        json.dump(data, outfile, indent=4, sort_keys=True)
 
 
 def calculate_xp():
@@ -167,6 +170,26 @@ def calculate_kano_level():
             return int(reached_level), reached_percentage
 
 
+def calculate_swags():
+    enabled = list()
+    disabled = list()
+
+    swag_rules = read_json(swags_file)
+    if not swag_rules:
+        return enabled, disabled
+
+    for swag, rule in swag_rules.iteritems():
+        appstate = load_app_state(rule['app'])
+        variable_name = rule['variable']
+        minvalue = float(rule['min'])
+        if appstate and variable_name in appstate:
+            if appstate[variable_name] >= minvalue:
+                enabled.append(swag)
+                continue
+        disabled.append(swag)
+    return enabled, disabled
+
+
 def get_gamestate_variables(app_name):
     allrules = read_json(rules_file)
     if not allrules:
@@ -194,11 +217,6 @@ def get_app_list(include_empty=False):
 
     return apps
 
-
-def calculate_swags():
-    level_rules = read_json(levels_file)
-    if not level_rules:
-        return -1
 
 # start
 if __name__ == "__main__":
@@ -234,14 +252,9 @@ apps_dir = os.path.join(kanoprofile_dir, apps_dir_str)
 profile_file_str = 'profile.json'
 profile_file = os.path.join(profile_dir, profile_file_str)
 
-levels_file_str = 'levels.json'
-levels_file = os.path.join(profile_dir, levels_file_str)
-
-swags_file_str = 'swags.json'
-swags_file = os.path.join(profile_dir, swags_file_str)
-
-rules_file_str = '/usr/share/kano-profile/rules.json'
-rules_file = os.path.join(module_dir, rules_file_str)
+levels_file = '/usr/share/kano-profile/levels.json'
+rules_file = '/usr/share/kano-profile/rules.json'
+swags_file = '/usr/share/kano-profile/swags.json'
 
 # initializing profile
 #profile = load_profile()

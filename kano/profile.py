@@ -249,6 +249,32 @@ def get_app_list(include_empty=False):
     return apps
 
 
+def check_images():
+    badges = read_json(badges_file).keys()
+    swags = read_json(swags_file).keys()
+    icon_dir = '/usr/share/kano-profile/media/icons'
+
+    for name in (badges + swags):
+        if name in badges:
+            filename = 'badge_{}.png'.format(name)
+        else:
+            filename = 'swag_{}.png'.format(name)
+
+        fullpath = os.path.join(icon_dir, filename)
+        if os.path.exists(fullpath):
+            print '{} exists'.format(fullpath)
+        else:
+            from randomavatar.randomavatar import Avatar
+            avatar = Avatar(rows=10, columns=10)
+            image_byte_array = avatar.get_image(
+                string=filename,
+                width=200, height=200, pad=10)
+            avatar.save(
+                image_byte_array=image_byte_array,
+                save_location=fullpath)
+            print '{} created'.format(fullpath)
+
+
 # start
 if __name__ == "__main__":
     sys.exit("Should be imported as module")

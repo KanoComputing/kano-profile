@@ -52,7 +52,7 @@ def activate(_win, _box, _label):
     if not projects_list:
         return
 
-    table = Gtk.Table(4, len(projects_list), False)
+    table = Gtk.Table(4, len(projects_list), True)
     _box.add(table)
 
     for i, project in enumerate(projects_list):

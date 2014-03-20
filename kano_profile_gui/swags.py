@@ -10,6 +10,7 @@ import math
 from gi.repository import Gtk
 
 import kano.profile as kp
+import kano_profile_gui.images as images
 
 
 def activate(_win, _box, _label):
@@ -32,6 +33,13 @@ def activate(_win, _box, _label):
         x = i % dim
         y = i / dim
 
-        btn = Gtk.Button(label=swag, halign=Gtk.Align.CENTER)
-        btn.set_sensitive(swags[swag])
-        table.attach(btn, x, x + 1, y, y + 1)
+        # TODO remove avatar generation in production!
+        img_path = images.check_image(swag, 'swag')
+        img = Gtk.Image()
+
+        if swags[swag]:
+            img.set_from_file(img_path)
+        else:
+            img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
+
+        table.attach(img, x, x + 1, y, y + 1)

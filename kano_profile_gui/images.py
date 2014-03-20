@@ -9,13 +9,14 @@
 import os
 
 
-def check_image(name, pre):
+def get_image(name, pre):
     icon_dir = '/usr/share/kano-profile/media/icons'
     filename = '{}_{}.png'.format(pre, name)
     fullpath = os.path.join(icon_dir, filename)
     if os.path.exists(fullpath):
         print '{} exists'.format(fullpath)
     else:
+        # TODO: remove random avatar generation from production!
         from randomavatar.randomavatar import Avatar
         avatar = Avatar(rows=10, columns=10)
         image_byte_array = avatar.get_image(

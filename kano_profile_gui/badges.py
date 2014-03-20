@@ -23,9 +23,6 @@ def activate(_win, _box, _label):
     total_number = len(badges)
     dim = int(math.ceil(math.sqrt(total_number)))
 
-    if not dim:
-        return
-
     table = Gtk.Table(dim, dim, False)
     _box.add(table)
 
@@ -33,8 +30,7 @@ def activate(_win, _box, _label):
         x = i % dim
         y = i / dim
 
-        # TODO remove avatar generation in production!
-        img_path = images.check_image(badge, 'badge')
+        img_path = images.get_image(badge, 'badge')
         img = Gtk.Image()
 
         if badges[badge]:

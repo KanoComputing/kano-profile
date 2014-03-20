@@ -13,6 +13,7 @@ import os
 import grp
 import json
 import kano.utils as ku
+import kano_profile_gui.dialogs as dialogs
 
 
 def load_profile():
@@ -94,8 +95,7 @@ def save_app_state(app_name, data):
 
     # New level dialog
     if old_level != new_level:
-        msg = "Congratulations, you've leveled up to level {}!".format(new_level)
-        ku.run_cmd('zenity --info --text "{}"'.format(msg))
+        dialogs.show(newLevel=new_level)
 
     # New badges dialog
     if old_badges != new_badges:
@@ -103,8 +103,7 @@ def save_app_state(app_name, data):
         for badge in old_badges:
             if old_badges[badge] is False and new_badges[badge] is True:
                 chg_badges.append(badge)
-        msg = "Congratulations, you've got new badges:\n{}".format(' '.join(chg_badges))
-        ku.run_cmd('zenity --info --text "{}"'.format(msg))
+        dialogs.show(newBadges=chg_badges)
 
     # New swags dialog
     if old_swags != new_swags:
@@ -112,8 +111,7 @@ def save_app_state(app_name, data):
         for swag in old_swags:
             if old_swags[swag] is False and new_swags[swag] is True:
                 chg_swags.append(swag)
-        msg = "Congratulations, you've got new swags:\n{}".format(' '.join(chg_swags))
-        ku.run_cmd('zenity --info --text "{}"'.format(msg))
+        dialogs.show(newSwags=chg_swags)
 
 
 def save_app_state_variable(app_name, variable, value):
@@ -287,6 +285,8 @@ rules_file = '/usr/share/kano-profile/rules/rules.json'
 levels_file = '/usr/share/kano-profile/rules/levels.json'
 badges_file = '/usr/share/kano-profile/rules/badges.json'
 swags_file = '/usr/share/kano-profile/rules/swags.json'
+
+is_gui = ku.is_gui()
 
 if not os.path.exists(profile_file):
     profile = load_profile()

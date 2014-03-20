@@ -101,7 +101,7 @@ def save_app_state(app_name, data):
     if old_badges != new_badges:
         chg_badges = []
         for badge in old_badges:
-            if old_badges[badge] != new_badges[badge]:
+            if old_badges[badge] is False and new_badges[badge] is True:
                 chg_badges.append(badge)
         msg = "Congratulations, you've got new badges:\n{}".format(' '.join(chg_badges))
         ku.run_cmd('zenity --info --text "{}"'.format(msg))
@@ -110,7 +110,7 @@ def save_app_state(app_name, data):
     if old_swags != new_swags:
         chg_swags = []
         for swag in old_swags:
-            if old_swags[swag] != new_swags[swag]:
+            if old_swags[swag] is False and new_swags[swag] is True:
                 chg_swags.append(swag)
         msg = "Congratulations, you've got new swags:\n{}".format(' '.join(chg_swags))
         ku.run_cmd('zenity --info --text "{}"'.format(msg))

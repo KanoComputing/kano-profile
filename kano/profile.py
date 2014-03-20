@@ -172,7 +172,7 @@ def calculate_xp():
 def calculate_kano_level():
     level_rules = read_json(levels_file)
     if not level_rules:
-        return -1
+        return -1, 0
 
     max_level = max([int(n) for n in level_rules.keys()])
     xp_now = calculate_xp()

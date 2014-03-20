@@ -26,15 +26,20 @@ def activate(_win, _box, _label):
     if not dim:
         return
 
-    table = Gtk.Table(dim, dim, True)
+    table = Gtk.Table(dim, dim, False)
     _box.add(table)
 
     for i, badge in enumerate(badges):
         x = i % dim
         y = i / dim
 
-        images.check_image(badge, 'badge')
+        # TODO remove avatar generation in production!
+        img_path = images.check_image(badge, 'badge')
+        img = Gtk.Image()
 
-        btn = Gtk.Button(label=badge, halign=Gtk.Align.CENTER)
-        btn.set_sensitive(badges[badge])
-        table.attach(btn, x, x + 1, y, y + 1)
+        if badges[badge]:
+            img.set_from_file(img_path)
+        else:
+            img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
+
+        table.attach(img, x, x + 1, y, y + 1)

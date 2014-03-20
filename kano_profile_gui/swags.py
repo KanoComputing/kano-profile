@@ -25,7 +25,7 @@ def activate(_win, _box, _label):
     if not dim:
         return
 
-    table = Gtk.Table(dim, dim, True)
+    table = Gtk.Table(dim, dim, False)
     _box.add(table)
 
     for i, swag in enumerate(swags):

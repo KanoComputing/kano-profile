@@ -33,7 +33,7 @@ class MainWindow(Gtk.Window):
 
         # Create common elements
         # Main table
-        self.table = Gtk.Table(3, 4, True)
+        self.table = Gtk.Table(3, 4, False)
         self.add(self.table)
 
         # Title

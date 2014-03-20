@@ -20,8 +20,9 @@ def check_image(name, pre):
         avatar = Avatar(rows=10, columns=10)
         image_byte_array = avatar.get_image(
             string=filename,
-            width=200, height=200, pad=10)
+            width=108, height=108, pad=10)
         avatar.save(
             image_byte_array=image_byte_array,
             save_location=fullpath)
         print '{} created'.format(fullpath)
+    return fullpath

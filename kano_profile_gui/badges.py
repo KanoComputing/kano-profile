@@ -10,6 +10,7 @@ import math
 from gi.repository import Gtk
 
 import kano.profile as kp
+import kano_profile_gui.images as images
 
 
 def activate(_win, _box, _label):
@@ -31,6 +32,8 @@ def activate(_win, _box, _label):
     for i, badge in enumerate(badges):
         x = i % dim
         y = i / dim
+
+        images.check_image(badge, 'badge')
 
         btn = Gtk.Button(label=badge, halign=Gtk.Align.CENTER)
         btn.set_sensitive(badges[badge])

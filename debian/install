@@ -1,6 +1,6 @@
 bin/* /usr/bin
 kano/* /usr/lib/python2.7/dist-packages/kano
-rules/* /usr/share/kano-profile
+rules /usr/share/kano-profile
 kano_profile_gui /usr/lib/python2.7/dist-packages/
 
 webapi/webapi.py /usr/lib/python2.7/dist-packages/kano

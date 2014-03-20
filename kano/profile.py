@@ -283,10 +283,10 @@ apps_dir = os.path.join(kanoprofile_dir, apps_dir_str)
 profile_file_str = 'profile.json'
 profile_file = os.path.join(profile_dir, profile_file_str)
 
-levels_file = '/usr/share/kano-profile/levels.json'
-rules_file = '/usr/share/kano-profile/rules.json'
-badges_file = '/usr/share/kano-profile/badges.json'
-swags_file = '/usr/share/kano-profile/swags.json'
+rules_file = '/usr/share/kano-profile/rules/rules.json'
+levels_file = '/usr/share/kano-profile/rules/levels.json'
+badges_file = '/usr/share/kano-profile/rules/badges.json'
+swags_file = '/usr/share/kano-profile/rules/swags.json'
 
 if not os.path.exists(profile_file):
     profile = load_profile()

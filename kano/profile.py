@@ -92,25 +92,28 @@ def save_app_state(app_name, data):
     new_badges = calculate_badges_swags('badges')
     new_swags = calculate_badges_swags('swags')
 
-    # # New level dialog
-    # if is_gui and old_level != new_level:
-    #     dialogs.show(newLevel=new_level)
+    # New level dialog
+    if is_gui and old_level != new_level:
+        cmd = 'kano-profile-dialog newlevel {}'.format(new_level)
+        ku.run_cmd(cmd)
 
-    # # New badges dialog
-    # if is_gui and old_badges != new_badges:
-    #     chg_badges = []
-    #     for badge in old_badges:
-    #         if old_badges[badge] is False and new_badges[badge] is True:
-    #             chg_badges.append(badge)
-    #     dialogs.show(newBadges=chg_badges)
+    # New badges dialog
+    if is_gui and old_badges != new_badges:
+        chg_badges = []
+        for badge in old_badges:
+            if old_badges[badge] is False and new_badges[badge] is True:
+                chg_badges.append(badge)
+        cmd = 'kano-profile-dialog newbadges {}'.format(' '.join(chg_badges))
+        ku.run_cmd(cmd)
 
-    # # New swags dialog
-    # if is_gui and old_swags != new_swags:
-    #     chg_swags = []
-    #     for swag in old_swags:
-    #         if old_swags[swag] is False and new_swags[swag] is True:
-    #             chg_swags.append(swag)
-    #     dialogs.show(newSwags=chg_swags)
+    # New swags dialog
+    if is_gui and old_swags != new_swags:
+        chg_swags = []
+        for swag in old_swags:
+            if old_swags[swag] is False and new_swags[swag] is True:
+                chg_swags.append(swag)
+        cmd = 'kano-profile-dialog newswags {}'.format(' '.join(chg_badges))
+        ku.run_cmd(cmd)
 
 
 def save_app_state_variable(app_name, variable, value):

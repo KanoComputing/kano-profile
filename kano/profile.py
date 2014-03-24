@@ -112,7 +112,7 @@ def save_app_state(app_name, data):
         for swag in old_swags:
             if old_swags[swag] is False and new_swags[swag] is True:
                 chg_swags.append(swag)
-        cmd = 'kano-profile-dialog newswags {}'.format(' '.join(chg_badges))
+        cmd = 'kano-profile-dialog newswags {}'.format(' '.join(chg_swags))
         ku.run_cmd(cmd)
 
 
@@ -197,6 +197,8 @@ def calculate_badges_swags(what):
         rules = read_json(badges_file)
     elif what == 'swags':
         rules = read_json(swags_file)
+    else:
+        return
 
     if not rules:
         return

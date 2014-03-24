@@ -30,11 +30,11 @@ def activate(_win, _box, _label):
         x = i % dim
         y = i / dim
 
-        img_path = images.get_image(badge, 'badge')
         img = Gtk.Image()
-
         if badges[badge]:
+            img_path = images.get_image(badge, 'badge')
             img.set_from_file(img_path)
+            print badge
         else:
             img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
 

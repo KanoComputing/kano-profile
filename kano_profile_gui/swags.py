@@ -30,12 +30,11 @@ def activate(_win, _box, _label):
         x = i % dim
         y = i / dim
 
-        # TODO remove avatar generation in production!
-        img_path = images.get_image(swag, 'swag')
         img = Gtk.Image()
-
         if swags[swag]:
+            img_path = images.get_image(swag, 'swag')
             img.set_from_file(img_path)
+            print swag
         else:
             img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
 

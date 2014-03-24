@@ -16,7 +16,8 @@ app_profiles = {
     'make-pong': {
         'dir': '~/Pong-content',
         'ext': 'xml',
-        'cmd': 'python /usr/share/make-pong/make-pong {}'
+        'cmd': 'python /usr/share/make-pong/make-pong {fullpath}'
+
     },
     'make-snake': {
         'dir': 'kanoprofile',
@@ -76,7 +77,7 @@ def activate(_win, _box, _label):
 def load(_button, app, filename, data_dir):
     print 'load', app, filename, data_dir
     fullpath = os.path.join(data_dir, filename)
-    cmd = app_profiles[app]['cmd'].format(fullpath)
+    cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
     ku.run_print_output_error(cmd)
 
 

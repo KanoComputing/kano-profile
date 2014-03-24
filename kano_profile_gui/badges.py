@@ -34,7 +34,6 @@ def activate(_win, _box, _label):
         if badges[badge]:
             img_path = images.get_image(badge, 'badge')
             img.set_from_file(img_path)
-            print badge
         else:
             img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
 

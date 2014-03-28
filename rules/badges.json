@@ -1,62 +1,221 @@
 {
-    "snake_hat": {
-        "app": "make-snake",
-        "variable": "level",
-        "min": "1"
+  "master": {
+    "computer_commander": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-world",
+          "level",
+          1
+        ]
+      ]
     },
-    "snake_background": {
-        "app": "make-snake",
-        "variable": "level",
-        "min": "3"
+    "video_voyager": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "make-video",
+          "level",
+          5
+        ]
+      ]
     },
-    "snake_tool": {
-        "app": "make-snake",
-        "variable": "level",
-        "min": "5"
+    "snake_survivor": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "make-snake",
+          "level",
+          8
+        ]
+      ]
     },
-    "snake_avatar": {
-        "app": "make-snake",
-        "variable": "level",
-        "min": "7"
-    },
-    "pong_hat": {
-        "app": "make-pong",
-        "variable": "level",
-        "min": "1"
-    },
-    "pong_background": {
-        "app": "make-pong",
-        "variable": "level",
-        "min": "5"
-    },
-    "pong_tool": {
-        "app": "make-pong",
-        "variable": "level",
-        "min": "10"
-    },
-    "pong_avatar": {
-        "app": "make-pong",
-        "variable": "level",
-        "min": "15"
-    },
-    "minecraft_hat": {
-        "app": "make-minecraft",
-        "variable": "level",
-        "min": "1"
-    },
-    "minecraft_background": {
-        "app": "make-minecraft",
-        "variable": "level",
-        "min": "5"
-    },
-    "minecraft_tool": {
-        "app": "make-minecraft",
-        "variable": "level",
-        "min": "10"
-    },
-    "minecraft_avatar": {
-        "app": "make-minecraft",
-        "variable": "level",
-        "min": "15"
+    "kano_apprentice": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-world",
+          "num_offline_badges",
+          15
+        ]
+      ],
+      "push_back": true
     }
+  },
+  "in_game": {
+    "pong_painter": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-pong",
+          "level",
+          5
+        ]
+      ]
+    },
+    "rule_braker": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "make-video",
+          "level",
+          8
+        ]
+      ]
+    },
+    "appetite_for_apples": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "make-snake",
+          "apples_eaten",
+          100
+        ]
+      ]
+    }
+  },
+  "application": {
+    "feedbacker": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-feedback",
+          "starts",
+          1
+        ]
+      ]
+    },
+    "staying_super": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-updater",
+          "updated",
+          1
+        ]
+      ]
+    }
+  },
+  "number": {
+    "bronze_medallion": {
+      "operation": "stat_sum_gt",
+      "targets": [
+        [
+          "make-snake",
+          "level"
+        ],
+        [
+          "make-video",
+          "level"
+        ],
+        [
+          "make-minecraft",
+          "level"
+        ]
+      ],
+      "value": 5
+    },
+    "silver_medallion": {
+      "operation": "stat_sum_gt",
+      "targets": [
+        [
+          "make-snake",
+          "level"
+        ],
+        [
+          "make-video",
+          "level"
+        ],
+        [
+          "make-minecraft",
+          "level"
+        ]
+      ],
+      "value": 15
+    },
+    "100_blocks": {
+      "operation": "stat_sum_gt",
+      "targets": [
+        [
+          "make-pong",
+          "blocks"
+        ],
+        [
+          "make-minecraft",
+          "blocks"
+        ]
+      ],
+      "value": 100
+    }
+  },
+  "online": {
+    "community_champion": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-world",
+          "shares",
+          5
+        ]
+      ]
+    },
+    "talent_tracker": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-world",
+          "you_follow",
+          10
+        ]
+      ]
+    }
+  },
+  "easter_eggs": {
+    "file_finder": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "hidden_file",
+          "opened",
+          1
+        ]
+      ]
+    }
+  },
+  "swag_avatars": {
+    "avatar_something": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano_world",
+          "kano_level",
+          3
+        ]
+      ]
+    },
+    "avatar_kano_master": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-world",
+          "num_offline_badges",
+          15
+        ]
+      ],
+      "push_back": true
+    }
+  },
+  "swag_envs": {
+    "env_kano_master": {
+      "operation": "stat_gta",
+      "targets": [
+        [
+          "kano-world",
+          "num_offline_badges",
+          15
+        ]
+      ],
+      "push_back": true
+    }
+  }
 }

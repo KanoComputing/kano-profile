@@ -60,6 +60,17 @@ elif sys.argv[1] == 'save_app_state_variable':
     kp.save_app_state_variable(app_name, variable, value)
 
 
+# unlock
+elif sys.argv[1] == 'unlock':
+    check_arg_len(1)
+    kp.set_unlocked(True)
+
+# lock
+elif sys.argv[1] == 'lock':
+    check_arg_len(1)
+    kp.set_unlocked(False)
+
+
 # mistyped command
 else:
     sys.exit("wrong usage")

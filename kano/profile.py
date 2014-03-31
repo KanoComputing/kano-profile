@@ -74,6 +74,8 @@ def load_app_state(app_name):
 
 def load_app_state_variable(app_name, variable):
     data = load_app_state(app_name)
+    if is_unlocked():
+        data['level'] = 999
     if variable in data:
         return data[variable]
 

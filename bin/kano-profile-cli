@@ -44,7 +44,7 @@ elif sys.argv[1] == 'load_app_state_variable':
     value = kp.load_app_state_variable(app_name, variable)
 
     if value:
-        sys.stdout.write(value)
+        sys.stdout.write(str(value))
     else:
         sys.stdout.write(variable_not_found_str)
 

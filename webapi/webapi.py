@@ -32,7 +32,7 @@ class ServerError(Error):
 
 
 class Client():
-    API_HOST = 'https://api.kano.me'
+    API_HOST = 'http://api.kano.me'
     API_VERSION = '0.1'
 
     def __init__(self):

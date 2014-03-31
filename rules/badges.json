@@ -3,25 +3,25 @@
     "computer_commander": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-world", "level", 1 ]
+        ["kano-world", "level", 1]
       ]
     },
     "video_voyager": {
       "operation": "stat_gta",
       "targets": [
-        [ "make-video", "level", 5 ]
+        ["make-video", "level", 5]
       ]
     },
     "snake_survivor": {
       "operation": "stat_gta",
       "targets": [
-        [ "make-snake", "level", 8 ]
+        ["make-snake", "level", 8]
       ]
     },
     "kano_apprentice": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-world", "num_offline_badges", 15 ]
+        ["kano-world", "num_offline_badges", 15]
       ],
       "push_back": true
     }
@@ -30,19 +30,19 @@
     "pong_painter": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-pong", "level", 5 ]
+        ["kano-pong", "level", 5]
       ]
     },
     "rule_braker": {
       "operation": "stat_gta",
       "targets": [
-        [ "make-video", "level", 8 ]
+        ["make-video", "level", 8]
       ]
     },
     "appetite_for_apples": {
       "operation": "stat_gta",
       "targets": [
-        [ "make-snake", "apples_eaten", 100 ]
+        ["make-snake", "apples_eaten", 100]
       ]
     }
   },
@@ -50,13 +50,13 @@
     "feedbacker": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-feedback", "starts", 1 ]
+        ["kano-feedback", "starts", 1]
       ]
     },
     "staying_super": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-updater", "updated", 1 ]
+        ["kano-updater", "updated", 1]
       ]
     }
   },
@@ -64,26 +64,28 @@
     "bronze_medallion": {
       "operation": "stat_sum_gt",
       "targets": [
-        [ "make-snake", "level" ],
-        [ "make-video", "level" ],
-        [ "make-minecraft", "level" ]
+        ["make-snake", "level"],
+        ["make-video", "level"],
+        ["make-pong", "level"],
+        ["make-minecraft", "level"]
       ],
       "value": 5
     },
     "silver_medallion": {
       "operation": "stat_sum_gt",
       "targets": [
-        [ "make-snake", "level" ],
-        [ "make-video", "level" ],
-        [ "make-minecraft", "level" ]
+        ["make-snake", "level"],
+        ["make-video", "level"],
+        ["make-pong", "level"],
+        ["make-minecraft", "level"]
       ],
       "value": 15
     },
     "100_blocks": {
       "operation": "stat_sum_gt",
       "targets": [
-        [ "make-pong", "blocks" ],
-        [ "make-minecraft", "blocks" ]
+        ["make-pong", "blocks"],
+        ["make-minecraft", "blocks"]
       ],
       "value": 100
     }
@@ -92,13 +94,13 @@
     "community_champion": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-world", "shares", 5 ]
+        ["kano-world", "shares", 5]
       ]
     },
     "talent_tracker": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-world", "you_follow", 10 ]
+        ["kano-world", "you_follow", 10]
       ]
     }
   },
@@ -106,7 +108,7 @@
     "file_finder": {
       "operation": "stat_gta",
       "targets": [
-        [ "hidden_file", "opened", 1 ]
+        ["hidden_file", "opened", 1]
       ]
     }
   },
@@ -114,13 +116,13 @@
     "avatar_something": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano_world", "kano_level", 3 ]
+        ["kano_world", "kano_level", 3]
       ]
     },
     "avatar_kano_master": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-world", "num_offline_badges", 15 ]
+        ["kano-world", "num_offline_badges", 15]
       ],
       "push_back": true
     }
@@ -129,7 +131,7 @@
     "env_kano_master": {
       "operation": "stat_gta",
       "targets": [
-        [ "kano-world", "num_offline_badges", 15 ]
+        ["kano-world", "num_offline_badges", 15]
       ],
       "push_back": true
     }

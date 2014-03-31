@@ -79,6 +79,10 @@ def load_app_state_variable(app_name, variable):
 
 
 def save_app_state(app_name, data):
+    if is_unlocked():
+        old_app_state = load_app_state(app_name)
+        data['level'] = old_app_state['level']
+
     app_state_file = get_app_state_file(app_name)
     data['last_save_date'] = ku.get_date_now()
 
@@ -117,6 +121,8 @@ def save_app_state(app_name, data):
 
 
 def save_app_state_variable(app_name, variable, value):
+    if is_unlocked() and variable == 'level':
+        return
     data = load_app_state(app_name)
     data[variable] = value
     save_app_state(app_name, data)
@@ -267,6 +273,16 @@ def get_app_list(include_empty=False):
     return apps
 
 
+def set_unlocked(boolean):
+    profile = load_profile()
+    profile['unlocked'] = boolean
+    save_profile(profile)
+
+
+def is_unlocked():
+    return load_profile()['unlocked']
+
+
 # start
 if __name__ == "__main__":
     sys.exit("Should be imported as module")
@@ -313,4 +329,3 @@ if not os.path.exists(profile_file):
     save_profile(profile)
 
 
-print calculate_badges_swags()

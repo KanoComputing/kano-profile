@@ -134,7 +134,11 @@ def set_unlocked(boolean):
 
 
 def is_unlocked():
-    return load_profile()['unlocked']
+    profile = load_profile()
+    if 'unlocked' in profile:
+        return load_profile()['unlocked']
+    else:
+        return False
 
 
 # start

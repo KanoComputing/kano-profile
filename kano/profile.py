@@ -111,6 +111,63 @@ def write_json(filepath, data):
         json.dump(data, outfile, indent=4, sort_keys=True)
 
 
+def calculate_xp():
+    allrules = read_json(xp_file)
+    if not allrules:
+        return -1
+
+    points = 0
+
+    for app, groups in allrules.iteritems():
+        appstate = load_app_state(app)
+        if not appstate:
+            continue
+
+        for group, rules in groups.iteritems():
+            # calculating points based on level
+            if group == 'level' and 'level' in appstate:
+                maxlevel = int(appstate['level'])
+
+                for level, value in rules.iteritems():
+                    level = int(level)
+                    value = int(value)
+
+                    if level <= maxlevel:
+                        points += value
+
+            # calculating points based on multipliers
+            if group == 'multipliers':
+                for thing, value in rules.iteritems():
+                    value = float(value)
+                    if thing in appstate:
+                        points += value * appstate[thing]
+
+    return int(points)
+
+
+def calculate_kano_level():
+    level_rules = read_json(levels_file)
+    if not level_rules:
+        return -1, 0
+
+    max_level = max([int(n) for n in level_rules.keys()])
+    xp_now = calculate_xp()
+
+    for level in xrange(1, max_level + 1):
+        level_min = level_rules[str(level)]
+
+        if level != max_level:
+            level_max = level_rules[str(level + 1)] - 1
+        else:
+            level_max = float("inf")
+
+        if level_min <= xp_now <= level_max:
+            reached_level = level
+            reached_percentage = (xp_now - level_min) / (level_max + 1 - level_min)
+
+            return int(reached_level), reached_percentage
+
+
 def get_app_list(include_empty=False):
     apps = []
     allrules = read_json(xp_file)

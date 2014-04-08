@@ -12,7 +12,7 @@ import sys
 import os
 import json
 
-from kano.utils import read_file_contents, get_device_id, get_mac_address, \
+from kano.utils import read_file_contents, get_cpu_id, get_mac_address, \
     get_date_now, ensure_dir, get_user, get_home_by_username, is_gui
 
 
@@ -27,8 +27,8 @@ def load_profile():
     if 'email' not in data and get_email_from_disk():
         data['email'] = get_email_from_disk()
 
-    if 'device_id' not in data and get_device_id():
-        data['device_id'] = get_device_id()
+    if 'cpu_id' not in data and get_cpu_id():
+        data['device_id'] = get_cpu_id()
 
     if 'mac_addr' not in data and get_mac_address():
         data['mac_addr'] = get_mac_address()

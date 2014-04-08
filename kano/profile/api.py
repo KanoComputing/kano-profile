@@ -2,17 +2,11 @@
 
 import requests
 import json
-import os
-import sys
+
+from ..utils import read_file_contents
 
 api_url = 'http://localhost:1234'
 content_type_json = {'content-type': 'application/json'}
-
-
-def read_file_contents(path):
-    if os.path.exists(path):
-        with open(path) as infile:
-            return infile.read().strip()
 
 
 class ApiSession(object):
@@ -38,10 +32,12 @@ def create_user(email, username, password):
     return r.ok, r.text
 
 
+# TODO replace with profile
 def load_token():
     return read_file_contents('token')
 
 
+# TODO replace with profile
 def save_token(str):
     with open('token', 'w') as outfile:
         outfile.write(str)
@@ -61,36 +57,4 @@ def login(email, password):
         # save token and update session
         return r.ok, r.json()['session']['token']
 
-
-if __name__ == '__main__':
-    email = 'zsolt.ero+4@gmail.com'
-    username = 'zsero3'
-    password = 'passwd'
-
-    # Create user if not found
-    registered = True
-    if not registered:
-        success, error = create_user(email=email, username=username, password=password)
-        if not success:
-            sys.exit(error)
-        else:
-            print 'User: {} created'.format(username)
-            registered = True
-
-    # load tokan
-    token = load_token()
-
-    # login using token
-    if token:
-        s = ApiSession(token)
-
-    # login using password and save token
-    else:
-        success, value = login(email=email, password=password)
-        if not success:
-            print 'Cannot log in, problem: {}'.format(value)
-        else:
-            token = value
-            save_token(token)
-            s = ApiSession(token)
 

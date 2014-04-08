@@ -17,7 +17,7 @@ import sys
 import time
 
 from kano.network import is_internet
-from kano.utils import get_user, delete_file, get_device_id
+from kano.utils import get_user, delete_file, get_cpu_id
 from kano.profile import get_email_from_disk
 
 USER = get_user()
@@ -56,7 +56,7 @@ def send_form(project):
     entryName = "entry.1615253867"
     # RPi ID
     entryId = "entry.842182050"
-    cpu_id = get_device_id()
+    cpu_id = get_cpu_id()
     # Project
     entryProject = "entry.1067737306"
 

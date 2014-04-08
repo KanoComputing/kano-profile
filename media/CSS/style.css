@@ -39,6 +39,11 @@
     -GtkWidget-separator-height: 0;
 }
 
+.home_button {
+    background: transparent;
+    padding-left:20px;
+}
+
 /* The bar at the top that mimics the window bar */
 .top_bar_container {
     background: @top_bar_background;
@@ -66,4 +71,16 @@
 .level_label {
     color: @top_bar_active;
     font: Bariol Bold 13;
+}
+.stat_number {
+    color: @title_color;
+    font: Bariol Bold 18;
+}
+.stat_label {
+    color: @subheading_color;
+    font: Bariol Bold 13;
+}
+.white {
+    background: #ffffff;
+    color: #ffffff;
 }

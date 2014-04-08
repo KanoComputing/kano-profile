@@ -30,6 +30,7 @@ class Home_button():
 
         self.button = Gtk.Button()
         self.button.get_style_context().add_class("top_bar_button")
+        self.button.get_style_context().add_class("home_button")
         self.button.set_can_focus(False)
         self.img = Gtk.Image()
         self.img.set_from_file(constants.media + "/icons/Level-" + str(level_number) + ".png")
@@ -37,14 +38,13 @@ class Home_button():
         self.container.attach(self.title, 2, 0, 1, 1)
         self.container.attach(self.description, 2, 1, 1, 1)
         self.container.attach(self.img, 0, 0, 2, 2)
-        #self.container.set_row_spacing(5)
-        self.container.set_column_spacing(10)
+        self.container.set_column_spacing(20)
         self.container.props.valign = Gtk.Align.CENTER
 
         self.button.add(self.container)
 
         self.button.height = 100
-        self.button.width = 200
+        self.button.width = 250
 
         self.button.set_size_request(self.button.width, self.button.height)
 

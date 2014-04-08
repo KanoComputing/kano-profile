@@ -22,9 +22,6 @@ import kano_profile_gui.swags as swags
 import kano_profile_gui.components.top_bar as top_bar
 import kano_profile_gui.components.constants as constants
 
-WINDOW_HEIGHT = 450
-WINDOW_WIDTH = 550
-
 
 class MainWindow(Gtk.Window):
     table = None
@@ -34,7 +31,10 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         # Create main window
         Gtk.Window.__init__(self, title='Kano-Profile')
-        self.set_size_request(WINDOW_HEIGHT, WINDOW_WIDTH)
+        self.WINDOW_HEIGHT = 450
+        self.WINDOW_WIDTH = 630
+
+        self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
         # Remove decoration
         self.set_decorated(False)
@@ -51,11 +51,11 @@ class MainWindow(Gtk.Window):
         #self.grid.attach(self.label, 0, 4, 0, 1)
 
         # Dynamic box
-        self.box = Gtk.Box(spacing=6)
+        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.grid.attach(self.box, 0, 1, 1, 1)
 
-        self.top_bar = top_bar.Top_bar(WINDOW_WIDTH)
-        #self.top_bar.home_button.connect('clicked', self.goto, 'home')
+        self.top_bar = top_bar.Top_bar(self.WINDOW_WIDTH)
+        self.top_bar.home_button.button.connect('clicked', self.goto, 'home')
         self.top_bar.badges_button.connect('clicked', self.goto, 'badges')
         self.top_bar.swag_button.connect('clicked', self.goto, 'swags')
         self.top_bar.challenges_button.connect('clicked', self.goto, 'projects')

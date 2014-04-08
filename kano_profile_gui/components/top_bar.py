@@ -33,6 +33,7 @@ class Top_bar():
 
         # Home button
         self.home_button = home_button.Home_button(1)
+        self.home_button.button.connect('button_press_event', self.activate_label)
 
         name_array = ['Badges', 'Swag', 'Challenges']
         self.badges_button = Gtk.Button()
@@ -70,7 +71,7 @@ class Top_bar():
 
         close_button = Gtk.Button()
         close_button.set_image(cross)
-        close_button.set_size_request(15, 15)
+        close_button.set_size_request(10, 10)
         close_button.set_can_focus(False)
         close_button.get_style_context().add_class("top_bar_button")
         close_button.connect("button_press_event", close_window)

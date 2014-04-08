@@ -83,4 +83,22 @@
 .white {
     background: #ffffff;
     color: #ffffff;
+    font: Bariol Bold 13;
+}
+.black {
+    background: #000000;
+    color: #000000;
+}
+.progress_bar {
+    color: @kano_orange;
+    background: @kano_orange;
+}
+.progress_label {
+    color: white;
+    background: @kano_orange;
+    border-radius: 3px;
+}
+.rest_of_bar {
+    color: @inactive_writing;
+    background: @inactive_writing;
 }

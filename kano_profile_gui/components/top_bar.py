@@ -59,7 +59,7 @@ class Top_bar():
             container.pack_start(label, False, False, 0)
 
             button = self.button_array[x]
-            button.set_size_request(TOP_BAR_HEIGHT, TOP_BAR_HEIGHT)
+            button.set_size_request(WINDOW_WIDTH / 5, TOP_BAR_HEIGHT)
             button.set_can_focus(False)
             button.get_style_context().add_class("top_bar_button")
             button.add(container)
@@ -75,15 +75,18 @@ class Top_bar():
         close_button.set_can_focus(False)
         close_button.get_style_context().add_class("top_bar_button")
         close_button.connect("button_press_event", close_window)
+        close_button.set_alignment(xalign=1, yalign=0)
 
         # Define progress bar here
+        #self.progress = progress_bar.Bar(0.8, WINDOW_WIDTH)
 
         self.container.attach(self.home_button.button, 0, 0, 1, 3)
         self.container.attach(self.badges_button, 1, 0, 1, 3)
         self.container.attach(self.swag_button, 2, 0, 1, 3)
         self.container.attach(self.challenges_button, 3, 0, 1, 3)
         self.container.attach(close_button, 4, 0, 1, 1)
-        self.container.set_row_spacing(5)
+        #self.container.attach(self.progress.fixed, 0, 2, 5, 1)
+        #self.container.set_row_spacing(0)
         self.container.set_size_request(WINDOW_WIDTH, TOP_BAR_HEIGHT)
 
         self.background.add(self.container)

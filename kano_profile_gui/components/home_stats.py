@@ -28,10 +28,12 @@ class Stats():
             box.get_style_context().add_class("white")
             box.set_size_request(WINDOW_WIDTH / 4, BAR_HEIGHT)
             box_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+
             stat_label = Gtk.Label(stat)
             stat_label.get_style_context().add_class("stat_number")
             stat_label.set_alignment(xalign=0.5, yalign=1)
             stat_label.set_size_request(WINDOW_WIDTH / 4, BAR_HEIGHT / 2)
+
             stat_title = Gtk.Label(title)
             stat_title.get_style_context().add_class("stat_title")
             stat_title.set_alignment(xalign=0.5, yalign=0)

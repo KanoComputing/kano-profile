@@ -27,9 +27,15 @@ def activate(_win, _box, _label):
     # 300 is currently a "magic number", to fill up window size
     picture_box.set_size_request(_win.WINDOW_WIDTH, PICTURE_HEIGHT)
 
+    picture = Gtk.Image()
+    picture.set_from_file("/home/caroline/kano-profile/media/screens/home.png")
+
+    picture_box.add(picture)
+
     # Stats
     stat_dict = {"Name": name, "XP": xp, "Level": level, "Progress": progress}
     stats = home_stats.Stats(_win.WINDOW_WIDTH, stat_dict)
+
     _box.pack_start(picture_box, False, False, 0)
     _box.pack_start(stats.container, False, False, 0)
 

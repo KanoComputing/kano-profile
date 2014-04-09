@@ -5,7 +5,7 @@
 #
 
 from ..utils import read_json, write_json, get_cpu_id, get_mac_address, get_date_now
-from .paths import profile_file, linux_user
+from .paths import profile_file, profile_dir, linux_user
 
 
 def load_profile():
@@ -27,6 +27,7 @@ def load_profile():
 
 def save_profile(data):
     data['last_save_date'] = get_date_now()
+    ensure_dir(profile_dir)
     write_json(profile_file, data)
 
 

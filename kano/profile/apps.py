@@ -6,7 +6,7 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now
+from ..utils import read_json, write_json, get_date_now, ensure_dir
 from .paths import apps_dir, xp_file
 from .profile import is_unlocked
 
@@ -50,6 +50,7 @@ def save_app_state(app_name, data):
 
     app_state_file = get_app_state_file(app_name)
     data['last_save_date'] = get_date_now()
+    ensure_dir(get_app_dir(app_name))
     write_json(app_state_file, data)
 
 

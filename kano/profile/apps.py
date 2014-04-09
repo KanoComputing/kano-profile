@@ -6,21 +6,19 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir
+from ..utils import read_json, write_json, get_date_now
 from .paths import apps_dir, xp_file
 from .profile import is_unlocked
 
 
 def get_app_dir(app_name):
     app_dir = os.path.join(apps_dir, app_name)
-    ensure_dir(app_dir)
     return app_dir
 
 
 def get_app_data_dir(app_name):
     data_str = 'data'
     app_data_dir = os.path.join(get_app_dir(app_name), data_str)
-    ensure_dir(app_data_dir)
     return app_data_dir
 
 

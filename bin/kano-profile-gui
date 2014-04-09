@@ -33,7 +33,7 @@ class MainWindow(Gtk.Window):
         # Create main window
         Gtk.Window.__init__(self, title='Kano-Profile')
         self.WINDOW_HEIGHT = 450
-        self.WINDOW_WIDTH = 730
+        self.WINDOW_WIDTH = 725
 
         self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
@@ -70,8 +70,8 @@ class MainWindow(Gtk.Window):
         # The first element attached to the grid is GtkFixed so that we can overlay the progress bar
         self.fixed = Gtk.Fixed()
         self.fixed.put(self.top_bar.background, 0, 0)
-        self.fixed.put(self.progress.fixed, 0, self.top_bar.height - self.progress.BAR_HEIGHT)
-        self.fixed.put(self.box, 0, self.top_bar.height)
+        self.fixed.put(self.progress.fixed, 0, self.top_bar.height - self.progress.height)
+        self.fixed.put(self.box, 0, self.top_bar.height + self.progress.height)
 
         self.grid.attach(self.fixed, 0, 0, 1, 1)
 

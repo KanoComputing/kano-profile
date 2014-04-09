@@ -3,7 +3,7 @@
 import requests
 import json
 
-from ..utils import read_file_contents
+from .utils import read_file_contents
 
 api_url = 'http://localhost:1234'
 content_type_json = {'content-type': 'application/json'}
@@ -14,12 +14,19 @@ class ApiSession(object):
 
     def __init__(self, token):
         self.session.headers.update({'Authorization': token})
-        if not self.test_auth():
-            print 'Error with login'
+        success, value = self.test_auth()
+        if not success:
+            raise Exception(value)
 
     def test_auth(self):
-        r = self.session.get(api_url + '/auth/is-authenticated')
-        return r.ok
+        try:
+            r = self.session.get(api_url + '/auth/is-authenticated')
+            if r.ok:
+                return r.ok, 'OK'
+            else:
+                return r.ok, r.text
+        except requests.exceptions.ConnectionError:
+            return False, "Connection error"
 
 
 def create_user(email, username, password):
@@ -28,8 +35,11 @@ def create_user(email, username, password):
         'username': username,
         'password': password
     }
-    r = requests.post(api_url + '/users', data=json.dumps(payload), headers=content_type_json)
-    return r.ok, r.text
+    try:
+        r = requests.post(api_url + '/users', data=json.dumps(payload), headers=content_type_json)
+        return r.ok, r.text
+    except requests.exceptions.ConnectionError:
+        return False, "Connection error"
 
 
 # TODO replace with profile

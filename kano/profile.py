@@ -24,9 +24,6 @@ def load_profile():
     if 'username_linux' not in data:
         data['username_linux'] = linux_user
 
-    if 'email' not in data and get_email_from_disk():
-        data['email'] = get_email_from_disk()
-
     if 'cpu_id' not in data and get_cpu_id():
         data['device_id'] = get_cpu_id()
 
@@ -39,11 +36,6 @@ def load_profile():
 def save_profile(data):
     data['last_save_date'] = get_date_now()
     write_json(profile_file, data)
-
-
-def get_email_from_disk():
-    kano_email_file = os.path.join(home_directory, '.useremail')
-    return read_file_contents(kano_email_file)
 
 
 def get_app_dir(app_name):
@@ -206,8 +198,18 @@ if __name__ == "__main__":
 # getting linux variables
 linux_user = get_user()
 home_directory = get_home_by_username(linux_user)
-module_file = os.path.realpath(__file__)
-module_dir = os.path.dirname(module_file)
+
+# setting up directories
+dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+rules_local = os.path.join(dir_path, 'rules')
+rules_usr = '/usr/share/kano-profile/rules/'
+
+if os.path.exists(rules_local):
+    rules_dir = rules_local
+elif os.path.exists(rules_usr):
+    rules_dir = rules_usr
+else:
+    sys.exit('Neither local nor usr rules found!')
 
 # constructing paths of directories, files
 kanoprofile_dir_str = '.kanoprofile'
@@ -222,8 +224,8 @@ apps_dir = os.path.join(kanoprofile_dir, apps_dir_str)
 profile_file_str = 'profile.json'
 profile_file = os.path.join(profile_dir, profile_file_str)
 
-xp_file = '/usr/share/kano-profile/rules/xp.json'
-levels_file = '/usr/share/kano-profile/rules/levels.json'
+xp_file = os.path.join(rules_dir, 'xp.json')
+levels_file = os.path.join(rules_dir, 'levels.json')
 
 is_gui = is_gui()
 

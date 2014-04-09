@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import sys
-from kano.profile.api import create_user, load_token, ApiSession, login, save_token
+from kano.world import create_user, load_token, ApiSession, login, save_token
+from kano.profile import load_profile, save_profile
 
 if __name__ == '__main__':
     email = 'zsolt.ero+4@gmail.com'
@@ -23,16 +24,23 @@ if __name__ == '__main__':
     token = load_token()
 
     # login using token
+    need_login = False
     if token:
-        s = ApiSession(token)
+        try:
+            s = ApiSession(token)
+        except Exception:
+            need_login = True
 
     # login using password and save token
-    else:
+    if not token or need_login:
         success, value = login(email=email, password=password)
         if not success:
             print 'Cannot log in, problem: {}'.format(value)
         else:
             token = value
             save_token(token)
-            s = ApiSession(token)
+            try:
+                s = ApiSession(token)
+            except Exception:
+                sys.exit('Cannot log in with fresh token')
 

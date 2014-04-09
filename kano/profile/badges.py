@@ -118,6 +118,18 @@ def calculate_badges():
     return badges
 
 
+def compare_badges_dict(old, new):
+    if old == new:
+        return []
+    changes = dict()
+    for group, items in new.iteritems():
+        for item, value in items.iteritems():
+            if group in old and item in old[group] and \
+               old[group][item] is False and value is True:
+                changes.setdefault(group, []).append(item)
+    return changes
+
+
 def save_app_state_with_dialog(app_name, data):
     if is_unlocked():
         data['level'] = load_app_state(app_name)['level']
@@ -132,27 +144,24 @@ def save_app_state_with_dialog(app_name, data):
     new_level, _ = calculate_kano_level()
     new_badges = calculate_badges()
 
-    # New level dialog
+    # new level dialog
     if is_gui() and old_level != new_level:
         cmd = '{bin_dir}/kano-profile-dialog newlevel "{new_level}"'.format(bin_dir=bin_dir, new_level=new_level)
         run_cmd(cmd)
 
+    # new badges dialog
     badge_changes = compare_badges_dict(old_badges, new_badges)
     if is_gui() and badge_changes:
         cmd = '{bin_dir}/kano-profile-dialog newbadges "{json}"'.format(bin_dir=bin_dir, json=json.dumps(badge_changes))
         run_cmd(cmd)
 
 
-def compare_badges_dict(old, new):
-    if old == new:
-        return []
-    changes = dict()
-    for group, items in new.iteritems():
-        for item, value in items.iteritems():
-            if group in old and item in old[group] and \
-               old[group][item] is False and value is True:
-                changes.setdefault(group, []).append(item)
-    return changes
+def save_app_state_variable_with_dialog(app_name, variable, value):
+    if is_unlocked() and variable == 'level':
+        return
+    data = load_app_state(app_name)
+    data[variable] = value
+    save_app_state_with_dialog(app_name, data)
 
 
 

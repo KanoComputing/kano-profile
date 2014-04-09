@@ -80,7 +80,37 @@ def save_app_state(app_name, data):
 
     app_state_file = get_app_state_file(app_name)
     data['last_save_date'] = get_date_now()
+    
+    # old_level, _ = calculate_kano_level()
+    # old_badges = calculate_badges()
+
     write_json(app_state_file, data)
+
+    # new_level, _ = calculate_kano_level()
+    # new_badges = calculate_badges()
+
+    # # New level dialog
+    # if is_gui and old_level != new_level:
+    #     cmd = 'kano-profile-dialog newlevel {}'.format(new_level)
+    #     ku.run_cmd(cmd)
+
+    # # New badges dialog
+    # if is_gui and old_badges != new_badges:
+    #     chg_badges = []
+    #     for badge in old_badges:
+    #         if old_badges[badge] is False and new_badges[badge] is True:
+    #             chg_badges.append(badge)
+    #     cmd = 'kano-profile-dialog newbadges {}'.format(' '.join(chg_badges))
+    #     ku.run_cmd(cmd)
+
+    # # New swags dialog
+    # if is_gui and old_swags != new_swags:
+    #     chg_swags = []
+    #     for swag in old_swags:
+    #         if old_swags[swag] is False and new_swags[swag] is True:
+    #             chg_swags.append(swag)
+    #     cmd = 'kano-profile-dialog newswags {}'.format(' '.join(chg_swags))
+    #     ku.run_cmd(cmd)
 
 
 def save_app_state_variable(app_name, variable, value):
@@ -161,6 +191,65 @@ def calculate_kano_level():
             return int(reached_level), reached_percentage
 
 
+# def calculate_badges():
+#     rules = read_json(badges_file)
+#     if not rules:
+#         return
+
+#     kano_level, _ = calculate_kano_level()
+#     app_list = get_app_list()
+#     app_state = dict()
+#     for app in app_list:
+#         app_state[app] = load_app_state(app)
+
+#     badges = dict()
+#     for category, items in rules.iteritems():
+#         for name, rule in items.iteritems():
+#             if rule['operation'] == 'stat_gta':
+#                 achieved = True
+#                 for target in rule['targets']:
+#                     app = target[0]
+#                     variable = target[1]
+#                     value = target[2]
+
+#                     if app not in app_list or variable not in app_state[app]:
+#                         achieved = False
+#                         continue
+#                     achieved &= app_state[app][variable] >= value
+#                 badges.setdefault(category, dict())[name] = achieved
+
+#             elif rule['operation'] == 'stat_sum_gt':
+#                 sum = 0
+#                 for target in rule['targets']:
+#                     app = target[0]
+#                     variable = target[1]
+
+#                     if app not in app_list or variable not in app_state[app]:
+#                         continue
+
+#                     sum += float(app_state[app][variable])
+
+#                 achieved = sum >= rule['value']
+#                 badges.setdefault(category, dict())[name] = achieved
+
+#             else:
+#                 print 'unknown uperation {}'.format(rule['operation'])
+
+#     return badges
+
+
+# def get_gamestate_variables(app_name):
+#     allrules = read_json(xp_file)
+#     if not allrules:
+#         return list()
+
+#     groups = allrules[app_name]
+
+#     for group, rules in groups.iteritems():
+#         if group == 'multipliers':
+#             return [str(key) for key in rules.keys()]
+
+
 def get_app_list(include_empty=False):
     apps = []
     allrules = read_json(xp_file)
@@ -173,6 +262,7 @@ def get_app_list(include_empty=False):
             continue
         else:
             apps.append(app)
+
     return apps
 
 
@@ -225,6 +315,7 @@ profile_file = os.path.join(profile_dir, profile_file_str)
 
 xp_file = os.path.join(rules_dir, 'xp.json')
 levels_file = os.path.join(rules_dir, 'levels.json')
+# badges_file = '/usr/share/kano-profile/rules/badges.json'
 
 is_gui = is_gui()
 

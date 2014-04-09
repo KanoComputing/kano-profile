@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+
+# dialogs.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+import sys
+from gi.repository import Gtk
+
+import kano_profile_gui.images as images
+
+
+class MainWindow(Gtk.Window):
+    def __init__(self, newlevel, newbadges, newswags):
+        if newlevel:
+            title = 'Level Up!'
+        elif newbadges:
+            title = 'New Badges!'
+        elif newswags:
+            title = 'New Swags!'
+        else:
+            sys.exit('Nothing to display!')
+
+        # Create main window
+        Gtk.Window.__init__(self, title=title)
+        self.set_size_request(300, 200)
+
+        # Create common elements
+        # Main table
+        table = Gtk.Table(2, 1, False)
+        self.add(table)
+
+        if newlevel:
+            msg = 'Congratulations, you\'ve leveled up to level {}!'.format(newlevel)
+            label = Gtk.Label()
+            label.set_text(msg)
+            table.attach(label, 0, 1, 0, 1)
+
+        elif newbadges:
+            icon_table = Gtk.Table(len(newbadges), 2, False)
+            for i, badge in enumerate(newbadges):
+                img_path = images.get_image(badge, 'badge')
+                img = Gtk.Image()
+                img.set_from_file(img_path)
+                icon_table.attach(img, i, i + 1, 0, 1)
+
+                label = Gtk.Label()
+                label.set_text(badge)
+                icon_table.attach(label, i, i + 1, 1, 2)
+            table.attach(icon_table, 0, 1, 0, 1)
+
+        elif newswags:
+            icon_table = Gtk.Table(len(newswags), 2, False)
+            for i, swag in enumerate(newswags):
+                img_path = images.get_image(swag, 'swag')
+                img = Gtk.Image()
+                img.set_from_file(img_path)
+                icon_table.attach(img, i, i + 1, 0, 1)
+
+                label = Gtk.Label()
+                label.set_text(swag)
+                icon_table.attach(label, i, i + 1, 1, 2)
+            table.attach(icon_table, 0, 1, 0, 1)
+
+        # OK Button
+        button = Gtk.Button(label='OK', halign=Gtk.Align.CENTER)
+        button.connect('clicked', Gtk.main_quit)
+        table.attach(button, 0, 1, 1, 2)
+
+
+def main(newlevel=None, newbadges=None, newswags=None):
+    if len(sys.argv) == 1:
+        sys.exit("Wrong usage")
+
+    if sys.argv[1] == 'newlevel':
+        newlevel = int(sys.argv[2])
+    elif sys.argv[1] == 'newbadges':
+        newbadges = sys.argv[2:]
+    elif sys.argv[1] == 'newswags':
+        newswags = sys.argv[2:]
+
+    win = MainWindow(newlevel, newbadges, newswags)
+    win.connect('delete-event', Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
+
+
+if __name__ == '__main__':
+    main()

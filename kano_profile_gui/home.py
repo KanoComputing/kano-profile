@@ -14,7 +14,7 @@ PICTURE_HEIGHT = 250
 
 
 def activate(_win, _box, _label):
-    _label.set_text('Home')
+    #_label.set_text('Home')
 
     profile = kp.load_profile()
 

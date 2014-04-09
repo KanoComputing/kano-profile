@@ -42,24 +42,15 @@ class MainWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
 
         # Create common elements
-        # Main table
+        # Main grid
         self.grid = Gtk.Grid()
-        #self.add(self.grid)
-
-        # Title
-        self.label = Gtk.Label()
-        #self.label.set_text('Kano Profile')
-        #self.grid.attach(self.label, 0, 4, 0, 1)
+        self.add(self.grid)
 
         # Dynamic box
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
+        # This is the progress bar - it overlaps with the main content in the box
         self.progress = progress_bar.Bar(0.8, self.WINDOW_WIDTH)
-
-        self.overlay = Gtk.Overlay()
-        self.add(self.grid)
-        self.overlay.add_overlay(self.progress.fixed)
-        self.overlay.show_all()
 
         self.top_bar = top_bar.Top_bar(self.WINDOW_WIDTH)
         self.top_bar.home_button.button.connect('clicked', self.goto, 'home')
@@ -67,11 +58,22 @@ class MainWindow(Gtk.Window):
         self.top_bar.swag_button.connect('clicked', self.goto, 'swags')
         self.top_bar.challenges_button.connect('clicked', self.goto, 'projects')
 
-        self.overlay.add(self.box)
+        # Overlay doesn't seem to work because it makes it impossible to click on the buttons
+        # Maybe try this with a set_size_request?
+        #self.overlay = Gtk.Overlay()
+        #self.overlay.add_overlay(self.progress.fixed)
+        #self.overlay.show_all()
+        #self.overlay.add(self.box)
+        #self.grid.attach(self.overlay, 0, 1, 1, 1)
+        #self.grid.attach(self.top_bar.background, 0, 0, 1, 1)
 
-        self.grid.attach(self.overlay, 0, 1, 1, 1)
+        # The first element attached to the grid is GtkFixed so that we can overlay the progress bar
+        self.fixed = Gtk.Fixed()
+        self.fixed.put(self.top_bar.background, 0, 0)
+        self.fixed.put(self.progress.fixed, 0, self.top_bar.height - self.progress.BAR_HEIGHT)
+        self.fixed.put(self.box, 0, self.top_bar.height)
 
-        self.grid.attach(self.top_bar.background, 0, 0, 1, 1)
+        self.grid.attach(self.fixed, 0, 0, 1, 1)
 
         # init home screen
         self.goto(self.top_bar.home_button, 'home')

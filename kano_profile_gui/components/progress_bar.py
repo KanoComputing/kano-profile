@@ -16,12 +16,6 @@ class Bar():
         self.CONTAINER_HEIGHT = 30
         self.LABEL_WIDTH = 60
 
-        #self.progress = Gtk.ProgressBar()
-        #self.progress.set_fraction(input)
-        #self.progress.set_text(str(input))
-        #self.progress.set_show_text(True)
-        #self.progress.get_style_context().add_class("progress_bar")
-
         # Calculate various widths of bars
         progress_width = (WINDOW_WIDTH - self.LABEL_WIDTH) * input
         rest_of_bar_width = (WINDOW_WIDTH - self.LABEL_WIDTH) * (1 - input)
@@ -47,11 +41,12 @@ class Bar():
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(WINDOW_WIDTH, self.CONTAINER_HEIGHT)
 
-        self.background = Gtk.EventBox()
-        self.background.set_size_request(WINDOW_WIDTH, self.BAR_HEIGHT)
-        self.background.get_style_context().add_class("black")
+        # This background is so we can pretend to overlap with the top bar.
+        #self.background = Gtk.EventBox()
+        #self.background.set_size_request(WINDOW_WIDTH, self.BAR_HEIGHT)
+        #self.background.get_style_context().add_class("black")
 
-        self.fixed.put(self.background, 0, 0)
+        #self.fixed.put(self.background, 0, 0)
         self.fixed.put(self.label_background, progress_width, 0)
         self.fixed.put(self.progress, 0, self.BAR_HEIGHT + 0)
         self.fixed.put(self.rest_of_bar, progress_width + self.LABEL_WIDTH, self.BAR_HEIGHT + 0)

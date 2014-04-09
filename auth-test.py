@@ -21,7 +21,7 @@ if __name__ == '__main__':
             profile['registered'] = True
             save_profile(profile)
 
-    # load tokan
+    # load token
     token = None
     if 'token' in profile and profile['token']:
         token = profile['token']

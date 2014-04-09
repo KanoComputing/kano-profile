@@ -13,15 +13,27 @@ home_directory = get_home_by_username(linux_user)
 
 # setting up directories
 dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+
+# rules path
 rules_local = os.path.join(dir_path, 'rules')
 rules_usr = '/usr/share/kano-profile/rules/'
-
 if os.path.exists(rules_local):
     rules_dir = rules_local
 elif os.path.exists(rules_usr):
     rules_dir = rules_usr
 else:
     raise Exception('Neither local nor usr rules found!')
+
+# bin path
+bin_local = os.path.join(dir_path, 'bin')
+bin_usr = '/usr/bin'
+if os.path.exists(bin_local):
+    bin_dir = bin_local
+elif os.path.exists(bin_usr):
+    bin_dir = bin_usr
+else:
+    raise Exception('Neither local nor usr bin found!')
+
 
 # constructing paths of directories, files
 kanoprofile_dir_str = '.kanoprofile'

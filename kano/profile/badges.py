@@ -6,8 +6,10 @@
 
 from __future__ import division
 
-from ..utils import read_json, get_date_now, is_gui
-from .paths import xp_file, levels_file, badges_file
+import json
+
+from ..utils import read_json, get_date_now, is_gui, run_cmd
+from .paths import xp_file, levels_file, badges_file, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -132,34 +134,28 @@ def save_app_state_with_dialog(app_name, data):
 
     # New level dialog
     if is_gui() and old_level != new_level:
-        cmd = 'kano-profile-dialog newlevel {}'.format(new_level)
+        cmd = '{bin_dir}/kano-profile-dialog newlevel "{new_level}"'.format(bin_dir=bin_dir, new_level=new_level)
         run_cmd(cmd)
 
-    # New badges dialog
-    # if is_gui() and old_badges != new_badges:
-        # chg_badges = []
-        # for badge in old_badges:
-            # if old_badges[badge] is False and new_badges[badge] is True:
-                # chg_badges.append(badge)
-        # cmd = 'kano-profile-dialog newbadges {}'.format(' '.join(chg_badges))
-        # run_cmd(cmd)
-
-    # # New swags dialog
-    # if is_gui() and old_swags != new_swags:
-    #     chg_swags = []
-    #     for swag in old_swags:
-    #         if old_swags[swag] is False and new_swags[swag] is True:
-    #             chg_swags.append(swag)
-    #     cmd = 'kano-profile-dialog newswags {}'.format(' '.join(chg_swags))
-    #     run_cmd(cmd)
+    badge_changes = compare_badges_dict(old_badges, new_badges)
+    if is_gui() and badge_changes:
+        cmd = '{bin_dir}/kano-profile-dialog newbadges "{json}"'.format(bin_dir=bin_dir, json=json.dumps(badge_changes))
+        run_cmd(cmd)
 
 
 def compare_badges_dict(old, new):
-    # if old == new:
-        # return []
+    if old == new:
+        return []
+    changes = dict()
     for group, items in new.iteritems():
         for item, value in items.iteritems():
-            print item, value
+            if group in old and item in old[group] and \
+               old[group][item] is False and value is True:
+                changes.setdefault(group, []).append(item)
+    return changes
+
+
+
 
 
 

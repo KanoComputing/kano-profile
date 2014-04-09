@@ -36,8 +36,10 @@ def create_user(email, username, password):
     }
     try:
         r = requests.post(api_url + '/users', data=json.dumps(payload), headers=content_type_json)
-        # return ok and error
-        return r.ok, r.text
+        if r.ok:
+            return r.ok, r.json()
+        else:
+            return r.ok, r.text
     except requests.exceptions.ConnectionError:
         return False, "Connection error"
 
@@ -51,11 +53,10 @@ def login(email, password):
             r = requests.post(api_url + '/auth', data=json.dumps(payload), headers=content_type_json)
             if r.ok:
                 # return token
-                return r.ok, r.json()['session']['token']
+                return r.ok, r.json()
             else:
                 # return error
                 return r.ok, r.text
-
         except requests.exceptions.ConnectionError:
             return False, "Connection error"
 

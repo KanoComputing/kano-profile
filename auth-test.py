@@ -2,49 +2,61 @@
 
 import sys
 from kano.world import create_user, ApiSession, login
-from kano.profile import load_profile, save_profile
+from kano.profile.profile import load_profile, save_profile
+
+
+def do_login(email, password):
+    global profile, s
+
+    success, value = login(email=email, password=password)
+    if success:
+        profile['token'] = value['session']['token']
+        profile['kanoworld_username'] = value['session']['user']['username']
+        profile['kanoworld_id'] = value['session']['user']['id']
+        profile['email'] = email
+        save_profile(profile)
+        try:
+            s = ApiSession(profile['token'])
+        except Exception:
+            sys.exit('Cannot log in with fresh token')
+    else:
+        print 'Cannot log in, problem: {}'.format(value)
+
+
+def do_register(email, username, password):
+    global profile
+
+    success, value = create_user(email=email, username=username, password=password)
+    if success:
+        print 'User: {} created'.format(username)
+        profile['kanoworld_username'] = value['user']['username']
+        profile['kanoworld_id'] = value['user']['id']
+        profile['email'] = email
+        save_profile(profile)
+    else:
+        sys.exit(value)
+
 
 if __name__ == '__main__':
-    email = 'zsolt.ero+6@gmail.com'
-    username = 'zsero6'
+    email = '9@abc.com'
+    username = '9abc'
     password = 'passwd'
 
     profile = load_profile()
+    s = None
 
-    # Create user if not found
-    if 'registered' not in profile or profile['registered'] is False:
-        success, error = create_user(email=email, username=username, password=password)
-        if not success:
-            sys.exit(error)
-        else:
-            print 'User: {} created'.format(username)
-            profile['registered'] = True
-            save_profile(profile)
+    # login or register of id not in profile
+    if 'kanoworld_id' not in profile:
+        answer = raw_input('Register or login? [r/l]: ')
+        if answer.lower() == 'r':
+            do_register(email, username, password)
+        elif answer.lower() == 'l':
+            do_login(email, password)
 
-    # load token
-    token = None
-    if 'token' in profile and profile['token']:
-        token = profile['token']
-
-    # login using token
-    need_login = False
-    if token:
+    if 'token' in profile:
         try:
-            s = ApiSession(token)
+            s = ApiSession(profile['token'])
         except Exception:
-            need_login = True
+            do_login(email, password)
 
-    # login using password and save token
-    if not token or need_login:
-        success, value = login(email=email, password=password)
-        if not success:
-            print 'Cannot log in, problem: {}'.format(value)
-        else:
-            token = value
-            profile['token'] = token
-            save_profile(profile)
-            try:
-                s = ApiSession(token)
-            except Exception:
-                sys.exit('Cannot log in with fresh token')
 

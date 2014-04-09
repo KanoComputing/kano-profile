@@ -4,7 +4,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-from ..utils import read_json, write_json, get_cpu_id, get_mac_address, get_date_now
+from ..utils import read_json, write_json, get_cpu_id, get_mac_address, get_date_now, ensure_dir
 from .paths import profile_file, profile_dir, linux_user
 
 

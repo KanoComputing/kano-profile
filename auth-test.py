@@ -1,27 +1,30 @@
 #!/usr/bin/env python
 
 import sys
-from kano.world import create_user, load_token, ApiSession, login, save_token
+from kano.world import create_user, ApiSession, login
 from kano.profile import load_profile, save_profile
 
 if __name__ == '__main__':
-    email = 'zsolt.ero+4@gmail.com'
-    username = 'zsero3'
+    email = 'zsolt.ero+6@gmail.com'
+    username = 'zsero6'
     password = 'passwd'
 
-    # TODO replace with profile
+    profile = load_profile()
+
     # Create user if not found
-    registered = True
-    if not registered:
+    if 'registered' not in profile or profile['registered'] is False:
         success, error = create_user(email=email, username=username, password=password)
         if not success:
             sys.exit(error)
         else:
             print 'User: {} created'.format(username)
-            registered = True
+            profile['registered'] = True
+            save_profile(profile)
 
     # load tokan
-    token = load_token()
+    token = None
+    if 'token' in profile and profile['token']:
+        token = profile['token']
 
     # login using token
     need_login = False
@@ -38,7 +41,8 @@ if __name__ == '__main__':
             print 'Cannot log in, problem: {}'.format(value)
         else:
             token = value
-            save_token(token)
+            profile['token'] = token
+            save_profile(profile)
             try:
                 s = ApiSession(token)
             except Exception:

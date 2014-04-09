@@ -173,7 +173,6 @@ def get_app_list(include_empty=False):
             continue
         else:
             apps.append(app)
-
     return apps
 
 

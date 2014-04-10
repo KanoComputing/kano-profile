@@ -1,4 +1,4 @@
 # run this to enable image generation in profile
 
-chmod -R 777 /usr/share/kano-profile
-pip install randomavatar
+# chmod -R 777 /usr/share/kano-profile
+sudo pip install randomavatar

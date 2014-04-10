@@ -4,7 +4,12 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+import os
 import sys
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.append(dir_path)
 
 from kano.profile.apps import get_app_data_dir, load_app_state_variable
 from kano.profile.profile import set_unlocked

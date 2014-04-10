@@ -10,11 +10,14 @@
 # If Scan: scan for temp files and send Google Forms
 #
 
-import os
-import os.path
 import requests
-import sys
 import time
+import os
+import sys
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.append(dir_path)
 
 from kano.network import is_internet
 from kano.utils import get_user, delete_file, get_cpu_id

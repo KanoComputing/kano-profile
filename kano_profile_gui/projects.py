@@ -20,7 +20,7 @@ app_profiles = {
 
     },
     'make-snake': {
-        'dir': 'kanoprofile',
+        'dir': '~/Snake-content',
         'ext': '',
         'cmd': 'kano-launcher "rxvt -title \'Make Snake\' -e python /usr/share/make-snake -t custom" "make-snake"'
     }
@@ -38,6 +38,9 @@ def activate(_win, _box, _label):
             data_dir = get_app_data_dir(app)
         else:
             data_dir = os.path.expanduser(app_profiles[app]['dir'])
+
+        if not os.path.exists(data_dir):
+            continue
 
         files = os.listdir(data_dir)
         files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_profiles[app]['ext']]

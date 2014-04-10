@@ -6,8 +6,14 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-import sys
 from gi.repository import Gtk
+
+import os
+import sys
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.append(dir_path)
 
 from kano.utils import is_gui
 from kano_profile_gui.images import get_image

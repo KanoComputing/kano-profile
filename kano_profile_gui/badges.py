@@ -6,10 +6,14 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+import os
 from gi.repository import Gtk
 
 from kano.profile.badges import calculate_badges
 from .images import get_image
+from .paths import icon_dir
+
+img_width = 50
 
 
 def activate(_win, _box, _label):
@@ -22,18 +26,18 @@ def activate(_win, _box, _label):
     num_categories = len(badges.keys())
     max_items = max([len(v) for k, v in badges.iteritems()])
 
-    table = Gtk.Table(max_items, num_categories, False)
+    table = Gtk.Table(num_categories, max_items, False)
     _box.add(table)
 
     for i, (group, items) in enumerate(badges.iteritems()):
         for j, item in enumerate(items):
-            print i, j, group, item
+            print i, j, group, item, items[item]
 
             img = Gtk.Image()
-            if badges[badge]:
-                img_path = get_image(badge, 'badge', 100)
+            if items[item]:
+                img_path = get_image(item, group, img_width)
                 img.set_from_file(img_path)
             else:
-                img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
+                img.set_from_file(os.path.join(icon_dir, '_locked.png'))
 
-            table.attach(img, x, x + 1, y, y + 1)
+            table.attach(img, j, j + 1, i, i + 1)

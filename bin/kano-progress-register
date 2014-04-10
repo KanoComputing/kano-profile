@@ -17,8 +17,7 @@ import sys
 import time
 
 from kano.network import is_internet
-from kano.utils import get_user, delete_file, get_device_id
-from kano.profile import get_email_from_disk
+from kano.utils import get_user, delete_file, get_cpu_id
 
 USER = get_user()
 
@@ -50,13 +49,13 @@ def send_form(project):
     # Details of the Google form
     url = "https://docs.google.com/a/kano.me/forms/d/15tfyqx2J0XFjf1rytguy8cFEZ3E20HZ3iU5wVZalyAk/formResponse"
     # User email
-    email = get_email_from_disk()
+    email = ''
     entryEmail = "entry.1049053909"
     # User name
     entryName = "entry.1615253867"
     # RPi ID
     entryId = "entry.842182050"
-    cpu_id = get_device_id()
+    cpu_id = get_cpu_id()
     # Project
     entryProject = "entry.1067737306"
 

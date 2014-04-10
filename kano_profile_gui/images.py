@@ -7,18 +7,7 @@
 #
 
 import os
-
-# setting up directories
-dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-media_local = os.path.join(dir_path, 'media')
-media_usr = '/usr/share/kano-profile/media/'
-
-if os.path.exists(media_local):
-    media_dir = media_local
-elif os.path.exists(media_usr):
-    media_dir = media_usr
-else:
-    raise Exception('Neither local nor usr rules found!')
+from .paths import media_dir
 
 
 def get_image(name, category, width):

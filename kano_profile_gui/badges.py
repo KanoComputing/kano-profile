@@ -9,14 +9,14 @@
 import math
 from gi.repository import Gtk
 
-import kano.profile as kp
-import kano_profile_gui.images as images
+from kano.profile.badges import calculate_badges
+from .images import get_image
 
 
 def activate(_win, _box, _label):
     _label.set_text('Badges')
 
-    badges = kp.calculate_badges_swags('badges')
+    badges = calculate_badges()
     if not badges:
         return
 
@@ -32,7 +32,7 @@ def activate(_win, _box, _label):
 
         img = Gtk.Image()
         if badges[badge]:
-            img_path = images.get_image(badge, 'badge')
+            img_path = get_image(badge, 'badge')
             img.set_from_file(img_path)
         else:
             img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')

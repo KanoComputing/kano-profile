@@ -7,16 +7,18 @@
 #
 
 from gi.repository import Gtk
-import kano.profile as kp
+
+from kano.profile.profile import load_profile
+from kano.profile.badges import calculate_xp, calculate_kano_level
 
 
 def activate(_win, _box, _label):
     _label.set_text('Home')
 
-    profile = kp.load_profile()
+    profile = load_profile()
 
-    xp = kp.calculate_xp()
-    level, progress = kp.calculate_kano_level()
+    xp = calculate_xp()
+    level, progress = calculate_kano_level()
     name = profile['username_linux']
 
     msg = 'name: {}\nXP: {}\nLevel: {}\nProgress to next level: {:.0%}'.format(name, xp, level, progress)

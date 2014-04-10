@@ -9,8 +9,8 @@
 import os
 from gi.repository import Gtk
 
-import kano.profile as kp
-import kano.utils as ku
+from kano.profile.apps import get_app_list, get_app_data_dir
+from kano.utils import run_print_output_error
 
 app_profiles = {
     'make-pong': {
@@ -30,12 +30,12 @@ app_profiles = {
 def activate(_win, _box, _label):
     _label.set_text('Projects')
 
-    apps = kp.get_app_list(include_empty=False)
+    apps = get_app_list(include_empty=False)
 
     projects_list = []
     for app in apps:
         if app_profiles[app]['dir'] == 'kanoprofile':
-            data_dir = kp.get_app_data_dir(app)
+            data_dir = get_app_data_dir(app)
         else:
             data_dir = os.path.expanduser(app_profiles[app]['dir'])
 
@@ -78,7 +78,7 @@ def load(_button, app, filename, data_dir):
     print 'load', app, filename, data_dir
     fullpath = os.path.join(data_dir, filename)
     cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
-    ku.run_print_output_error(cmd)
+    run_print_output_error(cmd)
 
 
 def share(_button, app, filename):

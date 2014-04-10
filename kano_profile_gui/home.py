@@ -13,7 +13,7 @@ import kano_profile_gui.components.home_stats as home_stats
 PICTURE_HEIGHT = 250
 
 
-def activate(_win, _box, _label):
+def activate(_win, _box):
     #_label.set_text('Home')
 
     profile = kp.load_profile()

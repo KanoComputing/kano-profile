@@ -16,7 +16,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.append(dir_path)
 
 import kano_profile_gui.home as home
-import kano_profile_gui.badges as badges
+import kano_profile_gui.badges_ui as badges
 import kano_profile_gui.projects as projects
 import kano_profile_gui.swags as swags
 import kano_profile_gui.components.top_bar as top_bar
@@ -91,7 +91,7 @@ class MainWindow(Gtk.Window):
         for i in self.box.get_children():
             self.box.remove(i)
 
-        module.activate(self, self.box, self.label)
+        module.activate(self, self.box)
         self.show_all()
 
 

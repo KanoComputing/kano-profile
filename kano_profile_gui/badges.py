@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# badges.py
-#
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
@@ -38,6 +36,6 @@ def activate(_win, _box, _label):
                 img_path = get_image(item, group, img_width)
                 img.set_from_file(img_path)
             else:
-                img.set_from_file(os.path.join(icon_dir, '_locked.png'))
+                img.set_from_file(os.path.join(icon_dir, str(img_width), '_locked.png'))
 
             table.attach(img, j, j + 1, i, i + 1)

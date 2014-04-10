@@ -25,7 +25,7 @@ def get_image(name, category, width):
             avatar.save(image_byte_array=image_byte_array, save_location=fullpath)
             print '{} created'.format(fullpath)
         except Exception:
-            return os.path.join(icon_dir, '_missing.png')
+            return os.path.join(icon_dir, '50/_missing.png')
     return fullpath
 
 

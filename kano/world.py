@@ -9,6 +9,7 @@ from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state
 
 api_url = 'http://localhost:1234'
+# api_url = 'http://10.0.2.2:1234'
 content_type_json = {'content-type': 'application/json'}
 
 
@@ -37,7 +38,7 @@ class ApiSession(object):
 
         data = dict()
         for k, v in profile.iteritems():
-            if k in ['username_linux', 'save_date']:
+            if k in ['save_date', 'username_linux', 'mac_addr', 'cpu_id']:
                 data[k] = v
 
         data['xp'] = calculate_xp()
@@ -52,6 +53,8 @@ class ApiSession(object):
         r = self.session.put(api_url + '/users/profile', data=json.dumps(data))
         print r.text
 
+
+# functions not part of ApiSession
 
 def create_user(email, username, password):
     payload = {

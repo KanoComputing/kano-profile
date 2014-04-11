@@ -152,7 +152,7 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui() and badge_changes:
         changes_list = list()
         for group, items in badge_changes.iteritems():
-            for item, unlocked in items.iteritems():
+            for item in items:
                 changes_list.append((group, item))
 
         chg_str = ' '.join(['{}:{}'.format(group, item) for group, item in changes_list])

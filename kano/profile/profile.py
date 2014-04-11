@@ -26,7 +26,7 @@ def load_profile():
 
 
 def save_profile(data):
-    data['last_save_date'] = get_date_now()
+    data['save_date'] = get_date_now()
     ensure_dir(profile_dir)
     write_json(profile_file, data)
 

@@ -6,7 +6,7 @@
 
 from __future__ import division
 
-from ..utils import read_json, get_date_now, is_gui, run_cmd
+from ..utils import read_json, is_gui, run_cmd
 from .paths import xp_file, levels_file, badges_file, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -129,11 +129,6 @@ def compare_badges_dict(old, new):
 
 
 def save_app_state_with_dialog(app_name, data):
-    if is_unlocked():
-        data['level'] = load_app_state(app_name)['level']
-
-    data['last_save_date'] = get_date_now()
-
     old_level, _ = calculate_kano_level()
     old_badges = calculate_badges()
 

@@ -49,7 +49,7 @@ def save_app_state(app_name, data):
         data['level'] = load_app_state(app_name)['level']
 
     app_state_file = get_app_state_file(app_name)
-    data['last_save_date'] = get_date_now()
+    data['save_date'] = get_date_now()
     ensure_dir(get_app_dir(app_name))
     write_json(app_state_file, data)
 

@@ -3,6 +3,8 @@
 import requests
 import json
 
+from kano.profile.profile import load_profile
+
 api_url = 'http://localhost:1234'
 content_type_json = {'content-type': 'application/json'}
 
@@ -26,6 +28,10 @@ class ApiSession(object):
                 return r.ok, r.text
         except requests.exceptions.ConnectionError:
             return False, "Connection error"
+
+    def upload_all(self):
+        data = dict()
+        profile = load_profile()
 
 
 def create_user(email, username, password):

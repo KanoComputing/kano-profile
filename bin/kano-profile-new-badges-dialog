@@ -20,13 +20,11 @@ from kano_profile_gui.images import get_image
 
 
 class MainWindow(Gtk.Window):
-    def __init__(self, newlevel, newbadges, newswags):
+    def __init__(self, newlevel, newbadges):
         if newlevel:
             title = 'Level Up!'
         elif newbadges:
             title = 'New Badges!'
-        elif newswags:
-            title = 'New Swags!'
         else:
             sys.exit('Nothing to display!')
 
@@ -40,12 +38,13 @@ class MainWindow(Gtk.Window):
         self.add(table)
 
         if newlevel:
-            msg = 'Congratulations, you\'ve leveled up to level {}!'.format(newlevel)
+            msg = "Congratulations, you've leveled up to level {}!".format(newlevel)
             label = Gtk.Label()
             label.set_text(msg)
             table.attach(label, 0, 1, 0, 1)
 
         elif newbadges:
+            print newbadges
             icon_table = Gtk.Table(len(newbadges), 2, False)
             for i, badge in enumerate(newbadges):
                 img_path = get_image(badge, 'badge')
@@ -64,9 +63,9 @@ class MainWindow(Gtk.Window):
         table.attach(button, 0, 1, 1, 2)
 
 
-def main(newlevel=None, newbadges=None, newswags=None):
+def main(newlevel=None, newbadges=None):
     if len(sys.argv) == 1:
-        sys.exit("Wrong usage")
+        sys.exit('Wrong usage')
 
     if sys.argv[1] == 'newlevel':
         newlevel = int(sys.argv[2])
@@ -76,7 +75,7 @@ def main(newlevel=None, newbadges=None, newswags=None):
     if not is_gui():
         sys.exit('Needs GUI to run!')
 
-    win = MainWindow(newlevel, newbadges, newswags)
+    win = MainWindow(newlevel, newbadges)
     win.connect('delete-event', Gtk.main_quit)
     win.show_all()
     Gtk.main()

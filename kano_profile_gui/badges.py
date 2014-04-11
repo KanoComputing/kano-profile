@@ -28,11 +28,11 @@ def activate(_win, _box, _label):
     _box.add(table)
 
     for i, (group, items) in enumerate(badges.iteritems()):
-        for j, item in enumerate(items):
-            print i, j, group, item, items[item]
+        for j, (item, unlocked) in enumerate(items.iteritems()):
+            print i, j, group, item, unlocked
 
             img = Gtk.Image()
-            if items[item]:
+            if unlocked:
                 img_path = get_image(item, group, img_width)
                 img.set_from_file(img_path)
             else:

@@ -18,6 +18,8 @@ if __name__ == '__main__' and __package__ is None:
 from kano.utils import is_gui
 from kano_profile_gui.images import get_image
 
+img_width = 50
+
 
 class MainWindow(Gtk.Window):
     def __init__(self, newlevel, newbadges):
@@ -46,14 +48,15 @@ class MainWindow(Gtk.Window):
         elif newbadges:
             print newbadges
             icon_table = Gtk.Table(len(newbadges), 2, False)
-            for i, badge in enumerate(newbadges):
-                img_path = get_image(badge, 'badge')
+            for i, item_str in enumerate(newbadges):
+                group, item = item_str.split(':')
+                img_path = get_image(item, group, img_width)
                 img = Gtk.Image()
                 img.set_from_file(img_path)
                 icon_table.attach(img, i, i + 1, 0, 1)
 
                 label = Gtk.Label()
-                label.set_text(badge)
+                label.set_text('{} {}'.format(group, item))
                 icon_table.attach(label, i, i + 1, 1, 2)
             table.attach(icon_table, 0, 1, 0, 1)
 

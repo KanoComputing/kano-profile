@@ -70,48 +70,78 @@ def calculate_kano_level():
 
 
 def calculate_badges():
+
+    # helper function to calculate operations
+    def do_calculate(select_push_back):
+        for category, items in rules.iteritems():
+            for item, rule in items.iteritems():
+                target_pushback = 'push_back' in rule and rule['push_back'] is True
+                if target_pushback != select_push_back:
+                    continue
+
+                if rule['operation'] == 'stat_gta':
+                    achieved = True
+                    for target in rule['targets']:
+                        app = target[0]
+                        variable = target[1]
+                        value = target[2]
+
+                        if app not in app_list or variable not in app_state[app]:
+                            achieved = False
+                            break
+                        achieved &= app_state[app][variable] >= value
+                    badges.setdefault(category, dict())[item] = achieved
+
+                elif rule['operation'] == 'stat_sum_gt':
+                    sum = 0
+                    for target in rule['targets']:
+                        app = target[0]
+                        variable = target[1]
+
+                        if app not in app_list or variable not in app_state[app]:
+                            continue
+
+                        sum += float(app_state[app][variable])
+
+                    achieved = sum >= rule['value']
+                    badges.setdefault(category, dict())[item] = achieved
+
+                else:
+                    print 'unknown uperation {}'.format(rule['operation'])
+
+    def count_offline_badges():
+        count = 0
+        for category, items in badges.iteritems():
+            for item, value in items.iteritems():
+                if value:
+                    count += 1
+        return count
+
     rules = read_json(badges_file)
     if not rules:
         return
 
-    kano_level, _ = calculate_kano_level()
-    app_list = get_app_list()
+    app_list = get_app_list() + ['kano-world']
     app_state = dict()
     for app in app_list:
         app_state[app] = load_app_state(app)
 
+    # special app: kanoprofile
+    profile_state = dict()
+    profile_state['xp'] = calculate_xp()
+    profile_state['level'], _ = calculate_kano_level()
+    app_state['kano-world'] = profile_state
+
     badges = dict()
-    for category, items in rules.iteritems():
-        for name, rule in items.iteritems():
-            if rule['operation'] == 'stat_gta':
-                achieved = True
-                for target in rule['targets']:
-                    app = target[0]
-                    variable = target[1]
-                    value = target[2]
 
-                    if app not in app_list or variable not in app_state[app]:
-                        achieved = False
-                        continue
-                    achieved &= app_state[app][variable] >= value
-                badges.setdefault(category, dict())[name] = achieved
+    # normal ones
+    do_calculate(False)
 
-            elif rule['operation'] == 'stat_sum_gt':
-                sum = 0
-                for target in rule['targets']:
-                    app = target[0]
-                    variable = target[1]
+    # count offline badges
+    app_state['kano-world']['num_offline_badges'] = count_offline_badges()
 
-                    if app not in app_list or variable not in app_state[app]:
-                        continue
-
-                    sum += float(app_state[app][variable])
-
-                achieved = sum >= rule['value']
-                badges.setdefault(category, dict())[name] = achieved
-
-            else:
-                print 'unknown uperation {}'.format(rule['operation'])
+    # add pushed back ones
+    do_calculate(True)
 
     return badges
 

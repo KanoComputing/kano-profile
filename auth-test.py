@@ -20,7 +20,7 @@ def do_login(email, password):
         except Exception:
             sys.exit('Cannot log in with fresh token')
     else:
-        print 'Cannot log in, problem: {}'.format(value)
+        sys.exit('Cannot log in, problem: {}'.format(value))
 
 
 def do_register(email, username, password):
@@ -58,5 +58,10 @@ if __name__ == '__main__':
             s = ApiSession(profile['token'])
         except Exception:
             do_login(email, password)
+
+    if not s:
+        sys.exit('Something really really strange is happening... :-(')
+
+    s.upload_all_stats()
 
 

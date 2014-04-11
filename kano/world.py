@@ -3,7 +3,10 @@
 import requests
 import json
 
+from kano.utils import get_date_now
 from kano.profile.profile import load_profile
+from kano.profile.badges import calculate_xp
+from kano.profile.apps import get_app_list, load_app_state
 
 api_url = 'http://localhost:1234'
 content_type_json = {'content-type': 'application/json'}
@@ -29,9 +32,25 @@ class ApiSession(object):
         except requests.exceptions.ConnectionError:
             return False, "Connection error"
 
-    def upload_all(self):
-        data = dict()
+    def upload_all_stats(self):
         profile = load_profile()
+
+        data = dict()
+        for k, v in profile.iteritems():
+            if k in ['username_linux', 'save_date']:
+                data[k] = v
+
+        data['xp'] = calculate_xp()
+        data['upload_date'] = get_date_now()
+
+        stats = dict()
+        for app in get_app_list():
+            stats[app] = load_app_state(app)
+        data['stats'] = stats
+        print data
+
+        r = self.session.put(api_url + '/users/profile', data=json.dumps(data))
+        print r.text
 
 
 def create_user(email, username, password):

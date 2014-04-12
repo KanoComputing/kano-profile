@@ -50,7 +50,10 @@ class ApiSession(object):
         data['stats'] = stats
         print data
 
-        r = self.session.put(api_url + '/users/profile', data=json.dumps(data))
+        payload = dict()
+        payload['values'] = data
+
+        r = self.session.put(api_url + '/users/profile', data=json.dumps(payload), headers=content_type_json)
         print r.text
 
 

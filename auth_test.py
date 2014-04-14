@@ -4,6 +4,8 @@ import sys
 from kano.world import create_user, KanoWorldSession, login
 from kano.profile.profile import load_profile, save_profile
 
+profile = {}
+
 
 def do_login(email, password):
     global profile, s
@@ -17,10 +19,12 @@ def do_login(email, password):
         save_profile(profile)
         try:
             s = KanoWorldSession(profile['token'])
+            return 0
         except Exception:
-            sys.exit('Cannot log in with fresh token')
+            return "There may be a problem with our servers.  Try again later."
+
     else:
-        sys.exit('Cannot log in, problem: {}'.format(value))
+        return 'Cannot log in, problem: {}'.format(value)
 
 
 def do_register(email, username, password):
@@ -33,8 +37,9 @@ def do_register(email, username, password):
         profile['kanoworld_id'] = value['user']['id']
         profile['email'] = email
         save_profile(profile)
+        return [True, email]
     else:
-        sys.exit(value)
+        return [False, value]
 
 
 if __name__ == '__main__':
@@ -62,7 +67,11 @@ if __name__ == '__main__':
     if not s:
         sys.exit('Something really really strange is happening... :-(')
 
+<<<<<<< HEAD:auth-test.py
     s.upload_profile_stats()
     s.upload_private_data()
 
 
+=======
+    s.upload_public()
+>>>>>>> refs/heads/update-login-screen:auth_test.py

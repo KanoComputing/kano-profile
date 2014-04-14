@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# main.py
+# kano-login-dialog.py
 #
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -8,8 +8,16 @@
 # UI for login screen
 
 from gi.repository import Gtk, Gdk
-import components.top_bar as top_bar
-import home
+import os
+import sys
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.append(dir_path)
+
+import kano_login_dialog.components.top_bar as top_bar
+import kano_login_dialog.home as home
 
 
 class MainWindow(Gtk.Window):
@@ -68,7 +76,7 @@ def main():
 
     # Create style sheet
     cssProvider = Gtk.CssProvider()
-    cssProvider.load_from_path('style.css')
+    cssProvider.load_from_path('../media/CSS/login.css')
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)

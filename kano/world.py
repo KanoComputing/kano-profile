@@ -12,6 +12,29 @@ api_url = 'http://localhost:1234'
 # api_url = 'http://10.0.2.2:1234'
 content_type_json = {'content-type': 'application/json'}
 
+apps_private = ['kano-settings']
+
+
+def request_wrapper(method, endpoint, data=None, headers=None, session=None):
+    if method not in ['put', 'get', 'post', 'delete']:
+        return False, 'Wrong method name!'
+
+    if session:
+        req_object = session
+    else:
+        req_object = requests
+
+    method = getattr(req_object, method)
+
+    try:
+        r = method(api_url + endpoint, data=data, headers=headers)
+        if r.ok:
+            return r.ok, r.json()
+        else:
+            return r.ok, r.text
+    except requests.exceptions.ConnectionError:
+        return False, "Connection error"
+
 
 class KanoWorldSession(object):
     session = requests.Session()
@@ -23,41 +46,47 @@ class KanoWorldSession(object):
             raise Exception(value)
 
     def test_auth(self):
-        try:
-            r = self.session.get(api_url + '/auth/is-authenticated')
-            if r.ok:
-                return r.ok, 'OK'
-            else:
-                # return error
-                return r.ok, r.text
-        except requests.exceptions.ConnectionError:
-            return False, "Connection error"
+        return request_wrapper('get', '/auth/is-authenticated')
 
-    def upload_all_stats(self):
+    def upload_public(self):
         profile = load_profile()
 
+        # append profile data
         data = dict()
         for k, v in profile.iteritems():
             if k in ['save_date', 'username_linux', 'mac_addr', 'cpu_id']:
                 data[k] = v
 
+        # append xp and upload date
         data['xp'] = calculate_xp()
         data['upload_date'] = get_date_now()
 
         stats = dict()
         for app in get_app_list():
-            stats[app] = load_app_state(app)
+            if app not in apps_private:
+                stats[app] = load_app_state(app)
+
+        # append stats
         data['stats'] = stats
-        print data
 
         payload = dict()
         payload['values'] = data
 
-        r = self.session.put(api_url + '/users/profile', data=json.dumps(payload), headers=content_type_json)
-        print r.text
+        return request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json)
+
+    def upload_private(self):
+        data = dict()
+        for app in get_app_list():
+            if app in apps_private:
+                data[app] = load_app_state(app)
+
+        payload = dict()
+        payload['data'] = data
+
+        return request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json)
 
 
-# functions not part of ApiSession
+# functions not needing a sessions
 
 def create_user(email, username, password):
     payload = {
@@ -65,31 +94,16 @@ def create_user(email, username, password):
         'username': username,
         'password': password
     }
-    try:
-        r = requests.post(api_url + '/users', data=json.dumps(payload), headers=content_type_json)
-        if r.ok:
-            return r.ok, r.json()
-        else:
-            return r.ok, r.text
-    except requests.exceptions.ConnectionError:
-        return False, "Connection error"
+
+    return request_wrapper('post', '/users', json.dumps(payload), content_type_json)
 
 
 def login(email, password):
-        payload = {
-            'email': email,
-            'password': password
-        }
-        try:
-            r = requests.post(api_url + '/auth', data=json.dumps(payload), headers=content_type_json)
-            if r.ok:
-                # return token
-                return r.ok, r.json()
-            else:
-                # return error
-                return r.ok, r.text
-        except requests.exceptions.ConnectionError:
-            return False, "Connection error"
+    payload = {
+        'email': email,
+        'password': password
+    }
 
+    return request_wrapper('post', '/auth', json.dumps(payload), content_type_json)
 
 

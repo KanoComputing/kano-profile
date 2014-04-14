@@ -9,7 +9,7 @@ import sys
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
-        sys.path.append(dir_path)
+        sys.path.insert(1, dir_path)
 
 from kano.profile.apps import get_app_data_dir, load_app_state_variable
 from kano.profile.profile import set_unlocked

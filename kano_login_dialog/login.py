@@ -11,6 +11,7 @@ from gi.repository import Gtk
 
 from components import heading, green_button
 from kano.world import login_profile
+from kano.profile.profile import load_profile
 
 
 def activate(_win, _box):
@@ -19,8 +20,14 @@ def activate(_win, _box):
 
     title = heading.Heading("Log in", "Open up your world")
 
-    username_entry.props.placeholder_text = "Username"
-    password_entry.props.placeholder_text = "Password"
+    profile = load_profile()
+    if 'email' in profile and profile['email']:
+        username = profile['email']
+    else:
+        username = 'e-mail address'
+
+    username_entry.props.placeholder_text = username
+    password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
     login = green_button.Button("LOG IN")

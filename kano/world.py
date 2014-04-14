@@ -150,3 +150,16 @@ def remove_token():
     profile.pop('token', None)
     save_profile(profile)
 
+
+def login_test():
+    if not is_registered() or not has_token():
+        return False
+
+    try:
+        profile = load_profile()
+        KanoWorldSession(profile['token'])
+        return True
+    except Exception:
+        return False
+
+

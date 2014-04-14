@@ -17,8 +17,9 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile_gui.paths import css_dir
-from kano_login_dialog import home
+from kano_login_dialog import home, login
 from kano_login_dialog.components import top_bar
+from kano.world import is_registered, login_test
 
 
 class MainWindow(Gtk.Window):
@@ -49,7 +50,19 @@ class MainWindow(Gtk.Window):
         self.grid.attach(self.box, 1, 1, 1, 1)
 
         # init home screen
-        home.activate(self, self.box)
+        if not is_registered():
+            home.activate(self, self.box)
+
+        # go directly to login
+        else:
+            for i in self.box.get_children():
+                self.box.remove(i)
+
+            self.top_bar.enable_prev()
+            self.top_bar.disable_next()
+
+            login.activate(self, self.box)
+            self.show_all()
 
     # Takes you back to the home screen (on pressing prev button)
     def on_prev(self, arg2=None):
@@ -74,6 +87,9 @@ class MainWindow(Gtk.Window):
 
 
 def main():
+    if login_test():
+        print "Login OK"
+        return
 
     # Create style sheet
     cssProvider = Gtk.CssProvider()

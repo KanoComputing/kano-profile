@@ -13,7 +13,7 @@ api_url = 'http://localhost:1234'
 content_type_json = {'content-type': 'application/json'}
 
 
-class ApiSession(object):
+class KanoWorldSession(object):
     session = requests.Session()
 
     def __init__(self, token):

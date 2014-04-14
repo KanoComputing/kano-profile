@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from kano.world import create_user, ApiSession, login
+from kano.world import create_user, KanoWorldSession, login
 from kano.profile.profile import load_profile, save_profile
 
 
@@ -16,7 +16,7 @@ def do_login(email, password):
         profile['email'] = email
         save_profile(profile)
         try:
-            s = ApiSession(profile['token'])
+            s = KanoWorldSession(profile['token'])
         except Exception:
             sys.exit('Cannot log in with fresh token')
     else:
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     if 'token' in profile:
         try:
-            s = ApiSession(profile['token'])
+            s = KanoWorldSession(profile['token'])
         except Exception:
             do_login(email, password)
 

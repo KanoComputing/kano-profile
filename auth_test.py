@@ -67,11 +67,5 @@ if __name__ == '__main__':
     if not s:
         sys.exit('Something really really strange is happening... :-(')
 
-<<<<<<< HEAD:auth-test.py
     s.upload_profile_stats()
     s.upload_private_data()
-
-
-=======
-    s.upload_public()
->>>>>>> refs/heads/update-login-screen:auth_test.py

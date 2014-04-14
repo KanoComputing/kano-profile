@@ -62,6 +62,6 @@ if __name__ == '__main__':
     if not s:
         sys.exit('Something really really strange is happening... :-(')
 
-    s.upload_all_stats()
+    s.upload_public()
 
 

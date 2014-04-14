@@ -46,7 +46,7 @@ class KanoWorldSession(object):
             raise Exception(value)
 
     def test_auth(self):
-        return request_wrapper('get', '/auth/is-authenticated')
+        return request_wrapper('get', '/auth/is-authenticated', session=self.session)
 
     def upload_public(self):
         profile = load_profile()
@@ -72,7 +72,7 @@ class KanoWorldSession(object):
         payload = dict()
         payload['values'] = data
 
-        return request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json)
+        return request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json, session=self.session)
 
     def upload_private(self):
         data = dict()
@@ -83,7 +83,7 @@ class KanoWorldSession(object):
         payload = dict()
         payload['data'] = data
 
-        return request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json)
+        return request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json, session=self.session)
 
 
 # functions not needing a sessions

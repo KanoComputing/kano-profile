@@ -8,6 +8,7 @@
 # Creates pixbufs that we can use to make images from.  Uses a strip of icons, each 24px by 24px.
 
 from gi.repository import GdkPixbuf
+import kano_login_dialog.constants as constants
 
 # To make an image using the pixbuf icon, use the command below:
 # image.set_from_pixbuf(self.pixbuf)
@@ -35,5 +36,5 @@ class Icons():
         elif name == "dropdown_arrow":
             icon_number = 7
         # Create main window
-        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size('../media/icons/systemsetup-icons.png', 192, 24)
+        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(constants.media + '/icons/systemsetup-icons.png', 192, 24)
         self.subpixbuf = self.pixbuf.new_subpixbuf(24 * icon_number, 0, 24, 24).add_alpha(True, 255, 255, 255)

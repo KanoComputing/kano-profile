@@ -1,2 +1,7 @@
 *.pyc
+/kano/utils.py
+/token
 
+/kano/__init__.py
+
+/npm-debug.log

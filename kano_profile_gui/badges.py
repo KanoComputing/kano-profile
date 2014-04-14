@@ -1,40 +1,41 @@
 #!/usr/bin/env python
 
-# badges.py
-#
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-import math
+import os
 from gi.repository import Gtk
 
-import kano.profile as kp
-import kano_profile_gui.images as images
+from kano.profile.badges import calculate_badges
+from .images import get_image
+from .paths import icon_dir
+
+img_width = 50
 
 
 def activate(_win, _box, _label):
     _label.set_text('Badges')
 
-    badges = kp.calculate_badges_swags('badges')
+    badges = {k: v for k, v in calculate_badges().iteritems() if not k.startswith('swag_')}
     if not badges:
         return
 
-    total_number = len(badges)
-    dim = int(math.ceil(math.sqrt(total_number)))
+    num_categories = len(badges.keys())
+    max_items = max([len(v) for k, v in badges.iteritems()])
 
-    table = Gtk.Table(dim, dim, False)
+    table = Gtk.Table(num_categories, max_items, False)
     _box.add(table)
 
-    for i, badge in enumerate(badges):
-        x = i % dim
-        y = i / dim
+    for i, (group, items) in enumerate(badges.iteritems()):
+        for j, (item, unlocked) in enumerate(items.iteritems()):
+            print i, j, group, item, unlocked
 
-        img = Gtk.Image()
-        if badges[badge]:
-            img_path = images.get_image(badge, 'badge')
-            img.set_from_file(img_path)
-        else:
-            img.set_from_file('/usr/share/kano-profile/media/icons/questionmark.png')
+            img = Gtk.Image()
+            if unlocked:
+                img_path = get_image(item, group, img_width)
+                img.set_from_file(img_path)
+            else:
+                img.set_from_file(os.path.join(icon_dir, str(img_width), '_locked.png'))
 
-        table.attach(img, x, x + 1, y, y + 1)
+            table.attach(img, j, j + 1, i, i + 1)

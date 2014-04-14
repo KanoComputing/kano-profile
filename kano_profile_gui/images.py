@@ -8,23 +8,24 @@
 
 import os
 
+from kano.utils import ensure_dir
+from .paths import icon_dir
 
-def get_image(name, pre):
-    icon_dir = '/usr/share/kano-profile/media/icons'
-    filename = '{}_{}.png'.format(pre, name)
-    fullpath = os.path.join(icon_dir, filename)
+
+def get_image(name, category, width):
+    img_folder = os.path.join(icon_dir, str(width))
+    filename = '{category}_{name}.png'.format(category=category, name=name)
+    fullpath = os.path.join(img_folder, filename)
     if not os.path.exists(fullpath):
         try:
-            # TODO: remove random avatar generation from production!
             from randomavatar.randomavatar import Avatar
+            ensure_dir(img_folder)
             avatar = Avatar(rows=10, columns=10)
-            image_byte_array = avatar.get_image(
-                string=filename,
-                width=108, height=108, pad=10)
-            avatar.save(
-                image_byte_array=image_byte_array,
-                save_location=fullpath)
+            image_byte_array = avatar.get_image(string=filename, width=width, height=width, pad=10)
+            avatar.save(image_byte_array=image_byte_array, save_location=fullpath)
             print '{} created'.format(fullpath)
         except Exception:
-            return '/usr/share/kano-profile/media/icons/_missing.png'
+            return os.path.join(icon_dir, '50/_missing.png')
     return fullpath
+
+

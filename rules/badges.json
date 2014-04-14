@@ -116,7 +116,7 @@
     "avatar_something": {
       "operation": "stat_gta",
       "targets": [
-        ["kano_world", "kano_level", 3]
+        ["kano-world", "kano_level", 3]
       ]
     },
     "avatar_kano_master": {

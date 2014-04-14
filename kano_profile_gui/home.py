@@ -7,8 +7,9 @@
 #
 
 from gi.repository import Gtk
-import kano.profile as kp
 import kano_profile_gui.components.home_stats as home_stats
+from kano.profile.profile import load_profile
+from kano.profile.badges import calculate_xp, calculate_kano_level
 
 PICTURE_HEIGHT = 250
 
@@ -16,10 +17,10 @@ PICTURE_HEIGHT = 250
 def activate(_win, _box):
     #_label.set_text('Home')
 
-    profile = kp.load_profile()
+    profile = load_profile()
 
-    xp = kp.calculate_xp()
-    level, progress = kp.calculate_kano_level()
+    xp = calculate_xp()
+    level, progress = calculate_kano_level()
     name = profile['username_linux']
 
     # Picture box - contains image depends on level reached

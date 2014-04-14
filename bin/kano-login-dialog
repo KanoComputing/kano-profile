@@ -16,15 +16,16 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-import kano_login_dialog.components.top_bar as top_bar
-import kano_login_dialog.home as home
+from kano.profile_gui.paths import css_dir
+from .components import top_bar
+from . import home
 
 
 class MainWindow(Gtk.Window):
 
     def __init__(self):
         # Create main window
-        Gtk.Window.__init__(self, title='Kano-Profile')
+        Gtk.Window.__init__(self, title='Kano Login')
         self.WINDOW_HEIGHT = 380
         self.WINDOW_WIDTH = 500
 
@@ -76,7 +77,11 @@ def main():
 
     # Create style sheet
     cssProvider = Gtk.CssProvider()
-    cssProvider.load_from_path('../media/CSS/login.css')
+    css_file = os.path.join(css_dir, 'login.css')
+    if not os.path.exists(css_file):
+        sys.exit('CSS file missing!')
+    cssProvider.load_from_path(css_file)
+
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)

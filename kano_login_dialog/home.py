@@ -8,10 +8,9 @@
 # UI for home screen.  User can choose to login or register from here
 
 from gi.repository import Gtk
-import login
-import register
-import components.heading as heading
-import components.green_button as green_button
+
+from . import login, register
+from components import heading, green_button
 
 win = None
 box = None
@@ -30,6 +29,7 @@ def activate(_win, _box):
 
     loginB = green_button.Button("Yes! Let me log in")
     loginB.button.set_size_request(200, 44)
+
     registerB = green_button.Button("I want to create a new account")
     registerB.button.set_size_request(300, 44)
 

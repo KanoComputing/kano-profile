@@ -131,3 +131,11 @@ def register_profile(email, username, password, profile):
         return True, email
     else:
         return False, text
+
+
+def is_registered():
+    return 'kanoworld_id' in load_profile()
+
+
+def is_logged_in():
+    return 'token' in load_profile()

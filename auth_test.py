@@ -37,9 +37,9 @@ def do_register(email, username, password):
         profile['kanoworld_id'] = value['user']['id']
         profile['email'] = email
         save_profile(profile)
-        return 0
+        return [True, email]
     else:
-        return value
+        return [False, value]
 
 
 if __name__ == '__main__':

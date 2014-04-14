@@ -49,23 +49,21 @@ def register_user(button, event, email_entry, username_entry, password_entry, wi
     print 'email = {0} , username = {1} , password = {2}'.format(email_text, username_text, password_text)
     response = auth_test.do_register(email_text, username_text, password_text)
     print "response = " + str(response)
-    if response != 0:
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.ERROR,
-                                   Gtk.ButtonsType.OK, "Houston, we have a problem")
-        dialog.format_secondary_text(response)
+    if response[0]:
+        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
+                                   Gtk.ButtonsType.OK, "Registered!")
+        dialog.format_secondary_text("Activate your account - check " + response[1] + " for an email")
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             dialog.destroy()
         else:
             dialog.destroy()
-
     else:
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
-                                   Gtk.ButtonsType.OK, "Registered!")
-        dialog.format_secondary_text("Yay!")
+        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.ERROR,
+                                   Gtk.ButtonsType.OK, "Houston, we have a problem")
+        dialog.format_secondary_text(response[1])
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             dialog.destroy()
-            Gtk.main_quit()
         else:
             dialog.destroy()

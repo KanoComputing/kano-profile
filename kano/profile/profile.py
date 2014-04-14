@@ -13,19 +13,20 @@ def load_profile():
     if not data:
         data = dict()
 
-    if 'username_linux' not in data:
-        data['username_linux'] = linux_user
+    data['username_linux'] = linux_user
 
-    if 'cpu_id' not in data and get_cpu_id():
-        data['device_id'] = get_cpu_id()
+    if get_cpu_id():
+        data['cpu_id'] = get_cpu_id()
 
-    if 'mac_addr' not in data and get_mac_address():
+    if get_mac_address():
         data['mac_addr'] = get_mac_address()
 
     return data
 
 
 def save_profile(data):
+    data.pop('cpu_id', None)
+    data.pop('mac_addr', None)
     data['save_date'] = get_date_now()
     ensure_dir(profile_dir)
     write_json(profile_file, data)

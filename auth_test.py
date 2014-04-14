@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import sys
-from kano.world import create_user, ApiSession, login
+from kano.world import create_user, KanoWorldSession, login
 from kano.profile.profile import load_profile, save_profile
+
+profile = {}
 
 
 def do_login(email, password):
@@ -16,15 +18,12 @@ def do_login(email, password):
         profile['email'] = email
         save_profile(profile)
         try:
-            s = ApiSession(profile['token'])
-            print 0
+            s = KanoWorldSession(profile['token'])
             return 0
         except Exception:
-            print "There may be a problem with our servers.  Try again later."
             return "There may be a problem with our servers.  Try again later."
 
     else:
-        print 'Cannot log in, problem: {}'.format(value)
         return 'Cannot log in, problem: {}'.format(value)
 
 
@@ -38,10 +37,8 @@ def do_register(email, username, password):
         profile['kanoworld_id'] = value['user']['id']
         profile['email'] = email
         save_profile(profile)
-        print 0
         return 0
     else:
-        print value
         return value
 
 
@@ -63,11 +60,11 @@ if __name__ == '__main__':
 
     if 'token' in profile:
         try:
-            s = ApiSession(profile['token'])
+            s = KanoWorldSession(profile['token'])
         except Exception:
             do_login(email, password)
 
     if not s:
         sys.exit('Something really really strange is happening... :-(')
 
-    s.upload_all_stats()
+    s.upload_public()

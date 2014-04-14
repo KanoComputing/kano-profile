@@ -60,7 +60,7 @@ def register_user(button, event, email_entry, username_entry, password_entry, wi
             dialog.destroy()
 
     else:
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.SUCCESS,
+        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
                                    Gtk.ButtonsType.OK, "Registered!")
         dialog.format_secondary_text("Yay!")
         response = dialog.run()

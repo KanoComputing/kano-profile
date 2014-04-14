@@ -56,7 +56,7 @@ def log_user_in(button, event, username_entry, password_entry, win):
             dialog.destroy()
 
     else:
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.SUCCESS,
+        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
                                    Gtk.ButtonsType.OK, "Logged in!")
         dialog.format_secondary_text("Yay!")
         response = dialog.run()

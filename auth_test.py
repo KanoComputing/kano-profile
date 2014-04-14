@@ -17,10 +17,15 @@ def do_login(email, password):
         save_profile(profile)
         try:
             s = ApiSession(profile['token'])
+            print 0
+            return 0
         except Exception:
-            sys.exit('Cannot log in with fresh token')
+            print "There may be a problem with our servers.  Try again later."
+            return "There may be a problem with our servers.  Try again later."
+
     else:
-        sys.exit('Cannot log in, problem: {}'.format(value))
+        print 'Cannot log in, problem: {}'.format(value)
+        return 'Cannot log in, problem: {}'.format(value)
 
 
 def do_register(email, username, password):
@@ -33,8 +38,11 @@ def do_register(email, username, password):
         profile['kanoworld_id'] = value['user']['id']
         profile['email'] = email
         save_profile(profile)
+        print 0
+        return 0
     else:
-        sys.exit(value)
+        print value
+        return value
 
 
 if __name__ == '__main__':
@@ -63,5 +71,3 @@ if __name__ == '__main__':
         sys.exit('Something really really strange is happening... :-(')
 
     s.upload_all_stats()
-
-

@@ -10,6 +10,7 @@
 from gi.repository import Gtk
 import components.heading as heading
 import components.green_button as green_button
+import auth_test
 
 
 def activate(_win, _box):
@@ -23,7 +24,7 @@ def activate(_win, _box):
     password_entry.set_visibility(False)
 
     login = green_button.Button("LOG IN")
-    login.button.connect("button_press_event", log_user_in, username_entry, password_entry)
+    login.button.connect("button_press_event", log_user_in, username_entry, password_entry, _win)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     container.pack_start(username_entry, False, False, 0)
@@ -38,7 +39,30 @@ def activate(_win, _box):
     _box.pack_start(login.box, False, False, 30)
 
 
-def log_user_in(button, event, username_entry, password_entry):
+def log_user_in(button, event, username_entry, password_entry, win):
     username_text = username_entry.get_text()
     password_text = password_entry.get_text()
     print 'username = {0} , password = {1}'.format(username_text, password_text)
+    response = auth_test.do_login(username_text, password_text)
+    print "response = " + str(response)
+    if response != 0:
+        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.ERROR,
+                                   Gtk.ButtonsType.OK, "Houston, we have a problem")
+        dialog.format_secondary_text(response)
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            dialog.destroy()
+        else:
+            dialog.destroy()
+
+    else:
+        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.SUCCESS,
+                                   Gtk.ButtonsType.OK, "Logged in!")
+        dialog.format_secondary_text("Yay!")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            dialog.destroy()
+            Gtk.main_quit()
+        else:
+            dialog.destroy()
+

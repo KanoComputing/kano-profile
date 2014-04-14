@@ -4,12 +4,13 @@ import requests
 import json
 
 from kano.utils import get_date_now
-from kano.profile.profile import load_profile
+from kano.profile.profile import load_profile, save_profile
 from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state
 
-api_url = 'http://localhost:1234'
+# api_url = 'http://localhost:1234'
 # api_url = 'http://10.0.2.2:1234'
+api_url = 'http://10.0.1.91:1234'
 content_type_json = {'content-type': 'application/json'}
 
 apps_private = ['kano-settings']
@@ -29,11 +30,11 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None):
     try:
         r = method(api_url + endpoint, data=data, headers=headers)
         if r.ok:
-            return r.ok, r.json()
+            return r.ok, None, r.json()
         else:
-            return r.ok, r.text
+            return r.ok, r.text, None
     except requests.exceptions.ConnectionError:
-        return False, "Connection error"
+        return False, 'Connection error', None
 
 
 class KanoWorldSession(object):
@@ -41,9 +42,9 @@ class KanoWorldSession(object):
 
     def __init__(self, token):
         self.session.headers.update({'Authorization': token})
-        success, value = self.test_auth()
+        success, text, _ = self.test_auth()
         if not success:
-            raise Exception(value)
+            raise Exception(text)
 
     def test_auth(self):
         return request_wrapper('get', '/auth/is-authenticated', session=self.session)
@@ -86,15 +87,12 @@ class KanoWorldSession(object):
         return request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json, session=self.session)
 
 
-# functions not needing a sessions
-
 def create_user(email, username, password):
     payload = {
         'email': email,
         'username': username,
         'password': password
     }
-
     return request_wrapper('post', '/users', json.dumps(payload), content_type_json)
 
 
@@ -103,7 +101,33 @@ def login(email, password):
         'email': email,
         'password': password
     }
-
     return request_wrapper('post', '/auth', json.dumps(payload), content_type_json)
 
 
+def login_profile(email, password, profile):
+    success, text, data = login(email=email, password=password)
+    if success:
+        profile['token'] = data['session']['token']
+        profile['kanoworld_username'] = data['session']['user']['username']
+        profile['kanoworld_id'] = data['session']['user']['id']
+        profile['email'] = email
+        save_profile(profile)
+        try:
+            session = KanoWorldSession(profile['token'])
+            return True, None, session
+        except Exception:
+            return False, 'There may be a problem with our servers.  Try again later.', None
+    else:
+        return False, 'Cannot log in, problem: {}'.format(text), None
+
+
+def register_profile(email, username, password, profile):
+    success, text, data = create_user(email=email, username=username, password=password)
+    if success:
+        profile['kanoworld_username'] = data['user']['username']
+        profile['kanoworld_id'] = data['user']['id']
+        profile['email'] = email
+        save_profile(profile)
+        return True, email
+    else:
+        return False, text

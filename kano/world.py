@@ -48,7 +48,7 @@ class KanoWorldSession(object):
     def test_auth(self):
         return request_wrapper('get', '/auth/is-authenticated', session=self.session)
 
-    def upload_public(self):
+    def upload_profile_stats(self):
         profile = load_profile()
 
         # append profile data
@@ -74,7 +74,7 @@ class KanoWorldSession(object):
 
         return request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json, session=self.session)
 
-    def upload_private(self):
+    def upload_private_data(self):
         data = dict()
         for app in get_app_list():
             if app in apps_private:

@@ -14,6 +14,7 @@ api_url = 'http://10.0.1.91:1234'
 content_type_json = {'content-type': 'application/json'}
 
 apps_private = ['kano-settings']
+glob_session = None
 
 
 def request_wrapper(method, endpoint, data=None, headers=None, session=None):
@@ -104,26 +105,29 @@ def login(email, password):
     return request_wrapper('post', '/auth', json.dumps(payload), content_type_json)
 
 
-def login_profile(email, password, profile):
+def login_profile(email, password):
+    global glob_session
     success, text, data = login(email=email, password=password)
     if success:
+        profile = load_profile()
         profile['token'] = data['session']['token']
         profile['kanoworld_username'] = data['session']['user']['username']
         profile['kanoworld_id'] = data['session']['user']['id']
         profile['email'] = email
         save_profile(profile)
         try:
-            session = KanoWorldSession(profile['token'])
-            return True, None, session
+            glob_session = KanoWorldSession(profile['token'])
+            return True, None
         except Exception:
-            return False, 'There may be a problem with our servers.  Try again later.', None
+            return False, 'There may be a problem with our servers.  Try again later.'
     else:
-        return False, 'Cannot log in, problem: {}'.format(text), None
+        return False, 'Cannot log in, problem: {}'.format(text)
 
 
-def register_profile(email, username, password, profile):
+def register_profile(email, username, password):
     success, text, data = create_user(email=email, username=username, password=password)
     if success:
+        profile = load_profile()
         profile['kanoworld_username'] = data['user']['username']
         profile['kanoworld_id'] = data['user']['id']
         profile['email'] = email
@@ -137,5 +141,12 @@ def is_registered():
     return 'kanoworld_id' in load_profile()
 
 
-def is_logged_in():
+def has_token():
     return 'token' in load_profile()
+
+
+def remove_token():
+    profile = load_profile()
+    profile.pop('token', None)
+    save_profile(profile)
+

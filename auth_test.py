@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
 import sys
-from kano.world import KanoWorldSession, register_profile, login_profile, \
+from kano.world import register_profile, login_profile, \
     is_registered, is_logged_in
-from kano.profile.profile import load_profile
 
 
 if __name__ == '__main__':
@@ -11,26 +10,26 @@ if __name__ == '__main__':
     username = '9abc'
     password = 'passwd'
 
-    profile = load_profile()
     session = None
 
     # login or register of id not in profile
     if not is_registered():
         answer = raw_input('Register or login? [r/l]: ')
         if answer.lower() == 'r':
-            success, text = register_profile(email, username, password, profile)
+            success, text = register_profile(email, username, password)
             if not success:
                 sys.exit(text)
         elif answer.lower() == 'l':
-            success, text, session = login_profile(email, password, profile)
+            success, text = login_profile(email, password)
             if not success:
                 sys.exit(text)
 
     if is_logged_in():
         try:
-            session = KanoWorldSession(profile['token'])
+            # session = KanoWorldSession(profile['token'])
+            pass
         except Exception:
-            success, text, session = login_profile(email, password, profile)
+            success, text = login_profile(email, password)
             if not success:
                 sys.exit(text)
 

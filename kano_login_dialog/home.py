@@ -9,8 +9,8 @@
 
 from gi.repository import Gtk
 
-from . import login, register
 from components import heading, green_button
+from . import login, register
 
 win = None
 box = None

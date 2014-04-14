@@ -16,9 +16,9 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.profile_gui.paths import css_dir
-from .components import top_bar
-from . import home
+from kano_profile_gui.paths import css_dir
+from kano_login_dialog import home
+from kano_login_dialog.components import top_bar
 
 
 class MainWindow(Gtk.Window):

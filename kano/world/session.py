@@ -7,13 +7,12 @@
 import requests
 import json
 
-from kano.utils import get_date_now
+from kano.utils import get_date_now, download_url
 from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state, save_app_state
 
 from .connection import request_wrapper, content_type_json
-
 
 apps_private = ['kano-settings', 'test']
 
@@ -54,11 +53,11 @@ class KanoWorldSession(object):
         payload = dict()
         payload['values'] = data
 
-        success, text, data = request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json, session=self.session)
+        success, text, data = request_wrapper('put', '/users/profile', data=json.dumps(payload), headers=content_type_json, session=self.session)
         if not success:
             return False, text
-        else:
-            return self.download_profile_stats(data)
+
+        return self.download_profile_stats(data)
 
     def download_profile_stats(self, data=None):
         if not data:
@@ -68,7 +67,7 @@ class KanoWorldSession(object):
             else:
                 return False, 'Profile not registered!'
 
-            success, text, data = request_wrapper('get', '/users/' + user_id, content_type_json, session=self.session)
+            success, text, data = request_wrapper('get', '/users/' + user_id, headers=content_type_json, session=self.session)
             if not success:
                 return False, text
             else:
@@ -98,15 +97,15 @@ class KanoWorldSession(object):
         payload = dict()
         payload['data'] = data
 
-        success, text, data = request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json, session=self.session)
+        success, text, data = request_wrapper('put', '/sync/data', data=json.dumps(payload), headers=content_type_json, session=self.session)
         if not success:
             return False, text
-        else:
-            return self.download_private_data(data)
+
+        return self.download_private_data(data)
 
     def download_private_data(self, data=None):
         if not data:
-            success, text, data = request_wrapper('get', '/sync/data', content_type_json, session=self.session)
+            success, text, data = request_wrapper('get', '/sync/data', headers=content_type_json, session=self.session)
             if not success:
                 return False, text
 
@@ -119,4 +118,28 @@ class KanoWorldSession(object):
             if app in apps_private:
                 save_app_state(app, values)
         return True, None
+
+    def backup_content(self):
+        path = 'archive.tar.gz'
+        files = {'file': open(path, 'rb')}
+
+        success, text, data = request_wrapper('put', '/sync/backup', session=self.session, files=files)
+        if not success:
+            return False, text
+
+        return 'success' in data and data['success']
+
+    def restore_content(self):
+        success, text, data = request_wrapper('get', '/sync/backup', session=self.session)
+        if not success:
+            return False, text
+
+        if 'user_backup' in data and 'file_url' in data['user_backup']:
+            file_url = data['user_backup']['file_url']
+        else:
+            return False, 'file_url not found'
+
+        return download_url(file_url, 'tmpfile.tar.gz')
+
+
 

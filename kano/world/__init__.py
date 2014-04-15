@@ -22,7 +22,7 @@ def login(email, password):
         'password': password
     }
 
-    success, text, data = request_wrapper('post', '/auth', json.dumps(payload), content_type_json)
+    success, text, data = request_wrapper('post', '/auth', data=json.dumps(payload), headers=content_type_json)
     if success:
         profile = load_profile()
         profile['token'] = data['session']['token']
@@ -46,7 +46,7 @@ def register(email, username, password):
         'password': password
     }
 
-    success, text, data = request_wrapper('post', '/users', json.dumps(payload), content_type_json)
+    success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)
     if success:
         profile = load_profile()
         profile['kanoworld_username'] = data['user']['username']
@@ -84,8 +84,8 @@ def login_using_token():
         profile = load_profile()
         glob_session = KanoWorldSession(profile['token'])
         return True, None
-    except Exception:
-        return False, Exception.text
+    except Exception as e:
+        return False, str(e)
 
 
 def sync():

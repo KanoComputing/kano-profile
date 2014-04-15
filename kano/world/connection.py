@@ -10,7 +10,7 @@ api_url = 'http://10.0.1.91:1234'
 content_type_json = {'content-type': 'application/json'}
 
 
-def request_wrapper(method, endpoint, data=None, headers=None, session=None):
+def request_wrapper(method, endpoint, data=None, headers=None, session=None, files=None):
     if method not in ['put', 'get', 'post', 'delete']:
         return False, 'Wrong method name!'
 
@@ -22,7 +22,7 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None):
     method = getattr(req_object, method)
 
     try:
-        r = method(api_url + endpoint, data=data, headers=headers)
+        r = method(api_url + endpoint, data=data, headers=headers, files=files)
         if r.ok:
             return r.ok, None, r.json()
         else:

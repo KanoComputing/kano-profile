@@ -74,13 +74,37 @@ class KanoWorldSession(object):
         payload = dict()
         payload['values'] = data
 
-        return request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json, session=self.session)
+        success, text, data = request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json, session=self.session)
+        if not success:
+            return False, text
+        else:
+            return self.download_profile_stats(data)
 
     def download_profile_stats(self, data=None):
         if not data:
-            success, text, data = request_wrapper('get', '/sync/data', content_type_json, session=self.session)
+            profile = load_profile()
+            if 'kanoworld_id' in profile:
+                user_id = profile['kanoworld_id']
+            else:
+                return False, 'Profile not registered!'
+
+            success, text, data = request_wrapper('get', '/users/' + user_id, content_type_json, session=self.session)
             if not success:
-                return success, text
+                return False, text
+            else:
+                data = data['user']
+
+        if 'profile' in data and 'stats' in data['profile']:
+            app_data = data['profile']['stats']
+        else:
+            return False, 'Data missing from payload!'
+
+        for app, values in app_data.iteritems():
+            if not values or (len(values.keys()) == 1 and 'save_date' in values):
+                continue
+            if app not in apps_private:
+                save_app_state(app, values)
+        return True, None
 
     def upload_private_data(self):
         data = dict()
@@ -93,7 +117,7 @@ class KanoWorldSession(object):
 
         success, text, data = request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json, session=self.session)
         if not success:
-            return success, text
+            return False, text
         else:
             return self.download_private_data(data)
 
@@ -101,7 +125,7 @@ class KanoWorldSession(object):
         if not data:
             success, text, data = request_wrapper('get', '/sync/data', content_type_json, session=self.session)
             if not success:
-                return success, text
+                return False, text
 
         if 'user_data' in data and 'data' in data['user_data']:
             app_data = data['user_data']['data']
@@ -111,30 +135,18 @@ class KanoWorldSession(object):
         for app, values in app_data.iteritems():
             if app in apps_private:
                 save_app_state(app, values)
-
         return True, None
 
 
-def create_user(email, username, password):
-    payload = {
-        'email': email,
-        'username': username,
-        'password': password
-    }
-    return request_wrapper('post', '/users', json.dumps(payload), content_type_json)
-
-
 def login(email, password):
+    global glob_session
+
     payload = {
         'email': email,
         'password': password
     }
-    return request_wrapper('post', '/auth', json.dumps(payload), content_type_json)
 
-
-def login_profile(email, password):
-    global glob_session
-    success, text, data = login(email=email, password=password)
+    success, text, data = request_wrapper('post', '/auth', json.dumps(payload), content_type_json)
     if success:
         profile = load_profile()
         profile['token'] = data['session']['token']
@@ -152,7 +164,13 @@ def login_profile(email, password):
 
 
 def register_profile(email, username, password):
-    success, text, data = create_user(email=email, username=username, password=password)
+    payload = {
+        'email': email,
+        'username': username,
+        'password': password
+    }
+
+    success, text, data = request_wrapper('post', '/users', json.dumps(payload), content_type_json)
     if success:
         profile = load_profile()
         profile['kanoworld_username'] = data['user']['username']
@@ -179,16 +197,34 @@ def remove_token():
 
 
 def login_test():
-    if not is_registered() or not has_token():
-        return False
+    global glob_session
+
+    if not is_registered():
+        return False, 'Not registered!'
+    if not has_token():
+        return False, 'No token!'
 
     try:
         profile = load_profile()
-        KanoWorldSession(profile['token'])
-        return True
+        glob_session = KanoWorldSession(profile['token'])
+        return True, None
     except Exception:
-        return False
+        return False, Exception.text
 
 
-login_profile('bbb@bbb.bbb', '123456')
-glob_session.upload_private_data()
+def sync():
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    success, value = glob_session.upload_profile_stats()
+    if not success:
+        return False, value
+
+    success, value = glob_session.upload_private_data()
+    if not success:
+        return False, value
+
+    return True, None
+
+
+

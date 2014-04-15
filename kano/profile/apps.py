@@ -6,7 +6,7 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir
+from kano.utils import read_json, write_json, get_date_now, ensure_dir
 from .paths import apps_dir, xp_file
 from .profile import is_unlocked
 
@@ -63,7 +63,10 @@ def save_app_state_variable(app_name, variable, value):
 
 
 def get_app_list():
-    return [p for p in os.listdir(apps_dir) if os.path.isdir(os.path.join(apps_dir, p))]
+    if not os.path.exists(apps_dir):
+        return []
+    else:
+        return [p for p in os.listdir(apps_dir) if os.path.isdir(os.path.join(apps_dir, p))]
 
 
 def get_gamestate_variables(app_name):

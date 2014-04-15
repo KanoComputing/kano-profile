@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+import os
+import sys
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano.world import sync, login_test
+
+
+success, value = login_test()
+if not success:
+    sys.exit('Login not possible, error: ' + value)
+
+success, value = sync()
+if not success:
+    sys.exit('Sync not possible, error: ' + value)
+
+

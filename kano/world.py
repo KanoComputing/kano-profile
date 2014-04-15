@@ -6,14 +6,14 @@ import json
 from kano.utils import get_date_now
 from kano.profile.profile import load_profile, save_profile
 from kano.profile.badges import calculate_xp
-from kano.profile.apps import get_app_list, load_app_state
+from kano.profile.apps import get_app_list, load_app_state, save_app_state
 
 # api_url = 'http://localhost:1234'
 # api_url = 'http://10.0.2.2:1234'
 api_url = 'http://10.0.1.91:1234'
 content_type_json = {'content-type': 'application/json'}
 
-apps_private = ['kano-settings']
+apps_private = ['kano-settings', 'test']
 glob_session = None
 
 
@@ -76,6 +76,12 @@ class KanoWorldSession(object):
 
         return request_wrapper('put', '/users/profile', json.dumps(payload), content_type_json, session=self.session)
 
+    def download_profile_stats(self, data=None):
+        if not data:
+            success, text, data = request_wrapper('get', '/sync/data', content_type_json, session=self.session)
+            if not success:
+                return success, text
+
     def upload_private_data(self):
         data = dict()
         for app in get_app_list():
@@ -85,7 +91,28 @@ class KanoWorldSession(object):
         payload = dict()
         payload['data'] = data
 
-        return request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json, session=self.session)
+        success, text, data = request_wrapper('put', '/sync/data', json.dumps(payload), content_type_json, session=self.session)
+        if not success:
+            return success, text
+        else:
+            return self.download_private_data(data)
+
+    def download_private_data(self, data=None):
+        if not data:
+            success, text, data = request_wrapper('get', '/sync/data', content_type_json, session=self.session)
+            if not success:
+                return success, text
+
+        if 'user_data' in data and 'data' in data['user_data']:
+            app_data = data['user_data']['data']
+        else:
+            return False, 'Data missing missing from payload!'
+
+        for app, values in app_data.iteritems():
+            if app in apps_private:
+                save_app_state(app, values)
+
+        return True, None
 
 
 def create_user(email, username, password):
@@ -163,3 +190,5 @@ def login_test():
         return False
 
 
+login_profile('bbb@bbb.bbb', '123456')
+glob_session.upload_private_data()

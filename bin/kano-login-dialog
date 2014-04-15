@@ -30,6 +30,8 @@ class MainWindow(Gtk.Window):
         self.WINDOW_HEIGHT = 380
         self.WINDOW_WIDTH = 500
 
+        self.last_level_visited = 0
+
         self.grid = Gtk.Grid()
         self.add(self.grid)
 

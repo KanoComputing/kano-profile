@@ -16,10 +16,17 @@ from kano.world import sync, login_using_token
 
 success, value = login_using_token()
 if not success:
+    # TODO trigger dialog
+    # if still not possible: then exit
     sys.exit('Login not possible, error: ' + value)
+
 
 success, value = sync()
 if not success:
     sys.exit('Sync not possible, error: ' + value)
 
+
+# TODO backup content
+
+# TODO restore content
 

@@ -11,10 +11,10 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world import sync, login_test
+from kano.world import sync, login_using_token
 
 
-success, value = login_test()
+success, value = login_using_token()
 if not success:
     sys.exit('Login not possible, error: ' + value)
 

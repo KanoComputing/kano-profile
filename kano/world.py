@@ -92,7 +92,10 @@ class KanoWorldSession(object):
             if not success:
                 return False, text
             else:
-                data = data['user']
+                if 'user' in data:
+                    data = data['user']
+                else:
+                    return False, 'User field missing from data!'
 
         if 'profile' in data and 'stats' in data['profile']:
             app_data = data['profile']['stats']
@@ -163,7 +166,7 @@ def login(email, password):
         return False, 'Cannot log in, problem: {}'.format(text)
 
 
-def register_profile(email, username, password):
+def register(email, username, password):
     payload = {
         'email': email,
         'username': username,
@@ -196,7 +199,7 @@ def remove_token():
     save_profile(profile)
 
 
-def login_test():
+def login_using_token():
     global glob_session
 
     if not is_registered():

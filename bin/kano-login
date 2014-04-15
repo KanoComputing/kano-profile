@@ -19,7 +19,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano_login_dialog import home, login
 from kano_login_dialog.components import top_bar
-from kano.world import is_registered, login_test
+from kano.world import is_registered, login_using_token
 
 
 class MainWindow(Gtk.Window):
@@ -89,7 +89,7 @@ class MainWindow(Gtk.Window):
 
 
 def main():
-    if login_test():
+    if login_using_token():
         print "Login OK"
         return
 

@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano.world import register_profile
+from kano.world import register as register_
 
 
 def activate(_win, _box):
@@ -48,7 +48,7 @@ def register_user(button, event, email_entry, username_entry, password_entry, wi
     password_text = password_entry.get_text()
     print 'email = {0} , username = {1} , password = {2}'.format(email_text, username_text, password_text)
 
-    success, text = register_profile(email_text, username_text, password_text)
+    success, text = register_(email_text, username_text, password_text)
 
     if not success:
         print "error = " + str(text)

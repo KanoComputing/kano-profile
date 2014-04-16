@@ -89,7 +89,8 @@ class MainWindow(Gtk.Window):
 
 
 def main():
-    if login_using_token():
+    success, _ = login_using_token()
+    if success:
         print "Login OK"
         return
 

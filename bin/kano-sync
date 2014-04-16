@@ -14,7 +14,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano.world import sync, login_using_token, backup_content, restore_content
 from kano.utils import get_home, ensure_dir, run_cmd, delete_dir
 
-content_dirs = ['Test-content', 'Test2-content', 'Test3-content']
+content_dirs = ['Snake-content', 'Test2-content', 'Test3-content']
 
 home_dir = get_home()
 os.chdir(home_dir)
@@ -22,12 +22,13 @@ os.chdir(home_dir)
 if len(sys.argv) < 2:
     sys.exit('Wrong usage!')
 
-# login
+# login first with token, if not working then try with dialog
 success, value = login_using_token()
 if not success:
-    # TODO trigger dialog
-    # if still not possible: then exit
-    sys.exit('Login not possible, error: ' + value)
+    run_cmd(dir_path + '/bin/kano-login')
+    success, value = login_using_token()
+    if not success:
+        sys.exit('Login not possible, error: ' + value)
 
 # sync JSON data
 if 'sync' in sys.argv[1:]:

@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano.world import login_profile
+from kano.world import login as login_
 from kano.profile.profile import load_profile
 
 
@@ -51,7 +51,7 @@ def log_user_in(button, event, username_entry, password_entry, win):
     password_text = password_entry.get_text()
     print 'username = {0} , password = {1}'.format(username_text, password_text)
 
-    success, text = login_profile(username_text, password_text)
+    success, text = login_(username_text, password_text)
 
     if not success:
         print "error = " + str(text)

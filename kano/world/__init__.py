@@ -103,4 +103,15 @@ def sync():
     return True, None
 
 
+def backup_content(file_path):
+    if not glob_session:
+        return False, 'You are not logged in!'
 
+    return glob_session.backup_content(file_path)
+
+
+def restore_content(file_path):
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.restore_content(file_path)

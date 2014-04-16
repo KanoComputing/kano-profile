@@ -11,22 +11,65 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world import sync, login_using_token
+from kano.world import sync, login_using_token, backup_content, restore_content
+from kano.utils import get_home, ensure_dir, run_cmd, delete_dir
 
+content_dirs = ['Test-content', 'Test2-content', 'Test3-content']
 
+home_dir = get_home()
+os.chdir(home_dir)
+
+if len(sys.argv) < 2:
+    sys.exit('Wrong usage!')
+
+# login
 success, value = login_using_token()
 if not success:
     # TODO trigger dialog
     # if still not possible: then exit
     sys.exit('Login not possible, error: ' + value)
 
+# sync JSON data
+if 'sync' in sys.argv[1:]:
+    success, value = sync()
+    if not success:
+        sys.exit('Sync not possible, error: ' + value)
 
-success, value = sync()
-if not success:
-    sys.exit('Sync not possible, error: ' + value)
+# backup content
+if 'backup_content' in sys.argv[1:]:
+    tmp_dir = '/tmp/kanoprofile'
+    delete_dir(tmp_dir)
+    ensure_dir(tmp_dir)
 
+    tmp_file = os.path.join(tmp_dir, 'content.tar.gz')
 
-# TODO backup content
+    folders = [d for d in content_dirs if os.path.exists(d)]
+    tar_cmd = 'tar -czf {tmp_file} {folders}'.format(tmp_file=tmp_file, folders=' '.join(folders))
+    _, e, _ = run_cmd(tar_cmd)
+    if e:
+        print 'Error with backing up data: ' + e
 
-# TODO restore content
+    success, error = backup_content(tmp_file)
+    if not success:
+        print 'Error with backing up data: ' + error
 
+    delete_dir(tmp_dir)
+
+# restore content
+if 'restore_content' in sys.argv[1:]:
+    tmp_dir = '/tmp/kanoprofile'
+    delete_dir(tmp_dir)
+    ensure_dir(tmp_dir)
+
+    tmp_file = os.path.join(tmp_dir, 'content.tar.gz')
+
+    success, error = restore_content(tmp_file)
+    if not success:
+        print 'Error with restoring data: ' + error
+
+    tar_cmd = 'tar -xzf {tmp_file}'.format(tmp_file=tmp_file)
+    _, e, _ = run_cmd(tar_cmd)
+    if e:
+        print 'Error with restoring data: ' + e
+
+    delete_dir(tmp_dir)

@@ -119,17 +119,19 @@ class KanoWorldSession(object):
                 save_app_state(app, values)
         return True, None
 
-    def backup_content(self):
-        path = 'archive.tar.gz'
-        files = {'file': open(path, 'rb')}
+    def backup_content(self, file_path):
+        files = {'file': open(file_path, 'rb')}
 
         success, text, data = request_wrapper('put', '/sync/backup', session=self.session, files=files)
         if not success:
             return False, text
 
-        return 'success' in data and data['success']
+        success = 'success' in data and data['success']
+        if not success:
+            return False, 'Backup not successful!'
+        return True, None
 
-    def restore_content(self):
+    def restore_content(self, file_path):
         success, text, data = request_wrapper('get', '/sync/backup', session=self.session)
         if not success:
             return False, text
@@ -139,7 +141,7 @@ class KanoWorldSession(object):
         else:
             return False, 'file_url not found'
 
-        return download_url(file_url, 'tmpfile.tar.gz')
+        return download_url(file_url, file_path)
 
 
 

@@ -26,8 +26,19 @@
 /* All */
 * {
     -GtkButton-inner-border: 0;
+    -GtkButton-outer-border: 0;
+    -GtkButton-inner-padding: 0;
+    -GtkButton-outer-padding: 0;
+    -GtkButton-internal-padding: 0;
+    -GtkButton-child-displacement-x: 0;
+    -GtkButton-child-displacement-y: 0;
+    -GtkButton-default-border: 0;
+    -GtkButton-default-outside-border: 0;
+    -GtkButton-image-spacing: 0;
     -GtkEntry-inner-border: 0;
     -GtkComboBox-inner-border: 0;
+    -GtkImage-outer-border: 0;
+    -GtkImage-inner-border: 0;
     -GtkMenuToolButton-inner-border: 0;
     -GtkTreeMenu-inner-border: 0;
     -unico-focus-border-color: transparent; /* Removes the annoying red outline on active buttons*/
@@ -37,6 +48,11 @@
     -GtkTreeView-vertical-separator: 0;
     -GtkWidget-separator-width: 0;
     -GtkWidget-separator-height: 0;
+    -GtkWidget-focus-padding: 0;
+    -GtkWidget-focus-line-width: 0;
+    -GtkWidget-outer-border: 0;
+    -GtkWidget-inner-border: 0;
+    -GtkWidget-padding: 0;
 }
 
 .home_button {
@@ -135,3 +151,27 @@ GtkSwitch.slider {
     border-style: solid;
     /*padding: 6px;*/
 }
+
+/* Styling specific to swag screen */
+
+.hover_label {
+    background: #00ff00;
+}
+
+.hover_text {
+    font: Bariol bold 13px;
+    color: #ffffff;
+}
+/*.transparent {
+    background: transparent;
+    color: transparent;
+}*/
+
+.environment_background {
+    background: #0000ff;
+}
+
+/*.environment_background:hover {
+    background: #ff0000;
+    color: #ffffff;
+}*/

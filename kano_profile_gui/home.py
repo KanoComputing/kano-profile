@@ -11,7 +11,7 @@ import kano_profile_gui.components.home_stats as home_stats
 from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp, calculate_kano_level
 
-PICTURE_HEIGHT = 250
+import kano_profile_gui.home_stuff.home_picture as home_pic
 
 
 def activate(_win, _box):
@@ -25,12 +25,7 @@ def activate(_win, _box):
 
     # Picture box - contains image depends on level reached
     picture_box = Gtk.Box()
-    # 300 is currently a "magic number", to fill up window size
-    picture_box.set_size_request(_win.WINDOW_WIDTH, PICTURE_HEIGHT)
-
-    picture = Gtk.Image()
-    picture.set_from_file("/home/caroline/kano-profile/media/screens/home.png")
-
+    picture = home_pic.Picture().image
     picture_box.add(picture)
 
     # Stats

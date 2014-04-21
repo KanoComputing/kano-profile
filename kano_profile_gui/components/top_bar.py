@@ -91,6 +91,7 @@ class Top_bar():
 
         self.background.add(self.container)
 
+    # TODO: Home button uses this function, change this
     def activate_label(self, widget, event):
 
         for label in self.label_array:

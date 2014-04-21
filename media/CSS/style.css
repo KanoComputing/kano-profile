@@ -21,7 +21,7 @@
 @define-color top_bar_active #ffffff;
 @define-color top_bar_selected #ff0000;
 @define-color top_bar_inactive #555555;
-@define-color top_bar_background #000000;
+@define-color top_bar_background #44423d;
 
 /* All */
 * {
@@ -96,6 +96,16 @@
     color: @subheading_color;
     font: Bariol Bold 13;
 }
+/* The title that appears at the top of Badges, Environments, etx */
+.heading {
+    font: Bariol Bold 15;
+    color: @title_color;
+}
+/* Writing next to padlocks indicating how many badges/environemnts are locked/unlocked*/
+.padlock_label {
+    font: Bariol Bold 15;
+    color: @inactive_writing;
+}
 .white {
     background: #ffffff;
     color: #ffffff;
@@ -155,23 +165,18 @@ GtkSwitch.slider {
 /* Styling specific to swag screen */
 
 .hover_label {
-    background: #00ff00;
+    background: @top_bar_background;
 }
 
 .hover_text {
     font: Bariol bold 13px;
     color: #ffffff;
 }
-/*.transparent {
-    background: transparent;
-    color: transparent;
-}*/
-
-.environment_background {
-    background: #0000ff;
+.selected_label {
+    background: @button_color;
 }
 
-/*.environment_background:hover {
-    background: #ff0000;
+.selected_text {
+    font: Bariol bold 13px;
     color: #ffffff;
-}*/
+}

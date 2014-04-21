@@ -32,7 +32,8 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         # Create main window
         Gtk.Window.__init__(self, title='Kano-Profile')
-        self.WINDOW_HEIGHT = 596
+        # TODO: Fix extra space under window
+        self.WINDOW_HEIGHT = 0
         self.WINDOW_WIDTH = 734
 
         self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
@@ -47,7 +48,7 @@ class MainWindow(Gtk.Window):
         self.add(self.grid)
 
         # Dynamic box
-        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
         # This is the progress bar - it overlaps with the main content in the box
         self.progress = progress_bar.Bar(0.8, self.WINDOW_WIDTH)
@@ -57,15 +58,6 @@ class MainWindow(Gtk.Window):
         self.top_bar.badges_button.connect('clicked', self.goto, 'badges')
         self.top_bar.swag_button.connect('clicked', self.goto, 'swags')
         self.top_bar.challenges_button.connect('clicked', self.goto, 'projects')
-
-        # Overlay doesn't seem to work because it makes it impossible to click on the buttons
-        # Maybe try this with a set_size_request?
-        #self.overlay = Gtk.Overlay()
-        #self.overlay.add_overlay(self.progress.fixed)
-        #self.overlay.show_all()
-        #self.overlay.add(self.box)
-        #self.grid.attach(self.overlay, 0, 1, 1, 1)
-        #self.grid.attach(self.top_bar.background, 0, 0, 1, 1)
 
         # The first element attached to the grid is GtkFixed so that we can overlay the progress bar
         self.fixed = Gtk.Fixed()
@@ -92,7 +84,6 @@ class MainWindow(Gtk.Window):
             self.box.remove(i)
 
         module.activate(self, self.box)
-        self.show_all()
 
 
 def main():

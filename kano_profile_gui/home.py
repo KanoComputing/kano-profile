@@ -25,7 +25,7 @@ def activate(_win, _box):
 
     # Picture box - contains image depends on level reached
     picture_box = Gtk.Box()
-    picture = home_pic.Picture().image
+    picture = home_pic.Picture().fixed
     picture_box.add(picture)
 
     # Stats
@@ -40,5 +40,7 @@ def activate(_win, _box):
     #label = Gtk.Label()
     #label.set_text(msg)
     #_box.add(label)
+
+    _win.show_all()
 
 

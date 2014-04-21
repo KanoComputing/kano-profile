@@ -25,9 +25,9 @@ class Icons():
             icon_number = 1
         elif name == "swag":
             icon_number = 2
-        elif name == "dark_right_arrow":
+        elif name == "locked":
             icon_number = 3
-        elif name == "pale_left_arrow":
+        elif name == "unlocked":
             icon_number = 4
         elif name == "tick":
             icon_number = 5

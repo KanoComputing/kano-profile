@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# environment_picture.py
+# selection_picture.py
 #
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -11,15 +11,15 @@
 
 # Read from directory /usr/share/kano-profile/media/environments/*
 
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.components.constants as constants
 
 
 class Picture():
-    def __init__(self, picture_name, environment_info):
+    def __init__(self, subfolder, picture_name, environment_info):
 
-        self.environment_dir = "/usr/share/kano-profile/media/environments/"
-        self.filename = self.environment_dir + picture_name + ".png"
+        self.dir = constants.media + "/" + subfolder + "/"
+        self.filename = self.dir + picture_name + ".png"
 
         self.width = 230
         self.height = 180
@@ -33,36 +33,37 @@ class Picture():
         self.image = Gtk.Image()
         self.image.set_from_pixbuf(self.pixbuf)
         self.button = Gtk.EventBox()
-        #self.button.set_above_child(True)
-        #self.button.add(self.image)
         self.button.connect("button_press_event", self.toggle_selected)
         self.button.get_style_context().add_class("environment_background")
         self.button.set_size_request(self.width, self.height)
+
         #enter-notify-event and leave-notify-event
-        self.enter_event = self.button.connect("enter-notify-event", self.add_label_background)
-        self.leave_event = self.button.connect("leave-notify-event", self.remove_label_background)
+        self.enter_event = self.button.connect("enter-notify-event", self.add_hover_style)
+        self.leave_event = self.button.connect("leave-notify-event", self.remove_hover_style)
 
         self.hover_label = Gtk.EventBox()
-
-        #self.hover_label.set_above_child(False)
         self.hover_label.get_style_context().add_class("hover_label")
+        self.hover_label.set_visible_window(False)
         self.hover_text = Gtk.Label(environment_info)
         self.hover_text.get_style_context().add_class("hover_text")
         self.hover_label.add(self.hover_text)
         self.hover_label.set_size_request(self.width, self.label_height)
 
+        self.selected_label = Gtk.EventBox()
+        self.selected_label.get_style_context().add_class("selected_label")
+        self.selected_label.set_visible_window(False)
+        self.selected_text = Gtk.Label(environment_info)
+        self.selected_text.get_style_context().add_class("selected_text")
+        self.selected_label.add(self.selected_text)
+        self.selected_label.set_size_request(self.width, self.label_height)
+
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)
         self.fixed.put(self.image, 0, 0)
         self.fixed.put(self.hover_label, 0, self.height - self.label_height)
+        self.fixed.put(self.selected_label, 0, self.height - self.label_height)
 
         self.button.add(self.fixed)
-
-        #cssProvider = Gtk.CssProvider()
-        #cssProvider.load_from_path(constants.media + '/CSS/swag.css')
-        #screen = Gdk.Screen.get_default()
-        #styleContext = Gtk.StyleContext()
-        #styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         # Default, set locked to True
         self.locked = True
@@ -82,32 +83,20 @@ class Picture():
     def toggle_selected(self, arg1=None, arg2=None):
         self.set_selected(not self.get_selected())
 
-    def add_label_background(self, arg1=None, arg2=None):
-        print "Showing label"
-        #style = self.hover_label.get_style_context()
-        """self.hover_label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("#eeeeee"))
-                                self.hover_text.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("#ffffff")) """
-
-        """style_label = self.button.get_style_context()
-                                style_label.remove_class("transparent")
-                                style_label.add_class("hover_label")"""
-
+    def add_hover_style(self, arg1=None, arg2=None):
         self.hover_label.set_visible_window(True)
         self.hover_text.set_visible(True)
-        #self.hover_label.set_above_child(True)
 
-    def remove_label_background(self, arg1=None, arg2=None):
-        print "Hiding label"
-        """self.hover_label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("transparent"))
-                                self.hover_text.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("transparent"))
-
-                                style_label = self.hover_label.get_style_context()
-                                style_label.add_class("transparent")
-                                style_label.remove_class("hover_label")
-                                style_text = self.hover_text.get_style_context()
-                                style_text.add_class("transparent")
-                                style_text.remove_class("hover_text")"""
-
+    def remove_hover_style(self, arg1=None, arg2=None):
         self.hover_label.set_visible_window(False)
         self.hover_text.set_visible(False)
-        #self.hover_label.set_above_child(True)
+
+    def add_selected_style(self, arg1=None, arg2=None):
+        self.selected_label.set_visible_window(True)
+        self.selected_text.set_visible(True)
+
+    def remove_selected_style(self, arg1=None, arg2=None):
+        self.selected_label.set_visible_window(False)
+        self.selected_text.set_visible(False)
+        self.hover_label.set_visible_window(False)
+        self.hover_text.set_visible(False)

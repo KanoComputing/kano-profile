@@ -13,21 +13,24 @@ import selection_picture as pic
 
 
 class Table():
-    def __init__(self, subfolder, pictures, info):
+    def __init__(self, subfolder, info):
         self.width = 690
         self.height = 540
 
-        self.pictures = pictures
-        self.info = info
+        #self.pictures = []
+        #for item in info:
+        #    self.pictures.append(item["name"])
+        #self.info = info
 
+        self.info = info
         self.number_of_columns = 3
         self.number_of_rows = 3
 
         self.buttons = []
         self.pics = []
 
-        for x in range(len(self.pictures)):
-            picture = pic.Picture(subfolder, self.pictures[x], self.info[x])
+        for x in self.info:
+            picture = pic.Picture(subfolder, x)
             self.pics.append(picture)
 
         # Attach to table
@@ -39,10 +42,9 @@ class Table():
 
         while index < (self.number_of_rows * self.number_of_columns):
             for j in range(self.number_of_columns):
-                if index < len(self.pictures):
+                if index < len(self.info):
                     self.table.attach(self.pics[index].button, j, j + 1, row, row + 1,
                                       Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.EXPAND, 0, 0)
-                    self.pics[index].button.connect("button_press_event", self.select, self.pics[index])
                 else:
                     emptybox = Gtk.EventBox()
                     if index % 2 == 0:
@@ -56,46 +58,45 @@ class Table():
 
             row += 1
 
-        # Read config file/ JSON and find selected picture.  Default to first one
-        self.set_selected(self.pics[0])
+        # Read config file/ JSON and find equipped picture.  Default to first one
+        self.set_equipped(self.pics[0])
 
-    def select(self, widget1=None, event=None, pic=None):
-        self.set_selected(pic)
+    def equip(self, widget1=None, event=None, pic=None):
+        self.set_equipped(pic)
 
-    def set_selected(self, pic="None"):
-
+    def set_equipped(self, pic=None):
         if pic is not None:
-            self.selected = pic
-            pic.set_selected(True)
-            self.set_selected_style()
+            self.equipped = pic
+            pic.set_equipped(True)
+            self.set_equipped_style()
             return
 
         for pic in self.pics:
-            if pic.get_selected():
-                self.selected = pic
-                self.set_selected_style()
+            if pic.get_equipped():
+                self.equipped = pic
+                self.set_equipped_style()
                 return
 
-        self.selected = None
-        self.set_selected_style()
+        self.equipped = None
+        self.set_equipped_style()
 
-    def get_selected(self):
-        return self.selected
+    def get_equipped(self):
+        return self.equipped
 
-    def set_selected_style(self):
+    def set_equipped_style(self):
         for pic in self.pics:
-            pic.remove_selected_style()
-            pic.set_selected(False)
+            pic.remove_equipped_style()
+            pic.set_equipped(False)
 
-        if self.selected is not None:
-            self.selected.add_selected_style()
-            self.selected.set_selected(True)
+        if self.equipped is not None:
+            self.equipped.add_equipped_style()
+            self.equipped.set_equipped(True)
 
-    def unselect_all(self):
+    def hide_labels(self):
         for pic in self.pics:
-            if not pic.get_selected():
-                pic.hover_label.set_visible_window(False)
-                pic.hover_text.set_visible(False)
-                pic.selected_label.set_visible_window(False)
-                pic.selected_text.set_visible(False)
+            if not pic.get_equipped():
+                pic.hover_box.set_visible_window(False)
+                pic.hover_label.set_visible(False)
+                pic.equipped_box.set_visible_window(False)
+                pic.equipped_label.set_visible(False)
 

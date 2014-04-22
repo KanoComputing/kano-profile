@@ -31,8 +31,8 @@ class Picture():
         # if we have the current active background
         # This will end up defaulting to 1
         if swags.swag_ui is not None:
-            environment_filename = swags.swag_ui.environments.get_selected().filename
-            avatar_filename = swags.swag_ui.avatars.get_selected().filename
+            environment_filename = swags.swag_ui.environments.get_equipped().filename
+            avatar_filename = swags.swag_ui.avatars.get_equipped().filename
 
         self.background_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(environment_filename, self.background_width, self.background_height)
         self.background = Gtk.Image()

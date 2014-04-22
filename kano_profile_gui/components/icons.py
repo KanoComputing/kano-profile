@@ -25,15 +25,15 @@ class Icons():
             icon_number = 1
         elif name == "swag":
             icon_number = 2
-        elif name == "locked":
+        elif name == "next_arrow":
             icon_number = 3
-        elif name == "unlocked":
+        elif name == "prev_arrow":
             icon_number = 4
-        elif name == "tick":
+        elif name == "locked":
             icon_number = 5
         elif name == "cross":
             icon_number = 6
-        elif name == "dropdown_arrow":
+        elif name == "unlocked":
             icon_number = 7
         # Create main window
         self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(constants.media + '/icons/systemsetup-icons.png', 192, 24)

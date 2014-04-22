@@ -8,11 +8,12 @@
 from gi.repository import Gtk
 
 from kano.profile.badges import calculate_badges
-from .images import get_image
-from .paths import icon_dir
+#from .images import get_image
+#from .paths import icon_dir
 
 import kano_profile_gui.components.selection_table as tab
 import kano_profile_gui.components.header as header
+import kano_profile_gui.components.info_screen as selected
 
 img_width = 50
 swag_ui = None
@@ -21,21 +22,34 @@ swag_ui = None
 class Ui():
     def __init__(self):
 
-        environ_pictures = ["environment-1", "environment-2", "environment-3", "environment-4", "environment-5", "environment-6"]
-        environ_info = ["environment-1 info", "environment-2 info", "environment-3 info", "environment-4 info", "environment-5 info", "environment-6 info"]
+        environ_info = [{"name": "environment-1", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
+                        {"name": "environment-2", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
+                        {"name": "environment-3", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
+                        {"name": "environment-4", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
+                        {"name": "environment-5", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
+                        {"name": "environment-6", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"}]
 
-        avatar_pictures = ["avatar-1", "avatar-2"]
-        avatar_info = ["avatar-1 info", "avatar-2 info"]
+        avatar_info = [{"name": "avatar-1", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
+                       {"name": "avatar-2", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"}]
 
         self.head = header.Header("Environments", "Avatars")
         self.head.radiobutton1.connect("toggled", self.on_button_toggled)
 
-        self.environments = tab.Table("environments", environ_pictures, environ_info)
-        self.avatars = tab.Table("avatars", avatar_pictures, avatar_info)
+        self.environments = tab.Table("environments", environ_info)
+        self.avatars = tab.Table("avatars", avatar_info)
+
+        for pic in self.environments.pics:
+            pic.button.connect("button_press_event", self.selected_item_screen, self.environments.pics, pic)
+
+        for pic in self.avatars.pics:
+            pic.button.connect("button_press_event", self.selected_item_screen, self.avatars.pics, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add(self.environments.table)
         self.scrolledwindow.set_size_request(self.environments.width, self.environments.height)
+
+        self.container = Gtk.Box()
+        self.container.add(self.scrolledwindow)
 
     def on_button_toggled(self, radio):
         in_environments = radio.get_active()
@@ -57,8 +71,25 @@ class Ui():
             self.scrolledwindow.add(self.avatars.table)
 
         self.scrolledwindow.show_all()
-        self.environments.unselect_all()
-        self.avatars.unselect_all()
+        self.environments.hide_labels()
+        self.avatars.hide_labels()
+
+    def selected_item_screen(self, arg1=None, arg2=None, array=[], selected_item=None):
+        selected_item_screen = selected.Item(array, selected_item)
+        for i in self.container.get_children():
+            self.container.remove(i)
+        self.container.add(selected_item_screen.box)
+        selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
+        self.container.show_all()
+
+    def leave_info_screen(self, arg1=None, arg2=None):
+        for i in self.container.get_children():
+            self.container.remove(i)
+        self.container.add(self.scrolledwindow)
+        self.container.show_all()
+        # Hide all labels on images
+        self.environments.hide_labels()
+        self.avatars.hide_labels()
 
 
 def activate(_win, _box):
@@ -96,10 +127,10 @@ def activate(_win, _box):
         swag_ui = Ui()
 
     _box.pack_start(swag_ui.head.box, False, False, 0)
-    _box.pack_start(swag_ui.scrolledwindow, False, False, 0)
+    _box.pack_start(swag_ui.container, False, False, 0)
 
     _win.show_all()
 
     # Hide all labels on images
-    swag_ui.environments.unselect_all()
-    swag_ui.avatars.unselect_all()
+    swag_ui.environments.hide_labels()
+    swag_ui.avatars.hide_labels()

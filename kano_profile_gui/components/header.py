@@ -62,7 +62,7 @@ class Header():
             self.halign.add(self.title_label)
 
         # 620 - magic number. :(
-        self.halign.set_size_request(620, self.height)
+        self.halign.set_size_request(610, self.height)
         top_padding = 5
         bottom_padding = 0
         left_padding = 180

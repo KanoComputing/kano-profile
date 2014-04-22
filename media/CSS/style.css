@@ -55,6 +55,14 @@
     -GtkWidget-padding: 0;
 }
 
+/* Green button seen when equipping an item */
+.green_button {
+    background: @button_color;
+    padding: 10px 15px 10px 15px;
+}
+.green_button GtkLabel {
+    color: #ffffff;
+}
 .home_button {
     background: transparent;
     padding-left:20px;
@@ -170,19 +178,34 @@ GtkSwitch.slider {
 
 /* Styling specific to the grid shown on the swag/badges screen */
 
-.hover_label {
+.hover_box {
     background: @top_bar_background;
 }
 
-.hover_text {
+.hover_label {
     font: Bariol bold 13px;
     color: #ffffff;
 }
-.selected_label {
+.equipped_label {
     background: @button_color;
 }
 
-.selected_text {
+.equipped_text {
     font: Bariol bold 13px;
     color: #ffffff;
 }
+
+/* Info screen oof individual badges/environments/avatars */
+.info_heading {
+    font: Bariol Bold 20;
+    color: @title_color;
+}
+.info_date {
+    font: Bariol Bold 14;
+    color: @inactive_writing;
+}
+.info_paragraph {
+    font: Bariol Bold 14;
+    color: @inactive_writing;
+}
+

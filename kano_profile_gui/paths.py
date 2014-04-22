@@ -21,3 +21,5 @@ else:
     raise Exception('Neither local nor usr media dir found!')
 
 icon_dir = os.path.join(media_dir, 'icons')
+css_dir = os.path.join(media_dir, 'CSS')
+

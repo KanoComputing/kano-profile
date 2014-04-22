@@ -3,7 +3,7 @@
 import requests
 import sys
 
-from kano.world import api_url
+from kano.world.connection import api_url
 
 
 if len(sys.argv) != 2:

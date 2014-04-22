@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+import os
+import sys
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano.world import sync, login_using_token, backup_content, restore_content
+from kano.utils import get_home, ensure_dir, run_cmd, delete_dir
+
+content_dirs = ['Snake-content', 'Test2-content', 'Test3-content']
+
+home_dir = get_home()
+os.chdir(home_dir)
+
+if len(sys.argv) < 2:
+    sys.exit('Wrong usage!')
+
+# login first with token, if not working then try with dialog
+success, value = login_using_token()
+if not success:
+    run_cmd(dir_path + '/bin/kano-login')
+    success, value = login_using_token()
+    if not success:
+        sys.exit('Login not possible, error: ' + value)
+
+# sync JSON data
+if 'sync' in sys.argv[1:]:
+    success, value = sync()
+    if not success:
+        sys.exit('Sync not possible, error: ' + value)
+
+# backup content
+if 'backup_content' in sys.argv[1:]:
+    tmp_dir = '/tmp/kanoprofile'
+    delete_dir(tmp_dir)
+    ensure_dir(tmp_dir)
+
+    tmp_file = os.path.join(tmp_dir, 'content.tar.gz')
+
+    folders = [d for d in content_dirs if os.path.exists(d)]
+    tar_cmd = 'tar -czf {tmp_file} {folders}'.format(tmp_file=tmp_file, folders=' '.join(folders))
+    _, e, _ = run_cmd(tar_cmd)
+    if e:
+        print 'Error with backing up data: ' + e
+
+    success, error = backup_content(tmp_file)
+    if not success:
+        print 'Error with backing up data: ' + error
+
+    delete_dir(tmp_dir)
+
+# restore content
+if 'restore_content' in sys.argv[1:]:
+    tmp_dir = '/tmp/kanoprofile'
+    delete_dir(tmp_dir)
+    ensure_dir(tmp_dir)
+
+    tmp_file = os.path.join(tmp_dir, 'content.tar.gz')
+
+    success, error = restore_content(tmp_file)
+    if not success:
+        print 'Error with restoring data: ' + error
+
+    tar_cmd = 'tar -xzf {tmp_file}'.format(tmp_file=tmp_file)
+    _, e, _ = run_cmd(tar_cmd)
+    if e:
+        print 'Error with restoring data: ' + e
+
+    delete_dir(tmp_dir)

@@ -8,9 +8,10 @@
 # UI for login screen
 
 from gi.repository import Gtk
-import components.heading as heading
-import components.green_button as green_button
-import auth_test
+
+from components import heading, green_button
+from kano.world import login as login_
+from kano.profile.profile import load_profile
 
 
 def activate(_win, _box):
@@ -19,8 +20,14 @@ def activate(_win, _box):
 
     title = heading.Heading("Log in", "Open up your world")
 
-    username_entry.props.placeholder_text = "Username"
-    password_entry.props.placeholder_text = "Password"
+    profile = load_profile()
+    if 'email' in profile and profile['email']:
+        username = profile['email']
+    else:
+        username = 'e-mail address'
+
+    username_entry.props.placeholder_text = username
+    password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
     login = green_button.Button("LOG IN")
@@ -43,12 +50,14 @@ def log_user_in(button, event, username_entry, password_entry, win):
     username_text = username_entry.get_text()
     password_text = password_entry.get_text()
     print 'username = {0} , password = {1}'.format(username_text, password_text)
-    response = auth_test.do_login(username_text, password_text)
-    print "response = " + str(response)
-    if response != 0:
+
+    success, text = login_(username_text, password_text)
+
+    if not success:
+        print "error = " + str(text)
         dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.ERROR,
                                    Gtk.ButtonsType.OK, "Houston, we have a problem")
-        dialog.format_secondary_text(response)
+        dialog.format_secondary_text(text)
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             dialog.destroy()

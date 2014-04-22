@@ -8,7 +8,7 @@
 # This controls the styling of the (pretend) top window bar.
 
 from gi.repository import Gtk
-import icons
+from . import icons
 
 TOP_BAR_HEIGHT = 44
 SPACE_TAKEN = 150

@@ -13,7 +13,7 @@ import sys
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
-        sys.path.append(dir_path)
+        sys.path.insert(1, dir_path)
 
 from kano.utils import is_gui
 from kano_profile_gui.images import get_image

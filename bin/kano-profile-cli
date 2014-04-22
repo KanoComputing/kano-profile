@@ -9,11 +9,12 @@ import sys
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
-        sys.path.append(dir_path)
+        sys.path.insert(1, dir_path)
 
 from kano.profile.apps import get_app_data_dir, load_app_state_variable
 from kano.profile.profile import set_unlocked
 from kano.profile.badges import save_app_state_variable_with_dialog
+from kano.utils import is_number
 
 variable_not_found_str = "VARIABLE_NOT_FOUND"
 
@@ -62,6 +63,11 @@ elif sys.argv[1] == 'save_app_state_variable':
     app_name = sys.argv[2]
     variable = sys.argv[3]
     value = sys.argv[4]
+
+    if value.isdigit():
+        value = int(value)
+    elif is_number(value):
+        value = float(value)
 
     save_app_state_variable_with_dialog(app_name, variable, value)
 

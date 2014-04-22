@@ -8,8 +8,8 @@
 from gi.repository import Gtk
 
 from kano.profile.badges import calculate_badges
-#from .images import get_image
-#from .paths import icon_dir
+from .images import get_image
+from .paths import icon_dir
 
 import kano_profile_gui.components.selection_table as tab
 import kano_profile_gui.components.header as header

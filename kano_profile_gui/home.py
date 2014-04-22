@@ -7,11 +7,11 @@
 #
 
 from gi.repository import Gtk
-import kano_profile_gui.components.home_stats as home_stats
 from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp, calculate_kano_level
 
-import kano_profile_gui.home_stuff.home_picture as home_pic
+import kano_profile_gui.home_components.home_stats as home_stats
+import kano_profile_gui.home_components.home_picture as home_pic
 
 
 def activate(_win, _box):

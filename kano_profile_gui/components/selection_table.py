@@ -5,12 +5,8 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# This controls the size of the pictures displayed on the page
+# This controls the styling of the table from which you can select backgrounds and avatars.
 
-# Size: width = 230px, height = 180px
-
-
-# Read from directory /usr/share/kano-profile/media/subfolder/*
 
 from gi.repository import Gtk
 import selection_picture as pic

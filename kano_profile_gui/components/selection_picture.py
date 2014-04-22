@@ -5,11 +5,9 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# This controls the size of the pictures displayed on the environment page
+# This controls the size and styling of the pictures displayed on the table
+# Used for badges, environments and avatar screen
 
-# Size: width = 230px, height = 180px
-
-# Read from directory /usr/share/kano-profile/media/environments/*
 
 from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.components.constants as constants
@@ -28,7 +26,6 @@ class Picture():
         self.number_of_columns = 3
         self.number_of_rows = 3
 
-        #for picture in self.environment_picture:
         self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.filename, self.width, self.height)
         self.image = Gtk.Image()
         self.image.set_from_pixbuf(self.pixbuf)
@@ -37,7 +34,6 @@ class Picture():
         self.button.get_style_context().add_class("environment_background")
         self.button.set_size_request(self.width, self.height)
 
-        #enter-notify-event and leave-notify-event
         self.enter_event = self.button.connect("enter-notify-event", self.add_hover_style)
         self.leave_event = self.button.connect("leave-notify-event", self.remove_hover_style)
 
@@ -65,15 +61,20 @@ class Picture():
 
         self.button.add(self.fixed)
 
-        # Default, set locked to True
+        # Default, set locked to True and selected to False.
         self.locked = True
         self.selected = False
 
     # Sets whether the picture has a padlock in front or not.
     # locked = True or False
-    def set_lock(self, locked):
+    def set_locked(self, locked):
         self.locked = locked
 
+    def get_locked(self):
+        return self.locked
+
+    # Sets whether the picture is selected
+    # selected = True or False
     def set_selected(self, selected):
         self.selected = selected
 
@@ -83,6 +84,7 @@ class Picture():
     def toggle_selected(self, arg1=None, arg2=None):
         self.set_selected(not self.get_selected())
 
+    # This function contains the styling applied to the picture when the mouse hovers over it.
     def add_hover_style(self, arg1=None, arg2=None):
         self.hover_label.set_visible_window(True)
         self.hover_text.set_visible(True)
@@ -91,6 +93,7 @@ class Picture():
         self.hover_label.set_visible_window(False)
         self.hover_text.set_visible(False)
 
+    # This function contains the styling applied to the picture when it is selected.
     def add_selected_style(self, arg1=None, arg2=None):
         self.selected_label.set_visible_window(True)
         self.selected_text.set_visible(True)

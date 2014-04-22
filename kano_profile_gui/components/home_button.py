@@ -21,11 +21,11 @@ class Home_button():
 
         # Info about the different settings
         self.title = Gtk.Label(self.possible_titles[level_number - 1])
-        self.title.get_style_context().add_class("earned_title")
+        self.title.get_style_context().add_class("home_button_title")
         self.title.set_alignment(xalign=0, yalign=1)
 
         self.description = Gtk.Label("Level " + str(level_number))
-        self.description.get_style_context().add_class("level_label")
+        self.description.get_style_context().add_class("home_button_description")
         self.description.set_alignment(xalign=0, yalign=0)
 
         self.button = Gtk.Button()

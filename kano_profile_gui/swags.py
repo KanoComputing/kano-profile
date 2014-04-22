@@ -20,7 +20,6 @@ swag_ui = None
 
 class Ui():
     def __init__(self):
-        global environments, avatars
 
         environ_pictures = ["environment-1", "environment-2", "environment-3", "environment-4", "environment-5", "environment-6"]
         environ_info = ["environment-1 info", "environment-2 info", "environment-3 info", "environment-4 info", "environment-5 info", "environment-6 info"]

@@ -13,6 +13,7 @@ import kano_profile_gui.components.icons as icons
 
 class Header():
     def __init__(self, title1, title2=None):
+        # Width of window plus scrollbar
         self.width = 690 + 44
         self.height = 44
         self.locked_elements = 5  # For now
@@ -26,19 +27,19 @@ class Header():
         unlocked_pic = Gtk.Image()
         unlocked_pic.set_from_pixbuf(icons.Icons("unlocked").subpixbuf)
 
-        locked_label = Gtk.Label(": " + str(self.locked_elements))
-        locked_label.get_style_context().add_class("padlock_label")
+        self.locked_label = Gtk.Label(": " + str(self.locked_elements))
+        self.locked_label.get_style_context().add_class("padlock_label")
         locked_box = Gtk.Box()
         locked_box.pack_start(locked_pic, False, False, 0)
-        locked_box.pack_start(locked_label, False, False, 0)
+        locked_box.pack_start(self.locked_label, False, False, 0)
 
-        unlocked_label = Gtk.Label(": " + str(self.unlocked_elements))
-        unlocked_label.get_style_context().add_class("padlock_label")
+        self.unlocked_label = Gtk.Label(": " + str(self.unlocked_elements))
+        self.unlocked_label.get_style_context().add_class("padlock_label")
         unlocked_box = Gtk.Box()
         unlocked_box.pack_start(unlocked_pic, False, False, 0)
-        unlocked_box.pack_start(unlocked_label, False, False, 0)
+        unlocked_box.pack_start(self.unlocked_label, False, False, 0)
 
-        self.halign = Gtk.Alignment(xalign=0.5, yalign=0.5)
+        self.halign = Gtk.Alignment(xalign=0, yalign=0)
 
         # If there are two titles, then we need to have 2 radio button to switch views
         if title2 is not None:
@@ -56,18 +57,28 @@ class Header():
             self.halign.add(self.container)
 
         else:
-            self.title_label = Gtk.Label(self.title1)
+            self.title_label = Gtk.Label(title1)
             self.title_label.get_style_context().add_class("heading")
             self.halign.add(self.title_label)
 
-        self.halign.set_size_request(200, 44)
+        # 620 - magic number. :(
+        self.halign.set_size_request(620, self.height)
         top_padding = 5
         bottom_padding = 0
         left_padding = 180
         right_padding = 180
-
         self.halign.set_padding(top_padding, bottom_padding, left_padding, right_padding)
 
         self.box.pack_start(locked_box, False, False, 5)
         self.box.pack_start(self.halign, False, False, 0)
         self.box.pack_start(unlocked_box, False, False, 0)
+
+    def set_locked(self, number_of_locked):
+        self.locked_elements = number_of_locked
+        self.locked_label.show()
+
+    def set_unlocked(self, number_of_unlocked):
+        self.unlocked_elements = number_of_unlocked
+        self.unlocked_label.show()
+
+

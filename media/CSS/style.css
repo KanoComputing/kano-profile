@@ -59,6 +59,14 @@
     background: transparent;
     padding-left:20px;
 }
+.home_button_title {
+    color: @top_bar_active;
+    font: Bariol Bold 16;
+}
+.home_button_description {
+    color: @top_bar_active;
+    font: Bariol Bold 13;
+}
 
 /* The bar at the top that mimics the window bar */
 .top_bar_container {
@@ -80,14 +88,8 @@
 .top_bar_label_active:hover {
     color: @top_bar_active;
 }
-.earned_title {
-    color: @top_bar_active;
-    font: Bariol Bold 16;
-}
-.level_label {
-    color: @top_bar_active;
-    font: Bariol Bold 13;
-}
+
+/* Home stats shown on home screen */
 .stat_number {
     color: @title_color;
     font: Bariol Bold 18;
@@ -96,12 +98,14 @@
     color: @subheading_color;
     font: Bariol Bold 13;
 }
-/* The title that appears at the top of Badges, Environments, etx */
+
+/* The title that appears at the top of Badges, Environments, etc */
 .heading {
     font: Bariol Bold 15;
     color: @title_color;
 }
-/* Writing next to padlocks indicating how many badges/environemnts are locked/unlocked*/
+
+/* Writing next to padlocks indicating how many badges/environemnts are locked/unlocked */
 .padlock_label {
     font: Bariol Bold 15;
     color: @inactive_writing;
@@ -115,6 +119,8 @@
     background: #000000;
     color: #000000;
 }
+
+/* Orange progress bar shown just below top bar */
 .progress_bar {
     color: @kano_orange;
     background: @kano_orange;
@@ -162,7 +168,7 @@ GtkSwitch.slider {
     /*padding: 6px;*/
 }
 
-/* Styling specific to swag screen */
+/* Styling specific to the grid shown on the swag/badges screen */
 
 .hover_label {
     background: @top_bar_background;

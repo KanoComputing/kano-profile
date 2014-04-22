@@ -9,13 +9,15 @@
 
 
 from gi.repository import Gtk
-import selection_picture as pic
+import kano_profile_gui.selection_table_components.individual_item as item
+import kano_profile_gui.selection_table_components.equipable as equip
 
 
 class Table():
-    def __init__(self, subfolder, info):
+    def __init__(self, info, equipable):
         self.width = 690
         self.height = 540
+        self.equipable = equipable
 
         #self.pictures = []
         #for item in info:
@@ -24,13 +26,16 @@ class Table():
 
         self.info = info
         self.number_of_columns = 3
-        self.number_of_rows = 3
+        self.number_of_rows = (len(info) / self.number_of_columns) + (len(info) % self.number_of_columns)
 
         self.buttons = []
         self.pics = []
 
         for x in self.info:
-            picture = pic.Picture(subfolder, x)
+            if equipable:
+                picture = equip.Picture(x)
+            else:
+                picture = item.Picture(x)
             self.pics.append(picture)
 
         # Attach to table
@@ -61,42 +66,42 @@ class Table():
         # Read config file/ JSON and find equipped picture.  Default to first one
         self.set_equipped(self.pics[0])
 
-    def equip(self, widget1=None, event=None, pic=None):
-        self.set_equipped(pic)
-
     def set_equipped(self, pic=None):
-        if pic is not None:
-            self.equipped = pic
-            pic.set_equipped(True)
-            self.set_equipped_style()
-            return
-
-        for pic in self.pics:
-            if pic.get_equipped():
+        if self.equipable:
+            if pic is not None:
                 self.equipped = pic
+                pic.set_equipped(True)
                 self.set_equipped_style()
                 return
 
-        self.equipped = None
-        self.set_equipped_style()
+            for pic in self.pics:
+                if pic.get_equipped():
+                    self.equipped = pic
+                    self.set_equipped_style()
+                    return
+
+            self.equipped = None
+            self.set_equipped_style()
 
     def get_equipped(self):
-        return self.equipped
+        if self.equipable:
+            return self.equipped
 
     def set_equipped_style(self):
-        for pic in self.pics:
-            pic.remove_equipped_style()
-            pic.set_equipped(False)
+        if self.equipable:
+            for pic in self.pics:
+                pic.remove_equipped_style()
+                pic.set_equipped(False)
 
-        if self.equipped is not None:
-            self.equipped.add_equipped_style()
-            self.equipped.set_equipped(True)
+            if self.equipped is not None:
+                self.equipped.add_equipped_style()
+                self.equipped.set_equipped(True)
 
     def hide_labels(self):
         for pic in self.pics:
-            if not pic.get_equipped():
-                pic.hover_box.set_visible_window(False)
-                pic.hover_label.set_visible(False)
+            pic.hover_box.set_visible_window(False)
+            pic.hover_label.set_visible(False)
+            if self.equipable and not pic.get_equipped():
                 pic.equipped_box.set_visible_window(False)
                 pic.equipped_label.set_visible(False)
 

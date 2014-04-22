@@ -7,13 +7,16 @@
 #import os
 from gi.repository import Gtk
 
+import os
+
 from kano.profile.badges import calculate_badges
 #from .images import get_image
 #from .paths import icon_dir
 
-import kano_profile_gui.components.selection_table as tab
+import kano_profile_gui.selection_table_components.selection_table as tab
+import kano_profile_gui.selection_table_components.info_screen as info_screen
 import kano_profile_gui.components.header as header
-import kano_profile_gui.components.info_screen as selected
+import kano_profile_gui.components.constants as constants
 
 img_width = 50
 swag_ui = None
@@ -22,27 +25,45 @@ swag_ui = None
 class Ui():
     def __init__(self):
 
-        environ_info = [{"name": "environment-1", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
-                        {"name": "environment-2", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
-                        {"name": "environment-3", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
-                        {"name": "environment-4", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
-                        {"name": "environment-5", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
-                        {"name": "environment-6", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"}]
+        environ_filenames = []
 
-        avatar_info = [{"name": "avatar-1", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"},
-                       {"name": "avatar-2", "heading": "heading", "date": "date changed", "description": "lots of info", "hover_over_info": "hover over info"}]
+        for root, dirs, files in os.walk(constants.media + "/environments/"):
+            for file in files:
+                if file.endswith(".png"):
+                    #print os.path.join(root, file)
+                    environ_filenames.append(os.path.join(root, file))
+
+        environ_info = []
+
+        for i in environ_filenames:
+            line = {"filename": i, "heading": "heading", "description": "lots of info", "color": "#ff0000"}
+            environ_info.append(line)
+
+        avatar_filenames = []
+
+        for root, dirs, files in os.walk(constants.media + "/avatars/"):
+            for file in files:
+                if file.endswith(".png"):
+                    #print os.path.join(root, file)
+                    avatar_filenames.append(os.path.join(root, file))
+
+        avatar_info = []
+
+        for i in avatar_filenames:
+            line = {"filename": i, "heading": "heading", "description": "lots of info", "color": "#00ff00"}
+            avatar_info.append(line)
 
         self.head = header.Header("Environments", "Avatars")
         self.head.radiobutton1.connect("toggled", self.on_button_toggled)
 
-        self.environments = tab.Table("environments", environ_info)
-        self.avatars = tab.Table("avatars", avatar_info)
+        self.environments = tab.Table(environ_info, True)
+        self.avatars = tab.Table(avatar_info, True)
 
         for pic in self.environments.pics:
-            pic.button.connect("button_press_event", self.selected_item_screen, self.environments.pics, pic)
+            pic.button.connect("button_press_event", self.selected_item_screen, self.environments, pic)
 
         for pic in self.avatars.pics:
-            pic.button.connect("button_press_event", self.selected_item_screen, self.avatars.pics, pic)
+            pic.button.connect("button_press_event", self.selected_item_screen, self.avatars, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add(self.environments.table)
@@ -74,13 +95,18 @@ class Ui():
         self.environments.hide_labels()
         self.avatars.hide_labels()
 
-    def selected_item_screen(self, arg1=None, arg2=None, array=[], selected_item=None):
-        selected_item_screen = selected.Item(array, selected_item)
+    def selected_item_screen(self, arg1=None, arg2=None, table=None, selected_item=None):
+        selected_item_screen = info_screen.Item(table.pics, selected_item, True)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.box)
         selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
+        selected_item_screen.info.select_button.connect("button_press_event", self.equip, table, selected_item)
         self.container.show_all()
+
+    def equip(self, arg1=None, arg2=None, table=None, selected_item=None):
+        table.set_equipped(selected_item)
+        self.leave_info_screen()
 
     def leave_info_screen(self, arg1=None, arg2=None):
         for i in self.container.get_children():

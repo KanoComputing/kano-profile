@@ -11,14 +11,11 @@ from gi.repository import Gtk
 
 
 class Info():
-    def __init__(self, width, height, heading, date, info):
+    def __init__(self, width, height, heading, info, equip):
 
         self.heading = Gtk.Label(heading)
         self.heading.get_style_context().add_class("info_heading")
         self.heading.set_alignment(xalign=0, yalign=0)
-        self.date = Gtk.Label(date.upper())
-        self.date.get_style_context().add_class("info_date")
-        self.date.set_alignment(xalign=0, yalign=0)
         self.paragraph = Gtk.TextView()
         self.paragraph.set_editable(False)
         self.paragraph.get_buffer().set_text(info)
@@ -26,7 +23,6 @@ class Info():
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.heading, False, False, 5)
-        self.box.pack_start(self.date, False, False, 2)
         self.box.pack_start(self.paragraph, False, False, 30)
         self.box.set_size_request(width, height)
 
@@ -35,8 +31,10 @@ class Info():
         self.back_button_box = Gtk.Box()
         self.back_button_box.add(self.back_button)
         # TODO: don't check heading, pass another variable we can check for
-        if "environemts" in heading or "avatars" in heading:
+        # add equip button
+        if equip:
             self.select_button = Gtk.Button("EQUIP")
+            self.select_button.get_style_context().add_class("green_button")
             self.box.pack_start(self.select_button, False, False, 3)
 
         self.box.pack_start(self.back_button_box, False, False, 3)

@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk, Gdk
 import kano_profile_gui.components.icons as icons
-import kano_profile_gui.components.home_button as home_button
+import kano_profile_gui.top_bar_components.home_button as home_button
 
 TOP_BAR_HEIGHT = 100
 SPACE_TAKEN = 220

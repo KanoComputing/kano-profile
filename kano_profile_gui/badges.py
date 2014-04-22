@@ -7,11 +7,14 @@
 #import os
 from gi.repository import Gtk
 
-from kano.profile.badges import calculate_badges
-from .images import get_image
-from .paths import icon_dir
+import os
+#from kano.profile.badges import calculate_badges
+#from .images import get_image
+#from .paths import icon_dir
 import kano_profile_gui.components.header as header
-import kano_profile_gui.components.selection_table as tab
+import kano_profile_gui.selection_table_components.selection_table as tab
+import kano_profile_gui.selection_table_components.info_screen as info_screen
+import kano_profile_gui.components.constants as constants
 
 img_width = 50
 badge_ui = None
@@ -20,15 +23,52 @@ badge_ui = None
 class Ui():
     def __init__(self):
 
-        badges_pictures = ["badge-1", "badge-2"]
-        badges_info = ["badge-1 info", "badge-2 info"]
+        filenames = []
+
+        #for file in os.listdir(constants.media + "/badges/"):
+        #    if file.endswith(".png"):
+        #        print file
+
+        for root, dirs, files in os.walk(constants.media + "/badges/"):
+            for file in files:
+                if file.endswith(".png"):
+                    #print os.path.join(root, file)
+                    filenames.append(os.path.join(root, file))
+
+        badges_info = []
+
+        for i in filenames:
+            line = {"filename": i, "heading": "heading", "description": "lots of info"}
+            badges_info.append(line)
 
         self.head = header.Header("Badges")
-        self.badges = tab.Table("badges", badges_pictures, badges_info)
+        self.badges = tab.Table(badges_info, False)
+
+        for pic in self.badges.pics:
+            pic.button.connect("button_press_event", self.selected_item_screen, self.badges.pics, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add(self.badges.table)
         self.scrolledwindow.set_size_request(self.badges.width, self.badges.height)
+
+        self.container = Gtk.Box()
+        self.container.add(self.scrolledwindow)
+
+    def selected_item_screen(self, arg1=None, arg2=None, array=[], selected_item=None):
+        selected_item_screen = info_screen.Item(array, selected_item, False)
+        for i in self.container.get_children():
+            self.container.remove(i)
+        self.container.add(selected_item_screen.box)
+        selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
+        self.container.show_all()
+
+    def leave_info_screen(self, arg1=None, arg2=None):
+        for i in self.container.get_children():
+            self.container.remove(i)
+        self.container.add(self.scrolledwindow)
+        self.container.show_all()
+        # Hide all labels on images
+        self.badges.hide_labels()
 
 
 def activate(_win, _box):
@@ -63,6 +103,6 @@ def activate(_win, _box):
         badge_ui = Ui()
 
     _box.pack_start(badge_ui.head.box, False, False, 0)
-    _box.pack_start(badge_ui.scrolledwindow, False, False, 0)
+    _box.pack_start(badge_ui.container, False, False, 0)
 
     _win.show_all()

@@ -19,9 +19,9 @@ import kano_profile_gui.home as home
 import kano_profile_gui.badges as badges
 import kano_profile_gui.projects as projects
 import kano_profile_gui.swags as swags
-import kano_profile_gui.components.top_bar as top_bar
+import kano_profile_gui.top_bar_components.top_bar as top_bar
 import kano_profile_gui.components.constants as constants
-import kano_profile_gui.components.progress_bar as progress_bar
+import kano_profile_gui.top_bar_components.progress_bar as progress_bar
 
 
 class MainWindow(Gtk.Window):

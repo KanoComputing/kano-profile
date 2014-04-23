@@ -18,6 +18,7 @@ class Table():
         self.width = 690
         self.height = 540
         self.equipable = equipable
+        self.equipped = None
 
         #self.pictures = []
         #for item in info:
@@ -32,7 +33,7 @@ class Table():
         self.pics = []
 
         for x in self.info:
-            if equipable:
+            if self.equipable:
                 picture = equip.Picture(x)
             else:
                 picture = item.Picture(x)
@@ -65,6 +66,17 @@ class Table():
 
         # Read config file/ JSON and find equipped picture.  Default to first one
         self.set_equipped(self.pics[0])
+
+    def set_selected(self, item):
+        for pic in self.pics:
+            pic.set_selected(False)
+        item.set_selected(True)
+
+    def get_selected(self):
+        for pic in self.pics:
+            if pic.get_selected():
+                return pic
+        return None
 
     def set_equipped(self, pic=None):
         if self.equipable:

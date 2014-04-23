@@ -11,10 +11,12 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.selection_table as tab
 import kano_profile_gui.selection_table_components.info_screen as info_screen
 import kano_profile_gui.components.header as header
-#import kano_profile_gui.components.constants as constants
 
 
-# headers = category names, e.g. ["badges"] or ["environments"]
+# headers: category names, e.g. ["badges"] or ["environments"]
+# info: array of information for each category
+# equipable: whether each item in the array is equipable (like avatars or environments)
+# width and height of the scrolled window
 class Template():
     def __init__(self, headers, info, equipable, width, height):
 
@@ -32,7 +34,7 @@ class Template():
 
         for cat in self.categories:
             for pic in cat.pics:
-                pic.button.connect("button_press_event", self.selected_item_screen, cat, pic)
+                pic.button.connect("button_press_event", self.go_to_info_screen, cat, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add(self.categories[0].table)
@@ -57,17 +59,21 @@ class Template():
         self.scrolledwindow.show_all()
         self.hide_labels()
 
-    def selected_item_screen(self, arg1=None, arg2=None, cat=None, selected_item=None):
-        selected_item_screen = info_screen.Item(cat.pics, selected_item, self.equipable)
+    def go_to_info_screen(self, arg1=None, arg2=None, cat=None, selected_item=None):
+        selected_item_screen = info_screen.Item(cat, selected_item, self.equipable)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)
         selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
         if self.equipable:
-            selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
+            # This doesn't work because we're not changing the selected_item
+            # We need to set a flag or self.selected = True
+            # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
+            selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat)
         self.container.show_all()
 
-    def equip(self, arg1=None, arg2=None, cat=None, selected_item=None):
+    def equip(self, arg1=None, arg2=None, cat=None):
+        selected_item = cat.get_selected()
         cat.set_equipped(selected_item)
         self.leave_info_screen()
 

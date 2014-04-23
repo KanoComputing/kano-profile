@@ -59,6 +59,9 @@ class Picture():
         # No item can be equipped
         self.equipable = False
 
+        # We're not in the item's info screen
+        self.selected = False
+
     # Sets whether the picture has a padlock in front or not.
     # locked = True or False
     def set_locked(self, locked):
@@ -67,13 +70,13 @@ class Picture():
     def get_locked(self):
         return self.locked
 
-    # Sets whether the picture is selected, ie whether we should go to the selection screen
+    # Sets whether the picture is selected, ie whether we are in the selection screen
     # selected = True or False
-    #def set_selected(self, selected):
-    #    self.selected = selected
+    def set_selected(self, selected):
+        self.selected = selected
 
-    #def get_selected(self):
-    #    return self.selected
+    def get_selected(self):
+        return self.selected
 
     # This function contains the styling applied to the picture when the mouse hovers over it.
     def add_hover_style(self, arg1=None, arg2=None):

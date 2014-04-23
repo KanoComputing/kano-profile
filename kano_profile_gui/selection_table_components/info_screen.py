@@ -14,13 +14,12 @@ import kano_profile_gui.components.icons as icons
 
 class Item():
     # Pass array of pictures into class then it can control it's own buttons
-    # info = array container headng, date, and complete information about the badge, environment, avatar
-    # info should be a property of the current_item
-    def __init__(self, array, current_item, equip):
+    # The current item is the screen we're currenty on
+    def __init__(self, category, current_item, equip):
 
         # image width and height
-        self.width = 460
-        self.height = 360
+        self.width = 450
+        self.height = 450
 
         # Boolean we pass to the text box to decide whether we put an equip button
         self.equip = equip
@@ -30,8 +29,12 @@ class Item():
 
         # Main container of info screen
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        self.array = array
+        self.category = category
+        self.array = category.pics
         self.current = current_item
+
+        # Make the item who's info screen it is the selected item
+        self.category.set_selected(self.current)
 
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
@@ -63,7 +66,7 @@ class Item():
         self.fixed.put(self.prev, 0, self.height / 2)
         self.fixed.put(self.next, self.width - 35, self.height / 2)
 
-        self.info = info_text.Info(700 - self.width, 300, self.current.heading, self.current.description, self.equip)
+        self.info = info_text.Info(700 - self.width, self.height, self.current.heading, self.current.description, self.equip)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed, False, False, 0)
@@ -86,6 +89,7 @@ class Item():
         self.refresh()
 
     def refresh(self):
+        self.category.set_selected(self.current)
         self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.current.filename, self.width, self.height)
         self.image.set_from_pixbuf(self.pixbuf)
         self.info = info_text.Info(734 - self.width, 300, self.current.heading, self.current.description, self.equip)

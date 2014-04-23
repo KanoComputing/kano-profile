@@ -14,10 +14,6 @@ import os
 from kano.profile.badges import calculate_badges
 #from .images import get_image
 #from .paths import icon_dir
-
-#import kano_profile_gui.selection_table_components.selection_table as tab
-#import kano_profile_gui.selection_table_components.info_screen as info_screen
-#import kano_profile_gui.components.header as header
 import kano_profile_gui.components.constants as constants
 import kano_profile_gui.selection_table_components.table_template as table_template
 

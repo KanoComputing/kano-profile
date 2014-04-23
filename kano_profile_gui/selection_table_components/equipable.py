@@ -25,7 +25,6 @@ class Picture(indiv_item.Picture):
         self.equipped_label.get_style_context().add_class("equipped_label")
         self.equipped_box.add(self.equipped_label)
         self.equipped_box.set_size_request(self.width, self.label_height)
-
         self.fixed.put(self.equipped_box, 0, self.height - self.label_height)
 
         # Default, set equipped to False.

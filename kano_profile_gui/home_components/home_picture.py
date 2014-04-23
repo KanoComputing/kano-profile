@@ -21,13 +21,14 @@ class Picture():
 
         self.background_width = 690 + 44
         self.background_height = 540 + 44
-        self.avatar_width = 300
-        self.avatar_height = 300
+        self.avatar_width = self.background_height
+        self.avatar_height = self.background_height
 
+        # Default background and avatar
         environment_filename = constants.media + "/environments/environment-1.png"
-        avatar_filename = constants.media + "/avatars/avatar-1.png"
+        avatar_filename = constants.media + "/avatars/Avatar-pong-1.png"
 
-        #for picture in self.environment_picture:
+        # for picture in self.environment_picture:
         # if we have the current active background
         # This will end up defaulting to 1
         if swags.swag_ui is not None:
@@ -45,4 +46,4 @@ class Picture():
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.background_width, self.background_height)
         self.fixed.put(self.background, 0, 0)
-        self.fixed.put(self.avatar, 250, 150)
+        self.fixed.put(self.avatar, (self.background_width - self.avatar_width) / 2, 0)

@@ -186,11 +186,11 @@ GtkSwitch.slider {
     font: Bariol bold 13px;
     color: #ffffff;
 }
-.equipped_label {
+.equipped_box {
     background: @button_color;
 }
 
-.equipped_text {
+.equipped_label {
     font: Bariol bold 13px;
     color: #ffffff;
 }

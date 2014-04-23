@@ -101,7 +101,7 @@ class Ui():
             self.container.remove(i)
         self.container.add(selected_item_screen.box)
         selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
-        selected_item_screen.info.select_button.connect("button_press_event", self.equip, table, selected_item)
+        selected_item_screen.info.equip_button.connect("button_press_event", self.equip, table, selected_item)
         self.container.show_all()
 
     def equip(self, arg1=None, arg2=None, table=None, selected_item=None):

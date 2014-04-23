@@ -26,7 +26,8 @@ class Picture():
         self.heading = info["heading"]
         self.description = info["description"]
 
-        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.filename, self.width, self.height)
+        # TODO: notice we are resizing the image to a SQUARE
+        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.filename, self.height, self.height)
         self.image = Gtk.Image()
         self.image.set_from_pixbuf(self.pixbuf)
         self.button = Gtk.EventBox()
@@ -45,7 +46,7 @@ class Picture():
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)
-        # TODO: in the case of badges, becaus ethe badge is square, we need to add (self.width-self.height)/2 padding to
+        # TODO: in the case of badges, because the badge is square, we need to add (self.width-self.height)/2 padding to
         # the badge
         self.fixed.put(self.image, (self.width - self.height) / 2, 0)
         self.fixed.put(self.hover_box, 0, self.height - self.label_height)

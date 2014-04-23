@@ -33,9 +33,11 @@ class Info():
         # TODO: don't check heading, pass another variable we can check for
         # add equip button
         if equip:
-            self.select_button = Gtk.Button("EQUIP")
-            self.select_button.get_style_context().add_class("green_button")
-            self.box.pack_start(self.select_button, False, False, 3)
+            self.equip_button = Gtk.Button("EQUIP")
+            self.equip_button.get_style_context().add_class("green_button")
+            self.equip_button_box = Gtk.Box()
+            self.equip_button_box.add(self.equip_button)
+            self.box.pack_start(self.equip_button_box, False, False, 3)
 
         self.box.pack_start(self.back_button_box, False, False, 3)
 

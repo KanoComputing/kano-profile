@@ -17,9 +17,9 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile_gui.paths import css_dir
-from kano_login_dialog import home, login
-from kano_login_dialog.components import top_bar
-from kano.world import is_registered, login_using_token
+from kano_login import home, login
+from kano_login.components import top_bar
+from kano.world.functions import is_registered, login_using_token
 
 
 class MainWindow(Gtk.Window):

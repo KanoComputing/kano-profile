@@ -21,7 +21,7 @@ from kano.network import is_internet
 
 from kano_profile_gui.paths import css_dir
 # from kano_share.components import top_bar
-from kano.world import login_using_token
+from kano.world.functions import login_using_token
 from kano_share.components import icons
 
 
@@ -72,6 +72,7 @@ def make_workspace_list():
         button.set_size_request(100, row_height)
         grid.attach(button, 1, i, 1, 1)
 
+    grid.get_style_context().add_class('test')
     return grid
 
 

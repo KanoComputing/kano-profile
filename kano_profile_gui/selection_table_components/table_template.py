@@ -37,7 +37,8 @@ class Template():
                 pic.button.connect("button_press_event", self.go_to_info_screen, cat, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
-        self.scrolledwindow.add(self.categories[0].table)
+        self.scrolledwindow.add_with_viewport(self.categories[0].table)
+        self.scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.scrolledwindow.set_size_request(width, height)
 
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)

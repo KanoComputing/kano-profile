@@ -55,6 +55,10 @@
     -GtkWidget-padding: 0;
 }
 
+GtkWindow {
+    background: #ffffff;
+}
+
 /* Green button seen when equipping an item */
 .green_button {
     background: @button_color;

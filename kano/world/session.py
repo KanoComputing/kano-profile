@@ -6,6 +6,7 @@
 
 import requests
 import json
+import os
 
 from kano.utils import get_date_now, download_url
 from kano.profile.profile import load_profile
@@ -120,6 +121,9 @@ class KanoWorldSession(object):
         return True, None
 
     def backup_content(self, file_path):
+        if not os.path.exists(file_path):
+            return False, 'File path not found!'
+
         files = {'file': open(file_path, 'rb')}
 
         success, text, data = request_wrapper('put', '/sync/backup', session=self.session, files=files)
@@ -142,6 +146,29 @@ class KanoWorldSession(object):
             return False, 'file_url not found'
 
         return download_url(file_url, file_path)
+
+    def upload_workspace(self, file_path, title, app_name):
+        if not os.path.exists(file_path):
+            return False, 'File path not found!'
+
+        files = {
+            'workspace': open(file_path, 'rb'),
+        }
+
+        payload = {
+            'title': title
+        }
+
+        endpoint = '/workspaces/{}'.format(app_name)
+
+        success, text, data = request_wrapper('post', endpoint, session=self.session, files=files, data=payload)
+        if not success:
+            return False, text
+
+        success = 'success' in data and data['success']
+        if not success:
+            return False, 'Backup not successful!'
+        return True, None
 
 
 

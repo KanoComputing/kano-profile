@@ -5,71 +5,21 @@
 #
 
 #import os
-from gi.repository import Gtk
+#from gi.repository import Gtk
 
 import os
 #from kano.profile.badges import calculate_badges
 #from .images import get_image
 #from .paths import icon_dir
-import kano_profile_gui.components.header as header
-import kano_profile_gui.selection_table_components.selection_table as tab
-import kano_profile_gui.selection_table_components.info_screen as info_screen
+#import kano_profile_gui.components.header as header
+#import kano_profile_gui.selection_table_components.selection_table as tab
+#import kano_profile_gui.selection_table_components.info_screen as info_screen
+#import kano_profile_gui.components.constants as constants
 import kano_profile_gui.components.constants as constants
+import kano_profile_gui.selection_table_components.table_template as table_template
 
 img_width = 50
 badge_ui = None
-
-
-class Ui():
-    def __init__(self):
-
-        filenames = []
-
-        #for file in os.listdir(constants.media + "/badges/"):
-        #    if file.endswith(".png"):
-        #        print file
-
-        for root, dirs, files in os.walk(constants.media + "/badges/"):
-            for file in files:
-                if file.endswith(".png"):
-                    filenames.append(os.path.join(root, file))
-
-        badges_info = []
-
-        for i in filenames:
-            line = {"filename": i, "heading": "heading", "description": "lots of info"}
-            badges_info.append(line)
-
-        self.head = header.Header("Badges")
-        self.badges = tab.Table(badges_info, False)
-
-        for pic in self.badges.pics:
-            pic.button.connect("button_press_event", self.selected_item_screen, self.badges.pics, pic)
-
-        self.scrolledwindow = Gtk.ScrolledWindow()
-        self.scrolledwindow.add_with_viewport(self.badges.table)
-        self.scrolledwindow.set_size_request(self.badges.width + 44, self.badges.height)
-        self.scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        self.container.pack_start(self.head.box, False, False, 0)
-        self.container.pack_start(self.scrolledwindow, False, False, 0)
-
-    def selected_item_screen(self, arg1=None, arg2=None, array=[], selected_item=None):
-        selected_item_screen = info_screen.Item(array, selected_item, False)
-        for i in self.container.get_children():
-            self.container.remove(i)
-        self.container.add(selected_item_screen.container)
-        selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
-        self.container.show_all()
-
-    def leave_info_screen(self, arg1=None, arg2=None):
-        for i in self.container.get_children():
-            self.container.remove(i)
-        self.container.pack_start(self.head.box, False, False, 0)
-        self.container.pack_start(self.scrolledwindow, False, False, 0)
-        self.container.show_all()
-        # Hide all labels on images
-        self.badges.hide_labels()
 
 
 def activate(_win, _box):
@@ -100,11 +50,30 @@ def activate(_win, _box):
 
                         table.attach(img, j, j + 1, i, i + 1)"""
 
+    filenames = []
+
+    for root, dirs, files in os.walk(constants.media + "/badges/"):
+        for file in files:
+            if file.endswith(".png"):
+                filenames.append(os.path.join(root, file))
+
+    badges_info = []
+
+    for i in filenames:
+        line = {"filename": i, "heading": "heading", "description": "lots of info"}
+        badges_info.append(line)
+
+    headers = ["badges"]
+    info = [badges_info]
+    equipable = False
+    width = 734
+    height = 540
+
     if badge_ui is None:
-        badge_ui = Ui()
+        badge_ui = table_template.Template(headers, info, equipable, width, height)
 
     _box.pack_start(badge_ui.container, False, False, 0)
 
     _win.show_all()
 
-    badge_ui.badges.hide_labels()
+    badge_ui.hide_labels()

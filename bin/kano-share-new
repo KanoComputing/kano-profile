@@ -16,26 +16,20 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.utils import run_cmd
 from kano.network import is_internet
 
 from kano_profile_gui.paths import css_dir
-# from kano_share.components import top_bar
-from kano.world.functions import login_using_token
-from kano_share.components import icons
+from kano_login.components import icons
 
 
-window_width = 400
-
-
-def make_top_bar(width, title):
+def make_top_bar(title):
     height = 44
 
     eb = Gtk.EventBox()
     eb.get_style_context().add_class('top_bar_container')
 
     header = Gtk.Label(title)
-    header.set_size_request(width - height, height)
+    header.set_size_request(200, height)
     header.get_style_context().add_class('header')
 
     cross = Gtk.Image()
@@ -51,7 +45,7 @@ def make_top_bar(width, title):
     grid = Gtk.Grid()
     grid.attach(header, 0, 0, 1, 1)
     grid.attach(close_button, 1, 0, 1, 1)
-    grid.set_size_request(width, height)
+    grid.set_size_request(200, height)
 
     eb.add(grid)
     return eb
@@ -61,19 +55,23 @@ def make_workspace_list():
     row_height = 30
 
     grid = Gtk.Grid()
-    grid.set_row_spacing(20)
+    grid.set_row_spacing(10)
 
     for i in xrange(10):
         label = Gtk.Label(i)
-        label.set_size_request(window_width, row_height)
+        label.set_size_request(300, row_height)
         grid.attach(label, 0, i, 1, 1)
 
         button = Gtk.Button('LOAD')
         button.set_size_request(100, row_height)
         grid.attach(button, 1, i, 1, 1)
 
-    grid.get_style_context().add_class('test')
-    return grid
+    align = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
+    padding = 20
+    align.set_padding(padding, padding, padding, padding)
+    align.add(grid)
+
+    return align
 
 
 class MainWindow(Gtk.Window):
@@ -87,7 +85,7 @@ class MainWindow(Gtk.Window):
         grid = Gtk.Grid()
         self.add(grid)
 
-        top_bar = make_top_bar(window_width, 'Kano Share')
+        top_bar = make_top_bar('Kano Share')
         grid.attach(top_bar, 0, 0, 1, 1)
 
         workspace_list = make_workspace_list()
@@ -97,13 +95,6 @@ class MainWindow(Gtk.Window):
 def main():
     if not is_internet():
         sys.exit('No internet')
-
-    success, value = login_using_token()
-    if not success:
-        run_cmd(dir_path + '/bin/kano-login')
-        success, value = login_using_token()
-        if not success:
-            sys.exit('Login not possible, error: ' + value)
 
     # Create style sheet
     cssProvider = Gtk.CssProvider()

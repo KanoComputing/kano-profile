@@ -48,9 +48,11 @@ class Ui():
             pic.button.connect("button_press_event", self.selected_item_screen, self.badges.pics, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
-        self.scrolledwindow.add(self.badges.table)
-        self.scrolledwindow.set_size_request(self.badges.width, self.badges.height)
-
+        self.scrolledwindow.add_with_viewport(self.badges.table)
+        #self.scrolledwindow.set_min_content_width(self.badges.width)
+        #self.scrolledwindow.set_min_content_height(self.badges.height)
+        self.scrolledwindow.set_size_request(self.badges.width + 44, self.badges.height)
+        self.scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.container = Gtk.Box()
         self.container.add(self.scrolledwindow)
 
@@ -106,3 +108,5 @@ def activate(_win, _box):
     _box.pack_start(badge_ui.container, False, False, 0)
 
     _win.show_all()
+
+    badge_ui.badges.hide_labels()

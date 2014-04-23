@@ -45,7 +45,9 @@ class Picture():
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)
-        self.fixed.put(self.image, 0, 0)
+        # TODO: in the case of badges, becaus ethe badge is square, we need to add (self.width-self.height)/2 padding to
+        # the badge
+        self.fixed.put(self.image, (self.width - self.height) / 2, 0)
         self.fixed.put(self.hover_box, 0, self.height - self.label_height)
 
         self.button.add(self.fixed)

@@ -200,13 +200,13 @@ GtkSwitch.slider {
     font: Bariol Bold 20;
     color: @title_color;
 }
-.info_date {
-    font: Bariol Bold 14;
-    color: @inactive_writing;
-}
 .info_paragraph {
     font: Bariol Bold 14;
     color: @inactive_writing;
+    background: #ffeee2;
+}
+.info_description_box {
+    background: #ffeee2;
 }
 
 /********************************************************

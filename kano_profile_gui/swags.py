@@ -69,8 +69,9 @@ class Ui():
         self.scrolledwindow.add(self.environments.table)
         self.scrolledwindow.set_size_request(self.environments.width, self.environments.height)
 
-        self.container = Gtk.Box()
-        self.container.add(self.scrolledwindow)
+        self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.container.pack_start(self.head.box, False, False, 0)
+        self.container.pack_start(self.scrolledwindow, False, False, 0)
 
     def on_button_toggled(self, radio):
         in_environments = radio.get_active()
@@ -99,7 +100,7 @@ class Ui():
         selected_item_screen = info_screen.Item(table.pics, selected_item, True)
         for i in self.container.get_children():
             self.container.remove(i)
-        self.container.add(selected_item_screen.box)
+        self.container.add(selected_item_screen.container)
         selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
         selected_item_screen.info.equip_button.connect("button_press_event", self.equip, table, selected_item)
         self.container.show_all()
@@ -111,7 +112,8 @@ class Ui():
     def leave_info_screen(self, arg1=None, arg2=None):
         for i in self.container.get_children():
             self.container.remove(i)
-        self.container.add(self.scrolledwindow)
+        self.container.pack_start(self.head.box, False, False, 0)
+        self.container.pack_start(self.scrolledwindow, False, False, 0)
         self.container.show_all()
         # Hide all labels on images
         self.environments.hide_labels()
@@ -152,7 +154,6 @@ def activate(_win, _box):
     if swag_ui is None:
         swag_ui = Ui()
 
-    _box.pack_start(swag_ui.head.box, False, False, 0)
     _box.pack_start(swag_ui.container, False, False, 0)
 
     _win.show_all()

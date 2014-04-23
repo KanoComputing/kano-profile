@@ -51,8 +51,7 @@ class Top_bar():
             label.set_text(name_array[x].upper())
             label.get_style_context().add_class("top_bar_label")
 
-            icon = Gtk.Image()
-            icon.set_from_pixbuf(icons.Icons(name_array[x].lower()).subpixbuf)
+            icon = icons.set_from_name(name_array[x].lower())
 
             container = Gtk.Box()
             container.pack_start(icon, False, False, 0)
@@ -66,9 +65,7 @@ class Top_bar():
             button.connect('button_press_event', self.activate_label)
 
         # Close button
-        cross = Gtk.Image()
-        cross.set_from_pixbuf(icons.Icons("cross").subpixbuf)
-
+        cross = icons.set_from_name("cross")
         close_button = Gtk.Button()
         close_button.set_image(cross)
         close_button.set_size_request(10, 10)
@@ -108,7 +105,6 @@ class Top_bar():
         label_style.add_class("top_bar_label_active")
 
 
-# On closing window, will alert if any of the listed booleans are True
 def close_window(event, button):
         Gtk.main_quit()
 

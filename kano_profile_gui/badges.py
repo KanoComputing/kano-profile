@@ -32,7 +32,6 @@ class Ui():
         for root, dirs, files in os.walk(constants.media + "/badges/"):
             for file in files:
                 if file.endswith(".png"):
-                    #print os.path.join(root, file)
                     filenames.append(os.path.join(root, file))
 
         badges_info = []
@@ -49,25 +48,25 @@ class Ui():
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add_with_viewport(self.badges.table)
-        #self.scrolledwindow.set_min_content_width(self.badges.width)
-        #self.scrolledwindow.set_min_content_height(self.badges.height)
         self.scrolledwindow.set_size_request(self.badges.width + 44, self.badges.height)
         self.scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.container = Gtk.Box()
-        self.container.add(self.scrolledwindow)
+        self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.container.pack_start(self.head.box, False, False, 0)
+        self.container.pack_start(self.scrolledwindow, False, False, 0)
 
     def selected_item_screen(self, arg1=None, arg2=None, array=[], selected_item=None):
         selected_item_screen = info_screen.Item(array, selected_item, False)
         for i in self.container.get_children():
             self.container.remove(i)
-        self.container.add(selected_item_screen.box)
+        self.container.add(selected_item_screen.container)
         selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
         self.container.show_all()
 
     def leave_info_screen(self, arg1=None, arg2=None):
         for i in self.container.get_children():
             self.container.remove(i)
-        self.container.add(self.scrolledwindow)
+        self.container.pack_start(self.head.box, False, False, 0)
+        self.container.pack_start(self.scrolledwindow, False, False, 0)
         self.container.show_all()
         # Hide all labels on images
         self.badges.hide_labels()
@@ -104,7 +103,6 @@ def activate(_win, _box):
     if badge_ui is None:
         badge_ui = Ui()
 
-    _box.pack_start(badge_ui.head.box, False, False, 0)
     _box.pack_start(badge_ui.container, False, False, 0)
 
     _win.show_all()

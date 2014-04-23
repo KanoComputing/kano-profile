@@ -46,5 +46,5 @@ class Info():
         self.align.add(self.box)
 
         self.background = Gtk.EventBox()
-        self.background.get_style_context().add_class("white")
+        self.background.get_style_context().add_class("info_description_box")
         self.background.add(self.align)

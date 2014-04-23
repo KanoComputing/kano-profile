@@ -8,5 +8,6 @@ Build-Depends: debhelper (>=9.0.0)
 Package: kano-profile
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, python, kano-toolset
+Recommends: kano-fonts
 Description: Profile app for KANO
 

@@ -6,7 +6,9 @@
 
 import requests
 
-api_url = 'http://10.0.1.91:1234'
+# api_url = 'http://10.0.1.91:1234'
+api_url = 'http://api.kano.me'
+
 content_type_json = {'content-type': 'application/json'}
 
 

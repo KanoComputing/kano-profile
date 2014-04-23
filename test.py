@@ -14,10 +14,12 @@ if not success:
 # kw.glob_session.backup_content()
 # print kw.glob_session.restore_content()
 # print kw.glob_session.upload_workspace('README.xml', 'title', 'appname')
-success, data = kww.list_workspaces('appname')
+success, data = kww.list_workspaces('appname', 0)
+if success:
+    pprint(data)
 
-for k in data:
-    pprint(k)
-    print
+# for k in data:
+#     pprint(k)
+#     print
 
 

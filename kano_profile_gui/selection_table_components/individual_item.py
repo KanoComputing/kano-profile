@@ -9,27 +9,29 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk
+from kano_profile_gui.images import get_image
 
 
 class Picture():
     def __init__(self, info):
-        # info is a dictionary containing name of picture file, heading, date, info about the item, hover over text shown
-
-        self.filename = info["filename"]
+        # info is a dictionary containing item and group which we use to find filename, heading, description, colour of background
 
         self.width = 230
         self.height = 180
         self.label_height = 44
+        self.item = info["item"]
+        self.group = info["group"]
 
         # split info into members
         self.heading = info["heading"]
         self.description = info["description"]
 
-        # TODO: notice we are resizing the image to a SQUARE
-        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.filename, self.height, self.height)
+        self.filename = get_image(info["item"], info["group"], self.height)  # pick the smaller of height or width
+
+        #self.filename = get_image(item, group, self.height) # the badge is square, so resize the width based on which is smaller
         self.image = Gtk.Image()
-        self.image.set_from_pixbuf(self.pixbuf)
+        self.image.set_from_file(self.filename)
         self.button = Gtk.EventBox()
         self.button.set_size_request(self.width, self.height)
 

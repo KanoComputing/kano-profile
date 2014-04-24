@@ -38,14 +38,14 @@ class Header():
 
         self.halign = Gtk.Alignment(xalign=0, yalign=0)
 
-        self.title_label1 = Gtk.Label(title1)
+        self.title_label1 = Gtk.Label(title1.upper())
         self.title_label1.get_style_context().add_class("heading")
 
         self.title_label2 = None
 
         # If there are two titles, then we need to have 2 radio button to switch views
         if title2 is not None:
-            self.title_label2 = Gtk.Label(title2)
+            self.title_label2 = Gtk.Label(title2.upper())
             self.title_label2.get_style_context().add_class("heading")
             self.radiobutton1 = Gtk.RadioButton()
             self.radiobutton2 = Gtk.RadioButton.new_from_widget(self.radiobutton1)

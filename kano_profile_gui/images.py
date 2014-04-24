@@ -12,8 +12,8 @@ from kano.utils import ensure_dir
 from .paths import image_dir
 
 
-def get_image(image_type, name, category, width):
-    img_folder = os.path.join(image_dir, image_type, str(width), category)
+def get_image(name, category, width):
+    img_folder = os.path.join(image_dir, str(width), category)
     #filename = '{category}_{name}.png'.format(category=category, name=name)
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(img_folder, filename)

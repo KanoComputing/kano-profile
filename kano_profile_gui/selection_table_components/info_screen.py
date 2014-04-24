@@ -10,6 +10,7 @@
 from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.selection_table_components.info_text as info_text
 import kano_profile_gui.components.icons as icons
+from kano_profile_gui.images import get_image
 
 
 class Item():
@@ -18,20 +19,20 @@ class Item():
     def __init__(self, category, current_item, equip):
 
         # image width and height
-        self.width = 450
-        self.height = 450
+        self.width = 400
+        self.height = 400
 
         # Boolean we pass to the text box to decide whether we put an equip button
         self.equip = equip
-
-        # filename of picture
-        self.filename = current_item.filename
 
         # Main container of info screen
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.category = category
         self.array = category.pics
         self.current = current_item
+
+        self.image = Gtk.Image()
+        self.set_image()
 
         # Make the item who's info screen it is the selected item
         self.category.set_selected(self.current)
@@ -42,13 +43,6 @@ class Item():
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
-
-        # self current should contain the heading, date achieved and full decription
-        # (or should be accessible through config using name)
-
-        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.current.filename, self.width, self.height)
-        self.image = Gtk.Image()
-        self.image.set_from_pixbuf(self.pixbuf)
 
         prev_arrow = icons.set_from_name("prev_arrow")
         next_arrow = icons.set_from_name("next_arrow")
@@ -90,6 +84,9 @@ class Item():
 
     def refresh(self):
         self.category.set_selected(self.current)
-        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.current.filename, self.width, self.height)
-        self.image.set_from_pixbuf(self.pixbuf)
-        self.info = info_text.Info(734 - self.width, 300, self.current.heading, self.current.description, self.equip)
+        self.set_image()
+
+    def set_image(self):
+         # filename of picture
+        filename = get_image(self.current.item, self.current.group, self.width)
+        self.image.set_from_file(filename)

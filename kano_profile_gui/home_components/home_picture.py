@@ -19,29 +19,26 @@ import kano_profile_gui.swags as swags
 class Picture():
     def __init__(self):
 
-        self.background_width = 690 + 44
-        self.background_height = 540 + 44
+        self.background_width = 690
+        self.background_height = 540
         self.avatar_width = self.background_height
         self.avatar_height = self.background_height
 
         # Default background and avatar
         environment_filename = constants.media + "/images/environments/1000/environment-1.png"
-        avatar_filename = constants.media + "/images/avatars/1000/Avatar-pong-1.png"
+        avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_width) + "/Avatar-pong-1.png"
 
-        # for picture in self.environment_picture:
-        # if we have the current active background
-        # This will end up defaulting to 1
         if swags.swag_ui is not None:
             environment_filename = swags.swag_ui.categories[0].get_equipped().filename
             avatar_filename = swags.swag_ui.categories[1].get_equipped().filename
 
-        self.background_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(environment_filename, self.background_width, self.background_height)
         self.background = Gtk.Image()
-        self.background.set_from_pixbuf(self.background_pixbuf)
+        self.background.set_from_file(environment_filename)
 
-        self.avatar_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(avatar_filename, self.avatar_width, self.avatar_height)
         self.avatar = Gtk.Image()
-        self.avatar.set_from_pixbuf(self.avatar_pixbuf)
+        self.avatar.set_from_file(avatar_filename)
+        #pixbuf = GdkPixbuf.Pixbuf.new_from_file(avatar_filename)
+        #self.avatar.set_from_pixbuf(pixbuf)
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.background_width, self.background_height)

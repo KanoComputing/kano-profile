@@ -9,46 +9,50 @@
 
 
 from gi.repository import Gtk
-import kano_profile_gui.selection_table_components.individual_item as item
+import kano_profile_gui.selection_table_components.individual_item as indiv
 import kano_profile_gui.selection_table_components.equipable as equip
+#from kano.profile.badges import calculate_badges
+#from .images import get_image
 
 
 class Table():
-    def __init__(self, info, equipable):
+    def __init__(self, category_dict, equipable):
         self.width = 690
         self.height = 540
         self.equipable = equipable
         self.equipped = None
-
-        #self.pictures = []
-        #for item in info:
-        #    self.pictures.append(item["name"])
-        #self.info = info
-
-        self.info = info
-        self.number_of_columns = 3
-        self.number_of_rows = (len(info) / self.number_of_columns) + (len(info) % self.number_of_columns)
-
         self.buttons = []
         self.pics = []
 
-        for x in self.info:
-            if self.equipable:
-                picture = equip.Picture(x)
-            else:
-                picture = item.Picture(x)
-            self.pics.append(picture)
+        number_of_badges = 0
+
+        for i, (group, items) in enumerate(category_dict.iteritems()):
+            for j, (item, unlocked) in enumerate(items.iteritems()):
+                if self.equipable:
+                    # Passing the item and group instead of the filename because the filename depends on the size, and the size varies
+                    # depending on what you need the image for.
+                    # TODO: change colour of badge background
+                    picture = equip.Picture({"item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked, "color": "#ff0000"})
+                    self.pics.append(picture)
+                else:
+                    #picture = indiv.Picture({"filename": img_path, "heading": item, "description": group, "unlocked": unlocked,})
+                    picture = indiv.Picture({"item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked, "color": "#ff0000"})
+                    self.pics.append(picture)
+                number_of_badges = number_of_badges + 1
+
+        #self.info = info
+        self.number_of_columns = 3
+        self.number_of_rows = (number_of_badges / self.number_of_columns) + (number_of_badges % self.number_of_columns)
+
+        self.table = Gtk.Table(self.number_of_rows, self.number_of_columns)
 
         # Attach to table
         index = 0
         row = 0
 
-        # Create table from number of rows and columns - preferably dynamically
-        self.table = Gtk.Table(self.number_of_rows, self.number_of_columns)
-
         while index < (self.number_of_rows * self.number_of_columns):
             for j in range(self.number_of_columns):
-                if index < len(self.info):
+                if index < number_of_badges:
                     self.table.attach(self.pics[index].button, j, j + 1, row, row + 1,
                                       Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.EXPAND, 0, 0)
                 else:

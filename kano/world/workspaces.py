@@ -10,20 +10,18 @@ from .connection import request_wrapper, content_type_json
 def list_workspaces(app_name, page):
     payload = {
         'app_name': app_name,
-        'page': page
+        'page': page,
+        'limit': 10
     }
 
     success, text, data = request_wrapper('get', '/workspaces', headers=content_type_json, params=payload)
     if not success:
-        return False, text
-
-    from pprint import pprint
-    pprint(data)
+        return success, text, None
 
     if 'entries' in data and data['entries']:
-        return True, data
+        return True, None, data
 
-    return False, 'Something wrong with getting workspaces!'
+    return False, 'Something wrong with getting workspaces!', None
 
 
 

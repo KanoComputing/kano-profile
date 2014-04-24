@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano.world import register as register_
+from kano.world.functions import register as register_
 
 
 def activate(_win, _box):

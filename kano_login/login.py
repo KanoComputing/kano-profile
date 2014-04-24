@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano.world import login as login_
+from kano.world.functions import login as login_
 from kano.profile.profile import load_profile
 
 

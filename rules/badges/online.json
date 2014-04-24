@@ -1,14 +1,47 @@
 {
+  "street_cred": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "shares", 1]
+    ],
+    "title": "Street Cred",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "hello_world": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "chats-sent", 1]
+    ],
+    "title": "Hello World",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
   "community_champion": {
     "operation": "stat_gta",
     "targets": [
       ["kano-world", "shares", 5]
-    ]
+    ],
+    "title": "Community Champion",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   },
   "talent_tracker": {
     "operation": "stat_gta",
     "targets": [
       ["kano-world", "you_follow", 10]
-    ]
+    ],
+    "title": "Talent Tracker",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "staff_pick": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "staff_picks", 1]
+    ],
+    "title": "Staff Pick",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   }
 }

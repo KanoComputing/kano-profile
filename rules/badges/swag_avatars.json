@@ -1,15 +1,21 @@
 {
-  "something": {
+  "some_avatar": {
     "operation": "stat_gta",
     "targets": [
       ["kano-world", "kano_level", 3]
-    ]
+    ],
+    "title": "Some Avatar",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   },
   "kano_master": {
     "operation": "stat_gta",
     "targets": [
       ["kano-world", "num_offline_badges", 15]
     ],
-    "push_back": true
+    "push_back": true,
+    "title": "KANO Master",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   }
 }

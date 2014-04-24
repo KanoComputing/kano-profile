@@ -215,6 +215,7 @@ def test_badge_rules():
         return
 
     properties = dict()
+    max_values = dict()
 
     for rule_file in rule_files:
         rules = read_json(os.path.join(badges_folder, rule_file))
@@ -226,10 +227,15 @@ def test_badge_rules():
             for target in badge_rules['targets']:
                 if badge_rules['operation'] == 'stat_sum_gt':
                     profile, variable = target
+                    value = badge_rules['value']
                 elif badge_rules['operation'] == 'stat_gta':
                     profile, variable, value = target
 
                 properties.setdefault(profile, set()).add(variable)
+
+                if value == -1:
+                    # print rule_file, badge, profile, variable, value
+                    max_values.setdefault(profile, set()).add(variable)
 
             # check if name == slugified title
             if True:
@@ -237,12 +243,17 @@ def test_badge_rules():
                 if badge != slug:
                     print rule_file, badge, slug
 
-            if True:
+            # print titles
+            if False:
                 print badge_rules['title']
+
+    # print properties using max_value
+    if True:
+        for category, items in max_values.iteritems():
+            print category, '-', ' '.join(items)
 
     # print all properties
     if False:
-        print
         for category, items in properties.iteritems():
             print category, '-', ' '.join(items)
 

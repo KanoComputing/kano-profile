@@ -2,11 +2,7 @@
   "judoka": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        1
-      ]
+      ["kano-profile", "level", 1]
     ],
     "title": "Judoka",
     "desc_locked": "desc_locked",
@@ -15,11 +11,7 @@
   "video_guy": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        2
-      ]
+      ["kano-profile", "level", 2]
     ],
     "title": "Video Guy",
     "desc_locked": "desc_locked",
@@ -28,11 +20,7 @@
   "domo": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        3
-      ]
+      ["kano-profile", "level", 3]
     ],
     "title": "Domo",
     "desc_locked": "desc_locked",
@@ -41,11 +29,7 @@
   "arcader": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        4
-      ]
+      ["kano-profile", "level", 4]
     ],
     "title": "Arcader",
     "desc_locked": "desc_locked",
@@ -54,11 +38,7 @@
   "minecrafter": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        5
-      ]
+      ["kano-profile", "level", 5]
     ],
     "title": "Minecrafter",
     "desc_locked": "desc_locked",
@@ -67,11 +47,7 @@
   "conductor": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        6
-      ]
+      ["kano-profile", "level", 6]
     ],
     "title": "Conductor",
     "desc_locked": "desc_locked",
@@ -80,11 +56,7 @@
   "kano_kin": {
     "operation": "stat_gta",
     "targets": [
-      [
-        "kano-profile",
-        "level",
-        7
-      ]
+      ["kano-profile", "level", 7]
     ],
     "title": "Kano Kin",
     "desc_locked": "desc_locked",

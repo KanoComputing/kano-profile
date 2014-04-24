@@ -46,7 +46,7 @@
       ["make-pong", "level"],
       ["make-minecraft", "level"]
     ],
-    "value": 999,
+    "value": -1,
     "title": "Platinum Medallion",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"

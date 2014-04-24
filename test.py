@@ -2,6 +2,7 @@
 
 import sys
 import os
+from pprint import pprint
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
@@ -10,7 +11,6 @@ if __name__ == '__main__' and __package__ is None:
 
 # import kano.world.functions as kw
 # import kano.world.workspaces as kww
-# from pprint import pprint
 # from kano.utils import run_cmd
 
 # # login first with token, if not working then try with dialog
@@ -33,6 +33,8 @@ if __name__ == '__main__' and __package__ is None:
 # #     print
 
 
-from kano.profile.badges import test_badge_rules
+from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules
 
 test_badge_rules()
+# badges = calculate_badges()
+# pprint(badges)

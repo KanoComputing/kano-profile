@@ -76,7 +76,7 @@ def calculate_badges():
 
     # helper function to calculate operations
     def do_calculate(select_push_back):
-        for category, items in rules.iteritems():
+        for category, items in all_rules.iteritems():
             for item, rule in items.iteritems():
                 target_pushback = 'push_back' in rule and rule['push_back'] is True
                 if target_pushback != select_push_back:
@@ -93,7 +93,8 @@ def calculate_badges():
                             achieved = False
                             break
                         achieved &= app_state[app][variable] >= value
-                    badges.setdefault(category, dict())[item] = achieved
+                    calculated_badges.setdefault(category, dict())[item] = all_rules[category][item]
+                    calculated_badges[category][item]['achieved'] = achieved
 
                 elif rule['operation'] == 'stat_sum_gt':
                     sum = 0
@@ -107,54 +108,47 @@ def calculate_badges():
                         sum += float(app_state[app][variable])
 
                     achieved = sum >= rule['value']
-                    badges.setdefault(category, dict())[item] = achieved
+                    calculated_badges.setdefault(category, dict())[item] = all_rules[category][item]
+                    calculated_badges[category][item]['achieved'] = achieved
 
                 else:
                     print 'unknown uperation {}'.format(rule['operation'])
 
-    # def count_offline_badges():
-    #     count = 0
-    #     for category, items in badges.iteritems():
-    #         for item, value in items.iteritems():
-    #             if value:
-    #                 count += 1
-    #     return count
+    def count_offline_badges():
+        return 18
 
-    if not os.path.exists(badges_folder):
-        print 'badge rules folder missing'
-        return
+        # TODO implement proper count
+        # count = 0
+        # for category, items in badges.iteritems():
+        #     for item, value in items.iteritems():
+        #         if value:
+        #             count += 1
+        # return count
 
-    rule_files = os.listdir(badges_folder)
-    if not rule_files:
-        print 'No rule files!'
-        return
+    app_list = get_app_list() + ['kano-world']
+    app_state = dict()
+    for app in app_list:
+        app_state[app] = load_app_state(app)
 
+    # special app: kanoprofile
+    profile_state = dict()
+    profile_state['xp'] = calculate_xp()
+    profile_state['level'], _ = calculate_kano_level()
+    app_state['kano-world'] = profile_state
 
+    all_rules = load_badge_rules()
+    calculated_badges = dict()
 
+    # normal ones
+    do_calculate(False)
 
-    # app_list = get_app_list() + ['kano-world']
-    # app_state = dict()
-    # for app in app_list:
-    #     app_state[app] = load_app_state(app)
+    # count offline badges
+    app_state['kano-world']['num_offline_badges'] = count_offline_badges()
 
-    # # special app: kanoprofile
-    # profile_state = dict()
-    # profile_state['xp'] = calculate_xp()
-    # profile_state['level'], _ = calculate_kano_level()
-    # app_state['kano-world'] = profile_state
+    # add pushed back ones
+    do_calculate(True)
 
-    # badges = dict()
-
-    # # normal ones
-    # do_calculate(False)
-
-    # # count offline badges
-    # app_state['kano-world']['num_offline_badges'] = count_offline_badges()
-
-    # # add pushed back ones
-    # do_calculate(True)
-
-    # return badges
+    return calculated_badges
 
 
 def compare_badges_dict(old, new):
@@ -205,25 +199,13 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
 
 
 def test_badge_rules():
-    if not os.path.exists(badges_folder):
-        print 'badge rules folder missing'
-        return
-
-    rule_files = os.listdir(badges_folder)
-    if not rule_files:
-        print 'No rule files!'
-        return
+    merged_rules = load_badge_rules()
 
     properties = dict()
     max_values = dict()
 
-    for rule_file in rule_files:
-        rules = read_json(os.path.join(badges_folder, rule_file))
-        if not rules:
-            print 'Rule file empty: {}'.format(rule_file)
-            continue
-
-        for badge, badge_rules in rules.iteritems():
+    for category, items in merged_rules.iteritems():
+        for badge, badge_rules in items.iteritems():
             for target in badge_rules['targets']:
                 if badge_rules['operation'] == 'stat_sum_gt':
                     profile, variable = target
@@ -241,14 +223,14 @@ def test_badge_rules():
             if True:
                 slug = slugify(badge_rules['title']).replace('-', '_')
                 if badge != slug:
-                    print rule_file, badge, slug
+                    print category, badge, slug
 
             # print titles
             if False:
                 print badge_rules['title']
 
-    # print properties using max_value
-    if True:
+    # print max_values
+    if False:
         for category, items in max_values.iteritems():
             print category, '-', ' '.join(items)
 
@@ -257,3 +239,31 @@ def test_badge_rules():
         for category, items in properties.iteritems():
             print category, '-', ' '.join(items)
 
+    calculated_badges = calculate_badges()
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            if not 'achieved' in properties:
+                print category, badge, properties
+
+
+def load_badge_rules():
+    if not os.path.exists(badges_folder):
+        print 'badge rules folder missing'
+        return
+
+    rule_files = os.listdir(badges_folder)
+    if not rule_files:
+        print 'No rule files!'
+        return
+
+    merged_rules = dict()
+    for rule_file in rule_files:
+        rules = read_json(os.path.join(badges_folder, rule_file))
+        if not rules:
+            print 'Rule file empty: {}'.format(rule_file)
+            continue
+
+        category = rule_file.split('.')[0]
+        merged_rules[category] = rules
+
+    return merged_rules

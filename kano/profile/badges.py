@@ -72,7 +72,7 @@ def calculate_kano_level():
             return int(reached_level), reached_percentage
 
 
-def calculate_badges():
+def calculate_badges(filter_category=None):
 
     # helper function to calculate operations
     def do_calculate(select_push_back):
@@ -148,7 +148,31 @@ def calculate_badges():
     # add pushed back ones
     do_calculate(True)
 
-    return calculated_badges
+    # filtering
+    if not filter_category:
+        return calculated_badges
+
+    else:
+        if filter_category == 'badges':
+            filtered_badges = {
+                k: v for k, v in calculated_badges.iteritems()
+                if not k.startswith('swag_')
+            }
+            return filtered_badges
+
+        elif filter_category == 'avatars':
+            filtered_badges = {
+                k: v for k, v in calculated_badges.iteritems()
+                if k == 'swag_avatars'
+            }
+            return filtered_badges
+
+        elif filter_category == 'environments':
+            filtered_badges = {
+                k: v for k, v in calculated_badges.iteritems()
+                if k == 'swag_environments'
+            }
+            return filtered_badges
 
 
 def compare_badges_dict(old, new):

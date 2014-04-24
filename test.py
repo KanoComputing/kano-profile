@@ -35,6 +35,6 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules
 
-test_badge_rules()
-# badges = calculate_badges()
-# pprint(badges)
+# test_badge_rules()
+badges = calculate_badges('badges')
+pprint(badges)

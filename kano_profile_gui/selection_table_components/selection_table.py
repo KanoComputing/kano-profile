@@ -16,7 +16,7 @@ import kano_profile_gui.selection_table_components.equipable as equip
 
 
 class Table():
-    def __init__(self, category_dict, equipable):
+    def __init__(self, category_name, category_dict, equipable):
         self.width = 690
         self.height = 540
         self.equipable = equipable
@@ -32,12 +32,12 @@ class Table():
                     # Passing the item and group instead of the filename because the filename depends on the size, and the size varies
                     # depending on what you need the image for.
                     # TODO: change colour of badge background
-                    picture = equip.Picture({"item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked, "color": "#ff0000"})
-                    self.pics.append(picture)
+                    picture = equip.Picture({"category": category_name, "item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked})
                 else:
                     #picture = indiv.Picture({"filename": img_path, "heading": item, "description": group, "unlocked": unlocked,})
-                    picture = indiv.Picture({"item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked, "color": "#ff0000"})
-                    self.pics.append(picture)
+                    picture = indiv.Picture({"category": category_name, "item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked})
+
+                self.pics.append(picture)
                 number_of_badges = number_of_badges + 1
 
         #self.info = info

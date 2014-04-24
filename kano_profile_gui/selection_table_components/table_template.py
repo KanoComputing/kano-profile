@@ -23,8 +23,8 @@ class Template():
         self.equipable = equipable
 
         self.categories = []
-        for x in info:
-            self.categories.append(tab.Table(x, self.equipable))
+        for x in range(len(info)):
+            self.categories.append(tab.Table(headers[x], info[x], self.equipable))
 
         if len(headers) == 2:
             self.head = header.Header(headers[0], headers[1])

@@ -9,12 +9,12 @@
 
 #from gi.repository import Gtk
 
-import os
+#import os
 
 from kano.profile.badges import calculate_badges
 #from .images import get_image
 #from .paths import icon_dir
-import kano_profile_gui.components.constants as constants
+#import kano_profile_gui.components.constants as constants
 import kano_profile_gui.selection_table_components.table_template as table_template
 
 img_width = 50
@@ -52,36 +52,19 @@ def activate(_win, _box):
 
     ##### My code ####
 
-    environ_filenames = []
+    """ badges =
+        {u'easter_eggs': {u'file_finder': False},
+        u'application': {u'staying_super': False, u'feedbacker': False},
+        u'number': {u'silver_medallion': False, u'bronze_medallion': False, u'100_blocks': False},
+        u'in_game': {u'appetite_for_apples': False, u'pong_painter': False, u'rule_braker': False},
+        u'master': {u'computer_commander': True, u'snake_survivor': False, u'kano_apprentice': False, u'video_voyager': False},
+        u'online': {u'community_champion': False, u'talent_tracker': False}}"""
 
-    for root, dirs, files in os.walk(constants.media + "/environments/"):
-        for file in files:
-            if file.endswith(".png"):
-                #print os.path.join(root, file)
-                environ_filenames.append(os.path.join(root, file))
-
-    environ_info = []
-
-    for i in environ_filenames:
-        line = {"filename": i, "heading": "heading", "description": "lots of info", "color": "#ff0000"}
-        environ_info.append(line)
-
-    avatar_filenames = []
-
-    for root, dirs, files in os.walk(constants.media + "/avatars/"):
-        for file in files:
-            if file.endswith(".png"):
-                #print os.path.join(root, file)
-                avatar_filenames.append(os.path.join(root, file))
-
-    avatar_info = []
-
-    for i in avatar_filenames:
-        line = {"filename": i, "heading": "heading", "description": "lots of info", "color": "#00ff00"}
-        avatar_info.append(line)
+    environments = {u'environments': {u'Kano-environment1': False}}
+    avatars = {u'avatars': {u'Avatar-1': False, u'Avatar-2': False, u'Avatar-3': False, u'Avatar-4': False, u'Avatar-5': False, u'Avatar-6': False}}
 
     headers = ["environments", "avatars"]
-    info = [environ_info, avatar_info]
+    info = [environments, avatars]
     equipable = True
     width = 734
     height = 540

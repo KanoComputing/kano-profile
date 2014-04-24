@@ -11,7 +11,7 @@
 
 # Read from directory /usr/share/kano-profile/media/environments/*
 
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk
 import kano_profile_gui.components.constants as constants
 import kano_profile_gui.swags as swags
 
@@ -24,21 +24,16 @@ class Picture():
         self.avatar_width = self.background_height
         self.avatar_height = self.background_height
 
-        # Default background and avatar
-        environment_filename = constants.media + "/images/environments/1000/environment-1.png"
-        avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_width) + "/Avatar-pong-1.png"
-
         if swags.swag_ui is not None:
-            environment_filename = swags.swag_ui.categories[0].get_equipped().filename
-            avatar_filename = swags.swag_ui.categories[1].get_equipped().filename
-
-        self.background = Gtk.Image()
-        self.background.set_from_file(environment_filename)
-
-        self.avatar = Gtk.Image()
-        self.avatar.set_from_file(avatar_filename)
-        #pixbuf = GdkPixbuf.Pixbuf.new_from_file(avatar_filename)
-        #self.avatar.set_from_pixbuf(pixbuf)
+            self.background = swags.swag_ui.categories[0].get_equipped().set_image_width(690)
+            self.avatar = swags.swag_ui.categories[1].get_equipped().set_image_width(580)
+        else:
+            environment_filename = constants.media + "/images/690/environments/Kano-environment1.png"
+            avatar_filename = constants.media + "/images/avatars/580/Avatar-1.png"
+            self.background = Gtk.Image()
+            self.background.set_from_file(environment_filename)
+            self.avatar = Gtk.Image()
+            self.avatar.set_from_file(avatar_filename)
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.background_width, self.background_height)

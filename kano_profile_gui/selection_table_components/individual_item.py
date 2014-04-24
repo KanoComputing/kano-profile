@@ -20,6 +20,7 @@ class Picture():
         self.width = 230
         self.height = 180
         self.label_height = 44
+        self.category = info["category"]
         self.item = info["item"]
         self.group = info["group"]
 
@@ -27,11 +28,11 @@ class Picture():
         self.heading = info["heading"]
         self.description = info["description"]
 
-        self.filename = get_image(info["item"], info["group"], self.height)  # pick the smaller of height or width
+        if self.category == "environments":
+            self.image = self.set_image_width(self.width)
+        else:
+            self.image = self.set_image_width(self.height)
 
-        #self.filename = get_image(item, group, self.height) # the badge is square, so resize the width based on which is smaller
-        self.image = Gtk.Image()
-        self.image.set_from_file(self.filename)
         self.button = Gtk.EventBox()
         self.button.set_size_request(self.width, self.height)
 
@@ -50,7 +51,10 @@ class Picture():
         self.fixed.set_size_request(self.width, self.height)
         # TODO: in the case of badges, because the badge is square, we need to add (self.width-self.height)/2 padding to
         # the badge
-        self.fixed.put(self.image, (self.width - self.height) / 2, 0)
+        if self.category == "environments":
+            self.fixed.put(self.image, 0, 0)
+        else:
+            self.fixed.put(self.image, (self.width - self.height) / 2, 0)
         self.fixed.put(self.hover_box, 0, self.height - self.label_height)
 
         self.button.add(self.fixed)
@@ -88,3 +92,9 @@ class Picture():
     def remove_hover_style(self, arg1=None, arg2=None):
         self.hover_box.set_visible_window(False)
         self.hover_label.set_visible(False)
+
+    def set_image_width(self, width_of_image):
+        filename = get_image(self.item, self.group, width_of_image)
+        image = Gtk.Image()
+        image.set_from_file(filename)
+        return image

@@ -54,8 +54,8 @@
   "100_blocks": {
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-pong", "blocks"],
-      ["make-minecraft", "blocks"]
+      ["make-pong", "blocks_created"],
+      ["make-minecraft", "blocks_created"]
     ],
     "value": 100,
     "title": "100 Blocks",
@@ -65,8 +65,8 @@
   "1000_blocks": {
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-pong", "blocks"],
-      ["make-minecraft", "blocks"]
+      ["make-pong", "blocks_created"],
+      ["make-minecraft", "blocks_created"]
     ],
     "value": 1000,
     "title": "1000 Blocks",

@@ -1,20 +1,92 @@
 {
-  "some_avatar": {
+  "judoka": {
     "operation": "stat_gta",
     "targets": [
-      ["kano-world", "kano_level", 3]
+      [
+        "kano-profile",
+        "level",
+        1
+      ]
     ],
-    "title": "Some Avatar",
+    "title": "Judoka",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },
-  "kano_master": {
+  "video_guy": {
     "operation": "stat_gta",
     "targets": [
-      ["kano-world", "num_offline_badges", 15]
+      [
+        "kano-profile",
+        "level",
+        2
+      ]
     ],
-    "push_back": true,
-    "title": "KANO Master",
+    "title": "Video Guy",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "Domo": {
+    "operation": "stat_gta",
+    "targets": [
+      [
+        "kano-profile",
+        "level",
+        3
+      ]
+    ],
+    "title": "Domo",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "Arcader": {
+    "operation": "stat_gta",
+    "targets": [
+      [
+        "kano-profile",
+        "level",
+        4
+      ]
+    ],
+    "title": "Arcader",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "minecrafter": {
+    "operation": "stat_gta",
+    "targets": [
+      [
+        "kano-profile",
+        "level",
+        5
+      ]
+    ],
+    "title": "Minecrafter",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "conductor": {
+    "operation": "stat_gta",
+    "targets": [
+      [
+        "kano-profile",
+        "level",
+        6
+      ]
+    ],
+    "title": "Judoka",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "kano_kin": {
+    "operation": "stat_gta",
+    "targets": [
+      [
+        "kano-profile",
+        "level",
+        7
+      ]
+    ],
+    "title": "Kano Kin",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   }

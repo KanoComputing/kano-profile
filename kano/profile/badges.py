@@ -6,8 +6,10 @@
 
 from __future__ import division
 
+import os
+
 from ..utils import read_json, is_gui, run_cmd
-from .paths import xp_file, levels_file, badges_file, bin_dir
+from .paths import xp_file, levels_file, badges_folder, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -117,33 +119,43 @@ def calculate_badges():
                     count += 1
         return count
 
-    rules = read_json(badges_file)
-    if not rules:
+    if not os.path.exists(badges_folder):
+        print 'badge rules folder missing'
         return
 
-    app_list = get_app_list() + ['kano-world']
-    app_state = dict()
-    for app in app_list:
-        app_state[app] = load_app_state(app)
+    rule_files = os.path.listdir(badges_folder)
+    if not rule_files:
+        print 'No rule files!'
+        return
 
-    # special app: kanoprofile
-    profile_state = dict()
-    profile_state['xp'] = calculate_xp()
-    profile_state['level'], _ = calculate_kano_level()
-    app_state['kano-world'] = profile_state
 
-    badges = dict()
+    # rules = read_json(badges_file)
+    # if not rules:
+    #     return
 
-    # normal ones
-    do_calculate(False)
+    # app_list = get_app_list() + ['kano-world']
+    # app_state = dict()
+    # for app in app_list:
+    #     app_state[app] = load_app_state(app)
 
-    # count offline badges
-    app_state['kano-world']['num_offline_badges'] = count_offline_badges()
+    # # special app: kanoprofile
+    # profile_state = dict()
+    # profile_state['xp'] = calculate_xp()
+    # profile_state['level'], _ = calculate_kano_level()
+    # app_state['kano-world'] = profile_state
 
-    # add pushed back ones
-    do_calculate(True)
+    # badges = dict()
 
-    return badges
+    # # normal ones
+    # do_calculate(False)
+
+    # # count offline badges
+    # app_state['kano-world']['num_offline_badges'] = count_offline_badges()
+
+    # # add pushed back ones
+    # do_calculate(True)
+
+    # return badges
 
 
 def compare_badges_dict(old, new):

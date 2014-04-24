@@ -1,11 +1,55 @@
 {
-  "kano_master": {
+  "video_set": {
     "operation": "stat_gta",
     "targets": [
-      ["kano-world", "num_offline_badges", 15]
+      ["make-video", "level", -1]
     ],
-    "push_back": true,
-    "title": "KANO Master",
+    "title": "Video Set",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "jungle": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-snake", "level", -1]
+    ],
+    "title": "Jungle",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "arcade_hall": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-pong", "level", -1]
+    ],
+    "title": "Arcade hall",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "fields_of_ideas": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-minecraft", "level", -1]
+    ],
+    "title": "Fields of Ideas",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "concert_hall": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-music", "level", -1]
+    ],
+    "title": "Concert hall",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "space": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-profile", "level", -1]
+    ],
+    "title": "Space",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   }

@@ -22,7 +22,7 @@
     "targets": [
       ["make-pong", "level", -1]
     ],
-    "title": "Arcade hall",
+    "title": "Arcade Hall",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },
@@ -40,7 +40,7 @@
     "targets": [
       ["make-music", "level", -1]
     ],
-    "title": "Concert hall",
+    "title": "Concert Hall",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },

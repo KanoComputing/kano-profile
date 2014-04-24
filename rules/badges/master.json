@@ -59,7 +59,7 @@
       ["kano-world", "num_offline_badges", 15]
     ],
     "push_back": true,
-    "title": "KANO Apprentice",
+    "title": "Kano Apprentice",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },
@@ -69,7 +69,7 @@
       ["kano-world", "num_offline_badges", 30]
     ],
     "push_back": true,
-    "title": "KANO Master",
+    "title": "Kano Master",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   }

@@ -7,6 +7,7 @@
 from __future__ import division
 
 import os
+from slugify import slugify
 
 from ..utils import read_json, is_gui, run_cmd
 from .paths import xp_file, levels_file, badges_folder, bin_dir
@@ -111,27 +112,25 @@ def calculate_badges():
                 else:
                     print 'unknown uperation {}'.format(rule['operation'])
 
-    def count_offline_badges():
-        count = 0
-        for category, items in badges.iteritems():
-            for item, value in items.iteritems():
-                if value:
-                    count += 1
-        return count
+    # def count_offline_badges():
+    #     count = 0
+    #     for category, items in badges.iteritems():
+    #         for item, value in items.iteritems():
+    #             if value:
+    #                 count += 1
+    #     return count
 
     if not os.path.exists(badges_folder):
         print 'badge rules folder missing'
         return
 
-    rule_files = os.path.listdir(badges_folder)
+    rule_files = os.listdir(badges_folder)
     if not rule_files:
         print 'No rule files!'
         return
 
 
-    # rules = read_json(badges_file)
-    # if not rules:
-    #     return
+
 
     # app_list = get_app_list() + ['kano-world']
     # app_state = dict()
@@ -205,9 +204,45 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
     save_app_state_with_dialog(app_name, data)
 
 
+def test_badge_rules():
+    if not os.path.exists(badges_folder):
+        print 'badge rules folder missing'
+        return
 
+    rule_files = os.listdir(badges_folder)
+    if not rule_files:
+        print 'No rule files!'
+        return
 
+    properties = dict()
 
+    for rule_file in rule_files:
+        rules = read_json(os.path.join(badges_folder, rule_file))
+        if not rules:
+            print 'Rule file empty: {}'.format(rule_file)
+            continue
 
+        for badge, badge_rules in rules.iteritems():
+            for target in badge_rules['targets']:
+                if badge_rules['operation'] == 'stat_sum_gt':
+                    profile, variable = target
+                elif badge_rules['operation'] == 'stat_gta':
+                    profile, variable, value = target
 
+                properties.setdefault(profile, set()).add(variable)
+
+            # check if name == slugified title
+            if True:
+                slug = slugify(badge_rules['title']).replace('-', '_')
+                if badge != slug:
+                    print rule_file, badge, slug
+
+            if True:
+                print badge_rules['title']
+
+    # print all properties
+    if False:
+        print
+        for category, items in properties.iteritems():
+            print category, '-', ' '.join(items)
 

@@ -25,7 +25,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },
-  "Domo": {
+  "domo": {
     "operation": "stat_gta",
     "targets": [
       [
@@ -38,7 +38,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },
-  "Arcader": {
+  "arcader": {
     "operation": "stat_gta",
     "targets": [
       [
@@ -73,7 +73,7 @@
         6
       ]
     ],
-    "title": "Judoka",
+    "title": "Conductor",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked"
   },

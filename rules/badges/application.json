@@ -1,0 +1,14 @@
+{
+  "feedbacker": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-feedback", "starts", 1]
+    ]
+  },
+  "staying_super": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-updater", "updated", 1]
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "pong_painter": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-pong", "level", 5]
+    ]
+  },
+  "rule_braker": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-video", "level", 8]
+    ]
+  },
+  "appetite_for_apples": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-snake", "apples_eaten", 100]
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "kano_master": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "num_offline_badges", 15]
+    ],
+    "push_back": true
+  }
+}

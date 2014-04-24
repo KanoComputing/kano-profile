@@ -1,0 +1,30 @@
+{
+  "bronze_medallion": {
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "value": 5
+  },
+  "silver_medallion": {
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "value": 15
+  },
+  "100_blocks": {
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-pong", "blocks"],
+      ["make-minecraft", "blocks"]
+    ],
+    "value": 100
+  }
+}

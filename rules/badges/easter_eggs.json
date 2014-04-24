@@ -1,0 +1,8 @@
+{
+  "file_finder": {
+    "operation": "stat_gta",
+    "targets": [
+      ["hidden_file", "opened", 1]
+    ]
+  }
+}

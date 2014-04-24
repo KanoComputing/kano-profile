@@ -1,0 +1,14 @@
+{
+  "community_champion": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "shares", 5]
+    ]
+  },
+  "talent_tracker": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "you_follow", 10]
+    ]
+  }
+}

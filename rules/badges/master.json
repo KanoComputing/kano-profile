@@ -1,0 +1,27 @@
+{
+  "computer_commander": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "level", 1]
+    ]
+  },
+  "video_voyager": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-video", "level", 5]
+    ]
+  },
+  "snake_survivor": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-snake", "level", 8]
+    ]
+  },
+  "kano_apprentice": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "num_offline_badges", 15]
+    ],
+    "push_back": true
+  }
+}

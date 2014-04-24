@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import subprocess
+
+
+def run_cmd(cmd):
+    process = subprocess.Popen(cmd, shell=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    returncode = process.returncode
+    return stdout, stderr, returncode
+
+
+def ensure_dir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+originals_str = 'originals'
+if not os.path.exists(originals_str):
+    sys.exit("Error: '{}' folder doesn't exist!".format(originals_str))
+files = os.listdir(originals_str)
+if not files:
+    sys.exit("No files in '{}' folder!".format(originals_str))
+
+if len(sys.argv) < 3:
+    sys.exit('Wrong usage, use: kiwimasher [png/jpg] sizes')
+
+target_ext = sys.argv[1].lower()
+widths = sys.argv[2:]
+
+dirpath = os.getcwd()
+originals_path = os.path.join(dirpath, originals_str)
+
+for root, dirs, filenames in os.walk(originals_path):
+    for filename in filenames:
+        path_full = os.path.join(root, filename)
+        path_rel = os.path.relpath(path_full, originals_path)
+        basename, ext = os.path.splitext(filename)
+
+        dir_path_full = os.path.dirname(path_full)
+        dir_path_rel = os.path.relpath(dir_path_full, originals_path)
+
+        for w in widths:
+            print path_rel, w
+            target_filename = '{basename}.{ext}'.format(basename=basename, ext=target_ext)
+            target_dir = os.path.join(dirpath, w, dir_path_rel)
+            target_fullpath = os.path.join(target_dir, target_filename)
+            ensure_dir(target_dir)
+
+            cmd = 'convert "{path_full}" -resize {w}x -quality 100 -sampling-factor 1x1 "{target_fullpath}"'\
+                .format(w=w, path_full=path_full, target_fullpath=target_fullpath)
+            _, e, _ = run_cmd(cmd)
+            if e:
+                print e
+
+            # if target_ext == 'jpg':
+            #     cmd = 'jpegoptim "{target_name}" -m85 --strip-all'.format(target_name=target_name)
+            #     _, e, _ = run_cmd(cmd)
+            #     if e:
+            #         print e
+

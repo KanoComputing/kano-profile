@@ -7,7 +7,10 @@
       ["make-pong", "level"],
       ["make-minecraft", "level"]
     ],
-    "value": 5
+    "value": 5,
+    "title": "Bronze Medallion",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   },
   "silver_medallion": {
     "operation": "stat_sum_gt",
@@ -17,7 +20,36 @@
       ["make-pong", "level"],
       ["make-minecraft", "level"]
     ],
-    "value": 15
+    "value": 15,
+    "title": "Silver Medallion",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "gold_medallion": {
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "value": 30,
+    "title": "Gold Medallion",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "platinum_medallion": {
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "value": 999,
+    "title": "Platinum Medallion",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   },
   "100_blocks": {
     "operation": "stat_sum_gt",
@@ -25,6 +57,20 @@
       ["make-pong", "blocks"],
       ["make-minecraft", "blocks"]
     ],
-    "value": 100
+    "value": 100,
+    "title": "100 Blocks",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "1000_blocks": {
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-pong", "blocks"],
+      ["make-minecraft", "blocks"]
+    ],
+    "value": 1000,
+    "title": "1000 Blocks",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
   }
 }

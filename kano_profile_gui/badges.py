@@ -8,7 +8,6 @@
 #from gi.repository import Gtk
 
 from kano.profile.badges import calculate_badges
-#import kano_profile_gui.components.constants as constants
 import kano_profile_gui.selection_table_components.table_template as table_template
 
 img_width = 180

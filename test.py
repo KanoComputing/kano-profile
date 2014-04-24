@@ -33,8 +33,10 @@ if __name__ == '__main__' and __package__ is None:
 # #     print
 
 
-from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules
+from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
 
 # test_badge_rules()
-badges = calculate_badges('badges')
-pprint(badges)
+create_images()
+# badges = calculate_badges('badges')
+# pprint(badges)
+

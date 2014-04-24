@@ -263,11 +263,13 @@ def test_badge_rules():
         for category, items in properties.iteritems():
             print category, '-', ' '.join(items)
 
-    calculated_badges = calculate_badges()
-    for category, items in calculated_badges.iteritems():
-        for badge, properties in items.iteritems():
-            if not 'achieved' in properties:
-                print category, badge, properties
+    # test achieved
+    if False:
+        calculated_badges = calculate_badges()
+        for category, items in calculated_badges.iteritems():
+            for badge, properties in items.iteritems():
+                if not 'achieved' in properties:
+                    print category, badge, properties
 
 
 def load_badge_rules():
@@ -291,3 +293,23 @@ def load_badge_rules():
         merged_rules[category] = rules
 
     return merged_rules
+
+
+def create_images():
+    from kano_profile_gui.images import get_image
+
+    calculated_badges = calculate_badges('badges')
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            get_image('badges', category, badge, 'originals')
+
+    calculated_badges = calculate_badges('avatars')
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            get_image('avatars', '', badge, 'originals')
+
+    calculated_badges = calculate_badges('environments')
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            get_image('environments', '', badge, 'originals')
+

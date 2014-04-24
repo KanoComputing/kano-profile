@@ -9,12 +9,13 @@
 import os
 
 from kano.utils import ensure_dir
-from .paths import icon_dir
+from .paths import image_dir
 
 
-def get_image(name, category, width):
-    img_folder = os.path.join(icon_dir, str(width))
-    filename = '{category}_{name}.png'.format(category=category, name=name)
+def get_image(image_type, name, category, width):
+    img_folder = os.path.join(image_dir, image_type, str(width), category)
+    #filename = '{category}_{name}.png'.format(category=category, name=name)
+    filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(img_folder, filename)
     if not os.path.exists(fullpath):
         try:
@@ -25,7 +26,7 @@ def get_image(name, category, width):
             avatar.save(image_byte_array=image_byte_array, save_location=fullpath)
             print '{} created'.format(fullpath)
         except Exception:
-            return os.path.join(icon_dir, '50/_missing.png')
+            return os.path.join(image_dir, 'icons/50/_missing.png')
     return fullpath
 
 

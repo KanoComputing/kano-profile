@@ -20,6 +20,9 @@ elif os.path.exists(media_usr):
 else:
     raise Exception('Neither local nor usr media dir found!')
 
-icon_dir = os.path.join(media_dir, 'icons')
+image_dir = os.path.join(media_dir, 'images')
+icon_dir = os.path.join(media_dir, 'images/icons')
 css_dir = os.path.join(media_dir, 'CSS')
-
+badges_dir = os.path.join(media_dir, 'images/badges')
+avatars_dir = os.path.join(media_dir, 'images/avatars')
+environment_dir = os.path.join(media_dir, 'images/environments')

@@ -25,8 +25,8 @@ class Picture():
         self.avatar_height = self.background_height
 
         # Default background and avatar
-        environment_filename = constants.media + "/environments/environment-1.png"
-        avatar_filename = constants.media + "/avatars/Avatar-pong-1.png"
+        environment_filename = constants.media + "/images/environments/1000/environment-1.png"
+        avatar_filename = constants.media + "/images/avatars/1000/Avatar-pong-1.png"
 
         # for picture in self.environment_picture:
         # if we have the current active background

@@ -46,7 +46,6 @@ class Top_bar():
         self.label_array = [badges_label, swag_label, challenges_label]
 
         for x in range(3):
-            # Badges Button
             label = self.label_array[x]
             label.set_text(name_array[x].upper())
             label.get_style_context().add_class("top_bar_label")
@@ -74,16 +73,11 @@ class Top_bar():
         close_button.connect("button_press_event", close_window)
         close_button.set_alignment(xalign=1, yalign=0)
 
-        # Define progress bar here
-        #self.progress = progress_bar.Bar(0.8, WINDOW_WIDTH)
-
         self.container.attach(self.home_button.button, 0, 0, 1, 3)
         self.container.attach(self.badges_button, 1, 0, 1, 3)
         self.container.attach(self.swag_button, 2, 0, 1, 3)
         self.container.attach(self.challenges_button, 3, 0, 1, 3)
         self.container.attach(close_button, 4, 0, 1, 1)
-        #self.container.attach(self.progress.fixed, 0, 2, 5, 1)
-        #self.container.set_row_spacing(0)
         self.container.set_size_request(WINDOW_WIDTH, TOP_BAR_HEIGHT)
 
         self.background.add(self.container)

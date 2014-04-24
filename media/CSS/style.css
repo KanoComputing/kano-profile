@@ -147,6 +147,29 @@ GtkWindow {
     background: @inactive_writing;
 }
 
+/* Project UI screen */
+/* Shows title of the projects that you've achived */
+.project_item_title {
+    font: Bariol Bold 18;
+    color: @active_writing;
+}
+.project_item_time {
+    font: Bariol Bold 14;
+    color: @inactive_writing;
+}
+.project_list_background {
+    background: #f0f0f0
+}
+.project_make_button {
+    background: @kano_orange;
+    padding: 0px 20px 0px 20px;
+    font: Bariol Bold 15;
+    border-radius: 3px;
+}
+.project_make_button GtkLabel {
+    color: #ffffff;
+}
+
 /*** GtkSwitch styling ****/
 
 /* Custom slider CSS */

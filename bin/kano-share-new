@@ -10,6 +10,7 @@
 from gi.repository import Gtk, Gdk
 import os
 import sys
+from slugify import slugify
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -17,9 +18,11 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.network import is_internet
+from kano.utils import download_url, ensure_dir, delete_file
 
 from kano_profile_gui.paths import css_dir
 from kano_login.components import icons
+from kano.world.workspaces import list_workspaces
 
 
 def make_top_bar(title):
@@ -29,7 +32,7 @@ def make_top_bar(title):
     eb.get_style_context().add_class('top_bar_container')
 
     header = Gtk.Label(title)
-    header.set_size_request(200, height)
+    header.set_size_request(400, height)
     header.get_style_context().add_class('header')
 
     cross = Gtk.Image()
@@ -45,7 +48,7 @@ def make_top_bar(title):
     grid = Gtk.Grid()
     grid.attach(header, 0, 0, 1, 1)
     grid.attach(close_button, 1, 0, 1, 1)
-    grid.set_size_request(200, height)
+    grid.set_size_request(0, height)
 
     eb.add(grid)
     return eb
@@ -56,14 +59,21 @@ def make_workspace_list():
 
     grid = Gtk.Grid()
     grid.set_row_spacing(10)
+    grid.set_size_request(400, 400)
 
-    for i in xrange(10):
-        label = Gtk.Label(i)
+    success, text, data = list_workspaces('', 0)
+    if not success:
+        print 'Error with listing workspaces, error: {}'.format(text)
+        return
+
+    for i, entry in enumerate(data['entries']):
+        label = Gtk.Label(entry['title'])
         label.set_size_request(300, row_height)
         grid.attach(label, 0, i, 1, 1)
 
         button = Gtk.Button('LOAD')
         button.set_size_request(100, row_height)
+        button.connect('clicked', load_workspace, entry['title'], entry['file_url'])
         grid.attach(button, 1, i, 1, 1)
 
     align = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
@@ -74,12 +84,30 @@ def make_workspace_list():
     return align
 
 
+def load_workspace(_button, title, url):
+    tmp_dir = '/tmp/kanoprofile'
+    ensure_dir(tmp_dir)
+
+    title_slugified = slugify(title)
+    ext = url.split('.')[-1]
+    tmp_file_name = '{}.{}'.format(title_slugified, ext)
+    tmp_file_path = os.path.join(tmp_dir, tmp_file_name)
+    delete_file(tmp_file_path)
+
+    success, text = download_url(url, tmp_file_path)
+    if not success:
+        print 'Error with downloading workspace file: {}'.format(text)
+    else:
+        print tmp_file_path
+        sys.exit()
+
+
 class MainWindow(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title='Kano Share')
 
-        self.set_decorated(True)
+        self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)
 
         grid = Gtk.Grid()

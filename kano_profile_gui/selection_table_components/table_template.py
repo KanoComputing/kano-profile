@@ -65,12 +65,12 @@ class Template():
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)
-        selected_item_screen.info.back_button.connect("button_press_event", self.leave_info_screen)
+        selected_item_screen.info_text.back_button.connect("button_press_event", self.leave_info_screen)
         if self.equipable:
             # This doesn't work because we're not changing the selected_item
             # We need to set a flag or self.selected = True
             # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
-            selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat)
+            selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, cat)
         self.container.show_all()
 
     def equip(self, arg1=None, arg2=None, cat=None):

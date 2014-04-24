@@ -48,3 +48,7 @@ class Info():
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("info_description_box")
         self.background.add(self.align)
+
+    def refresh(self, heading, info):
+        self.heading.set_text(heading)
+        self.paragraph.get_buffer().set_text(info)

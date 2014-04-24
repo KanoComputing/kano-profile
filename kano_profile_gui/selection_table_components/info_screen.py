@@ -7,7 +7,7 @@
 #
 # If an environment/avatar/badge is selected, we go to this screen to show more info
 
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text as info_text
 import kano_profile_gui.components.icons as icons
 from kano_profile_gui.images import get_image
@@ -60,11 +60,11 @@ class Item():
         self.fixed.put(self.prev, 0, self.height / 2)
         self.fixed.put(self.next, self.width - 35, self.height / 2)
 
-        self.info = info_text.Info(700 - self.width, self.height, self.current.heading, self.current.description, self.equip)
+        self.info_text = info_text.Info(700 - self.width, self.height, self.current.heading, self.current.description, self.equip)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed, False, False, 0)
-        self.box.pack_start(self.info.background, False, False, 0)
+        self.box.pack_start(self.info_text.background, False, False, 0)
 
         self.container.pack_start(self.header_box, False, False, 0)
         self.container.pack_start(self.box, False, False, 0)
@@ -85,6 +85,8 @@ class Item():
     def refresh(self):
         self.category.set_selected(self.current)
         self.set_image()
+        self.header_label.set_text(self.current.heading)
+        self.info_text.refresh(self.current.heading, self.current.description)
 
     def set_image(self):
          # filename of picture

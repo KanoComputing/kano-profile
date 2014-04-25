@@ -46,4 +46,4 @@ if not success:
 # shares = list_shares(app_name='minecraft')[2]
 # pprint(shares)
 
-pprint(upload_share())
+pprint(upload_share('readme.xml', 'title2', 'app_name3'))

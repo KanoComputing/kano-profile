@@ -5,6 +5,7 @@
 #
 
 from .connection import request_wrapper, content_type_json
+from .functions import glob_session
 
 
 def list_shares(app_name=None, page=0, featured=False):
@@ -25,6 +26,8 @@ def list_shares(app_name=None, page=0, featured=False):
     return False, 'Something wrong with getting workspaces!', None
 
 
+def upload_share():
+    if not glob_session:
+        return False, 'You are not logged in!'
 
-
-
+    return glob_session.upload_share()

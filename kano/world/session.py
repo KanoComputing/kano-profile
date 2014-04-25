@@ -147,7 +147,7 @@ class KanoWorldSession(object):
 
         return download_url(file_url, file_path)
 
-    def upload_workspace(self, file_path, title, app_name):
+    def upload_share(self, file_path, title, app_name, featured=False):
         if not os.path.exists(file_path):
             return False, 'File path not found!'
 

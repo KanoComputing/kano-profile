@@ -33,3 +33,10 @@ def upload_share(file_path, title, app_name, featured=False):
 
     return glob_session.upload_share(file_path, title, app_name, featured)
 
+
+def delete_share(share_id):
+    glob_session = get_glob_session()
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.delete_share(share_id)

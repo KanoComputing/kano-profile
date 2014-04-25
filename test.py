@@ -12,7 +12,7 @@ if __name__ == '__main__' and __package__ is None:
 # from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
 from kano.utils import run_cmd
 from kano.world.functions import login_using_token
-from kano.world.share import list_shares, upload_share
+from kano.world.share import list_shares, upload_share, delete_share
 
 success, value = login_using_token()
 if not success:
@@ -46,4 +46,10 @@ if not success:
 # shares = list_shares(app_name='minecraft')[2]
 # pprint(shares)
 
-pprint(upload_share('kanoCastle.xml', 'Kano Castle Unshared', 'make-minecraft', False))
+pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft', True))
+
+# delete all shares
+# shares = list_shares(featured=False)[2]['entries']
+# for share in shares:
+#     print[share['user']['username']]
+#     print delete_share(share['id'])

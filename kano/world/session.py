@@ -157,7 +157,7 @@ class KanoWorldSession(object):
 
         payload = {
             'title': title,
-            'featured': int(featured)
+            'featured': featured
         }
 
         endpoint = '/share/{}'.format(app_name)
@@ -170,6 +170,15 @@ class KanoWorldSession(object):
         if not success:
             return False, 'Backup not successful!'
         return True, None
+
+    def delete_share(self, share_id):
+        endpoint = '/share/{}'.format(share_id)
+
+        success, text, data = request_wrapper('delete', endpoint, session=self.session)
+        if not success:
+            return False, text
+        return True, None
+
 
 
 

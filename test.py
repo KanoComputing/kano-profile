@@ -9,9 +9,9 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-# import kano.world.functions as kw
-# import kano.world.workspaces as kww
-# from kano.utils import run_cmd
+from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
+from kano.world.share import list_shares
+
 
 # # login first with token, if not working then try with dialog
 # success, value = kw.login_using_token()
@@ -33,10 +33,14 @@ if __name__ == '__main__' and __package__ is None:
 # #     print
 
 
-from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
 
 # test_badge_rules()
-create_images()
+# create_images()
 # badges = calculate_badges('badges')
 # pprint(badges)
 
+
+
+shares = list_shares(app_name='minecraft')[2]
+
+pprint(shares)

@@ -7,14 +7,15 @@
 from .connection import request_wrapper, content_type_json
 
 
-def list_workspaces(app_name, page):
+def list_shares(app_name=None, page=0, featured=False):
     payload = {
         'app_name': app_name,
         'page': page,
+        'featured': int(featured),
         'limit': 10
     }
 
-    success, text, data = request_wrapper('get', '/workspaces', headers=content_type_json, params=payload)
+    success, text, data = request_wrapper('get', '/share', headers=content_type_json, params=payload)
     if not success:
         return success, text, None
 

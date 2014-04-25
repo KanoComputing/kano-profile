@@ -22,7 +22,7 @@ from kano.utils import download_url, ensure_dir, delete_file
 
 from kano_profile_gui.paths import css_dir
 from kano_login.components import icons
-from kano.world.workspaces import list_workspaces
+from kano.world.share import list_shares
 
 
 def make_top_bar(title):
@@ -61,7 +61,7 @@ def make_workspace_list():
     grid.set_row_spacing(10)
     grid.set_size_request(400, 400)
 
-    success, text, data = list_workspaces('', 0)
+    success, text, data = list_shares('', 0)
     if not success:
         print 'Error with listing workspaces, error: {}'.format(text)
         return

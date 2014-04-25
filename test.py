@@ -43,6 +43,7 @@ if not success:
 
 
 
-shares = list_shares(app_name='minecraft')[2]
+# shares = list_shares(app_name='minecraft')[2]
+# pprint(shares)
 
-pprint(shares)
+pprint(upload_share())

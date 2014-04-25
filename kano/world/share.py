@@ -5,7 +5,7 @@
 #
 
 from .connection import request_wrapper, content_type_json
-from .functions import glob_session
+from .functions import get_glob_session
 
 
 def list_shares(app_name=None, page=0, featured=False):
@@ -27,7 +27,9 @@ def list_shares(app_name=None, page=0, featured=False):
 
 
 def upload_share():
+    glob_session = get_glob_session()
     if not glob_session:
         return False, 'You are not logged in!'
 
-    return glob_session.upload_share()
+    return glob_session.upload_share('readme.xml', 'title2', 'app_name3')
+

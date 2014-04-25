@@ -147,19 +147,19 @@ class KanoWorldSession(object):
 
         return download_url(file_url, file_path)
 
-    def upload_share(self, file_path, title, app_name, featured=False):
+    def upload_share(self, file_path, title, app_name):
         if not os.path.exists(file_path):
-            return False, 'File path not found!'
+            return False, 'File path not found: {}'.format(file_path)
 
         files = {
-            'workspace': open(file_path, 'rb'),
+            'attachment': open(file_path, 'rb'),
         }
 
         payload = {
-            'title': title
+            'title': title,
         }
 
-        endpoint = '/workspaces/{}'.format(app_name)
+        endpoint = '/share/{}'.format(app_name)
 
         success, text, data = request_wrapper('post', endpoint, session=self.session, files=files, data=payload)
         if not success:

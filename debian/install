@@ -3,7 +3,7 @@ kano/* /usr/lib/python2.7/dist-packages/kano
 rules /usr/share/kano-profile
 media /usr/share/kano-profile
 kano_profile_gui /usr/lib/python2.7/dist-packages
-kano_login_dialog /usr/lib/python2.7/dist-packages
+kano_login /usr/lib/python2.7/dist-packages
 
 webapi/webapi.py /usr/lib/python2.7/dist-packages/kano
 

@@ -67,7 +67,7 @@ def make_share_list():
         else:
             filter_app = sys.argv[1]
             if filter_app not in read_json(app_profiles_file):
-                sys.exit('Given app not in app profiles')
+                sys.exit('Given app not in app profiles: {}'.format(filter_app))
             featured = False
     else:
         filter_app = None

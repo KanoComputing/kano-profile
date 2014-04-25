@@ -62,10 +62,18 @@ def make_share_list():
     grid.set_row_spacing(10)
     grid.set_size_request(400, 400)
 
-    success, text, data = list_shares()
+    if len(sys.argv) == 2:
+        filter_app = sys.argv[1]
+        if filter_app not in read_json(app_profiles_file):
+            sys.exit('Given app not in app profiles')
+        featured = False
+    else:
+        filter_app = None
+        featured = True
+
+    success, text, data = list_shares(app_name=filter_app, featured=featured)
     if not success:
-        print 'Error with listing shares, error: {}'.format(text)
-        return
+        sys.exit('Error with listing shares, error: {}'.format(text))
 
     for i, entry in enumerate(data['entries']):
         has_url = bool(entry['attachment_url'])

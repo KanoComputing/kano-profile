@@ -20,10 +20,10 @@ def list_shares(app_name=None, page=0, featured=False):
     if not success:
         return success, text, None
 
-    if 'entries' in data and data['entries']:
+    if 'entries' in data:
         return True, None, data
 
-    return False, 'Something wrong with getting workspaces!', None
+    return False, 'Something wrong with listing shares!', None
 
 
 def upload_share(file_path, title, app_name):

@@ -11,12 +11,12 @@
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.individual_item as indiv
 import kano_profile_gui.selection_table_components.equipable as equip
-#from kano.profile.badges import calculate_badges
+from kano.profile.badges import calculate_badges
 #from .images import get_image
 
 
 class Table():
-    def __init__(self, category_name, category_dict, equipable):
+    def __init__(self, category_name, equipable):
         self.width = 690
         self.height = 540
         self.equipable = equipable
@@ -26,17 +26,28 @@ class Table():
 
         number_of_badges = 0
 
-        for i, (group, items) in enumerate(category_dict.iteritems()):
-            for j, (item, unlocked) in enumerate(items.iteritems()):
-                if self.equipable:
+        #for i, (group, items) in enumerate(category_dict.iteritems()):
+            #for j, (item, unlocked) in enumerate(items.iteritems()):
+                #if self.equipable:
                     # Passing the item and group instead of the filename because the filename depends on the size, and the size varies
                     # depending on what you need the image for.
                     # TODO: change colour of badge background
-                    picture = equip.Picture({"category": category_name, "item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked})
-                else:
+                    #picture = equip.Picture({"category": category_name, "item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked})
+                #else:
                     #picture = indiv.Picture({"filename": img_path, "heading": item, "description": group, "unlocked": unlocked,})
-                    picture = indiv.Picture({"category": category_name, "item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked})
+                    #picture = indiv.Picture({"category": category_name, "item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked})
 
+                #self.pics.append(picture)
+                #number_of_badges = number_of_badges + 1
+
+        for category, items in calculate_badges(category_name).iteritems():
+            for badge, properties in items.iteritems():
+                if category == "swag_environments" or category == "swag_avatars":
+                    category = ""
+                if self.equipable:
+                    picture = equip.Picture({"category": category_name, "subcategory": category, "badge_name": badge, "title": properties["title"], "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"], "unlocked": properties["achieved"]})
+                else:
+                    picture = indiv.Picture({"category": category_name, "subcategory": category, "badge_name": badge, "title": properties["title"], "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"], "unlocked": properties["achieved"]})
                 self.pics.append(picture)
                 number_of_badges = number_of_badges + 1
 
@@ -84,7 +95,7 @@ class Table():
 
     def set_equipped(self, pic=None):
         if self.equipable:
-            if pic is not None:
+            if pic is not None and not pic.get_locked:
                 self.equipped = pic
                 pic.set_equipped(True)
                 self.set_equipped_style()
@@ -120,4 +131,6 @@ class Table():
             if self.equipable and not pic.get_equipped():
                 pic.equipped_box.set_visible_window(False)
                 pic.equipped_label.set_visible(False)
+            if not pic.get_locked():
+                pic.remove_locked_style()
 

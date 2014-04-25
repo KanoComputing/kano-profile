@@ -122,6 +122,11 @@ GtkWindow {
     font: Bariol Bold 15;
     color: @inactive_writing;
 }
+/* Locked screen over locked images */
+.locked_box {
+    background: alpha(#dddddd, 0.5);
+}
+/* Testing classes */
 .white {
     background: #ffffff;
     color: #ffffff;
@@ -206,7 +211,7 @@ GtkSwitch.slider {
 /* Styling specific to the grid shown on the swag/badges screen */
 
 .hover_box {
-    background: @top_bar_background;
+    background: alpha(@top_bar_background, 0.5);
 }
 
 .hover_label {

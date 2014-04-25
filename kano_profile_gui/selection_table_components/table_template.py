@@ -18,13 +18,13 @@ import kano_profile_gui.components.header as header
 # equipable: whether each item in the array is equipable (like avatars or environments)
 # width and height of the scrolled window
 class Template():
-    def __init__(self, headers, info, equipable, width, height):
+    def __init__(self, headers, equipable, width, height):
 
         self.equipable = equipable
 
         self.categories = []
-        for x in range(len(info)):
-            self.categories.append(tab.Table(headers[x], info[x], self.equipable))
+        for x in range(len(headers)):
+            self.categories.append(tab.Table(headers[x], self.equipable))
 
         if len(headers) == 2:
             self.head = header.Header(headers[0], headers[1])
@@ -72,6 +72,9 @@ class Template():
             # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
             selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, cat)
         self.container.show_all()
+
+        # Remove locked images from selected item screen
+        selected_item_screen.set_locked()
 
     def equip(self, arg1=None, arg2=None, cat=None):
         selected_item = cat.get_selected()

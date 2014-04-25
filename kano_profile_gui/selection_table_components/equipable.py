@@ -21,7 +21,7 @@ class Picture(indiv_item.Picture):
         self.equipped_box = Gtk.EventBox()
         self.equipped_box.get_style_context().add_class("equipped_box")
         self.equipped_box.set_visible_window(False)
-        self.equipped_label = Gtk.Label(self.heading)
+        self.equipped_label = Gtk.Label(self.title)
         self.equipped_label.get_style_context().add_class("equipped_label")
         self.equipped_box.add(self.equipped_label)
         self.equipped_box.set_size_request(self.width, self.label_height)

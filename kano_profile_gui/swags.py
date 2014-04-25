@@ -60,17 +60,17 @@ def activate(_win, _box):
         u'master': {u'computer_commander': True, u'snake_survivor': False, u'kano_apprentice': False, u'video_voyager': False},
         u'online': {u'community_champion': False, u'talent_tracker': False}}"""
 
-    environments = {u'environments': {u'Kano-environment1': False}}
-    avatars = {u'avatars': {u'Avatar-1': False, u'Avatar-2': False, u'Avatar-3': False, u'Avatar-4': False, u'Avatar-5': False, u'Avatar-6': False}}
+    #environments = {u'environments': {u'Kano-environment1': False}}
+    #avatars = {u'avatars': {u'Avatar-1': False, u'Avatar-2': False, u'Avatar-3': False, u'Avatar-4': False, u'Avatar-5': False, u'Avatar-6': True}}
 
     headers = ["environments", "avatars"]
-    info = [environments, avatars]
+    #info = [environments, avatars]
     equipable = True
     width = 734
     height = 540
 
     if swag_ui is None:
-        swag_ui = table_template.Template(headers, info, equipable, width, height)
+        swag_ui = table_template.Template(headers, equipable, width, height)
 
     _box.pack_start(swag_ui.container, False, False, 0)
 

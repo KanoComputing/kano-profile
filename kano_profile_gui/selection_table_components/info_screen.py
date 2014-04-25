@@ -9,8 +9,8 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text as info_text
+import kano_profile_gui.selection_table_components.locked_screen as locked_screen
 import kano_profile_gui.components.icons as icons
-from kano_profile_gui.images import get_image
 
 
 class Item():
@@ -39,7 +39,7 @@ class Item():
 
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
-        self.header_label = Gtk.Label(self.current.heading)
+        self.header_label = Gtk.Label(self.current.title)
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
@@ -54,13 +54,16 @@ class Item():
         self.next.set_image(next_arrow)
         self.next.connect("button_press_event", self.go_to_next)
 
+        self.locked = locked_screen.Screen(self.width, self.height, 50, 50)
+
         # To get the buttons overlaying the main picture
         self.fixed = Gtk.Fixed()
         self.fixed.put(self.image, 0, 0)
+        self.fixed.put(self.locked.fixed, 0, 0)
         self.fixed.put(self.prev, 0, self.height / 2)
         self.fixed.put(self.next, self.width - 35, self.height / 2)
 
-        self.info_text = info_text.Info(700 - self.width, self.height, self.current.heading, self.current.description, self.equip)
+        self.info_text = info_text.Info(700 - self.width, self.height, self.current.title, self.current.get_description(), self.equip)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed, False, False, 0)
@@ -69,8 +72,7 @@ class Item():
         self.container.pack_start(self.header_box, False, False, 0)
         self.container.pack_start(self.box, False, False, 0)
 
-        #self.box.pack_start(self.fixed, False, False, 0)
-        #self.box.pack_start(self.info.background, False, False, 0)
+        self.set_locked()
 
     def go_to_next(self, arg1=None, arg2=None):
         index = self.array.index(self.current)
@@ -85,10 +87,18 @@ class Item():
     def refresh(self):
         self.category.set_selected(self.current)
         self.set_image()
-        self.header_label.set_text(self.current.heading)
-        self.info_text.refresh(self.current.heading, self.current.description)
+        self.header_label.set_text(self.current.title)
+        self.info_text.refresh(self.current.title, self.current.get_description())
 
     def set_image(self):
          # filename of picture
-        filename = get_image(self.current.item, self.current.group, self.width)
+        filename = self.current.get_filename_at_width(self.width)
         self.image.set_from_file(filename)
+
+    def set_locked(self, locked=None):
+        if locked is None:
+            locked = self.current.locked
+        else:
+            self.current.locked = locked
+        self.locked.box.set_visible_window(locked)
+        self.locked.padlock.set_visible(locked)

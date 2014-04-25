@@ -12,8 +12,9 @@ from kano.utils import ensure_dir
 from .paths import image_dir
 
 
+# "Badge", folder_name, file_name, width of wimage
 def get_image(category, subcategory, name, width):
-    folder = os.path.join(image_dir, category, width, subcategory)
+    folder = os.path.join(image_dir, category, str(width), subcategory)
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):

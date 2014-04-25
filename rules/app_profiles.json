@@ -4,6 +4,11 @@
     "ext": "xml",
     "cmd": "python /usr/share/make-pong/make-pong {fullpath}"
   },
+  "make-minecraft": {
+    "dir": "Minecraft-content",
+    "ext": "xml",
+    "cmd": "python /usr/share/make-minecraft/make-minecraft {fullpath}"
+  },
   "make-snake": {
     "dir": "Snake-content",
     "ext": "",

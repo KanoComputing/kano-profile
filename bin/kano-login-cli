@@ -17,7 +17,9 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.world.functions import login_using_token, login, register, remove_token
 
-# remove_token()
+if len(sys.argv) == 2:
+    if sys.argv[1] == '--reset':
+        remove_token()
 
 
 def check_login():

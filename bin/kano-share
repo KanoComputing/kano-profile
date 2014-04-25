@@ -120,7 +120,7 @@ def load_share(_button, app, title, url):
     if not success:
         print 'Error with downloading share file: {}'.format(text)
     else:
-        print file_path
+        print 'File Path: {}'.format(file_path)
         sys.exit()
 
 

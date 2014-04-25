@@ -89,7 +89,7 @@ def make_share_list():
         grid.attach(label, 1, i, 1, 1)
 
         if has_url:
-            button = Gtk.Button('LOAD')
+            button = Gtk.Button('Download')
             button.set_size_request(100, row_height)
             button.connect('clicked', load_share, entry['app'], entry['title'], entry['attachment_url'])
             grid.attach(button, 2, i, 1, 1)

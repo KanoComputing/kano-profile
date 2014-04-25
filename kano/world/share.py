@@ -26,10 +26,10 @@ def list_shares(app_name=None, page=0, featured=False):
     return False, 'Something wrong with listing shares!', None
 
 
-def upload_share(file_path, title, app_name):
+def upload_share(file_path, title, app_name, featured=False):
     glob_session = get_glob_session()
     if not glob_session:
         return False, 'You are not logged in!'
 
-    return glob_session.upload_share(file_path, title, app_name)
+    return glob_session.upload_share(file_path, title, app_name, featured)
 

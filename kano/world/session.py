@@ -147,7 +147,7 @@ class KanoWorldSession(object):
 
         return download_url(file_url, file_path)
 
-    def upload_share(self, file_path, title, app_name):
+    def upload_share(self, file_path, title, app_name, featured):
         if not os.path.exists(file_path):
             return False, 'File path not found: {}'.format(file_path)
 
@@ -157,6 +157,7 @@ class KanoWorldSession(object):
 
         payload = {
             'title': title,
+            'featured': int(featured)
         }
 
         endpoint = '/share/{}'.format(app_name)

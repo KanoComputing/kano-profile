@@ -1,0 +1,12 @@
+{
+  "make-pong": {
+    "dir": "Pong-content",
+    "ext": "xml",
+    "cmd": "python /usr/share/make-pong/make-pong {fullpath}"
+  },
+  "make-snake": {
+    "dir": "Snake-content",
+    "ext": "",
+    "cmd": "kano-launcher \"rxvt -title \"Make Snake\" -e python /usr/share/make-snake -t custom\" \"make-snake\""
+  }
+}

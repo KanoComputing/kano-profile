@@ -1,0 +1,11 @@
+{
+  "file_finder": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-profile", "hidden_file_opened", 1]
+    ],
+    "title": "File Finder",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  }
+}

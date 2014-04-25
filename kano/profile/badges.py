@@ -6,8 +6,12 @@
 
 from __future__ import division
 
-from ..utils import read_json, is_gui, run_cmd
-from .paths import xp_file, levels_file, badges_file, bin_dir
+import os
+from slugify import slugify
+
+from ..utils import read_json, is_gui
+# DISABLED , run_cmd
+from .paths import xp_file, levels_file, badges_folder, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -69,11 +73,11 @@ def calculate_kano_level():
             return int(reached_level), reached_percentage
 
 
-def calculate_badges():
+def calculate_badges(filter_category=None):
 
     # helper function to calculate operations
     def do_calculate(select_push_back):
-        for category, items in rules.iteritems():
+        for category, items in all_rules.iteritems():
             for item, rule in items.iteritems():
                 target_pushback = 'push_back' in rule and rule['push_back'] is True
                 if target_pushback != select_push_back:
@@ -90,7 +94,8 @@ def calculate_badges():
                             achieved = False
                             break
                         achieved &= app_state[app][variable] >= value
-                    badges.setdefault(category, dict())[item] = achieved
+                    calculated_badges.setdefault(category, dict())[item] = all_rules[category][item]
+                    calculated_badges[category][item]['achieved'] = achieved
 
                 elif rule['operation'] == 'stat_sum_gt':
                     sum = 0
@@ -104,22 +109,22 @@ def calculate_badges():
                         sum += float(app_state[app][variable])
 
                     achieved = sum >= rule['value']
-                    badges.setdefault(category, dict())[item] = achieved
+                    calculated_badges.setdefault(category, dict())[item] = all_rules[category][item]
+                    calculated_badges[category][item]['achieved'] = achieved
 
                 else:
                     print 'unknown uperation {}'.format(rule['operation'])
 
     def count_offline_badges():
-        count = 0
-        for category, items in badges.iteritems():
-            for item, value in items.iteritems():
-                if value:
-                    count += 1
-        return count
+        return 18
 
-    rules = read_json(badges_file)
-    if not rules:
-        return
+        # TODO implement proper count
+        # count = 0
+        # for category, items in badges.iteritems():
+        #     for item, value in items.iteritems():
+        #         if value:
+        #             count += 1
+        # return count
 
     app_list = get_app_list() + ['kano-world']
     app_state = dict()
@@ -132,7 +137,8 @@ def calculate_badges():
     profile_state['level'], _ = calculate_kano_level()
     app_state['kano-world'] = profile_state
 
-    badges = dict()
+    all_rules = load_badge_rules()
+    calculated_badges = dict()
 
     # normal ones
     do_calculate(False)
@@ -143,7 +149,31 @@ def calculate_badges():
     # add pushed back ones
     do_calculate(True)
 
-    return badges
+    # filtering
+    if not filter_category:
+        return calculated_badges
+
+    else:
+        if filter_category == 'badges':
+            filtered_badges = {
+                k: v for k, v in calculated_badges.iteritems()
+                if not k.startswith('swag_')
+            }
+            return filtered_badges
+
+        elif filter_category == 'avatars':
+            filtered_badges = {
+                k: v for k, v in calculated_badges.iteritems()
+                if k == 'swag_avatars'
+            }
+            return filtered_badges
+
+        elif filter_category == 'environments':
+            filtered_badges = {
+                k: v for k, v in calculated_badges.iteritems()
+                if k == 'swag_environments'
+            }
+            return filtered_badges
 
 
 def compare_badges_dict(old, new):
@@ -170,7 +200,7 @@ def save_app_state_with_dialog(app_name, data):
     # new level dialog
     if is_gui() and old_level != new_level:
         cmd = '{bin_dir}/kano-profile-new-badges-dialog newlevel "{new_level}"'.format(bin_dir=bin_dir, new_level=new_level)
-        run_cmd(cmd)
+        # DISABLED run_cmd(cmd)
 
     # new badges dialog
     badge_changes = compare_badges_dict(old_badges, new_badges)
@@ -182,7 +212,7 @@ def save_app_state_with_dialog(app_name, data):
 
         chg_str = ' '.join(['{}:{}'.format(group, item) for group, item in changes_list])
         cmd = '{bin_dir}/kano-profile-new-badges-dialog newbadges {chg_str}'.format(bin_dir=bin_dir, chg_str=chg_str)
-        run_cmd(cmd)
+        # DISABLED run_cmd(cmd)
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
@@ -193,9 +223,94 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
     save_app_state_with_dialog(app_name, data)
 
 
+def test_badge_rules():
+    merged_rules = load_badge_rules()
+
+    properties = dict()
+    max_values = dict()
+
+    for category, items in merged_rules.iteritems():
+        for badge, badge_rules in items.iteritems():
+            for target in badge_rules['targets']:
+                if badge_rules['operation'] == 'stat_sum_gt':
+                    profile, variable = target
+                    value = badge_rules['value']
+                elif badge_rules['operation'] == 'stat_gta':
+                    profile, variable, value = target
+
+                properties.setdefault(profile, set()).add(variable)
+
+                if value == -1:
+                    # print rule_file, badge, profile, variable, value
+                    max_values.setdefault(profile, set()).add(variable)
+
+            # check if name == slugified title
+            if True:
+                slug = slugify(badge_rules['title']).replace('-', '_')
+                if badge != slug:
+                    print category, badge, slug
+
+            # print titles
+            if False:
+                print badge_rules['title']
+
+    # print max_values
+    if False:
+        for category, items in max_values.iteritems():
+            print category, '-', ' '.join(items)
+
+    # print all properties
+    if False:
+        for category, items in properties.iteritems():
+            print category, '-', ' '.join(items)
+
+    # test achieved
+    if False:
+        calculated_badges = calculate_badges()
+        for category, items in calculated_badges.iteritems():
+            for badge, properties in items.iteritems():
+                if not 'achieved' in properties:
+                    print category, badge, properties
 
 
+def load_badge_rules():
+    if not os.path.exists(badges_folder):
+        print 'badge rules folder missing'
+        return
+
+    rule_files = os.listdir(badges_folder)
+    if not rule_files:
+        print 'No rule files!'
+        return
+
+    merged_rules = dict()
+    for rule_file in rule_files:
+        rules = read_json(os.path.join(badges_folder, rule_file))
+        if not rules:
+            print 'Rule file empty: {}'.format(rule_file)
+            continue
+
+        category = rule_file.split('.')[0]
+        merged_rules[category] = rules
+
+    return merged_rules
 
 
+def create_images():
+    from kano_profile_gui.images import get_image
 
+    calculated_badges = calculate_badges('badges')
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            get_image('badges', category, badge, 'originals')
+
+    calculated_badges = calculate_badges('avatars')
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            get_image('avatars', '', badge, 'originals')
+
+    calculated_badges = calculate_badges('environments')
+    for category, items in calculated_badges.iteritems():
+        for badge, properties in items.iteritems():
+            get_image('environments', '', badge, 'originals')
 

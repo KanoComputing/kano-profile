@@ -1,0 +1,76 @@
+{
+  "computer_commander": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "setup_completed", 1]
+    ],
+    "title": "Computer Commander",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "video_voyager": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-video", "level", -1]
+    ],
+    "title": "Video Voyager",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "snake_survivor": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-snake", "level", -1]
+    ],
+    "title": "Snake Survivor",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "pong_pro": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-pong", "level", -1]
+    ],
+    "title": "Pong Pro",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "minecraft_master": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-minecraft", "level", -1]
+    ],
+    "title": "Minecraft Master",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "music_marvel": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-music", "level", -1]
+    ],
+    "title": "Music Marvel",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "kano_apprentice": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "num_offline_badges", 15]
+    ],
+    "push_back": true,
+    "title": "Kano Apprentice",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "kano_master": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-world", "num_offline_badges", -1]
+    ],
+    "push_back": true,
+    "title": "Kano Master",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  }
+}

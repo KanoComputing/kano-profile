@@ -1,0 +1,56 @@
+{
+  "pong_painter": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-pong", "level", 5]
+    ],
+    "title": "Pong Painter",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "rule_breaker": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-pong", "level", 8]
+    ],
+    "title": "Rule Breaker",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "block_builder": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-minecraft", "level", 9]
+    ],
+    "title": "Block Builder",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "amazing_architect": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-minecraft", "level", 12]
+    ],
+    "title": "Amazing Architect",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "end_everything": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-minecraft", "level", 15]
+    ],
+    "title": "End Everything",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "appetite_for_apples": {
+    "operation": "stat_gta",
+    "targets": [
+      ["make-snake", "apples_eaten", 100]
+    ],
+    "title": "Appetite for Apples",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  }
+}

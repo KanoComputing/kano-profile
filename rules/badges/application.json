@@ -1,0 +1,38 @@
+{
+  "feedbacker": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-feedback", "starts", 1]
+    ],
+    "title": "Feedbacker",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+    "bug_buster": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-feedback", "bugs_submitted", 1]
+    ],
+    "title": "Bug Buster",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+    "remote_roamer": {
+    "operation": "stat_gta",
+    "targets": [
+      ["vnc", "starts", 1]
+    ],
+    "title": "Remote Roamer",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  },
+  "staying_super": {
+    "operation": "stat_gta",
+    "targets": [
+      ["kano-updater", "updated", 1]
+    ],
+    "title": "Staying Super",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked"
+  }
+}

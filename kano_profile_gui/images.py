@@ -12,21 +12,23 @@ from kano.utils import ensure_dir
 from .paths import image_dir
 
 
-def get_image(name, category, width):
-    img_folder = os.path.join(image_dir, str(width), category)
-    #filename = '{category}_{name}.png'.format(category=category, name=name)
+def get_image(category, subcategory, name, width):
+    folder = os.path.join(image_dir, category, width, subcategory)
     filename = '{name}.png'.format(name=name)
-    fullpath = os.path.join(img_folder, filename)
+    fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):
-        try:
-            from randomavatar.randomavatar import Avatar
-            ensure_dir(img_folder)
-            avatar = Avatar(rows=10, columns=10)
-            image_byte_array = avatar.get_image(string=filename, width=width, height=width, pad=10)
-            avatar.save(image_byte_array=image_byte_array, save_location=fullpath)
-            print '{} created'.format(fullpath)
-        except Exception:
-            return os.path.join(image_dir, 'icons/50/_missing.png')
+        ensure_dir(folder)
+        open(fullpath, 'w').close()
+        print '{} created'.format(fullpath)
+        # try:
+        #     from randomavatar.randomavatar import Avatar
+        #     ensure_dir(folder)
+        #     avatar = Avatar(rows=10, columns=10)
+        #     image_byte_array = avatar.get_image(string=filename, width=width, height=width, pad=10)
+        #     avatar.save(image_byte_array=image_byte_array, save_location=fullpath)
+        #     print '{} created'.format(fullpath)
+        # except Exception:
+        #     return os.path.join(image_dir, 'icons/50/_missing.png')
     return fullpath
 
 

@@ -50,4 +50,4 @@ profile_file = os.path.join(profile_dir, profile_file_str)
 
 xp_file = os.path.join(rules_dir, 'xp.json')
 levels_file = os.path.join(rules_dir, 'levels.json')
-badges_file = os.path.join(rules_dir, 'badges.json')
+badges_folder = os.path.join(rules_dir, 'badges')

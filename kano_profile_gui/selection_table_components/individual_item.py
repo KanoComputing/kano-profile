@@ -32,7 +32,7 @@ class Picture():
         self.locked_description = info["locked_description"]
         self.unlocked_description = info["unlocked_description"]
 
-        self.image = self.set_image_height(self.height)
+        self.image = self.set_image_height()
 
         self.hover_box = Gtk.EventBox()
         self.hover_box.get_style_context().add_class("hover_box")
@@ -117,16 +117,15 @@ class Picture():
     def get_filename_at_height(self, height_of_image):
         return get_image(self.category, self.subcategory, self.badge, height_of_image)
 
-    def set_image_height(self, height_of_image):
+    def set_image_height(self):
         #filename = self.get_filename_at_height(height_of_image)
-        pixbuf = self.set_pixbuf_height(height_of_image)
+        pixbuf = self.set_pixbuf_height()
         image = Gtk.Image()
         image.set_from_pixbuf(pixbuf)
         return image
 
-    def set_pixbuf_height(self, height_of_image):
-        filename = self.get_filename_at_height(height_of_image)
-        print "line 125 " + str(filename)
+    def set_pixbuf_height(self):
+        filename = self.get_filename_at_height(self.height)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
         if self.category == "environments":
             pixbuf = pixbuf.new_subpixbuf(46, 0, self.width, self.height)

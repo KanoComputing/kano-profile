@@ -19,20 +19,22 @@ import kano_profile_gui.swags as swags
 class Picture():
     def __init__(self):
 
-        self.background_width = 690
-        self.background_height = 540
+        self.background_width = 734
+        self.background_height = 404
         self.avatar_width = self.background_height
         self.avatar_height = self.background_height
+        self.background = Gtk.Image()
+        self.avatar = Gtk.Image()
 
         if swags.swag_ui is not None:
-            self.background = swags.swag_ui.categories[0].get_equipped().set_image_width(690)
-            self.avatar = swags.swag_ui.categories[1].get_equipped().set_image_width(580)
+            environ_file = swags.swag_ui.categories[0].get_equipped().get_filename_at_height(self.background_height)
+            self.background.set_from_file(environ_file)
+            avatar_file = swags.swag_ui.categories[1].get_equipped().get_filename_at_height(self.avatar_height)
+            self.avatar.set_from_file(avatar_file)
         else:
-            environment_filename = constants.media + "/images/690/environments/Kano-environment1.png"
-            avatar_filename = constants.media + "/images/avatars/580/Avatar-1.png"
-            self.background = Gtk.Image()
+            environment_filename = constants.media + "/images/environments/" + str(self.background_height) + "/arcade_hall.png"
+            avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_height) + "/video_guy.png"
             self.background.set_from_file(environment_filename)
-            self.avatar = Gtk.Image()
             self.avatar.set_from_file(avatar_filename)
 
         self.fixed = Gtk.Fixed()

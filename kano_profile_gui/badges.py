@@ -18,25 +18,17 @@ def activate(_win, _box):
     global badge_ui
 
     badges = calculate_badges('badges')
-    #for category, items in calculated_badges.iteritems():
-        #for badge, properties in items.iteritems():
-            #get_image('badges', category, badge, 'originals')
-
-    #badges = {k: v for k, v in calculate_badges().iteritems() if not k.startswith('swag_')}
 
     if not badges:
         return
 
     headers = ["badges"]
-    #info = [badges]
     equipable = False
-    width = 734
-    height = 540
 
     # So we don't overwrite the current selected items
     # If we read and write to a config file, this isn't needed
     if badge_ui is None:
-        badge_ui = table_template.Template(headers, equipable, width, height)
+        badge_ui = table_template.Template(headers, equipable)
 
     _box.pack_start(badge_ui.container, False, False, 0)
 

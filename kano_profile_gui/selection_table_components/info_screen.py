@@ -180,4 +180,6 @@ class Item():
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
         if self.current.category == "environments":
             pixbuf = pixbuf.new_subpixbuf(177, 0, self.height, self.height)  # x = 177
+        else:
+            pixbuf = pixbuf.new_subpixbuf(0, 0, self.height, self.height)
         return pixbuf

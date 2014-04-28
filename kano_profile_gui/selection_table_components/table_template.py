@@ -15,17 +15,17 @@ import kano_profile_gui.components.header as header
 
 # headers: category names, e.g. ["badges"] or ["environments"]
 # equipable: whether each item in the array is equipable (like avatars or environments)
-# width and height of the scrolled window
 class Template():
-    def __init__(self, headers, equipable, width, height):
+    def __init__(self, headers, equipable):
 
         self.equipable = equipable
+        self.scrollbar_width = 44
+        self.width = 734 - self.scrollbar_width
+        self.height = 448
 
         self.categories = []
         for x in range(len(headers)):
             self.categories.append(tab.Table(headers[x], self.equipable))
-
-        print self.categories
 
         if len(headers) == 2:
             self.head = header.Header(headers[0], headers[1])
@@ -40,7 +40,7 @@ class Template():
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add_with_viewport(self.categories[0].table)
         self.scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.scrolledwindow.set_size_request(width, height)
+        self.scrolledwindow.set_size_request(self.width, self.height)
 
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.container.pack_start(self.head.box, False, False, 0)

@@ -8,13 +8,15 @@ from .connection import request_wrapper, content_type_json
 from .functions import get_glob_session
 
 
-def list_shares(app_name=None, page=0, featured=False):
+def list_shares(app_name=None, page=0, featured=False, user_id=None):
     payload = {
         'app_name': app_name,
         'page': page,
         'featured': int(featured),
         'limit': 10
     }
+    if user_id:
+        payload['user_id'] = user_id
 
     success, text, data = request_wrapper('get', '/share', headers=content_type_json, params=payload)
     if not success:

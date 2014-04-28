@@ -13,8 +13,8 @@ import kano_profile_gui.components.icons as icons
 
 class Header():
     def __init__(self, title1, title2=None):
-        # Width of window plus scrollbar
-        self.width = 690 + 44
+
+        self.width = 734
         self.height = 44
         self.locked_elements = 5  # For now
         self.unlocked_elements = 5  # For now
@@ -28,6 +28,7 @@ class Header():
         locked_box = Gtk.Box()
         locked_box.pack_start(locked_pic, False, False, 0)
         locked_box.pack_start(self.locked_label, False, False, 0)
+        locked_box.set_size_request(44, 44)
 
         unlocked_pic = icons.set_from_name("unlocked")
         self.unlocked_label = Gtk.Label(": " + str(self.unlocked_elements))
@@ -36,7 +37,8 @@ class Header():
         unlocked_box.pack_start(unlocked_pic, False, False, 0)
         unlocked_box.pack_start(self.unlocked_label, False, False, 0)
 
-        self.halign = Gtk.Alignment(xalign=0, yalign=0)
+        self.halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
+        self.halign.set_size_request(580, 44)
 
         self.title_label1 = Gtk.Label(title1.upper())
         self.title_label1.get_style_context().add_class("heading")
@@ -59,23 +61,15 @@ class Header():
         else:
             self.halign.add(self.title_label1)
 
-        # 610 - magic number. :(
-        self.halign.set_size_request(610, self.height)
-        top_padding = 5
-        bottom_padding = 0
-        left_padding = 140
-        right_padding = 140
-        self.halign.set_padding(top_padding, bottom_padding, left_padding, right_padding)
-
         self.box.pack_start(locked_box, False, False, 5)
         self.box.pack_start(self.halign, False, False, 0)
-        self.box.pack_start(unlocked_box, False, False, 0)
+        self.box.pack_end(unlocked_box, False, False, 5)
 
-    def set_locked(self, number_of_locked):
+    def set_locked_number(self, number_of_locked):
         self.locked_elements = number_of_locked
         self.locked_label.show()
 
-    def set_unlocked(self, number_of_unlocked):
+    def set_unlocked_number(self, number_of_unlocked):
         self.unlocked_elements = number_of_unlocked
         self.unlocked_label.show()
 

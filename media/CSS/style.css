@@ -40,6 +40,7 @@
     -GtkImage-outer-border: 0;
     -GtkImage-inner-border: 0;
     -GtkMenuToolButton-inner-border: 0;
+    -GtkScrolledWindow-scrollbar-spacing: 0;
     -GtkTreeMenu-inner-border: 0;
     -unico-focus-border-color: transparent; /* Removes the annoying red outline on active buttons*/
     engine: none; /* Turns off annoying borders */

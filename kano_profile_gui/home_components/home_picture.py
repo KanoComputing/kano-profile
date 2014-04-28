@@ -7,7 +7,7 @@
 #
 # This controls the size of the pictures displayed on the environment page
 
-# Size: width = 230px, height = 180px
+# Size: width = 734px, height = 404px
 
 # Read from directory /usr/share/kano-profile/media/environments/*
 

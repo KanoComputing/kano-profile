@@ -9,17 +9,19 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-# import kano.world.functions as kw
-# import kano.world.workspaces as kww
-# from kano.utils import run_cmd
+# from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
+from kano.utils import run_cmd
+from kano.world.functions import login_using_token
+from kano.world.share import list_shares, upload_share, delete_share
 
-# # login first with token, if not working then try with dialog
-# success, value = kw.login_using_token()
-# if not success:
-#     run_cmd(dir_path + '/bin/kano-login')
-#     success, value = kw.login_using_token()
-#     if not success:
-#         sys.exit('Login not possible, error: ' + value)
+success, value = login_using_token()
+if not success:
+    run_cmd(dir_path + '/bin/kano-login')
+    success, value = login_using_token()
+    if not success:
+        sys.exit('Login not possible, error: ' + value)
+
+
 
 # # kw.glob_session.backup_content()
 # # print kw.glob_session.restore_content()
@@ -33,10 +35,13 @@ if __name__ == '__main__' and __package__ is None:
 # #     print
 
 
-from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
 
 # test_badge_rules()
-create_images()
+# create_images()
 # badges = calculate_badges('badges')
 # pprint(badges)
+
+
+
+# pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft', False))
 

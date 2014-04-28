@@ -1,38 +1,34 @@
 {
+  "bug_buster": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-feedback", "bugs_submitted", 1]],
+    "title": "Bug Buster"
+  },
   "feedbacker": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-feedback", "starts", 1]
-    ],
-    "title": "Feedbacker",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-feedback", "starts", 1]],
+    "title": "Feedbacker"
   },
-    "bug_buster": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-feedback", "bugs_submitted", 1]
-    ],
-    "title": "Bug Buster",
+  "remote_roamer": {
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-    "remote_roamer": {
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [
-      ["vnc", "starts", 1]
-    ],
-    "title": "Remote Roamer",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "targets": [["vnc", "starts", 1]],
+    "title": "Remote Roamer"
   },
   "staying_super": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-updater", "updated", 1]
-    ],
-    "title": "Staying Super",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-updater", "updated", 1]],
+    "title": "Staying Super"
   }
 }

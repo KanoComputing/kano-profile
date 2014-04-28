@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# UI for login screen
+
+import os
+import sys
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano.world.functions import login_using_token, login, register, remove_token
+from kano.world.share import list_shares, delete_share
+from kano.profile.profile import load_profile
+
+
+def list_all_shares():
+    user_id = load_profile()['kanoworld_id']
+    for featured in [False, True]:
+        shares = list_shares(featured=featured, user_id=user_id)[2]['entries']
+        for share in shares:
+            username = share['user']['username']
+            app = share['app']
+            title = share['title']
+            print username, app, title
+
+
+def delete_all_shares():
+    answer = raw_input('Are you sure? Y/N: ').lower()
+    if answer != 'y':
+        return
+    user_id = load_profile()['kanoworld_id']
+    for featured in [False, True]:
+        shares = list_shares(featured=featured, user_id=user_id)[2]['entries']
+        for share in shares:
+            username = share['user']['username']
+            app = share['app']
+            title = share['title']
+            share_id = share['id']
+            print 'Deleting share: ', username, app, title
+            print delete_share(share_id)
+
+
+def check_login():
+    success, _ = login_using_token()
+    if success:
+        print "Login OK"
+        return True
+    return False
+
+
+def do_login():
+    email = raw_input('e-mail: ')
+    password = raw_input('password: ')
+    success, error = login(email, password)
+    if not success:
+        sys.exit('Error with login: {}'.format(error))
+    check_login()
+
+
+def do_register():
+    email = raw_input('e-mail: ')
+    username = raw_input('username: ')
+    password = raw_input('password: ')
+    success, error = register(email, username, password)
+    if not success:
+        sys.exit('Error with registering: {}'.format(error))
+
+
+def main():
+    if len(sys.argv) == 2 and sys.argv[1] == '--reset':
+        remove_token()
+
+    if not check_login():
+        choice = raw_input('Login (L) or Register (R)?: ').lower()
+        if choice == 'l':
+            do_login()
+            sys.exit()
+        elif choice == 'r':
+            do_register()
+            sys.exit()
+
+    if len(sys.argv) == 2:
+        if sys.argv[1] == '--delete-shares':
+            delete_all_shares()
+        if sys.argv[1] == '--list-shares':
+            list_all_shares()
+
+
+if __name__ == '__main__':
+    main()

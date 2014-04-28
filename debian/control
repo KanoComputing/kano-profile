@@ -10,4 +10,6 @@ Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, python, kano-toolset
 Recommends: kano-fonts
 Description: Profile app for KANO
-
+Provides: kano-share
+Conflicts: kano-share
+Replaces: kano-share

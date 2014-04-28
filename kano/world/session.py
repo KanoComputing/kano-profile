@@ -147,19 +147,20 @@ class KanoWorldSession(object):
 
         return download_url(file_url, file_path)
 
-    def upload_workspace(self, file_path, title, app_name):
+    def upload_share(self, file_path, title, app_name, featured):
         if not os.path.exists(file_path):
-            return False, 'File path not found!'
+            return False, 'File path not found: {}'.format(file_path)
 
         files = {
-            'workspace': open(file_path, 'rb'),
+            'attachment': open(file_path, 'rb'),
         }
 
         payload = {
-            'title': title
+            'title': title,
+            'featured': featured
         }
 
-        endpoint = '/workspaces/{}'.format(app_name)
+        endpoint = '/share/{}'.format(app_name)
 
         success, text, data = request_wrapper('post', endpoint, session=self.session, files=files, data=payload)
         if not success:
@@ -169,6 +170,15 @@ class KanoWorldSession(object):
         if not success:
             return False, 'Backup not successful!'
         return True, None
+
+    def delete_share(self, share_id):
+        endpoint = '/share/{}'.format(share_id)
+
+        success, text, data = request_wrapper('delete', endpoint, session=self.session)
+        if not success:
+            return False, text
+        return True, None
+
 
 
 

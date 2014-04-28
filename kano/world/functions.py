@@ -115,3 +115,7 @@ def restore_content(file_path):
         return False, 'You are not logged in!'
 
     return glob_session.restore_content(file_path)
+
+
+def get_glob_session():
+    return glob_session

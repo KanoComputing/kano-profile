@@ -1,10 +1,9 @@
 bin/* /usr/bin
 kano/* /usr/lib/python2.7/dist-packages/kano
-rules /usr/share/kano-profile
-media /usr/share/kano-profile
+kano_login /usr/lib/python2.7/dist-packages
 kano_profile_gui /usr/lib/python2.7/dist-packages
-kano_login_dialog /usr/lib/python2.7/dist-packages
+media /usr/share/kano-profile
+rules /usr/share/kano-profile
 
-webapi/webapi.py /usr/lib/python2.7/dist-packages/kano
-
-
+icon/kano-share /usr/share/kano-extras/extras
+icon/kano-share.png /usr/share/kano-extras/icons

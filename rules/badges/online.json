@@ -1,47 +1,42 @@
 {
-  "street_cred": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-world", "shares", 1]
-    ],
-    "title": "Street Cred",
+  "community_champion": {
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-world", "shares", 5]],
+    "title": "Community Champion"
   },
   "hello_world": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-world", "chats-sent", 1]
-    ],
-    "title": "Hello World",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "community_champion": {
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [
-      ["kano-world", "shares", 5]
-    ],
-    "title": "Community Champion",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "talent_tracker": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-world", "you_follow", 10]
-    ],
-    "title": "Talent Tracker",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "targets": [["kano-world", "chats-sent", 1]],
+    "title": "Hello World"
   },
   "staff_pick": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-world", "staff_picks", 1]
-    ],
-    "title": "Staff Pick",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-world", "staff_picks", 1]],
+    "title": "Staff Pick"
+  },
+  "street_cred": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-world", "shares", 1]],
+    "title": "Street Cred"
+  },
+  "talent_tracker": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-world", "you_follow", 10]],
+    "title": "Talent Tracker"
   }
 }

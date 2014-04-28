@@ -2,16 +2,19 @@
   "make-pong": {
     "dir": "Pong-content",
     "ext": "xml",
-    "cmd": "python /usr/share/make-pong/make-pong {fullpath}"
+    "cmd": "python /usr/share/make-pong/make-pong {fullpath}",
+    "max_level": 15
   },
   "make-minecraft": {
     "dir": "Minecraft-content",
     "ext": "xml",
-    "cmd": "python /usr/share/make-minecraft/make-minecraft {fullpath}"
+    "cmd": "python /usr/share/make-minecraft/make-minecraft {fullpath}",
+    "max_level": 15
   },
   "make-snake": {
     "dir": "Snake-content",
     "ext": "",
-    "cmd": "kano-launcher \"rxvt -title \"Make Snake\" -e python /usr/share/make-snake -t custom\" \"make-snake\""
+    "cmd": "kano-launcher \"rxvt -title \"Make Snake\" -e python /usr/share/make-snake -t custom\" \"make-snake\"",
+    "max_level": 8
   }
 }

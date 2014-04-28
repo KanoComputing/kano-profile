@@ -18,5 +18,5 @@ for f in files:
         continue
     for item in data.iterkeys():
         data[item]['bg_color'] = '000000'
-    write_json(f, data)
+    write_json(f, data, prettyprint=True)
 

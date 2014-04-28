@@ -63,8 +63,8 @@ class Header():
         self.halign.set_size_request(610, self.height)
         top_padding = 5
         bottom_padding = 0
-        left_padding = 180
-        right_padding = 180
+        left_padding = 140
+        right_padding = 140
         self.halign.set_padding(top_padding, bottom_padding, left_padding, right_padding)
 
         self.box.pack_start(locked_box, False, False, 5)

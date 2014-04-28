@@ -33,7 +33,9 @@ class Picture():
             self.avatar.set_from_file(avatar_file)
         else:
             environment_filename = constants.media + "/images/environments/" + str(self.background_height) + "/arcade_hall.png"
+            print environment_filename
             avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_height) + "/video_guy.png"
+            print avatar_filename
             self.background.set_from_file(environment_filename)
             self.avatar.set_from_file(avatar_filename)
 

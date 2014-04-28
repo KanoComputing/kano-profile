@@ -82,7 +82,7 @@ def activate(_win, _box):
     plist = project_list.List()
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.add_with_viewport(plist.background)
-    scrolledwindow.set_size_request(734, 590)
+    scrolledwindow.set_size_request(734, 404)
     _box.pack_start(heading.box, False, False, 0)
     _box.pack_start(scrolledwindow, False, False, 0)
     _win.show_all()

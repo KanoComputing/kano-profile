@@ -1,76 +1,76 @@
 {
-  "bronze_medallion": {
-    "operation": "stat_sum_gt",
-    "targets": [
-      ["make-snake", "level"],
-      ["make-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
-    ],
-    "value": 5,
-    "title": "Bronze Medallion",
+  "1000_blocks": {
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "silver_medallion": {
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
-    "targets": [
-      ["make-snake", "level"],
-      ["make-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
-    ],
-    "value": 15,
-    "title": "Silver Medallion",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "gold_medallion": {
-    "operation": "stat_sum_gt",
-    "targets": [
-      ["make-snake", "level"],
-      ["make-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
-    ],
-    "value": 30,
-    "title": "Gold Medallion",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "platinum_medallion": {
-    "operation": "stat_sum_gt",
-    "targets": [
-      ["make-snake", "level"],
-      ["make-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
-    ],
-    "value": -1,
-    "title": "Platinum Medallion",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "targets": [["make-pong", "blocks_created"], ["make-minecraft", "blocks_created"]],
+    "title": "1000 Blocks",
+    "value": 1000
   },
   "100_blocks": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
-    "targets": [
-      ["make-pong", "blocks_created"],
-      ["make-minecraft", "blocks_created"]
-    ],
-    "value": 100,
+    "targets": [["make-pong", "blocks_created"], ["make-minecraft", "blocks_created"]],
     "title": "100 Blocks",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "value": 100
   },
-  "1000_blocks": {
+  "bronze_medallion": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-pong", "blocks_created"],
-      ["make-minecraft", "blocks_created"]
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
     ],
-    "value": 1000,
-    "title": "1000 Blocks",
+    "title": "Bronze Medallion",
+    "value": 5
+  },
+  "gold_medallion": {
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "title": "Gold Medallion",
+    "value": 30
+  },
+  "platinum_medallion": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "title": "Platinum Medallion",
+    "value": -1
+  },
+  "silver_medallion": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_sum_gt",
+    "targets": [
+      ["make-snake", "level"],
+      ["make-video", "level"],
+      ["make-pong", "level"],
+      ["make-minecraft", "level"]
+    ],
+    "title": "Silver Medallion",
+    "value": 15
   }
 }

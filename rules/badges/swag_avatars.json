@@ -1,65 +1,58 @@
 {
-  "judoka": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 1]
-    ],
-    "title": "Judoka",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "video_guy": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 2]
-    ],
-    "title": "Video Guy",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "domo": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 3]
-    ],
-    "title": "Domo",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
   "arcader": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 4]
-    ],
-    "title": "Arcader",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "minecrafter": {
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 5]
-    ],
-    "title": "Minecrafter",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "targets": [["kano-profile", "level", 4]],
+    "title": "Arcader"
   },
   "conductor": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 6]
-    ],
-    "title": "Conductor",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 6]],
+    "title": "Conductor"
+  },
+  "domo": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 3]],
+    "title": "Domo"
+  },
+  "judoka": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 1]],
+    "title": "Judoka"
   },
   "kano_kin": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", 7]
-    ],
-    "title": "Kano Kin",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 7]],
+    "title": "Kano Kin"
+  },
+  "minecrafter": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 5]],
+    "title": "Minecrafter"
+  },
+  "video_guy": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 2]],
+    "title": "Video Guy"
   }
 }

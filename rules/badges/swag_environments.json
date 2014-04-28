@@ -1,56 +1,50 @@
 {
-  "video_set": {
-    "operation": "stat_gta",
-    "targets": [
-      ["make-video", "level", -1]
-    ],
-    "title": "Video Set",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "jungle": {
-    "operation": "stat_gta",
-    "targets": [
-      ["make-snake", "level", -1]
-    ],
-    "title": "Jungle",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
   "arcade_hall": {
-    "operation": "stat_gta",
-    "targets": [
-      ["make-pong", "level", -1]
-    ],
-    "title": "Arcade Hall",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
-  },
-  "fields_of_ideas": {
+    "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [
-      ["make-minecraft", "level", -1]
-    ],
-    "title": "Fields of Ideas",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "targets": [["make-pong", "level", -1]],
+    "title": "Arcade Hall"
   },
   "concert_hall": {
-    "operation": "stat_gta",
-    "targets": [
-      ["make-music", "level", -1]
-    ],
-    "title": "Concert Hall",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["make-music", "level", -1]],
+    "title": "Concert Hall"
+  },
+  "fields_of_ideas": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["make-minecraft", "level", -1]],
+    "title": "Fields of Ideas"
+  },
+  "jungle": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["make-snake", "level", -1]],
+    "title": "Jungle"
   },
   "space": {
-    "operation": "stat_gta",
-    "targets": [
-      ["kano-profile", "level", -1]
-    ],
-    "title": "Space",
+    "bg_color": "000000",
     "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked"
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", -1]],
+    "title": "Space"
+  },
+  "video_set": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["make-video", "level", -1]],
+    "title": "Video Set"
   }
 }

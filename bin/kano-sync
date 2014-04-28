@@ -68,7 +68,7 @@ if 'restore_content' in sys.argv[1:]:
     if not success:
         print 'Error with restoring data: ' + error
 
-    tar_cmd = 'tar -xzf {tmp_file}'.format(tmp_file=tmp_file)
+    tar_cmd = 'tar -xzf --skip-old-files {tmp_file}'.format(tmp_file=tmp_file)
     _, e, _ = run_cmd(tar_cmd)
     if e:
         print 'Error with restoring data: ' + e

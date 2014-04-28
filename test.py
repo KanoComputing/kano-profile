@@ -43,13 +43,5 @@ if not success:
 
 
 
-# shares = list_shares(app_name='minecraft')[2]
-# pprint(shares)
+# pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft', False))
 
-pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft', True))
-
-# delete all shares
-# shares = list_shares(featured=False)[2]['entries']
-# for share in shares:
-#     print[share['user']['username']]
-#     print delete_share(share['id'])

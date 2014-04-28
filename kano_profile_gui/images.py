@@ -18,9 +18,10 @@ def get_image(category, subcategory, name, width):
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):
-        ensure_dir(folder)
-        open(fullpath, 'w').close()
-        print '{} created'.format(fullpath)
+        return os.path.join(image_dir, 'icons/50/_missing.png')
+        #ensure_dir(folder)
+        #open(fullpath, 'w').close()
+        #print '{} created'.format(fullpath)
         # try:
         #     from randomavatar.randomavatar import Avatar
         #     ensure_dir(folder)

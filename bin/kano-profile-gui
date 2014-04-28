@@ -33,7 +33,7 @@ class MainWindow(Gtk.Window):
         # Create main window
         Gtk.Window.__init__(self, title='Kano-Profile')
         # TODO: Fix extra space under window
-        self.WINDOW_HEIGHT = 0
+        self.WINDOW_HEIGHT = 596
         self.WINDOW_WIDTH = 734
 
         self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)

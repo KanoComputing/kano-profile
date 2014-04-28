@@ -11,8 +11,14 @@ from gi.repository import Gtk
 
 
 class Info():
-    def __init__(self, width, height, heading, info, equip):
+    def __init__(self, heading, info, equip):
 
+        self.width = 274
+        self.height = 448
+        top_padding = 20
+        bottom_padding = 20
+        right_padding = 20
+        left_padding = 20
         self.heading = Gtk.Label(heading)
         self.heading.get_style_context().add_class("info_heading")
         self.heading.set_alignment(xalign=0, yalign=0)
@@ -24,7 +30,7 @@ class Info():
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.heading, False, False, 5)
         self.box.pack_start(self.paragraph, False, False, 30)
-        self.box.set_size_request(width, height)
+        self.box.set_size_request(self.width - left_padding - right_padding, self.height - top_padding - bottom_padding)
 
         self.back_button = Gtk.Button("BACK")
         self.back_button.get_style_context().add_class("green_button")
@@ -42,7 +48,7 @@ class Info():
         self.box.pack_start(self.back_button_box, False, False, 3)
 
         self.align = Gtk.Alignment(xalign=0, yalign=0)
-        self.align.set_padding(20, 20, 20, 20)
+        self.align.set_padding(top_padding, bottom_padding, left_padding, right_padding)
         self.align.add(self.box)
 
         self.background = Gtk.EventBox()

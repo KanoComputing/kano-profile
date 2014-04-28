@@ -9,7 +9,7 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 from kano_profile_gui.images import get_image
 import kano_profile_gui.components.constants as constants
 
@@ -32,10 +32,7 @@ class Picture():
         self.locked_description = info["locked_description"]
         self.unlocked_description = info["unlocked_description"]
 
-        if self.category == "environments":
-            self.image = self.set_image_width(self.width)
-        else:
-            self.image = self.set_image_width(self.height)
+        self.image = self.set_image_height(self.height)
 
         self.hover_box = Gtk.EventBox()
         self.hover_box.get_style_context().add_class("hover_box")
@@ -61,11 +58,12 @@ class Picture():
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)
+
+        self.fixed.put(self.hover_box, 0, self.height - self.label_height)
         if self.category == "environments":
             self.fixed.put(self.image, 0, 0)
         else:
             self.fixed.put(self.image, (self.width - self.height) / 2, 0)
-        self.fixed.put(self.hover_box, 0, self.height - self.label_height)
         self.fixed.put(self.locked_fixed, 0, 0)
 
         self.button.add(self.fixed)
@@ -116,14 +114,25 @@ class Picture():
         self.hover_box.set_visible_window(False)
         self.hover_label.set_visible(False)
 
-    def get_filename_at_width(self, width_of_image):
-        return get_image(self.category, self.subcategory, self.badge, width_of_image)
+    def get_filename_at_height(self, height_of_image):
+        return get_image(self.category, self.subcategory, self.badge, height_of_image)
 
-    def set_image_width(self, width_of_image):
-        filename = self.get_filename_at_width(width_of_image)
+    def set_image_height(self, height_of_image):
+        #filename = self.get_filename_at_height(height_of_image)
+        pixbuf = self.set_pixbuf_height(height_of_image)
         image = Gtk.Image()
-        image.set_from_file(filename)
+        image.set_from_pixbuf(pixbuf)
         return image
+
+    def set_pixbuf_height(self, height_of_image):
+        filename = self.get_filename_at_height(height_of_image)
+        print "line 125 " + str(filename)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
+        if self.category == "environments":
+            pixbuf = pixbuf.new_subpixbuf(46, 0, self.width, self.height)
+        else:
+            pixbuf = pixbuf.new_subpixbuf(0, 0, self.height, self.height)
+        return pixbuf
 
     def get_description(self):
         if self.locked:

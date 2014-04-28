@@ -25,6 +25,8 @@ class Template():
         for x in range(len(headers)):
             self.categories.append(tab.Table(headers[x], self.equipable))
 
+        print self.categories
+
         if len(headers) == 2:
             self.head = header.Header(headers[0], headers[1])
             self.head.radiobutton1.connect("toggled", self.on_button_toggled)

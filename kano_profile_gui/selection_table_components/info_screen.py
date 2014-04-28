@@ -7,7 +7,7 @@
 #
 # If an environment/avatar/badge is selected, we go to this screen to show more info
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.selection_table_components.info_text as info_text
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.constants as constants
@@ -19,8 +19,8 @@ class Item():
     def __init__(self, category, current_item, equip):
 
         # image width and height
-        self.width = 400
-        self.height = 400
+        self.width = 460
+        self.height = 448
 
         # Boolean we pass to the text box to decide whether we put an equip button
         self.equip = equip
@@ -31,10 +31,11 @@ class Item():
         self.array = category.pics
         self.current = current_item
 
-        self.image = self.set_image()
-        self.locked_image = self.set_image()
+        self.image = self.set_image_height()
+        self.locked_image = self.set_image_height()
         self.greybox = Gtk.EventBox()
         self.greybox.get_style_context().add_class("locked_box")
+        #self.greybox.get_style_context().add_class("black")
         self.greybox.set_size_request(self.width, self.height)
         self.padlock = Gtk.Image()
         self.padlock.set_from_file(constants.media + "/images/icons/Level-4.png")
@@ -43,6 +44,7 @@ class Item():
         fixed.put(self.locked_image, 0, 0)
         fixed.put(self.greybox, 0, 0)
         fixed.put(self.padlock, 180, 180)
+        fixed.set_size_request(self.width, self.height)
 
         self.fixed = self.create_fixed(self.image)
         self.locked_fixed = self.create_fixed(fixed)
@@ -79,7 +81,7 @@ class Item():
         #self.fixed.put(self.prev, 0, self.height / 2)
         #self.fixed.put(self.next, self.width - 35, self.height / 2)
 
-        self.info_text = info_text.Info(700 - self.width, self.height, self.current.title, self.current.get_description(), self.equip)
+        self.info_text = info_text.Info(self.current.title, self.current.get_description(), self.equip)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed_container, False, False, 0)
@@ -104,7 +106,10 @@ class Item():
         nextb.connect("button_press_event", self.go_to_next)
 
         fixed = Gtk.Fixed()
-        fixed.put(image, 0, 0)
+        if self.current.category == "environments":
+            fixed.put(image, 0, 0)
+        else:
+            fixed.put(image, 6, 0)
         fixed.put(prevb, 0, self.height / 2)
         fixed.put(nextb, self.width - 35, self.height / 2)
 
@@ -122,8 +127,10 @@ class Item():
 
     def refresh(self):
         self.category.set_selected(self.current)
-        self.image.set_from_file(self.set_filename())
-        self.locked_image.set_from_file(self.set_filename())
+        #self.image.set_from_file(self.set_filename())
+        #self.locked_image.set_from_file(self.set_filename())
+        self.image.set_from_pixbuf(self.set_pixbuf_height())
+        self.locked_image.set_from_pixbuf(self.set_pixbuf_height())
         self.header_label.set_text(self.current.title)
         self.info_text.refresh(self.current.title, self.current.get_description())
         self.set_locked()
@@ -136,7 +143,7 @@ class Item():
         return image
 
     def set_filename(self):
-        return self.current.get_filename_at_width(self.width)
+        return self.current.get_filename_at_height(self.height)
 
     """def set_locked(self, locked=None):
                     if locked is None:
@@ -159,3 +166,18 @@ class Item():
             self.fixed_container.add(self.locked_fixed)
         else:
             self.fixed_container.add(self.fixed)
+
+    def set_image_height(self):
+        #filename = self.get_filename_at_height(height_of_image)
+        pixbuf = self.set_pixbuf_height()
+        image = Gtk.Image()
+        image.set_from_pixbuf(pixbuf)
+        return image
+
+    def set_pixbuf_height(self):
+        filename = self.current.get_filename_at_height(self.height)
+        print "info screen filename = " + str(filename)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
+        if self.current.category == "environments":
+            pixbuf = pixbuf.new_subpixbuf(177, 0, self.height, self.height)  # x = 177
+        return pixbuf

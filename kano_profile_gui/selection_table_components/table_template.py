@@ -14,7 +14,6 @@ import kano_profile_gui.components.header as header
 
 
 # headers: category names, e.g. ["badges"] or ["environments"]
-# info: array of information for each category
 # equipable: whether each item in the array is equipable (like avatars or environments)
 # width and height of the scrolled window
 class Template():

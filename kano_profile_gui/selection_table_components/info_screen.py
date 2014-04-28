@@ -9,8 +9,8 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text as info_text
-import kano_profile_gui.selection_table_components.locked_screen as locked_screen
 import kano_profile_gui.components.icons as icons
+import kano_profile_gui.components.constants as constants
 
 
 class Item():
@@ -31,8 +31,22 @@ class Item():
         self.array = category.pics
         self.current = current_item
 
-        self.image = Gtk.Image()
-        self.set_image()
+        self.image = self.set_image()
+        self.locked_image = self.set_image()
+        self.greybox = Gtk.EventBox()
+        self.greybox.get_style_context().add_class("locked_box")
+        self.greybox.set_size_request(self.width, self.height)
+        self.padlock = Gtk.Image()
+        self.padlock.set_from_file(constants.media + "/images/icons/Level-4.png")
+        # fixed is the locked image
+        fixed = Gtk.Fixed()
+        fixed.put(self.locked_image, 0, 0)
+        fixed.put(self.greybox, 0, 0)
+        fixed.put(self.padlock, 180, 180)
+
+        self.fixed = self.create_fixed(self.image)
+        self.locked_fixed = self.create_fixed(fixed)
+        self.fixed_container = Gtk.Box()
 
         # Make the item who's info screen it is the selected item
         self.category.set_selected(self.current)
@@ -44,35 +58,57 @@ class Item():
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        prev_arrow = icons.set_from_name("prev_arrow")
-        next_arrow = icons.set_from_name("next_arrow")
+        #prev_arrow = icons.set_from_name("prev_arrow")
+        #next_arrow = icons.set_from_name("next_arrow")
 
-        self.prev = Gtk.Button()
-        self.prev.set_image(prev_arrow)
-        self.prev.connect("button_press_event", self.go_to_prev)
-        self.next = Gtk.Button()
-        self.next.set_image(next_arrow)
-        self.next.connect("button_press_event", self.go_to_next)
+        #self.prev = Gtk.Button()
+        #self.prev.set_image(prev_arrow)
+        #self.prev.connect("button_press_event", self.go_to_prev)
+        #self.next = Gtk.Button()
+        #self.next.set_image(next_arrow)
+        #self.next.connect("button_press_event", self.go_to_next)
 
-        self.locked = locked_screen.Screen(self.width, self.height, 50, 50)
+        #self.locked = locked_screen.Screen(self.width, self.height, 50, 50)
+        #self.locked.fixed.put(self.prev, 0, self.height / 2)
+        #self.locked.fixed.put(self.next, self.width - 35, self.height / 2)
 
         # To get the buttons overlaying the main picture
-        self.fixed = Gtk.Fixed()
-        self.fixed.put(self.image, 0, 0)
-        self.fixed.put(self.locked.fixed, 0, 0)
-        self.fixed.put(self.prev, 0, self.height / 2)
-        self.fixed.put(self.next, self.width - 35, self.height / 2)
+        #self.fixed = Gtk.Fixed()
+        #self.fixed.put(self.image, 0, 0)
+        #self.fixed.put(self.locked.fixed, 0, 0)
+        #self.fixed.put(self.prev, 0, self.height / 2)
+        #self.fixed.put(self.next, self.width - 35, self.height / 2)
 
         self.info_text = info_text.Info(700 - self.width, self.height, self.current.title, self.current.get_description(), self.equip)
 
         self.box = Gtk.Box()
-        self.box.pack_start(self.fixed, False, False, 0)
+        self.box.pack_start(self.fixed_container, False, False, 0)
         self.box.pack_start(self.info_text.background, False, False, 0)
 
         self.container.pack_start(self.header_box, False, False, 0)
         self.container.pack_start(self.box, False, False, 0)
+        #self.container.pack_start(self.box, False, False, 0)
 
+        #self.set_image()
         self.set_locked()
+
+    def create_fixed(self, image):
+        prev_arrow = icons.set_from_name("prev_arrow")
+        next_arrow = icons.set_from_name("next_arrow")
+
+        prevb = Gtk.Button()
+        prevb.set_image(prev_arrow)
+        prevb.connect("button_press_event", self.go_to_prev)
+        nextb = Gtk.Button()
+        nextb.set_image(next_arrow)
+        nextb.connect("button_press_event", self.go_to_next)
+
+        fixed = Gtk.Fixed()
+        fixed.put(image, 0, 0)
+        fixed.put(prevb, 0, self.height / 2)
+        fixed.put(nextb, self.width - 35, self.height / 2)
+
+        return fixed
 
     def go_to_next(self, arg1=None, arg2=None):
         index = self.array.index(self.current)
@@ -86,19 +122,40 @@ class Item():
 
     def refresh(self):
         self.category.set_selected(self.current)
-        self.set_image()
+        self.image.set_from_file(self.set_filename())
+        self.locked_image.set_from_file(self.set_filename())
         self.header_label.set_text(self.current.title)
         self.info_text.refresh(self.current.title, self.current.get_description())
+        self.set_locked()
+        self.container.show_all()
 
     def set_image(self):
-         # filename of picture
-        filename = self.current.get_filename_at_width(self.width)
-        self.image.set_from_file(filename)
+        image = Gtk.Image()
+        image.set_from_file(self.set_filename())
+        #self.set_locked()
+        return image
+
+    def set_filename(self):
+        return self.current.get_filename_at_width(self.width)
+
+    """def set_locked(self, locked=None):
+                    if locked is None:
+                        locked = self.current.locked
+                    else:
+                        self.current.locked = locked
+                    self.locked.box.set_visible_window(locked)
+                    self.locked.padlock.set_visible(locked)
+                    self.locked.box.set_above_child(True)"""
 
     def set_locked(self, locked=None):
         if locked is None:
             locked = self.current.locked
         else:
             self.current.locked = locked
-        self.locked.box.set_visible_window(locked)
-        self.locked.padlock.set_visible(locked)
+        for child in self.fixed_container.get_children():
+            self.fixed_container.remove(child)
+
+        if locked:
+            self.fixed_container.add(self.locked_fixed)
+        else:
+            self.fixed_container.add(self.fixed)

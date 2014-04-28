@@ -46,30 +46,28 @@ class Table():
         self.number_of_columns = 3
         self.number_of_rows = (number_of_badges / self.number_of_columns) + (number_of_badges % self.number_of_columns)
 
-        self.table = Gtk.Table(self.number_of_rows, self.number_of_columns)
-        # set_size_request has no effect
-        self.table.set_size_request(300, 448)
+        self.grid = Gtk.Grid()
 
-        # Attach to table
+        # Attach to grid
         index = 0
         row = 0
 
         while index < (self.number_of_rows * self.number_of_columns):
             for j in range(self.number_of_columns):
                 if index < number_of_badges:
-                    self.table.attach(self.pics[index].button, j, j + 1, row, row + 1,
-                                      Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.EXPAND, 0, 0)
+                    self.grid.attach(self.pics[index].button, j, row, 1, 1)
                 else:
                     emptybox = Gtk.EventBox()
                     emptybox.set_size_request(230, 180)
-                    self.table.attach(emptybox, j, j + 1, row, row + 1,
-                                      Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.EXPAND, 0, 0)
+                    self.grid.attach(emptybox, j, row, 1, 1)
                 index += 1
 
             row += 1
 
         # Read config file/ JSON and find equipped picture.  Default to first one
         self.set_equipped(self.pics[0])
+        self.grid.set_row_spacing(0)
+        self.grid.set_column_spacing(0)
 
     def set_selected(self, item):
         for pic in self.pics:

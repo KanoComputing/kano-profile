@@ -38,7 +38,7 @@ class Template():
                 pic.button.connect("button_press_event", self.go_to_info_screen, cat, pic)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
-        self.scrolledwindow.add_with_viewport(self.categories[0].table)
+        self.scrolledwindow.add_with_viewport(self.categories[0].grid)
         self.scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.scrolledwindow.set_size_request(self.width, self.height)
 
@@ -49,15 +49,15 @@ class Template():
     def on_button_toggled(self, radio):
         in_cat1 = radio.get_active()
         for cat in self.categories:
-            container = cat.table.get_parent()
+            container = cat.grid.get_parent()
             if container is not None:
-                container.remove(cat.table)
+                container.remove(cat.grid)
         for i in self.scrolledwindow.get_children():
                 self.scrolledwindow.remove(i)
         if in_cat1:
-            self.scrolledwindow.add(self.categories[0].table)
+            self.scrolledwindow.add(self.categories[0].grid)
         else:
-            self.scrolledwindow.add(self.categories[1].table)
+            self.scrolledwindow.add(self.categories[1].grid)
         self.scrolledwindow.show_all()
         self.hide_labels()
 

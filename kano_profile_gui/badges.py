@@ -10,7 +10,6 @@
 from kano.profile.badges import calculate_badges
 import kano_profile_gui.selection_table_components.table_template as table_template
 
-img_width = 180
 badge_ui = None
 
 

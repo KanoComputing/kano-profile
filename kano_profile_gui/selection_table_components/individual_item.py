@@ -9,7 +9,7 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf, Gdk
 from kano_profile_gui.images import get_image
 import kano_profile_gui.components.constants as constants
 
@@ -26,6 +26,9 @@ class Picture():
         self.badge = info["badge_name"]
         self.subcategory = info["subcategory"]
         self.locked = not info["unlocked"]
+        bg_color = '#' + str(info["bg_color"])
+        self.bg_color = Gdk.RGBA()
+        self.bg_color.parse(bg_color)
 
         # split info into members
         self.title = info["title"]
@@ -46,6 +49,7 @@ class Picture():
         self.button.set_size_request(self.width, self.height)
         self.button.connect("enter-notify-event", self.add_hover_style, self.hover_box)
         self.button.connect("leave-notify-event", self.remove_hover_style, self.hover_box)
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.bg_color)
 
         self.locked_box = Gtk.EventBox()
         self.locked_box.get_style_context().add_class("locked_box")

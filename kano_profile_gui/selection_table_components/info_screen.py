@@ -31,23 +31,29 @@ class Item():
         self.array = category.pics
         self.current = current_item
 
+        self.background = Gtk.EventBox()
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
+        self.background.set_size_request(self.width, self.height)
+
         self.image = self.set_image_height()
         self.locked_image = self.set_image_height()
         self.greybox = Gtk.EventBox()
         self.greybox.get_style_context().add_class("locked_box")
-        #self.greybox.get_style_context().add_class("black")
         self.greybox.set_size_request(self.width, self.height)
         self.padlock = Gtk.Image()
         self.padlock.set_from_file(constants.media + "/images/icons/Level-4.png")
-        # fixed is the locked image
-        fixed = Gtk.Fixed()
-        fixed.put(self.locked_image, 0, 0)
-        fixed.put(self.greybox, 0, 0)
-        fixed.put(self.padlock, 180, 180)
-        fixed.set_size_request(self.width, self.height)
 
-        self.fixed = self.create_fixed(self.image)
-        self.locked_fixed = self.create_fixed(fixed)
+        fixed = Gtk.Fixed()
+        fixed.put(self.image, 0, 0)
+
+        locked_fixed = Gtk.Fixed()
+        locked_fixed.put(self.locked_image, 0, 0)
+        locked_fixed.put(self.greybox, 0, 0)
+        locked_fixed.put(self.padlock, 180, 180)
+        locked_fixed.set_size_request(self.width, self.height)
+
+        self.fixed = self.create_fixed(fixed)
+        self.locked_fixed = self.create_fixed(locked_fixed)
         self.fixed_container = Gtk.Box()
 
         # Make the item who's info screen it is the selected item
@@ -60,35 +66,16 @@ class Item():
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        #prev_arrow = icons.set_from_name("prev_arrow")
-        #next_arrow = icons.set_from_name("next_arrow")
-
-        #self.prev = Gtk.Button()
-        #self.prev.set_image(prev_arrow)
-        #self.prev.connect("button_press_event", self.go_to_prev)
-        #self.next = Gtk.Button()
-        #self.next.set_image(next_arrow)
-        #self.next.connect("button_press_event", self.go_to_next)
-
-        #self.locked = locked_screen.Screen(self.width, self.height, 50, 50)
-        #self.locked.fixed.put(self.prev, 0, self.height / 2)
-        #self.locked.fixed.put(self.next, self.width - 35, self.height / 2)
-
-        # To get the buttons overlaying the main picture
-        #self.fixed = Gtk.Fixed()
-        #self.fixed.put(self.image, 0, 0)
-        #self.fixed.put(self.locked.fixed, 0, 0)
-        #self.fixed.put(self.prev, 0, self.height / 2)
-        #self.fixed.put(self.next, self.width - 35, self.height / 2)
-
         self.info_text = info_text.Info(self.current.title, self.current.get_description(), self.equip)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed_container, False, False, 0)
         self.box.pack_start(self.info_text.background, False, False, 0)
 
+        self.background.add(self.box)
+
         self.container.pack_start(self.header_box, False, False, 0)
-        self.container.pack_start(self.box, False, False, 0)
+        self.container.pack_start(self.background, False, False, 0)
         #self.container.pack_start(self.box, False, False, 0)
 
         #self.set_image()
@@ -134,6 +121,7 @@ class Item():
         self.header_label.set_text(self.current.title)
         self.info_text.refresh(self.current.title, self.current.get_description())
         self.set_locked()
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
         self.container.show_all()
 
     def set_image(self):

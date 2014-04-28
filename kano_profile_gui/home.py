@@ -15,10 +15,6 @@ import kano_profile_gui.home_components.home_picture as home_pic
 
 
 def activate(_win, _box):
-    #_label.set_text('Home')
-    image_width = 734
-    image_height = 404
-
     profile = load_profile()
 
     xp = calculate_xp()
@@ -29,7 +25,6 @@ def activate(_win, _box):
     picture_box = Gtk.Box()
     picture = home_pic.Picture().fixed
     picture_box.add(picture)
-    picture_box.set_size_request(image_width, image_height)
 
     # Stats
     stat_dict = {"Name": name, "XP": xp, "Level": level, "Progress": progress}

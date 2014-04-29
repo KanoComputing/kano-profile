@@ -27,9 +27,9 @@ class HomePicture():
         self.avatar = Gtk.Image()
 
         if swags.swag_ui is not None:
-            environ_file = swags.swag_ui.categories[0].get_equipped().get_filename_at_height(self.background_height)
+            environ_file = swags.swag_ui.categories[0].get_equipped().get_filename_at_size(self.background_width, self.background_height)
             self.background.set_from_file(environ_file)
-            avatar_file = swags.swag_ui.categories[1].get_equipped().get_filename_at_height(self.avatar_height)
+            avatar_file = swags.swag_ui.categories[1].get_equipped().get_filename_at_size(self.avatar_width, self.avatar_height)
             self.avatar.set_from_file(avatar_file)
         else:
             environment_filename = constants.media + "/images/environments/" + str(self.background_width) + "x" + str(self.background_height) + "/arcade_hall.png"

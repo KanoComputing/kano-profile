@@ -22,6 +22,8 @@ class Header():
         padlock_label_width = 60
         padlock_label_height = 44
 
+        halign_width = self.width - self.locked_elements - self.unlocked_elements - 2 * padlock_label_width
+
         self.box = Gtk.Box()
         self.box.set_size_request(self.width, self.height)
 
@@ -42,7 +44,7 @@ class Header():
         unlocked_box.set_size_request(padlock_label_width, padlock_label_height)
 
         self.halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
-        self.halign.set_size_request(580, 44)
+        self.halign.set_size_request(halign_width, self.height)
 
         self.title_label1 = Gtk.Label(title1.upper())
         self.title_label1.get_style_context().add_class("heading")
@@ -65,7 +67,7 @@ class Header():
 
         self.box.pack_start(locked_box, False, False, 0)
         self.box.pack_start(self.halign, False, False, 0)
-        self.box.pack_end(unlocked_box, False, False, 0)
+        self.box.pack_start(unlocked_box, False, False, 0)
 
     def set_locked_number(self, number_of_locked):
         self.locked_elements = number_of_locked
@@ -98,14 +100,8 @@ class Header():
         # This means we don'tdraw the radio button
         button.set_mode(False)
         button.get_child().get_style_context().add_class("heading")
+        button.get_child().set_alignment(xalign=0.5, yalign=0.5)
         return button
 
     def set_event_listener1(self, callback):
         self.radiobutton1.connect("toggled", callback)
-        #self.radiobutton1.connect("clicked", callback)
-
-    def set_event_listener2(self, callback):
-        self.radiobutton2.connect("toggled", callback)
-        #self.radiobutton2.connect("clicked", callback)
-
-

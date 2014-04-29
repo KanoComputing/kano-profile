@@ -86,6 +86,9 @@ GtkWindow {
     background: #ffffff;
     border-radius: 0;
 }
+.header_button {
+    background: transparent;
+}
 
 .header_button:active {
     background: @button_color;

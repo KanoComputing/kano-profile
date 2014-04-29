@@ -55,9 +55,9 @@ class TableTemplate():
         for i in self.scrolledwindow.get_children():
             self.scrolledwindow.remove(i)
         if in_cat1:
-            self.scrolledwindow.add(self.categories[0].grid)
+            self.scrolledwindow.add_with_viewport(self.categories[0].grid)
         else:
-            self.scrolledwindow.add(self.categories[1].grid)
+            self.scrolledwindow.add_with_viewport(self.categories[1].grid)
         self.scrolledwindow.show_all()
         self.hide_labels()
 

@@ -19,7 +19,7 @@ class Header():
         self.locked_elements = 5  # For now
         self.unlocked_elements = 5  # For now
 
-        padlock_label_width = 70
+        padlock_label_width = 60
         padlock_label_height = 44
 
         self.box = Gtk.Box()
@@ -63,9 +63,9 @@ class Header():
         else:
             self.halign.add(self.title_label1)
 
-        self.box.pack_start(locked_box, False, False, 5)
+        self.box.pack_start(locked_box, False, False, 0)
         self.box.pack_start(self.halign, False, False, 0)
-        self.box.pack_end(unlocked_box, False, False, 5)
+        self.box.pack_end(unlocked_box, False, False, 0)
 
     def set_locked_number(self, number_of_locked):
         self.locked_elements = number_of_locked

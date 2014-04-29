@@ -36,8 +36,7 @@ class InfoText():
         self.back_button.get_style_context().add_class("green_button")
         self.back_button_box = Gtk.Box()
         self.back_button_box.add(self.back_button)
-        # TODO: don't check heading, pass another variable we can check for
-        # add equip button
+
         if equip:
             self.equip_button = Gtk.Button("EQUIP")
             self.equip_button.get_style_context().add_class("green_button")

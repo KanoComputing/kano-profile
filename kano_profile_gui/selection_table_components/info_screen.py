@@ -35,8 +35,8 @@ class InfoScreen():
         self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
         self.background.set_size_request(self.width, self.height)
 
-        self.image = self.set_image_height()
-        self.locked_image = self.set_image_height()
+        self.image = self.get_image_at_size()
+        self.locked_image = self.get_image_at_size()
         self.greybox = Gtk.EventBox()
         self.greybox.get_style_context().add_class("locked_box")
         self.greybox.set_size_request(self.width, self.height)
@@ -76,9 +76,7 @@ class InfoScreen():
 
         self.container.pack_start(self.header_box, False, False, 0)
         self.container.pack_start(self.background, False, False, 0)
-        #self.container.pack_start(self.box, False, False, 0)
 
-        #self.set_image()
         self.set_locked()
 
     def create_fixed(self, image):
@@ -114,24 +112,16 @@ class InfoScreen():
 
     def refresh(self):
         self.category.set_selected(self.current)
-        #self.image.set_from_file(self.set_filename())
-        #self.locked_image.set_from_file(self.set_filename())
-        self.image.set_from_pixbuf(self.set_pixbuf_height())
-        self.locked_image.set_from_pixbuf(self.set_pixbuf_height())
+        self.image.set_from_pixbuf(self.get_pixbuf_at_size())
+        self.locked_image.set_from_pixbuf(self.get_pixbuf_at_size())
         self.header_label.set_text(self.current.title)
         self.info_text.refresh(self.current.title, self.current.get_description())
         self.set_locked()
         self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
         self.container.show_all()
 
-    def set_image(self):
-        image = Gtk.Image()
-        image.set_from_file(self.set_filename())
-        #self.set_locked()
-        return image
-
-    def set_filename(self):
-        return self.current.get_filename_at_height(self.height)
+    def get_filename_at_size(self):
+        return self.current.get_filename_at_size(self.width, self.height)
 
     def set_locked(self, locked=None):
         if locked is None:
@@ -146,19 +136,13 @@ class InfoScreen():
         else:
             self.fixed_container.add(self.fixed)
 
-    def set_image_height(self):
-        #filename = self.get_filename_at_height(height_of_image)
-        pixbuf = self.set_pixbuf_height()
+    def get_image_at_size(self):
         image = Gtk.Image()
-        image.set_from_pixbuf(pixbuf)
+        filename = self.get_filename_at_size()
+        image.set_from_file(filename)
         return image
 
-    def set_pixbuf_height(self):
-        filename = self.current.get_filename_at_height(self.height)
-        print "info screen filename = " + str(filename)
+    def get_pixbuf_at_size(self):
+        filename = self.get_filename_at_size()
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
-        if self.current.category == "environments":
-            pixbuf = pixbuf.new_subpixbuf(177, 0, self.height, self.height)
-        else:
-            pixbuf = pixbuf.new_subpixbuf(0, 0, self.height, self.height)
         return pixbuf

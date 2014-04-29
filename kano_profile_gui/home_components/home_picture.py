@@ -21,7 +21,7 @@ class HomePicture():
 
         self.background_width = 734
         self.background_height = 404
-        self.avatar_width = self.background_height
+        self.avatar_width = self.background_width
         self.avatar_height = self.background_height
         self.background = Gtk.Image()
         self.avatar = Gtk.Image()
@@ -32,9 +32,9 @@ class HomePicture():
             avatar_file = swags.swag_ui.categories[1].get_equipped().get_filename_at_height(self.avatar_height)
             self.avatar.set_from_file(avatar_file)
         else:
-            environment_filename = constants.media + "/images/environments/" + str(self.background_height) + "/arcade_hall.png"
+            environment_filename = constants.media + "/images/environments/" + str(self.background_width) + "x" + str(self.background_height) + "/arcade_hall.png"
             print environment_filename
-            avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_height) + "/video_guy.png"
+            avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_width) + "x" + str(self.avatar_height) + "/video_guy.png"
             print avatar_filename
             self.background.set_from_file(environment_filename)
             self.avatar.set_from_file(avatar_filename)

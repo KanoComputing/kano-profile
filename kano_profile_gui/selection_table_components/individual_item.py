@@ -9,7 +9,7 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk, GdkPixbuf, Gdk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 from kano_profile_gui.images import get_image
 import kano_profile_gui.components.constants as constants
 
@@ -35,7 +35,7 @@ class IndividualItem():
         self.locked_description = info["locked_description"]
         self.unlocked_description = info["unlocked_description"]
 
-        self.image = self.set_image_height()
+        self.image = self.get_image_at_size()
 
         self.hover_box = Gtk.EventBox()
         self.hover_box.get_style_context().add_class("hover_box")
@@ -64,10 +64,7 @@ class IndividualItem():
         self.fixed.set_size_request(self.width, self.height)
 
         self.fixed.put(self.hover_box, 0, self.height - self.label_height)
-        if self.category == "environments":
-            self.fixed.put(self.image, 0, 0)
-        else:
-            self.fixed.put(self.image, (self.width - self.height) / 2, 0)
+        self.fixed.put(self.image, 0, 0)
         self.fixed.put(self.locked_fixed, 0, 0)
 
         self.button.add(self.fixed)
@@ -118,23 +115,18 @@ class IndividualItem():
         self.hover_box.set_visible_window(False)
         self.hover_label.set_visible(False)
 
-    def get_filename_at_height(self, height_of_image):
-        return get_image(self.category, self.subcategory, self.badge, height_of_image)
+    def get_filename_at_size(self, width_of_image, height_of_image):
+        return get_image(self.category, self.subcategory, self.badge, str(width_of_image) + "x" + str(height_of_image))
 
-    def set_image_height(self):
-        #filename = self.get_filename_at_height(height_of_image)
-        pixbuf = self.set_pixbuf_height()
+    def get_image_at_size(self):
         image = Gtk.Image()
-        image.set_from_pixbuf(pixbuf)
+        filename = self.get_filename_at_size(self.width, self.height)
+        image.set_from_file(filename)
         return image
 
-    def set_pixbuf_height(self):
-        filename = self.get_filename_at_height(self.height)
+    def get_pixbuf_at_size(self):
+        filename = self.get_filename_at_size(self.width, self.height)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
-        if self.category == "environments":
-            pixbuf = pixbuf.new_subpixbuf(46, 0, self.width, self.height)
-        else:
-            pixbuf = pixbuf.new_subpixbuf(0, 0, self.height, self.height)
         return pixbuf
 
     def get_description(self):

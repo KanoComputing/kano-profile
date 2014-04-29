@@ -11,7 +11,7 @@ from gi.repository import Gtk
 import kano_profile_gui.components.constants as constants
 
 
-class Home_button():
+class HomeButton():
     def __init__(self, level_number):
 
         self.possible_titles = ["White belt", "Quick learner", "Dragonslayer"]

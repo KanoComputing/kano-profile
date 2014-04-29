@@ -12,7 +12,7 @@ import kano_profile_gui.components.icons as icons
 import kano_profile_gui.top_bar_components.home_button as home_button
 
 
-class Top_bar():
+class TopBar():
     def __init__(self, WINDOW_WIDTH):
 
         # Makes it easier to centre other widgets even if we change this
@@ -28,7 +28,7 @@ class Top_bar():
         self.container = Gtk.Grid()
 
         # Home button
-        self.home_button = home_button.Home_button(1)
+        self.home_button = home_button.HomeButton(1)
         self.home_button.button.connect('button_press_event', self.activate_label)
 
         name_array = ['Badges', 'Swag', 'Challenges']

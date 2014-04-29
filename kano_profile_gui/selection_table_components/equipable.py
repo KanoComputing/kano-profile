@@ -13,10 +13,10 @@ from gi.repository import Gtk
 import individual_item as indiv_item
 
 
-class Picture(indiv_item.Picture):
+class Equipable(indiv_item.IndividualItem):
     def __init__(self, info):
         # info is a dictionary containing name of picture file, heading, date, info about the item, hover over text shown
-        indiv_item.Picture.__init__(self, info)
+        indiv_item.IndividualItem.__init__(self, info)
 
         self.equipped_box = Gtk.EventBox()
         self.equipped_box.get_style_context().add_class("equipped_box")

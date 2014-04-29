@@ -20,7 +20,7 @@ def activate(_win, _box):
     equipable = True
 
     if swag_ui is None:
-        swag_ui = table_template.Template(headers, equipable)
+        swag_ui = table_template.TableTemplate(headers, equipable)
 
     _box.pack_start(swag_ui.container, False, False, 0)
 

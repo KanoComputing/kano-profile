@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 
-class Bar():
+class ProgressBar():
     def __init__(self, input, WINDOW_WIDTH):
         # Height of the thin part of the progress bar
         self.height = 10
@@ -50,5 +50,5 @@ class Bar():
 
         #self.fixed.put(self.background, 0, 0)
         self.fixed.put(self.label_background, progress_width, 0)
-        self.fixed.put(self.progress, 0, self.height + 0)
+        self.fixed.put(self.progress, 0, self.height)
         self.fixed.put(self.rest_of_bar, progress_width + self.label_width, self.height + 0)

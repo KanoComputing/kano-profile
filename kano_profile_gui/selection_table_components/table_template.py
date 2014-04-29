@@ -15,7 +15,7 @@ import kano_profile_gui.components.header as header
 
 # headers: category names, e.g. ["badges"] or ["environments"]
 # equipable: whether each item in the array is equipable (like avatars or environments)
-class Template():
+class TableTemplate():
     def __init__(self, headers, equipable):
 
         self.equipable = equipable
@@ -25,11 +25,11 @@ class Template():
 
         self.categories = []
         for x in range(len(headers)):
-            self.categories.append(tab.Table(headers[x], self.equipable))
+            self.categories.append(tab.SelectionTable(headers[x], self.equipable))
 
         if len(headers) == 2:
             self.head = header.Header(headers[0], headers[1])
-            self.head.radiobutton1.connect("toggled", self.on_button_toggled)
+            self.head.set_event_listener1(self.on_button_toggled)
         else:
             self.head = header.Header(headers[0])
 
@@ -46,14 +46,14 @@ class Template():
         self.container.pack_start(self.head.box, False, False, 0)
         self.container.pack_start(self.scrolledwindow, False, False, 0)
 
-    def on_button_toggled(self, radio):
-        in_cat1 = radio.get_active()
+    def on_button_toggled(self, button):
+        in_cat1 = button.get_active()
         for cat in self.categories:
             container = cat.grid.get_parent()
             if container is not None:
                 container.remove(cat.grid)
         for i in self.scrolledwindow.get_children():
-                self.scrolledwindow.remove(i)
+            self.scrolledwindow.remove(i)
         if in_cat1:
             self.scrolledwindow.add(self.categories[0].grid)
         else:
@@ -62,7 +62,7 @@ class Template():
         self.hide_labels()
 
     def go_to_info_screen(self, arg1=None, arg2=None, cat=None, selected_item=None):
-        selected_item_screen = info_screen.Item(cat, selected_item, self.equipable)
+        selected_item_screen = info_screen.InfoScreen(cat, selected_item, self.equipable)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)

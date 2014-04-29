@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 
-class Info():
+class InfoText():
     def __init__(self, heading, info, equip):
 
         self.width = 274

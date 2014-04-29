@@ -28,7 +28,7 @@ app_profiles = {
 
 
 # The list of the displayed items
-class List():
+class ProjectList():
     def __init__(self):
         apps = get_app_list()
 
@@ -68,12 +68,12 @@ class List():
             return
 
         for i, project in enumerate(self.projects_list):
-            item = Item(project)
+            item = ProjectItem(project)
             self.container.pack_start(item.background, False, False, 0)
 
 
 # Each item shown in the list
-class Item():
+class ProjectItem():
     def __init__(self, project):
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("white")
@@ -126,7 +126,7 @@ class Item():
 
 
 def activate(_win, _box):
-    project_list = List()
+    project_list = ProjectList()
     heading = header.Header("Challenges")
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.add_with_viewport(project_list.background)

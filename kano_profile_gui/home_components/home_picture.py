@@ -16,7 +16,7 @@ import kano_profile_gui.components.constants as constants
 import kano_profile_gui.swags as swags
 
 
-class Picture():
+class HomePicture():
     def __init__(self):
 
         self.background_width = 734

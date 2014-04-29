@@ -81,6 +81,18 @@ GtkWindow {
     font: Bariol Bold 13;
 }
 
+/* Environment / avatar toggle buttons */
+.header_button {
+    background: #ffffff;
+    border-radius: 0;
+}
+
+.header_button:active {
+    background: @button_color;
+}
+.header_button GtkLabel:active {
+    color: #ffffff;
+}
 /* The bar at the top that mimics the window bar */
 .top_bar_container {
     background: @top_bar_background;

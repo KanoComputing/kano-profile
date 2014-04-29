@@ -14,7 +14,7 @@ from kano_profile_gui.images import get_image
 import kano_profile_gui.components.constants as constants
 
 
-class Picture():
+class IndividualItem():
     def __init__(self, info):
         # info is a dictionary containing item and group which we use to find filename, heading, description, colour of background
 

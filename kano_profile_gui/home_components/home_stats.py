@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 
-class Stats():
+class HomeStats():
     def __init__(self, WINDOW_WIDTH, stat_dict):
 
         #stat_titles = ["Name", "Level", "Progress to next level", "Completion"]

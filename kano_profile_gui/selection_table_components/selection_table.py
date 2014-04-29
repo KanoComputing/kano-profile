@@ -15,7 +15,7 @@ from kano.profile.badges import calculate_badges
 #from .images import get_image
 
 
-class Table():
+class SelectionTable():
     def __init__(self, category_name, equipable):
         self.equipable = equipable
         self.equipped = None
@@ -26,19 +26,15 @@ class Table():
 
         for category, items in calculate_badges(category_name).iteritems():
             for badge, properties in items.iteritems():
-                #print category
-                #print items
-                #print badge
-                #print properties
                 if category == "swag_environments" or category == "swag_avatars":
                     category = ""
                 cat_dict = {"category": category_name, "subcategory": category, "badge_name": badge, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
-                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
+                            "unlocked": True, "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
                 if self.equipable:
-                    picture = equip.Picture(cat_dict)
+                    picture = equip.Equipable(cat_dict)
                 else:
-                    picture = indiv.Picture(cat_dict)
+                    picture = indiv.IndividualItem(cat_dict)
                 self.pics.append(picture)
                 number_of_badges = number_of_badges + 1
 

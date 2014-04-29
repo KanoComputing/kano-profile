@@ -13,7 +13,7 @@ import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.constants as constants
 
 
-class Item():
+class InfoScreen():
     # Pass array of pictures into class then it can control it's own buttons
     # The current item is the screen we're currenty on
     def __init__(self, category, current_item, equip):
@@ -66,7 +66,7 @@ class Item():
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        self.info_text = info_text.Info(self.current.title, self.current.get_description(), self.equip)
+        self.info_text = info_text.InfoText(self.current.title, self.current.get_description(), self.equip)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed_container, False, False, 0)
@@ -133,15 +133,6 @@ class Item():
     def set_filename(self):
         return self.current.get_filename_at_height(self.height)
 
-    """def set_locked(self, locked=None):
-                    if locked is None:
-                        locked = self.current.locked
-                    else:
-                        self.current.locked = locked
-                    self.locked.box.set_visible_window(locked)
-                    self.locked.padlock.set_visible(locked)
-                    self.locked.box.set_above_child(True)"""
-
     def set_locked(self, locked=None):
         if locked is None:
             locked = self.current.locked
@@ -167,7 +158,7 @@ class Item():
         print "info screen filename = " + str(filename)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
         if self.current.category == "environments":
-            pixbuf = pixbuf.new_subpixbuf(177, 0, self.height, self.height)  # x = 177
+            pixbuf = pixbuf.new_subpixbuf(177, 0, self.height, self.height)
         else:
             pixbuf = pixbuf.new_subpixbuf(0, 0, self.height, self.height)
         return pixbuf

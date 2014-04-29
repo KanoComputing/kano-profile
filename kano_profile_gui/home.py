@@ -23,12 +23,12 @@ def activate(_win, _box):
 
     # Picture box - contains image depends on level reached
     picture_box = Gtk.Box()
-    picture = home_pic.Picture().fixed
+    picture = home_pic.HomePicture().fixed
     picture_box.add(picture)
 
     # Stats
     stat_dict = {"Name": name, "XP": xp, "Level": level, "Progress": progress}
-    stats = home_stats.Stats(_win.WINDOW_WIDTH, stat_dict)
+    stats = home_stats.HomeStats(_win.WINDOW_WIDTH, stat_dict)
 
     _box.pack_start(picture_box, False, False, 0)
     _box.pack_start(stats.container, False, False, 0)

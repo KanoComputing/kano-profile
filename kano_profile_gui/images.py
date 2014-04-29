@@ -13,11 +13,12 @@ from .paths import image_dir
 
 
 # "Badge", folder_name, file_name, width of wimage
-def get_image(category, subcategory, name, width):
-    folder = os.path.join(image_dir, category, str(width), subcategory)
+def get_image(category, subcategory, name, subfolder_str):
+    folder = os.path.join(image_dir, category, subfolder_str, subcategory)
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):
+        print 'missing image: {}'.format(fullpath)
         return os.path.join(image_dir, 'icons/50/_missing.png')
         #ensure_dir(folder)
         #open(fullpath, 'w').close()

@@ -64,9 +64,11 @@ GtkWindow {
 .green_button {
     background: @button_color;
     padding: 10px 15px 10px 15px;
+    border-radius: 3px;
 }
 .green_button GtkLabel {
     color: #ffffff;
+    font: Bariol Bold 14px;
 }
 .home_button {
     background: transparent;
@@ -151,6 +153,9 @@ GtkWindow {
 .black {
     background: #000000;
     color: #000000;
+}
+.transparent {
+    background: transparent;
 }
 
 /* Orange progress bar shown just below top bar */

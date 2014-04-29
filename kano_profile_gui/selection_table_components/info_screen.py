@@ -85,16 +85,15 @@ class InfoScreen():
 
         prevb = Gtk.Button()
         prevb.set_image(prev_arrow)
+        prevb.get_style_context().add_class("transparent")
         prevb.connect("button_press_event", self.go_to_prev)
         nextb = Gtk.Button()
         nextb.set_image(next_arrow)
+        nextb.get_style_context().add_class("transparent")
         nextb.connect("button_press_event", self.go_to_next)
 
         fixed = Gtk.Fixed()
-        if self.current.category == "environments":
-            fixed.put(image, 0, 0)
-        else:
-            fixed.put(image, 6, 0)
+        fixed.put(image, 0, 0)
         fixed.put(prevb, 0, self.height / 2)
         fixed.put(nextb, self.width - 35, self.height / 2)
 

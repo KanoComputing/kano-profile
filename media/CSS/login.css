@@ -83,13 +83,15 @@ GtkImage {
 
 .gender_dropdown_list GtkButton {
     border-color: @active_border;
-    color: @active_writing;
     border-style: solid;
     border-width: 2px;
     border-radius:3px;
     padding: 10px;
-    font: Bariol Bold 13;
     background: #ffffff;
+}
+.gender_dropdown_list GtkCellView {
+    color: @active_writing;
+    font: Bariol Bold 13;
 }
 /* The title of the current level*/
 .title {

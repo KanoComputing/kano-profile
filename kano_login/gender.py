@@ -24,17 +24,13 @@ def activate(_win, _box):
 
     win.clear_box()
 
-    print "activating gender"
-
-    #gender_list = Gtk.ListStore(int, str)
-    #gender_list.append([1, "Girl"])
-    #gender_list.append([2, "Boy"])
-    #gender_combo = Gtk.ComboBox.new_with_model_and_entry(gender_list)
+    next_button = green_button.Button("NEXT")
 
     gender_combo = Gtk.ComboBoxText()
     gender_combo.append_text("Girl")
     gender_combo.append_text("Boy")
-    gender_combo.connect("changed", on_gender_combo_changed)
+    print gender_combo.get_children()
+    gender_combo.connect("changed", on_gender_combo_changed, next_button.button)
     gender_combo.get_style_context().add_class("gender_dropdown_list")
 
     title = heading.Heading("Gender", "Are you a boy or girl?")
@@ -43,8 +39,8 @@ def activate(_win, _box):
     padding = 10
     valign.set_padding(padding, padding, 0, 0)
 
-    next_button = green_button.Button("NEXT")
     next_button.button.connect("button_press_event", set_gender, gender_combo)
+    next_button.button.set_sensitive(False)
 
     box.pack_start(title.container, False, False, 0)
     box.pack_start(gender_combo, False, False, 30)
@@ -52,8 +48,9 @@ def activate(_win, _box):
     box.show_all()
 
 
-def on_gender_combo_changed(arg1=None, arg2=None):
+def on_gender_combo_changed(arg1, button):
     print "changing gender"
+    button.set_sensitive(True)
 
 
 def set_gender(arg1=None, arg2=None, gender_combo=None):

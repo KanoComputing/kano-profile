@@ -27,14 +27,17 @@ def activate(_win, _box):
 
     nickname_entry = Gtk.Entry()
     nickname_entry.set_placeholder_text("Type your nickname here")
-    title = heading.Heading("Nickname", "What do you want us to call you?")
 
     valign = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=1)
     padding = 10
     valign.set_padding(padding, padding, 0, 0)
 
     next_button = green_button.Button("NEXT")
+
+    nickname_entry.connect("key_release_event", update_register_button, next_button.button)
+    title = heading.Heading("Nickname", "What do you want us to call you?")
     next_button.button.connect("button_press_event", set_nickname, username)
+    next_button.button.set_sensitive(False)
 
     box.pack_start(title.container, False, False, 0)
     box.pack_start(nickname_entry, False, False, 30)
@@ -44,7 +47,13 @@ def activate(_win, _box):
     username = nickname_entry.get_text()
 
 
+def update_register_button(widget, arg2, button):
+    if widget.get_text() != "":
+        button.set_sensitive(True)
+    else:
+        button.set_sensitive(False)
+
+
 def set_nickname(arg1=None, arg2=None, username=""):
-    print "setting nickname"
     win.nickname = username
     gender.activate(win, box)

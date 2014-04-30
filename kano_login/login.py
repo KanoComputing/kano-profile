@@ -24,7 +24,7 @@ def activate(_win, _box):
     if 'email' in profile and profile['email']:
         username = profile['email']
     else:
-        username = 'e-mail address'
+        username = 'Email'
 
     username_entry.props.placeholder_text = username
     password_entry.props.placeholder_text = 'Password'
@@ -33,17 +33,22 @@ def activate(_win, _box):
     login = green_button.Button("LOG IN")
     login.button.connect("button_press_event", log_user_in, username_entry, password_entry, _win)
 
+    not_registered = Gtk.Button("Not registered?")
+    not_registered.get_style_context().add_class("not_registered")
+    not_registered.connect("clicked", _win.on_prev)
+
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     container.pack_start(username_entry, False, False, 0)
     container.pack_start(password_entry, False, False, 0)
 
-    valign = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-    padding_above = 10
-    valign.set_padding(padding_above, 0, 0, 0)
+    valign = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=1)
+    padding = 10
+    valign.set_padding(padding, padding, 0, 0)
     valign.add(container)
     _box.pack_start(title.container, False, False, 0)
     _box.pack_start(valign, False, False, 0)
     _box.pack_start(login.box, False, False, 30)
+    _box.pack_start(not_registered, False, False, 0)
 
 
 def log_user_in(button, event, username_entry, password_entry, win):

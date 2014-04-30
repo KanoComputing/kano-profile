@@ -30,6 +30,13 @@ class MainWindow(Gtk.Window):
 
         self.last_level_visited = 0
 
+        self.username = ""
+        self.email = ""
+        self.password = ""
+        self.birthday = ""
+        self.age = 0
+        self.gender = ""
+
         self.grid = Gtk.Grid()
         self.add(self.grid)
 
@@ -84,6 +91,10 @@ class MainWindow(Gtk.Window):
 
         home.goto(None, None, self.last_level_visited)
         self.show_all()
+
+    def clear_box(self):
+        for i in self.box.get_children():
+            self.box.remove(i)
 
 
 def main():

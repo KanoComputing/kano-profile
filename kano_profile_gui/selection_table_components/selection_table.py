@@ -30,7 +30,7 @@ class SelectionTable():
                     category = ""
                 cat_dict = {"category": category_name, "subcategory": category, "badge_name": badge, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
-                            "unlocked": True, "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
+                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
                 if self.equipable:
                     picture = equip.Equipable(cat_dict)
                 else:

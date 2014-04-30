@@ -49,7 +49,7 @@ class MainWindow(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
         # This is the progress bar - it overlaps with the main content in the box
-        self.progress = progress_bar.ProgressBar(0.5, self.WINDOW_WIDTH)
+        self.progress = progress_bar.ProgressBar(0, self.WINDOW_WIDTH)
 
         self.top_bar = top_bar.TopBar(self.WINDOW_WIDTH)
         self.top_bar.home_button.button.connect('clicked', self.goto, 'home')

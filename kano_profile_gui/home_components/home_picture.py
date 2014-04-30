@@ -26,7 +26,7 @@ class HomePicture():
         self.background = Gtk.Image()
         self.avatar = Gtk.Image()
 
-        if swags.swag_ui is not None:
+        if swags.swag_ui is not None and swags.swag_ui.categories[0].get_equipped() is not None and swags.swag_ui.categories[1].get_equipped() is not None:
             environ_file = swags.swag_ui.categories[0].get_equipped().get_filename_at_size(self.background_width, self.background_height)
             self.background.set_from_file(environ_file)
             avatar_file = swags.swag_ui.categories[1].get_equipped().get_filename_at_size(self.avatar_width, self.avatar_height)

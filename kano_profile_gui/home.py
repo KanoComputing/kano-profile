@@ -33,6 +33,8 @@ def activate(_win, _box):
     _box.pack_start(picture_box, False, False, 0)
     _box.pack_start(stats.container, False, False, 0)
 
+    _win.progress.set_progress(stat_dict["Progress"])
+
     #msg = 'name: {}\nXP: {}\nLevel: {}\nProgress to next level: {:.0%}'.format(name, xp, level, progress)
 
     #label = Gtk.Label()

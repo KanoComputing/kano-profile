@@ -115,13 +115,13 @@ class ProjectItem():
 
         self.background.add(self.container)
 
-    def load(_button, app, filename, data_dir):
+    def load(self, _button, app, filename, data_dir):
         print 'load', app, filename, data_dir
         fullpath = os.path.join(data_dir, filename)
         cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
         run_print_output_error(cmd)
 
-    def share(_button, app, filename):
+    def share(self, _button, app, filename):
         print 'share', app, filename
 
 

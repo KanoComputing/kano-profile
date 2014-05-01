@@ -9,9 +9,8 @@ from __future__ import division
 import os
 from slugify import slugify
 
-from ..utils import read_json, is_gui
-# DISABLED , run_cmd
-from .paths import xp_file, levels_file, badges_folder, bin_dir
+from ..utils import read_json, is_gui, run_cmd
+from .paths import xp_file, levels_file, rules_dir, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -200,7 +199,7 @@ def save_app_state_with_dialog(app_name, data):
     # new level dialog
     if is_gui() and old_level != new_level:
         cmd = '{bin_dir}/kano-profile-new-badges-dialog newlevel "{new_level}"'.format(bin_dir=bin_dir, new_level=new_level)
-        # DISABLED run_cmd(cmd)
+        run_cmd(cmd)
 
     # new badges dialog
     badge_changes = compare_badges_dict(old_badges, new_badges)
@@ -212,7 +211,7 @@ def save_app_state_with_dialog(app_name, data):
 
         chg_str = ' '.join(['{}:{}'.format(group, item) for group, item in changes_list])
         cmd = '{bin_dir}/kano-profile-new-badges-dialog newbadges {chg_str}'.format(bin_dir=bin_dir, chg_str=chg_str)
-        # DISABLED run_cmd(cmd)
+        run_cmd(cmd)
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
@@ -274,25 +273,34 @@ def test_badge_rules():
 
 
 def load_badge_rules():
-    if not os.path.exists(badges_folder):
-        print 'badge rules folder missing'
-        return
-
-    rule_files = os.listdir(badges_folder)
-    if not rule_files:
-        print 'No rule files!'
+    if not os.path.exists(rules_dir):
+        print 'rules dir missing'
         return
 
     merged_rules = dict()
-    for rule_file in rule_files:
-        rules = read_json(os.path.join(badges_folder, rule_file))
-        if not rules:
-            print 'Rule file empty: {}'.format(rule_file)
-            continue
+    subfolders = ['avatars', 'badges', 'environments']
+    for folder in subfolders:
+        folder_fullpath = os.path.join(rules_dir, folder)
+        if not os.path.exists(folder_fullpath):
+            print 'rules subfolder missing: {}'.format(folder_fullpath)
+            return
 
-        category = rule_file.split('.')[0]
-        merged_rules[category] = rules
+        rule_files = os.listdir(folder_fullpath)
+        if not rule_files:
+            print 'no rule files in subfolder: {}'.format(folder_fullpath)
+            return
 
+        for rule_file in rule_files:
+            rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
+            rule_data = read_json(rule_file_fullpath)
+            if not rule_data:
+                print 'rule file empty: {}'.format(rule_file_fullpath)
+                continue
+
+            category = folder
+            subcategory = rule_file.split('.')[0]
+
+            merged_rules.setdefault(category, dict())[subcategory] = rule_data
     return merged_rules
 
 

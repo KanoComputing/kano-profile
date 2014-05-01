@@ -1,0 +1,18 @@
+{
+  "minecrafter_1": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 5]],
+    "title": "Minecrafter 1"
+  },
+  "minecrafter_2": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 5]],
+    "title": "Minecrafter 2"
+  }
+}

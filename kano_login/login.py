@@ -12,9 +12,17 @@ from gi.repository import Gtk
 from components import heading, green_button
 from kano.world.functions import login as login_
 from kano.profile.profile import load_profile
+from kano_login import nickname
+
+win = None
+box = None
 
 
 def activate(_win, _box):
+    global win, box
+
+    win = _win
+    box = _box
     username_entry = Gtk.Entry()
     password_entry = Gtk.Entry()
 
@@ -35,7 +43,7 @@ def activate(_win, _box):
 
     not_registered = Gtk.Button("Not registered?")
     not_registered.get_style_context().add_class("not_registered")
-    not_registered.connect("clicked", _win.on_prev)
+    not_registered.connect("clicked", register)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     container.pack_start(username_entry, False, False, 0)
@@ -49,6 +57,12 @@ def activate(_win, _box):
     _box.pack_start(valign, False, False, 0)
     _box.pack_start(login.box, False, False, 30)
     _box.pack_start(not_registered, False, False, 0)
+
+
+def register(event):
+    global win, box
+    nickname.activate(win, box)
+    win.state = win.state + 1
 
 
 def log_user_in(button, event, username_entry, password_entry, win):

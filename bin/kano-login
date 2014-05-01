@@ -15,14 +15,27 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile_gui.paths import css_dir
-from kano_login import home, login
+from kano_login import login, first_screen, nickname, gender, birthday, account_email, account_password, account_confirm
 from kano_login.components import top_bar
-from kano.world.functions import is_registered, login_using_token
+#from kano.world.functions import is_registered
+from kano.world.functions import login_using_token
 
 
+refs = {
+    0: [first_screen, login],
+    1: nickname,
+    2: gender,
+    3: birthday,
+    4: account_email,
+    5: account_password,
+    6: account_confirm,
+}
+
+
+# if first_time = TRue, this is passed from kano-settings
 class MainWindow(Gtk.Window):
 
-    def __init__(self):
+    def __init__(self, flow=None):
         # Create main window
         Gtk.Window.__init__(self, title='Kano Login')
         self.WINDOW_HEIGHT = 380
@@ -30,12 +43,20 @@ class MainWindow(Gtk.Window):
 
         self.last_level_visited = 0
 
-        self.username = ""
+        self.flow = 1
+        # flow = 0 or 1 depending on whether it was launched from kano-settings
+        if flow is not None:
+            self.flow = flow
+
+        self.nickname = ""
         self.email = ""
         self.password = ""
         self.birthday = ""
         self.age = 0
         self.gender = ""
+
+        # The state is the current window showing
+        self.state = 0
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -57,8 +78,9 @@ class MainWindow(Gtk.Window):
         self.grid.attach(self.box, 1, 1, 1, 1)
 
         # init home screen
-        if not is_registered():
-            home.activate(self, self.box)
+        if flow is not None:
+            self.flow = flow
+            first_screen.activate(self, self.box)
 
         # go directly to login
         else:
@@ -71,26 +93,27 @@ class MainWindow(Gtk.Window):
             login.activate(self, self.box)
             self.show_all()
 
-    # Takes you back to the home screen (on pressing prev button)
-    def on_prev(self, arg2=None):
-        for i in self.box.get_children():
-            self.box.remove(i)
+    # flow = 0 for first run or 1 for login screen - decides which is the second screen we use
+    def on_prev(self, arg):
+        self.clear_box()
+        self.state = self.state - 1
+        module = refs[self.state]
+        if self.state == 0:
+            module = refs[0][self.flow]
+        self.goto(self.box, module)
 
-        self.top_bar.disable_prev()
-        self.top_bar.enable_next()
-        home.activate(self, self.box)
-        self.show_all()
+    def on_next(self, arg):
+        self.clear_box()
+        self.state = self.state + 1
+        module = refs[self.state]
+        if self.state == 0:
+            module = refs[0][self.flow]
+        self.on_prev.set_sensitive(False)
+        self.goto(self.box, module)
 
-    # When clicking next in the home screen - takes you to the last screen you visited
-    def on_next(self, widget=None):
-        for i in self.box.get_children():
-            self.box.remove(i)
-
-        self.top_bar.enable_prev()
-        self.top_bar.disable_next()
-
-        home.goto(None, None, self.last_level_visited)
-        self.show_all()
+    def goto(self, box, module):
+        self.clear_box()
+        module.activate(self, self.box)
 
     def clear_box(self):
         for i in self.box.get_children():

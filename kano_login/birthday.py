@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano_login import register
+from kano_login import account_email
 import time
 
 win = None
@@ -78,7 +78,8 @@ class Birthday():
         if age == -1:
             return
         self.win.age = age
-        register.activate(self.win, self.box)
+        account_email.activate(self.win, self.box)
+        self.win.state = self.win.state + 1
 
     def calculate_age(self):
         try:

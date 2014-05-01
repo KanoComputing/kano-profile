@@ -11,7 +11,8 @@
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from kano_profile_gui.images import get_image
-import kano_profile_gui.components.constants as constants
+#import kano_profile_gui.components.constants as constants
+import kano_profile_gui.components.icons as icons
 
 
 class IndividualItem():
@@ -54,11 +55,11 @@ class IndividualItem():
         self.locked_box = Gtk.EventBox()
         self.locked_box.get_style_context().add_class("locked_box")
         self.locked_box.set_size_request(self.width, self.height)
-        self.padlock = Gtk.Image()
-        self.padlock.set_from_file(constants.media + "/images/icons/Level-4.png")
+        self.padlock = icons.set_from_name("padlock")
+        print self.padlock
         self.locked_fixed = Gtk.Fixed()
         self.locked_fixed.put(self.locked_box, 0, 0)
-        self.locked_fixed.put(self.padlock, 80, 55)
+        self.locked_fixed.put(self.padlock, 95, 70)
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)

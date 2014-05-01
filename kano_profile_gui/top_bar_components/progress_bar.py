@@ -33,7 +33,7 @@ class ProgressBar():
         self.rest_of_bar.set_size_request(rest_of_bar_width, self.height)
         self.rest_of_bar.get_style_context().add_class("rest_of_bar")
 
-        self.label = Gtk.Label(self.set_text_shown)
+        self.label = Gtk.Label(self.text_shown)
         print str(self.fraction * 100) + "%"
         self.label.set_size_request(self.label_width, self.label_height)
         self.label.set_alignment(xalign=0.5, yalign=0.5)

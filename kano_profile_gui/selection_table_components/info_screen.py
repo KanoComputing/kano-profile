@@ -10,7 +10,6 @@
 from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.selection_table_components.info_text as info_text
 import kano_profile_gui.components.icons as icons
-import kano_profile_gui.components.constants as constants
 
 
 class InfoScreen():
@@ -40,8 +39,7 @@ class InfoScreen():
         self.greybox = Gtk.EventBox()
         self.greybox.get_style_context().add_class("locked_box")
         self.greybox.set_size_request(self.width, self.height)
-        self.padlock = Gtk.Image()
-        self.padlock.set_from_file(constants.media + "/images/icons/Level-4.png")
+        self.padlock = icons.set_from_name("padlock")
 
         fixed = Gtk.Fixed()
         fixed.put(self.image, 0, 0)
@@ -49,7 +47,7 @@ class InfoScreen():
         locked_fixed = Gtk.Fixed()
         locked_fixed.put(self.locked_image, 0, 0)
         locked_fixed.put(self.greybox, 0, 0)
-        locked_fixed.put(self.padlock, 180, 180)
+        locked_fixed.put(self.padlock, 200, 200)
         locked_fixed.set_size_request(self.width, self.height)
 
         self.fixed = self.create_fixed(fixed)

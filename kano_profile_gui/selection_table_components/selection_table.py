@@ -26,9 +26,14 @@ class SelectionTable():
 
         for category, items in calculate_badges(category_name).iteritems():
             for badge, properties in items.iteritems():
-                if category == "swag_environments" or category == "swag_avatars":
-                    category = ""
-                cat_dict = {"category": category_name, "subcategory": category, "badge_name": badge, "title": properties["title"],
+                folder_name = category
+                filename = badge
+                if category == "swag_environments":
+                    folder_name = ""
+                if category == "swag_avatars":
+                    folder_name = badge
+                    filename = badge + "-1"
+                cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
                             "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
                 if self.equipable:

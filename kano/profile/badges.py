@@ -10,7 +10,7 @@ import os
 from slugify import slugify
 
 from ..utils import read_json, is_gui, run_cmd
-from .paths import xp_file, levels_file, badges_folder, bin_dir
+from .paths import xp_file, levels_file, rules_dir, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -273,25 +273,34 @@ def test_badge_rules():
 
 
 def load_badge_rules():
-    if not os.path.exists(badges_folder):
-        print 'badge rules folder missing'
-        return
-
-    rule_files = os.listdir(badges_folder)
-    if not rule_files:
-        print 'No rule files!'
+    if not os.path.exists(rules_dir):
+        print 'rules dir missing'
         return
 
     merged_rules = dict()
-    for rule_file in rule_files:
-        rules = read_json(os.path.join(badges_folder, rule_file))
-        if not rules:
-            print 'Rule file empty: {}'.format(rule_file)
-            continue
+    subfolders = ['avatars', 'badges', 'environments']
+    for folder in subfolders:
+        folder_fullpath = os.path.join(rules_dir, folder)
+        if not os.path.exists(folder_fullpath):
+            print 'rules subfolder missing: {}'.format(folder_fullpath)
+            return
 
-        category = rule_file.split('.')[0]
-        merged_rules[category] = rules
+        rule_files = os.listdir(folder_fullpath)
+        if not rule_files:
+            print 'no rule files in subfolder: {}'.format(folder_fullpath)
+            return
 
+        for rule_file in rule_files:
+            rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
+            rule_data = read_json(rule_file_fullpath)
+            if not rule_data:
+                print 'rule file empty: {}'.format(rule_file_fullpath)
+                continue
+
+            category = folder
+            subcategory = rule_file.split('.')[0]
+
+            merged_rules.setdefault(category, dict())[subcategory] = rule_data
     return merged_rules
 
 

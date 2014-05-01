@@ -9,8 +9,7 @@ from __future__ import division
 import os
 from slugify import slugify
 
-from ..utils import read_json, is_gui
-# DISABLED , run_cmd
+from ..utils import read_json, is_gui, run_cmd
 from .paths import xp_file, levels_file, badges_folder, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -200,7 +199,7 @@ def save_app_state_with_dialog(app_name, data):
     # new level dialog
     if is_gui() and old_level != new_level:
         cmd = '{bin_dir}/kano-profile-new-badges-dialog newlevel "{new_level}"'.format(bin_dir=bin_dir, new_level=new_level)
-        # DISABLED run_cmd(cmd)
+        run_cmd(cmd)
 
     # new badges dialog
     badge_changes = compare_badges_dict(old_badges, new_badges)
@@ -212,7 +211,7 @@ def save_app_state_with_dialog(app_name, data):
 
         chg_str = ' '.join(['{}:{}'.format(group, item) for group, item in changes_list])
         cmd = '{bin_dir}/kano-profile-new-badges-dialog newbadges {chg_str}'.format(bin_dir=bin_dir, chg_str=chg_str)
-        # DISABLED run_cmd(cmd)
+        run_cmd(cmd)
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):

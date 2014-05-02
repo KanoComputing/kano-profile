@@ -142,7 +142,7 @@ GtkWindow {
 }
 /* Locked screen over locked images */
 .locked_box {
-    background: alpha(#dddddd, 0.5);
+    background: alpha(#dddddd, 0.2);
 }
 /* Testing classes */
 .white {

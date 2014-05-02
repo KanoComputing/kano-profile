@@ -4,7 +4,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import os
 import sys
@@ -15,8 +15,9 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.utils import is_gui
 from kano_profile_gui.images import get_image
+import kano_profile_gui.components.constants as constants
 
-img_width = 50
+img_size = "230x180"
 
 
 class MainWindow(Gtk.Window):
@@ -30,41 +31,65 @@ class MainWindow(Gtk.Window):
 
         # Create main window
         Gtk.Window.__init__(self, title=title)
-        self.set_size_request(300, 200)
+        self.set_size_request(350, 300)
 
         # Create common elements
-        # Main table
-        table = Gtk.Table(2, 1, False)
-        self.add(table)
+        # Image containing the current new swag or level up screen
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(box)
+        self.set_decorated(False)
+
+        # Get username from profile
+        username = "Username"
 
         if newlevel:
-            msg = "Congratulations, you've leveled up to level {}!".format(newlevel)
-            label = Gtk.Label()
-            label.set_text(msg)
-            table.attach(label, 0, 1, 0, 1)
+            image = Gtk.Image()
+            image.set_from_file(constants.media + "/images/badges/applications")
+            label1 = Gtk.Label("Great job " + username + "!")
+            label1.get_style_context().add_class("heading")
+            msg = "You've leveled up to level {}!".format(newlevel)
+            label2 = Gtk.Label()
+            label2.set_text(msg)
+            box.pack_start(image, False, False, 0)
+            box.pack_start(label1, False, False, 0)
+            box.pack_start(label2, False, False, 0)
 
         elif newbadges:
             print newbadges
+
             icon_table = Gtk.Table(len(newbadges), 2, False)
             for i, item_str in enumerate(newbadges):
-                group, item = item_str.split(':')
-                img_path = get_image(item, group, img_width)
+                group, item, category = item_str.split(':')
+                img_path = get_image(category, item, group, img_size)
                 img = Gtk.Image()
                 img.set_from_file(img_path)
                 icon_table.attach(img, i, i + 1, 0, 1)
 
                 label = Gtk.Label()
                 label.set_text('{} {}'.format(group, item))
+                label.get_style_context().add_class("heading")
                 icon_table.attach(label, i, i + 1, 1, 2)
-            table.attach(icon_table, 0, 1, 0, 1)
+            box.pack_start(icon_table, False, False, 0)
 
         # OK Button
         button = Gtk.Button(label='OK', halign=Gtk.Align.CENTER)
+        button.get_style_context().add_class("green_button")
+
         button.connect('clicked', Gtk.main_quit)
-        table.attach(button, 0, 1, 1, 2)
+        box.pack_start(button, False, False, 10)
+
+        box.show_all()
 
 
 def main(newlevel=None, newbadges=None):
+
+    # Create style sheet
+    cssProvider = Gtk.CssProvider()
+    cssProvider.load_from_path(constants.media + '/CSS/style.css')
+    screen = Gdk.Screen.get_default()
+    styleContext = Gtk.StyleContext()
+    styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
     if len(sys.argv) == 1:
         sys.exit('Wrong usage')
 

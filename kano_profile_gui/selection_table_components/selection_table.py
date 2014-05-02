@@ -23,16 +23,21 @@ class SelectionTable():
         self.pics = []
 
         number_of_badges = 0
+        category_dict = calculate_badges()[category_name]
 
-        for category, items in calculate_badges(category_name).iteritems():
+        # To access video dude jason:
+        #calculate_badges()['avatars']['video_dude']
+        # all_avatars = calculate_badges()['avatars']
+
+        # cycle through all avatar_category, avatar_items like this:
+
+        # for avatar_cat, avatar_items in all_avatars.iteritems():
+        #   print avatar_cat, avatar_items
+
+        for category, items in category_dict.iteritems():
             for badge, properties in items.iteritems():
                 folder_name = category
                 filename = badge
-                if category == "swag_environments":
-                    folder_name = ""
-                if category == "swag_avatars":
-                    folder_name = badge
-                    filename = badge + "-1"
                 cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
                             "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"

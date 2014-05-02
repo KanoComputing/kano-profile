@@ -34,7 +34,7 @@ class HomePicture():
         else:
             environment_filename = constants.media + "/images/environments/" + str(self.background_width) + "x" + str(self.background_height) + "/arcade_hall.png"
             print environment_filename
-            avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_width) + "x" + str(self.avatar_height) + "/video_guy.png"
+            avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_width) + "x" + str(self.avatar_height) + "/video_dude/video_dude_1.png"
             print avatar_filename
             self.background.set_from_file(environment_filename)
             self.avatar.set_from_file(avatar_filename)

@@ -1,0 +1,26 @@
+{
+  "judoka_1": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 1]],
+    "title": "Judoka 1"
+  },
+  "judoka_2": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 1]],
+    "title": "Judoka 2"
+  },
+  "judoka_3": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "level", 1]],
+    "title": "Judoka 3"
+  }
+}

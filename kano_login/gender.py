@@ -56,13 +56,18 @@ def on_gender_combo_changed(gender_combo, button):
         wizard_heading = heading.Heading("You're only fooling yourself...", "")
         wizard_image = Gtk.Image()
         wizard_image.set_from_file(constants.media + "/images/icons/you_are_not_a_wizard.png")
-        wizard_button = green_button.Button("Aww...")
+        wizard_button = Gtk.Button("Aww...")
+        wizard_button.get_style_context().add_class("green_button")
         dialog = Gtk.Dialog()
-        wizard_button.button.connect("clicked", dialog.do_close)
+        dialog.set_decorated(False)
+        dialog.add_button("Awww..", Gtk.ResponseType.OK)
         dialog.get_content_area().pack_start(wizard_heading.container, False, False, 0)  # This is a vbox
         dialog.get_content_area().pack_start(wizard_image, False, False, 0)
-        dialog.get_action_area().pack_start(wizard_button.box, False, False, 10)
+        #dialog.get_action_area().pack_start(wizard_button, False, False, 10)
         dialog.show_all()
+        response = dialog.run()
+        if response:
+            dialog.destroy()
         gender_combo.set_active(0)
     button.set_sensitive(True)
 

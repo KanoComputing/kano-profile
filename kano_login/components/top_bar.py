@@ -42,16 +42,11 @@ class Top_bar():
         self.align_header.set_padding(13, 0, padding_left, padding_right)
 
         # Icons of the buttons
-        self.pale_prev_arrow = Gtk.Image()
-        self.pale_prev_arrow.set_from_pixbuf(icons.Icons("pale_left_arrow").subpixbuf)
-        self.pale_next_arrow = Gtk.Image()
-        self.pale_next_arrow.set_from_pixbuf(icons.Icons("pale_right_arrow").subpixbuf)
-        self.dark_prev_arrow = Gtk.Image()
-        self.dark_prev_arrow.set_from_pixbuf(icons.Icons("dark_left_arrow").subpixbuf)
-        self.dark_next_arrow = Gtk.Image()
-        self.dark_next_arrow.set_from_pixbuf(icons.Icons("dark_right_arrow").subpixbuf)
-        self.cross = Gtk.Image()
-        self.cross.set_from_pixbuf(icons.Icons("cross").subpixbuf)
+        self.pale_prev_arrow = icons.set_from_name("pale_left_arrow")
+        self.pale_next_arrow = icons.set_from_name("pale_right_arrow")
+        self.dark_prev_arrow = icons.set_from_name("dark_left_arrow")
+        self.dark_next_arrow = icons.set_from_name("dark_right_arrow")
+        self.cross = icons.set_from_name("cross")
 
         # Prev Button
         self.prev_button = Gtk.Button()
@@ -101,3 +96,8 @@ class Top_bar():
         self.next_button.set_sensitive(True)
         self.next_button.set_image(self.dark_next_arrow)
 
+    def set_prev_callback(self, callback):
+        self.prev_button.connect("button_press_event", callback)
+
+    def set_next_callback(self, callback):
+        self.next_button.connect("button_press_event", callback)

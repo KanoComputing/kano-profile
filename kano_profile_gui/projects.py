@@ -8,10 +8,8 @@
 
 import os
 from gi.repository import Gtk
-
-#from kano.profile.apps import get_app_list, get_app_data_dir
+from kano.profile.apps import get_app_list, get_app_data_dir
 from kano.utils import run_print_output_error
-import kano_profile_gui.projects_list_components.project_list as project_list
 import kano_profile_gui.components.header as header
 
 app_profiles = {
@@ -29,71 +27,110 @@ app_profiles = {
 }
 
 
+# The list of the displayed items
+class ProjectList():
+    def __init__(self):
+        apps = get_app_list()
+
+        self.projects_list = []
+
+        for app in apps:
+            if app_profiles[app]['dir'] == 'kanoprofile':
+                data_dir = get_app_data_dir(app)
+            else:
+                data_dir = os.path.expanduser(app_profiles[app]['dir'])
+
+            if not os.path.exists(data_dir):
+                continue
+
+            files = os.listdir(data_dir)
+            files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_profiles[app]['ext']]
+
+            for filename in files_filtered:
+                project = dict()
+                project['app'] = app
+                project['data_dir'] = data_dir
+                project['file'] = filename
+                project['display_name'] = os.path.splitext(filename)[0]
+                self.projects_list.append(project)
+
+        self.background = Gtk.EventBox()
+        self.background.get_style_context().add_class("project_list_background")
+
+        self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+
+        self.align = Gtk.Alignment(xalign=0.5, yalign=0.5)
+        self.align.set_padding(10, 10, 20, 20)
+        self.align.add(self.container)
+        self.background.add(self.align)
+
+        if not self.projects_list:
+            return
+
+        for i, project in enumerate(self.projects_list):
+            item = ProjectItem(project)
+            self.container.pack_start(item.background, False, False, 0)
+
+
+# Each item shown in the list
+class ProjectItem():
+    def __init__(self, project):
+        self.background = Gtk.EventBox()
+        self.background.get_style_context().add_class("white")
+
+        image_filename = "/usr/share/kano-desktop/icons/" + str(project['app'])
+        time = "time played"
+
+        self.button = Gtk.Button("MAKE")
+        self.button.connect("clicked", self.load, project['app'], project['file'], project['data_dir'])
+        self.button.get_style_context().add_class("project_make_button")
+        self.button_padding = Gtk.Alignment()
+        self.button_padding.set_padding(10, 10, 10, 10)
+        self.button_padding.add(self.button)
+
+        self.title = Gtk.Label(project["display_name"])
+        self.title.get_style_context().add_class("project_item_title")
+        self.title.set_alignment(xalign=0, yalign=1)
+        self.title.set_padding(10, 0)
+        self.time = Gtk.Label(time)
+        self.time.get_style_context().add_class("project_item_time")
+        self.time.set_alignment(xalign=0, yalign=0.5)
+        self.time.set_padding(10, 0)
+
+        self.label_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.label_container.pack_start(self.title, False, False, 0)
+        self.label_container.pack_start(self.time, False, False, 0)
+
+        self.label_align = Gtk.Alignment(xalign=0, yalign=0.5)
+        self.label_align.add(self.label_container)
+        self.label_align.set_padding(10, 10, 10, 0)
+
+        self.image = Gtk.Image()
+        self.image.set_from_file(image_filename)
+
+        self.container = Gtk.Box()
+        self.container.pack_start(self.image, False, False, 0)
+        self.container.pack_start(self.label_align, False, False, 0)
+        self.container.pack_end(self.button_padding, False, False, 0)
+
+        self.background.add(self.container)
+
+    def load(self, _button, app, filename, data_dir):
+        print 'load', app, filename, data_dir
+        fullpath = os.path.join(data_dir, filename)
+        cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
+        run_print_output_error(cmd)
+
+    def share(self, _button, app, filename):
+        print 'share', app, filename
+
+
 def activate(_win, _box):
-
-    """apps = get_app_list()
-
-                projects_list = []
-                for app in apps:
-                    if app_profiles[app]['dir'] == 'kanoprofile':
-                        data_dir = get_app_data_dir(app)
-                    else:
-                        data_dir = os.path.expanduser(app_profiles[app]['dir'])
-
-                    if not os.path.exists(data_dir):
-                        continue
-
-                    files = os.listdir(data_dir)
-                    files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_profiles[app]['ext']]
-
-                    for filename in files_filtered:
-                        project = dict()
-                        project['app'] = app
-                        project['data_dir'] = data_dir
-                        project['file'] = filename
-                        project['display_name'] = os.path.splitext(filename)[0]
-                        projects_list.append(project)
-
-                if not projects_list:
-                    return
-
-                table = Gtk.Table(4, len(projects_list), True)
-                _box.add(table)
-
-                for i, project in enumerate(projects_list):
-                    label = Gtk.Label()
-                    label.set_text(project['app'])
-                    table.attach(label, 0, 1, i, i + 1)
-
-                    label = Gtk.Label()
-                    label.set_text(project['display_name'])
-                    table.attach(label, 1, 2, i, i + 1)
-
-                    btn = Gtk.Button(label='Load', halign=Gtk.Align.CENTER)
-                    btn.connect('clicked', load, project['app'], project['file'], project['data_dir'])
-                    table.attach(btn, 2, 3, i, i + 1)
-
-                    btn = Gtk.Button(label='Share', halign=Gtk.Align.CENTER)
-                    btn.connect('clicked', share, project['app'], project['file'])
-                    table.attach(btn, 3, 4, i, i + 1)"""
-
-    ################################################################################################################
+    project_list = ProjectList()
     heading = header.Header("Challenges")
-    plist = project_list.List()
     scrolledwindow = Gtk.ScrolledWindow()
-    scrolledwindow.add_with_viewport(plist.background)
-    scrolledwindow.set_size_request(734, 590)
+    scrolledwindow.add_with_viewport(project_list.background)
+    scrolledwindow.set_size_request(734, 404)
     _box.pack_start(heading.box, False, False, 0)
     _box.pack_start(scrolledwindow, False, False, 0)
     _win.show_all()
-
-
-def load(_button, app, filename, data_dir):
-    print 'load', app, filename, data_dir
-    fullpath = os.path.join(data_dir, filename)
-    cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
-    run_print_output_error(cmd)
-
-
-def share(_button, app, filename):
-    print 'share', app, filename

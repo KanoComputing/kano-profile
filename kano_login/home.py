@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from . import login, register
+from . import login, nickname
 
 win = None
 box = None
@@ -27,10 +27,10 @@ def activate(_win, _box):
 
     title = heading.Heading("Hello!", "Do you already have an account?")
 
-    loginB = green_button.Button("Yes! Let me log in")
+    loginB = green_button.Button("Yes! Let me log in".upper())
     loginB.button.set_size_request(200, 44)
 
-    registerB = green_button.Button("I want to create a new account")
+    registerB = green_button.Button("I want to create a new account".upper())
     registerB.button.set_size_request(300, 44)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
@@ -55,7 +55,7 @@ def goto(button, event, page):
 
     refs = {
         'login': login,
-        'register': register,
+        'register': nickname,
     }
 
     module = refs[page]

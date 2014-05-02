@@ -11,41 +11,138 @@ from gi.repository import Gtk
 
 from components import heading, green_button
 from kano.world.functions import register as register_
+import re
+#from kano_login import home, login,
+
+win = None
+box = None
 
 
+def is_email(email):
+    pattern = '[\.\w]{1,}[@]\w+[.]\w+'
+    if re.match(pattern, email):
+        return True
+    else:
+        return False
+
+
+# We calclate age based on the birthday screen - if less than 13,
+# we ask for parent's email
 def activate(_win, _box):
-    email_entry = Gtk.Entry()
-    username_entry = Gtk.Entry()
-    password_entry = Gtk.Entry()
+    global win, box
 
-    title = heading.Heading("Register", "Become a real person")
+    win = _win
+    box = _box
 
-    email_entry.props.placeholder_text = "Email"
-    username_entry.props.placeholder_text = "Username"
-    password_entry.props.placeholder_text = "Password"
-    password_entry.set_visibility(False)
+    win.clear_box()
+    email_entry1 = Gtk.Entry()
+    email_entry2 = Gtk.Entry()
+    password_entry1 = Gtk.Entry()
+    password_entry2 = Gtk.Entry()
 
     register = green_button.Button("REGISTER")
-    register.button.connect("button_press_event", register_user, email_entry, username_entry, password_entry, _win)
 
-    container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    container.pack_start(email_entry, False, False, 0)
-    container.pack_start(username_entry, False, False, 0)
-    container.pack_start(password_entry, False, False, 0)
+    email_entry1.connect("key_release_event", unlock_second_entry, email_entry2, register.button)
+    email_entry2.connect("key_release_event", set_email_icon, email_entry1, password_entry1, password_entry2, register.button)
+    email_entry2.set_sensitive(False)
+    password_entry1.connect("key_release_event", set_register_button, password_entry2, register.button)
+    password_entry1.set_sensitive(False)
+    password_entry2.connect("key_release_event", set_register_button, password_entry1, register.button)
+    password_entry2.set_sensitive(False)
+    register.button.connect("button_press_event", register_user, email_entry1, password_entry1, _win)
+    register.button.set_sensitive(False)
 
-    valign = Gtk.Alignment(xalign=0.5, yalign=0.3, xscale=0, yscale=0)
-    #padding_above = 0
-    #valign.set_padding(padding_above, 0, 0, 0)
-    valign.add(container)
-    _box.pack_start(title.container, False, False, 0)
-    _box.pack_start(valign, False, False, 0)
-    _box.pack_start(register.box, False, False, 15)
+    subheading = ''
+    if win.age < 13:
+        subheading = "Please provide a parent's email"
+    else:
+        subheading = "Become a real person"
+
+    title = heading.Heading("Register", subheading)
+
+    email_entry1.set_placeholder_text("Email")
+    email_entry2.set_placeholder_text("Confirm your email")
+    password_entry1.set_placeholder_text("Password")
+    password_entry1.set_visibility(False)
+    password_entry2.set_placeholder_text("Confirm your password")
+    password_entry2.set_visibility(False)
+
+    entry_container = Gtk.Grid(column_homogeneous=False,
+                               row_spacing=7)
+    entry_container.attach(email_entry1, 0, 0, 1, 1)
+    entry_container.attach(email_entry2, 0, 1, 1, 1)
+    entry_container.attach(password_entry1, 0, 2, 1, 1)
+    entry_container.attach(password_entry2, 0, 3, 1, 1)
+
+    #container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    #container.pack_start(email_entry, False, False, 0)
+    #container.pack_start(username_entry, False, False, 0)
+    #container.pack_start(password_entry, False, False, 0)
+
+    valign = Gtk.Alignment()
+    valign.add(entry_container)
+    valign.set_padding(0, 0, 100, 0)
+    box.pack_start(title.container, False, False, 0)
+    box.pack_start(valign, False, False, 0)
+    box.pack_start(register.box, False, False, 15)
+    box.show_all()
 
 
-def register_user(button, event, email_entry, username_entry, password_entry, win):
+def check_match(widget, event, entry1, entry2):
+    text1 = entry1.get_text()
+    text2 = entry2.get_text()
+
+    if text1 == text2:
+        return True
+    else:
+        return False
+
+
+def unlock_second_entry(entry1, event, entry2, button):
+    if is_email(entry1.get_text()):
+        entry2.set_sensitive(True)
+    else:
+        entry2.set_sensitive(False)
+        button.set_sensitive(False)
+
+
+def set_email_icon(entry2, event, entry1, entry3, entry4, button):
+    text1 = entry1.get_text()
+    text2 = entry2.get_text()
+    if text1 == text2:
+        entry3.set_sensitive(True)
+        entry4.set_sensitive(True)
+    else:
+        entry3.set_sensitive(False)
+        entry4.set_sensitive(False)
+        button.set_sensitive(False)
+
+
+def set_register_button(entry2, event, entry1, button):
+    text1 = entry1.get_text()
+    text2 = entry2.get_text()
+    if text1 != "" and text1 == text2:
+        button.set_sensitive(True)
+    else:
+        button.set_sensitive(False)
+
+
+def update_register_button(widget, event, entry1, entry2, entry3, entry4, button):
+    text1 = entry1.get_text()
+    text2 = entry2.get_text()
+    text3 = entry3.get_text()
+    text4 = entry4.get_text()
+    if text1 != "" and text2 != "" and text3 != "" and text4 != "":
+        if check_match(None, None, entry1, entry2) and check_match(None, None, entry3, entry4):
+            button.set_sensitive(True)
+
+
+def register_user(button, event, email_entry, password_entry, win):
     email_text = email_entry.get_text()
-    username_text = username_entry.get_text()
+    #username_text = username_entry.get_text()
+    username_text = win.username
     password_text = password_entry.get_text()
+
     print 'email = {0} , username = {1} , password = {2}'.format(email_text, username_text, password_text)
 
     success, text = register_(email_text, username_text, password_text)
@@ -61,6 +158,7 @@ def register_user(button, event, email_entry, username_entry, password_entry, wi
         else:
             dialog.destroy()
 
+    # This needs to be adjusted depending on the age of the user
     else:
         dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
                                    Gtk.ButtonsType.OK, "Registered!")

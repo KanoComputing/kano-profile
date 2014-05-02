@@ -60,24 +60,47 @@ GtkEntry:insensitive {
     border-width: 2px;
     border-radius:3px;
 }
-GtkButton {
-    color: #ffffff;
-    background: @button_color;
-    border-radius: 3px;
-    border-color: transparent;
-}
+
 GtkImage {
     background: transparent;
 }
 
-.green_event_box {
+.green_button {
     background: @button_color;
-    color: #ffffff;
     border-radius: 3px;
+    border-color: transparent;
+    padding: 10px 20px 10px 20px;
 }
-.white_label {
+
+.green_button GtkLabel {
     color: #ffffff;
     font: Bariol Bold 13;
+}
+
+.green_button:insensitive {
+    background: #dddddd;
+}
+
+.gender_dropdown_list GtkButton {
+    border-color: @active_border;
+    border-style: solid;
+    border-width: 2px;
+    border-radius:3px;
+    padding: 10px;
+    background: #ffffff;
+}
+.gender_dropdown_list GtkCellView {
+    color: @active_writing;
+    font: Bariol Bold 13;
+}
+.gender_dropdown_list .menu {
+    border-color: @active_border;
+    border-width: 2px;
+    border-radius: 3px;
+}
+.gender_dropdown_list .separator {
+    /* This removes lines in combotextbox*/
+    -GtkWidget-wide-separators: true;
 }
 /* The title of the current level*/
 .title {
@@ -110,4 +133,12 @@ GtkImage {
     color: @subheading_color;
     padding-bottom: 18px;
     font: Bariol 14;
+}
+.not_registered {
+    background: #ffffff;
+}
+
+.not_registered GtkLabel {
+    color: @kano_orange;
+    font: Bariol Bold 13;
 }

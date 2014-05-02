@@ -12,14 +12,17 @@ from kano.utils import ensure_dir
 from .paths import image_dir
 
 
-def get_image(category, subcategory, name, width):
-    folder = os.path.join(image_dir, category, width, subcategory)
+# "Badge", folder_name, file_name, width of image
+def get_image(category, subcategory, name, subfolder_str):
+    folder = os.path.join(image_dir, category, subfolder_str, subcategory)
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):
-        ensure_dir(folder)
-        open(fullpath, 'w').close()
-        print '{} created'.format(fullpath)
+        print 'missing image: {}'.format(fullpath)
+        return os.path.join(image_dir, 'icons/50/_missing.png')
+        #ensure_dir(folder)
+        #open(fullpath, 'w').close()
+        #print '{} created'.format(fullpath)
         # try:
         #     from randomavatar.randomavatar import Avatar
         #     ensure_dir(folder)

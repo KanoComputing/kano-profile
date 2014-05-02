@@ -11,65 +11,69 @@
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.individual_item as indiv
 import kano_profile_gui.selection_table_components.equipable as equip
-#from kano.profile.badges import calculate_badges
+from kano.profile.badges import calculate_badges
 #from .images import get_image
 
 
-class Table():
-    def __init__(self, category_dict, equipable):
-        self.width = 690
-        self.height = 540
+class SelectionTable():
+    def __init__(self, category_name, equipable):
         self.equipable = equipable
         self.equipped = None
         self.buttons = []
         self.pics = []
 
         number_of_badges = 0
+        category_dict = calculate_badges()[category_name]
 
-        for i, (group, items) in enumerate(category_dict.iteritems()):
-            for j, (item, unlocked) in enumerate(items.iteritems()):
+        # To access video dude jason:
+        #calculate_badges()['avatars']['video_dude']
+        # all_avatars = calculate_badges()['avatars']
+
+        # cycle through all avatar_category, avatar_items like this:
+
+        # for avatar_cat, avatar_items in all_avatars.iteritems():
+        #   print avatar_cat, avatar_items
+
+        for category, items in category_dict.iteritems():
+            for badge, properties in items.iteritems():
+                folder_name = category
+                filename = badge
+                cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
+                            "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
+                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
                 if self.equipable:
-                    # Passing the item and group instead of the filename because the filename depends on the size, and the size varies
-                    # depending on what you need the image for.
-                    # TODO: change colour of badge background
-                    picture = equip.Picture({"item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked, "color": "#ff0000"})
-                    self.pics.append(picture)
+                    picture = equip.Equipable(cat_dict)
                 else:
-                    #picture = indiv.Picture({"filename": img_path, "heading": item, "description": group, "unlocked": unlocked,})
-                    picture = indiv.Picture({"item": item, "group": group, "heading": item, "description": group, "unlocked": unlocked, "color": "#ff0000"})
-                    self.pics.append(picture)
+                    picture = indiv.IndividualItem(cat_dict)
+                self.pics.append(picture)
                 number_of_badges = number_of_badges + 1
 
         #self.info = info
         self.number_of_columns = 3
         self.number_of_rows = (number_of_badges / self.number_of_columns) + (number_of_badges % self.number_of_columns)
 
-        self.table = Gtk.Table(self.number_of_rows, self.number_of_columns)
+        self.grid = Gtk.Grid()
 
-        # Attach to table
+        # Attach to grid
         index = 0
         row = 0
 
         while index < (self.number_of_rows * self.number_of_columns):
             for j in range(self.number_of_columns):
                 if index < number_of_badges:
-                    self.table.attach(self.pics[index].button, j, j + 1, row, row + 1,
-                                      Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.EXPAND, 0, 0)
+                    self.grid.attach(self.pics[index].button, j, row, 1, 1)
                 else:
                     emptybox = Gtk.EventBox()
-                    if index % 2 == 0:
-                        emptybox.get_style_context().add_class("black")
-                    else:
-                        emptybox.get_style_context().add_class("white")
                     emptybox.set_size_request(230, 180)
-                    self.table.attach(emptybox, j, j + 1, row, row + 1,
-                                      Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.EXPAND, 0, 0)
+                    self.grid.attach(emptybox, j, row, 1, 1)
                 index += 1
 
             row += 1
 
         # Read config file/ JSON and find equipped picture.  Default to first one
         self.set_equipped(self.pics[0])
+        self.grid.set_row_spacing(0)
+        self.grid.set_column_spacing(0)
 
     def set_selected(self, item):
         for pic in self.pics:
@@ -84,7 +88,7 @@ class Table():
 
     def set_equipped(self, pic=None):
         if self.equipable:
-            if pic is not None:
+            if pic is not None and not pic.get_locked():
                 self.equipped = pic
                 pic.set_equipped(True)
                 self.set_equipped_style()
@@ -120,4 +124,6 @@ class Table():
             if self.equipable and not pic.get_equipped():
                 pic.equipped_box.set_visible_window(False)
                 pic.equipped_label.set_visible(False)
+            if not pic.get_locked():
+                pic.remove_locked_style()
 

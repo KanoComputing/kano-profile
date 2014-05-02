@@ -10,17 +10,20 @@
 from gi.repository import Gtk
 
 
-class Bar():
-    def __init__(self, input, WINDOW_WIDTH):
+class ProgressBar():
+    def __init__(self, fraction, WINDOW_WIDTH):
         # Height of the thin part of the progress bar
         self.height = 10
         # Height of the label
         self.label_height = 30
         self.label_width = 60
+        self.total_width = WINDOW_WIDTH
+        self.fraction = fraction
+        self.text_shown = str(self.fraction * 100) + "%"
 
         # Calculate various widths of bars
-        progress_width = (WINDOW_WIDTH - self.label_width) * input
-        rest_of_bar_width = (WINDOW_WIDTH - self.label_width) * (1 - input)
+        progress_width = (self.total_width - self.label_width) * self.fraction
+        rest_of_bar_width = (self.total_width - self.label_width) * (1 - self.fraction)
 
         self.progress = Gtk.EventBox()
         self.progress.set_size_request(progress_width, self.height)
@@ -30,7 +33,8 @@ class Bar():
         self.rest_of_bar.set_size_request(rest_of_bar_width, self.height)
         self.rest_of_bar.get_style_context().add_class("rest_of_bar")
 
-        self.label = Gtk.Label(str(int(input * 100)) + "%")
+        self.label = Gtk.Label(self.text_shown)
+        print str(self.fraction * 100) + "%"
         self.label.set_size_request(self.label_width, self.label_height)
         self.label.set_alignment(xalign=0.5, yalign=0.5)
         self.label.get_style_context().add_class("white")
@@ -41,14 +45,26 @@ class Bar():
         self.label_background.add(self.label)
 
         self.fixed = Gtk.Fixed()
-        self.fixed.set_size_request(WINDOW_WIDTH, self.label_height)
-
-        # This background is so we can pretend to overlap with the top bar.
-        #self.background = Gtk.EventBox()
-        #self.background.set_size_request(WINDOW_WIDTH, self.BAR_HEIGHT)
-        #self.background.get_style_context().add_class("black")
-
-        #self.fixed.put(self.background, 0, 0)
+        self.fixed.set_size_request(self.total_width, self.label_height)
+        self.fixed.put(self.progress, 0, self.height)
         self.fixed.put(self.label_background, progress_width, 0)
-        self.fixed.put(self.progress, 0, self.height + 0)
-        self.fixed.put(self.rest_of_bar, progress_width + self.label_width, self.height + 0)
+        self.fixed.put(self.rest_of_bar, progress_width + self.label_width, self.height)
+
+    def set_progress(self, fraction):
+        self.fraction = fraction
+        progress_width = (self.total_width - self.label_width) * self.fraction
+        rest_of_bar_width = (self.total_width - self.label_width) * (1 - self.fraction)
+
+        self.rest_of_bar.set_size_request(rest_of_bar_width, self.height)
+
+        for child in self.fixed.get_children():
+            self.fixed.remove(child)
+
+        self.label.set_text(str(self.fraction * 100) + "%")
+
+        self.fixed.put(self.progress, 0, self.height)
+        self.fixed.put(self.label_background, progress_width, 0)
+        self.fixed.put(self.rest_of_bar, progress_width + self.label_width, self.height)
+
+    def get_progress(self):
+        return self.fraction

@@ -7,7 +7,6 @@
 from __future__ import division
 
 import os
-from slugify import slugify
 
 from ..utils import read_json, is_gui, run_cmd
 from .paths import xp_file, levels_file, rules_dir, bin_dir
@@ -76,43 +75,45 @@ def calculate_badges(filter_category=None):
 
     # helper function to calculate operations
     def do_calculate(select_push_back):
-        for category, items in all_rules.iteritems():
-            for item, rule in items.iteritems():
-                target_pushback = 'push_back' in rule and rule['push_back'] is True
-                if target_pushback != select_push_back:
-                    continue
+        for category, subcats in all_rules.iteritems():
+            for subcat, items in subcats.iteritems():
+                for item, rules in items.iteritems():
+                    target_pushback = 'push_back' in rules and rules['push_back'] is True
+                    if target_pushback != select_push_back:
+                        continue
 
-                if rule['operation'] == 'stat_gta':
-                    achieved = True
-                    for target in rule['targets']:
-                        app = target[0]
-                        variable = target[1]
-                        value = target[2]
+                    if rules['operation'] == 'stat_gta':
+                        achieved = True
+                        for target in rules['targets']:
+                            app = target[0]
+                            variable = target[1]
+                            value = target[2]
 
-                        if app not in app_list or variable not in app_state[app]:
-                            achieved = False
-                            break
-                        achieved &= app_state[app][variable] >= value
-                    calculated_badges.setdefault(category, dict())[item] = all_rules[category][item]
-                    calculated_badges[category][item]['achieved'] = achieved
+                            if app not in app_list or variable not in app_state[app]:
+                                achieved = False
+                                break
+                            achieved &= app_state[app][variable] >= value
 
-                elif rule['operation'] == 'stat_sum_gt':
-                    sum = 0
-                    for target in rule['targets']:
-                        app = target[0]
-                        variable = target[1]
+                    elif rules['operation'] == 'stat_sum_gt':
+                        sum = 0
+                        for target in rules['targets']:
+                            app = target[0]
+                            variable = target[1]
 
-                        if app not in app_list or variable not in app_state[app]:
-                            continue
+                            if app not in app_list or variable not in app_state[app]:
+                                continue
 
-                        sum += float(app_state[app][variable])
+                            sum += float(app_state[app][variable])
 
-                    achieved = sum >= rule['value']
-                    calculated_badges.setdefault(category, dict())[item] = all_rules[category][item]
-                    calculated_badges[category][item]['achieved'] = achieved
+                        achieved = sum >= rules['value']
 
-                else:
-                    print 'unknown uperation {}'.format(rule['operation'])
+                    else:
+                        print 'unknown uperation {}'.format(rules['operation'])
+                        continue
+
+                    calculated_badges.setdefault(category, dict()).setdefault(subcat, dict())[item] \
+                        = all_rules[category][subcat][item]
+                    calculated_badges[category][subcat][item]['achieved'] = achieved
 
     def count_offline_badges():
         return 18
@@ -222,56 +223,6 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
     save_app_state_with_dialog(app_name, data)
 
 
-def test_badge_rules():
-    merged_rules = load_badge_rules()
-
-    properties = dict()
-    max_values = dict()
-
-    for category, items in merged_rules.iteritems():
-        for badge, badge_rules in items.iteritems():
-            for target in badge_rules['targets']:
-                if badge_rules['operation'] == 'stat_sum_gt':
-                    profile, variable = target
-                    value = badge_rules['value']
-                elif badge_rules['operation'] == 'stat_gta':
-                    profile, variable, value = target
-
-                properties.setdefault(profile, set()).add(variable)
-
-                if value == -1:
-                    # print rule_file, badge, profile, variable, value
-                    max_values.setdefault(profile, set()).add(variable)
-
-            # check if name == slugified title
-            if True:
-                slug = slugify(badge_rules['title']).replace('-', '_')
-                if badge != slug:
-                    print category, badge, slug
-
-            # print titles
-            if False:
-                print badge_rules['title']
-
-    # print max_values
-    if False:
-        for category, items in max_values.iteritems():
-            print category, '-', ' '.join(items)
-
-    # print all properties
-    if False:
-        for category, items in properties.iteritems():
-            print category, '-', ' '.join(items)
-
-    # test achieved
-    if False:
-        calculated_badges = calculate_badges()
-        for category, items in calculated_badges.iteritems():
-            for badge, properties in items.iteritems():
-                if not 'achieved' in properties:
-                    print category, badge, properties
-
-
 def load_badge_rules():
     if not os.path.exists(rules_dir):
         print 'rules dir missing'
@@ -302,23 +253,4 @@ def load_badge_rules():
 
             merged_rules.setdefault(category, dict())[subcategory] = rule_data
     return merged_rules
-
-
-def create_images():
-    from kano_profile_gui.images import get_image
-
-    calculated_badges = calculate_badges('badges')
-    for category, items in calculated_badges.iteritems():
-        for badge, properties in items.iteritems():
-            get_image('badges', category, badge, 'originals')
-
-    calculated_badges = calculate_badges('avatars')
-    for category, items in calculated_badges.iteritems():
-        for badge, properties in items.iteritems():
-            get_image('avatars', '', badge, 'originals')
-
-    calculated_badges = calculate_badges('environments')
-    for category, items in calculated_badges.iteritems():
-        for badge, properties in items.iteritems():
-            get_image('environments', '', badge, 'originals')
 

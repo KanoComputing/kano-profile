@@ -4,10 +4,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-#import os
-#from gi.repository import Gtk
 
-from kano.profile.badges import calculate_badges
 import kano_profile_gui.selection_table_components.table_template as table_template
 
 badge_ui = None
@@ -15,11 +12,6 @@ badge_ui = None
 
 def activate(_win, _box):
     global badge_ui
-
-    badges = calculate_badges('badges')
-
-    if not badges:
-        return
 
     headers = ["badges"]
     equipable = False

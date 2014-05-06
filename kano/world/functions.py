@@ -72,6 +72,15 @@ def remove_token():
     save_profile(profile)
 
 
+def remove_registration():
+    profile = load_profile()
+    profile.pop('token', None)
+    profile.pop('kanoworld_username', None)
+    profile.pop('kanoworld_id', None)
+    profile.pop('email', None)
+    save_profile(profile)
+
+
 def login_using_token():
     global glob_session
 

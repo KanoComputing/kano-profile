@@ -12,10 +12,10 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.apps import get_app_data_dir, load_app_state_variable
-from kano.profile.profile import set_unlocked
-from kano.profile.badges import save_app_state_variable_with_dialog
+from kano.profile.profile import set_unlocked, load_profile
+from kano.profile.badges import save_app_state_variable_with_dialog, calculate_xp, calculate_kano_level
 from kano.world.functions import is_registered
-from kano.utils import is_number
+from kano.utils import is_number, get_user
 
 variable_not_found_str = "VARIABLE_NOT_FOUND"
 
@@ -87,6 +87,36 @@ elif sys.argv[1] == 'lock':
 elif sys.argv[1] == 'is_registered':
     check_arg_len(1)
     out_str = str(int(is_registered()))
+    sys.stdout.write(out_str)
+
+# get_avatar
+elif sys.argv[1] == 'get_avatar':
+    check_arg_len(1)
+    out_str = 'judoka judoka_1'
+    sys.stdout.write(out_str)
+
+# get_xp
+elif sys.argv[1] == 'get_xp':
+    check_arg_len(1)
+    out_str = str(calculate_xp())
+    sys.stdout.write(out_str)
+
+# get_level
+elif sys.argv[1] == 'get_level':
+    check_arg_len(1)
+    level, progress = calculate_kano_level()
+    out_str = str(level)
+    sys.stdout.write(out_str)
+
+# get_username
+elif sys.argv[1] == 'get_username':
+    check_arg_len(1)
+    if is_registered():
+        profile = load_profile()
+        username = profile['kanoworld_username']
+    else:
+        username = get_user()
+    out_str = username
     sys.stdout.write(out_str)
 
 # mistyped command

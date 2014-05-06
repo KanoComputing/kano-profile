@@ -53,6 +53,10 @@ def save_app_state(app_name, data):
     ensure_dir(get_app_dir(app_name))
     write_json(app_state_file, data)
 
+    # Ask kdesk to refresh the Login/Register icon with new Kano Level
+    if os.path.exists('/usr/bin/kdesk'):
+        os.system('kdesk -a loginregister')
+
 
 def save_app_state_variable(app_name, variable, value):
     if is_unlocked() and variable == 'level':

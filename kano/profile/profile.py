@@ -31,9 +31,6 @@ def save_profile(data):
     ensure_dir(profile_dir)
     write_json(profile_file, data)
 
-    # Ask kdesk to refresh the Login/Register icon with new Kano Level
-    os.system ('kdesk -a loginregister')
-
 
 def set_unlocked(boolean):
     profile = load_profile()

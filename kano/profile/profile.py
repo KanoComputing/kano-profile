@@ -7,7 +7,6 @@
 from ..utils import read_json, write_json, get_date_now, ensure_dir
 from .paths import profile_file, profile_dir, linux_user
 
-import os
 
 def load_profile():
     data = read_json(profile_file)

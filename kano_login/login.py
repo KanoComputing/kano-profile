@@ -12,7 +12,7 @@ from gi.repository import Gtk
 from components import heading, green_button
 from kano.world.functions import login as login_
 from kano.profile.profile import load_profile
-from kano_login import nickname
+from kano_login import gender
 
 win = None
 box = None
@@ -61,7 +61,7 @@ def activate(_win, _box):
 
 def register(event):
     global win, box
-    nickname.activate(win, box)
+    gender.activate(win, box)
     win.state = win.state + 1
 
 

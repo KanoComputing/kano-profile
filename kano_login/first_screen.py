@@ -13,7 +13,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano_login import nickname
+from kano_login import gender
 from kano.network import is_internet
 
 win = None
@@ -47,7 +47,7 @@ def activate(_win, _box):
 def update(widget, event):
     global win, box
 
-    nickname.activate(win, box)
+    gender.activate(win, box)
     win.state = win.state + 1
 
 

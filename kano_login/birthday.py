@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano_login import account_email
+from kano_login import register
 import time
 
 win = None
@@ -64,21 +64,17 @@ class Birthday():
         return box
 
     def update_next_button(self, arg1=None, arg2=None):
-        print "key released"
         if self.day_entry.get_text() != "" and self.month_entry.get_text() != "" and self.year_entry.get_text() != "":
-            print "button is sensitive"
             self.next_button.button.set_sensitive(True)
         else:
-            print "button is not sensitive"
             self.next_button.button.set_sensitive(False)
 
     def set_birthday(self, arg1=None, arg2=None):
-        print "setting birthday"
         age = self.calculate_age()
         if age == -1:
             return
         self.win.age = age
-        account_email.activate(self.win, self.box)
+        register.activate(self.win, self.box)
         self.win.state = self.win.state + 1
 
     def calculate_age(self):
@@ -86,6 +82,8 @@ class Birthday():
             bday_day = int(self.day_entry.get_text())
             bday_month = int(self.month_entry.get_text())
             bday_year = int(self.year_entry.get_text())
+            if bday_day > 31 or bday_month > 12 or bday_year > 2014:
+                raise Exception
 
         except:
             dialog = Gtk.MessageDialog(self.win, 0, Gtk.MessageType.ERROR,
@@ -96,6 +94,9 @@ class Birthday():
                 dialog.destroy()
             else:
                 dialog.destroy()
+            self.day_entry.set_text("")
+            self.month_entry.set_text("")
+            self.year_entry.set_text("")
             return -1
 
         # Get current date

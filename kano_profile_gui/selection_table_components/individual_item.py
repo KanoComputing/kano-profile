@@ -56,7 +56,6 @@ class IndividualItem():
         self.locked_box.get_style_context().add_class("locked_box")
         self.locked_box.set_size_request(self.width, self.height)
         self.padlock = icons.set_from_name("padlock")
-        print self.padlock
         self.locked_fixed = Gtk.Fixed()
         self.locked_fixed.put(self.locked_box, 0, 0)
         self.locked_fixed.put(self.padlock, 95, 70)

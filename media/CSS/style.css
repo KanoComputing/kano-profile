@@ -60,6 +60,22 @@ GtkWindow {
     background: #ffffff;
 }
 
+/* This is to remove padding */
+GtkContainer GtkBox,
+GtkContainer GtkEvent,
+GtkContainer GtkFixed,
+GtkBox GtkEventBox,
+GtkBox GtkFixed,
+GtkBox GtkGrid,
+GtkBox GtkContainer,
+GtkGrid GtkEventBox,
+GtkFixed GtkImage,
+GtkFixed GtkEventBox,
+GtkWindow GtkGrid,
+GtkWindow GtkBox {
+    padding: 0;
+}
+
 /* Green button seen when equipping an item */
 .green_button {
     background: @button_color;
@@ -243,9 +259,24 @@ GtkSwitch.slider {
     background: @button_color;
 }
 
-.equipped_label {
+.equipped_box GtkLabel {
     font: Bariol bold 13px;
     color: #ffffff;
+}
+
+.equipped_box2 {
+    border-radius: 20px;
+    background: linear-gradient(to top, @button_color);
+}
+
+.equipped_box2 GtkLabel {
+    font: Bariol bold 13px;
+    color: #ffffff;
+}
+
+.equipped_border {
+    border-radius: 20px;
+    background: linear-gradient(to top, #ffffff);
 }
 
 /* Info screen oof individual badges/environments/avatars */

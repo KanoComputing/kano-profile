@@ -26,7 +26,7 @@ class SelectionTable():
         category_dict = calculate_badges()[category_name]
 
         # To access video dude jason:
-        #calculate_badges()['avatars']['video_dude']
+        # calculate_badges()['avatars']['video_dude']
         # all_avatars = calculate_badges()['avatars']
 
         # cycle through all avatar_category, avatar_items like this:
@@ -40,7 +40,7 @@ class SelectionTable():
                 filename = badge
                 cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
-                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']"
+                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
                 if self.equipable:
                     picture = equip.Equipable(cat_dict)
                 else:
@@ -122,8 +122,7 @@ class SelectionTable():
             pic.hover_box.set_visible_window(False)
             pic.hover_label.set_visible(False)
             if self.equipable and not pic.get_equipped():
-                pic.equipped_box.set_visible_window(False)
-                pic.equipped_label.set_visible(False)
+                pic.remove_equipped_style()
             if not pic.get_locked():
                 pic.remove_locked_style()
 

@@ -28,7 +28,7 @@ class KanoWorldSession(object):
             raise Exception(text)
 
     def test_auth(self):
-        return request_wrapper('get', '/auth/is-authenticated', session=self.session)
+        return request_wrapper('get', '/auth/session', session=self.session)
 
     def upload_profile_stats(self):
         profile = load_profile()

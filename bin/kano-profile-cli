@@ -80,29 +80,24 @@ elif sys.argv[1] == 'lock':
 
 elif sys.argv[1] == 'is_registered':
     check_arg_len(1)
-    out_str = str(int(is_registered()))
-    sys.stdout.write(out_str)
+    print int(is_registered())
 
 elif sys.argv[1] == 'get_avatar':
     check_arg_len(1)
-    out_str = 'judoka judoka_1'
-    sys.stdout.write(out_str)
+    print 'judoka judoka_1'
 
 elif sys.argv[1] == 'get_xp':
     check_arg_len(1)
-    out_str = str(calculate_xp())
-    sys.stdout.write(out_str)
+    print calculate_xp()
 
 elif sys.argv[1] == 'get_level':
     check_arg_len(1)
     level, progress = calculate_kano_level()
-    out_str = str(level)
-    sys.stdout.write(out_str)
+    print level
 
 elif sys.argv[1] == 'get_username':
     check_arg_len(1)
-    out_str = get_mixed_username()
-    sys.stdout.write(out_str)
+    print get_mixed_username()
 
 else:
     sys.exit("wrong usage")

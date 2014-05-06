@@ -13,20 +13,26 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
-from kano_profile_gui.paths import image_dir
-
+from kano.utils import write_json, uniqify_list
 
 all_rules = load_badge_rules()
 
+variables_needed = dict()
+
 for category, subcats in all_rules.iteritems():
     for subcat, items in subcats.iteritems():
-        path = os.path.join(image_dir, category, 'originals', subcat)
+        for item, rules in items.iteritems():
+            targets = rules['targets']
+            for target in targets:
+                app = target[0]
+                variable = target[1]
+                variables_needed.setdefault(app, list()).append(variable)
 
-        existing_items = os.listdir(path)
-        needed_items = ['{}.png'.format(f) for f in items.keys()]
+for key in variables_needed.iterkeys():
+    variables_needed[key] = uniqify_list(variables_needed[key])
 
-        if sorted(existing_items) != sorted(needed_items):
-            print 'Existing images:\n{}'.format(', '.join(existing_items))
-            print 'Needed images:\n{}'.format(', '.join(needed_items))
-            print
+
+write_json('variables_needed.json', variables_needed, False)
+
+
 

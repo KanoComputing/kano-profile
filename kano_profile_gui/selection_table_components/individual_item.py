@@ -11,7 +11,6 @@
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from kano_profile_gui.images import get_image
-#import kano_profile_gui.components.constants as constants
 import kano_profile_gui.components.icons as icons
 
 
@@ -30,6 +29,8 @@ class IndividualItem():
         bg_color = '#' + str(info["bg_color"])
         self.bg_color = Gdk.RGBA()
         self.bg_color.parse(bg_color)
+        self.grey_bg = Gdk.RGBA()
+        self.grey_bg.parse("#e7e7e7")
 
         # split info into members
         self.title = info["title"]
@@ -92,11 +93,12 @@ class IndividualItem():
     def add_locked_style(self):
         self.locked_box.set_visible_window(True)
         self.padlock.set_visible(True)
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.grey_bg)
 
     def remove_locked_style(self):
-        #self.fixed.remove(self.locked_fixed)
         self.locked_box.set_visible_window(False)
         self.padlock.set_visible(False)
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.bg_color)
 
     # Sets whether the picture is selected, ie whether we are in the selection screen
     # selected = True or False

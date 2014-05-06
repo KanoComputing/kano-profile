@@ -46,10 +46,8 @@ class Header():
         self.halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
         self.halign.set_size_request(halign_width, self.height)
 
-        self.title_label1 = Gtk.Label(title1.upper())
-        self.title_label1.get_style_context().add_class("heading")
-
-        self.title_label2 = None
+        self.title_label = Gtk.Label(title1.upper())
+        self.title_label.get_style_context().add_class("heading")
 
         # If there are two titles, then we need to have 2 radio buttons to switch views
         if title2 is not None:
@@ -63,7 +61,7 @@ class Header():
             self.halign.add(self.container)
 
         else:
-            self.halign.add(self.title_label1)
+            self.halign.add(self.title_label)
 
         self.box.pack_start(locked_box, False, False, 0)
         self.box.pack_start(self.halign, False, False, 0)
@@ -78,12 +76,14 @@ class Header():
         self.unlocked_label.show()
 
     def set_titles(self, title1, title2=None):
-        self.radiobutton1.set_label(title1)
-        if self.radiobutton2 is not None and title2 is not None:
+        if title2 is not None:
+            self.radiobutton1.set_label(title1)
             self.radiobutton2.set_label(title2)
+        else:
+            self.title_label = title1
 
     def get_titles(self):
-        title1 = self.radiobutton1.get_label()
+        title1 = self.title_label
         title2 = None
         if self.radiobutton2 is not None:
             title2 = self.radiobutton2.get_label()

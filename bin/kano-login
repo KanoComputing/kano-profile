@@ -16,7 +16,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_profile_gui.paths import css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
-from kano_login.components import top_bar, heading
+from kano_login.components import top_bar, logged_in
 #from kano.world.functions import is_registered
 from kano.world.functions import login_using_token
 
@@ -119,27 +119,6 @@ class MainWindow(Gtk.Window):
             self.box.remove(i)
 
 
-def logged_in_screen():
-    win = Gtk.Window()
-    win.set_size_request(200, 150)
-    win.set_decorated(False)
-    button = Gtk.Button("OK")
-    button.get_style_context().add_class("green_button")
-    button.connect("clicked", Gtk.main_quit)
-    button_box = Gtk.Box()
-    button_box.add(button)
-    alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
-    alignment.add(button_box)
-    alignment.set_padding(0, 0, 65, 0)
-    title = heading.Heading("Logged in!", "You're already logged in")
-    main_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-    win.add(main_container)
-    main_container.pack_start(title.container, False, False, 0)
-    main_container.pack_start(alignment, False, False, 0)
-    win.connect('delete-event', Gtk.main_quit)
-    win.show_all()
-
-
 def main():
     # Create style sheet
     cssProvider = Gtk.CssProvider()
@@ -154,7 +133,8 @@ def main():
 
     success, _ = login_using_token()
     if success:
-        logged_in_screen()
+        win = logged_in.LoggedIn()
+        win.show_all()
         Gtk.main()
 
     else:

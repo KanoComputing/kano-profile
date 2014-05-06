@@ -134,11 +134,13 @@ GtkImage {
     padding-bottom: 18px;
     font: Bariol 14;
 }
-.not_registered {
+.not_registered,
+.logout {
     background: #ffffff;
 }
 
-.not_registered GtkLabel {
+.not_registered GtkLabel,
+.logout GtkLabel {
     color: @kano_orange;
     font: Bariol Bold 13;
 }

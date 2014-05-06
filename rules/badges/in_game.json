@@ -1,6 +1,6 @@
 {
   "amazing_architect": {
-    "bg_color": "000000",
+    "bg_color": "f1db9f",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Amazing Architect"
   },
   "appetite_for_apples": {
-    "bg_color": "000000",
+    "bg_color": "ff9c9d",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -16,7 +16,7 @@
     "title": "Appetite for Apples"
   },
   "block_builder": {
-    "bg_color": "000000",
+    "bg_color": "928f7e",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -24,7 +24,7 @@
     "title": "Block Builder"
   },
   "end_everything": {
-    "bg_color": "000000",
+    "bg_color": "f38484",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -32,7 +32,7 @@
     "title": "End Everything"
   },
   "pong_painter": {
-    "bg_color": "000000",
+    "bg_color": "afe5fa",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -40,7 +40,7 @@
     "title": "Pong Painter"
   },
   "rule_breaker": {
-    "bg_color": "000000",
+    "bg_color": "d9c2df",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

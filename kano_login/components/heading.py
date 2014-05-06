@@ -26,3 +26,10 @@ class Heading():
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.container.pack_start(self.title, False, False, 6)
         self.container.pack_start(self.description, False, False, 0)
+
+    def set_text(self, title, description):
+        self.title.set_text(title)
+        self.description.set_text(description)
+
+    def get_text(self):
+        return [self.title.get_text(), self.description.get_text()]

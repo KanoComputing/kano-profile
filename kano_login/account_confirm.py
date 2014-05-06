@@ -8,7 +8,7 @@
 # UI for confirming to the user they've registered
 
 from gi.repository import Gtk
-from components import heading
+from components import heading, green_button
 
 win = None
 box = None
@@ -54,14 +54,13 @@ def confirmation_screen():
 
     win.clear_box()
 
-    doneB = Gtk.Button("DONE")
-    doneB.get_style_context().add_class("green_button")
-    doneB.connect("button_press_event", finish)
+    doneB = green_button.Button("DONE")
+    doneB.button.connect("button_press_event", finish)
 
     title = heading.Heading("Profile created!", "Boom")
 
     box.pack_start(title.container, False, False, 0)
-    box.pack_start(doneB, False, False, 15)
+    box.pack_start(doneB.box, False, False, 15)
     box.show_all()
 
 

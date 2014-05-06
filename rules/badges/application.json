@@ -1,6 +1,6 @@
 {
   "bug_buster": {
-    "bg_color": "000000",
+    "bg_color": "f7e37a",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Bug Buster"
   },
   "feedbacker": {
-    "bg_color": "000000",
+    "bg_color": "ff99a0",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -16,7 +16,7 @@
     "title": "Feedbacker"
   },
   "remote_roamer": {
-    "bg_color": "000000",
+    "bg_color": "94b0d8",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -24,7 +24,7 @@
     "title": "Remote Roamer"
   },
   "staying_super": {
-    "bg_color": "000000",
+    "bg_color": "a6bac4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

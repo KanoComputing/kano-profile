@@ -8,7 +8,7 @@
 # UI for confirming to the user they've registered
 
 from gi.repository import Gtk
-from components import heading, green_button
+from components import heading
 
 win = None
 box = None
@@ -23,7 +23,8 @@ def activate(_win, _box):
     win.clear_box()
 
     if win.age < 13:
-        nextB = green_button.Button("GOT IT")
+        nextB = Gtk.Button("GOT IT")
+        nextB.get_style_context().add_class("green_button")
 
         title = heading.Heading("Confirmation email", "An email has been sent to:")
 
@@ -42,7 +43,7 @@ def activate(_win, _box):
         valign.set_padding(0, 0, 100, 0)
         box.pack_start(title.container, False, False, 0)
         box.pack_start(valign, False, False, 0)
-        box.pack_start(nextB.box, False, False, 15)
+        box.pack_start(nextB, False, False, 15)
         box.show_all()
     else:
         confirmation_screen()
@@ -53,13 +54,14 @@ def confirmation_screen():
 
     win.clear_box()
 
-    doneB = green_button.Button("DONE")
+    doneB = Gtk.Button("DONE")
+    doneB.get_style_context().add_class("green_button")
     doneB.connect("button_press_event", finish)
 
     title = heading.Heading("Profile created!", "Boom")
 
     box.pack_start(title.container, False, False, 0)
-    box.pack_start(doneB.box, False, False, 15)
+    box.pack_start(doneB, False, False, 15)
     box.show_all()
 
 

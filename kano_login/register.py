@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button
+from components import heading
 from kano.world.functions import register as register_
 import re
 #from kano_login import home, login,
@@ -40,17 +40,18 @@ def activate(_win, _box):
     password_entry1 = Gtk.Entry()
     password_entry2 = Gtk.Entry()
 
-    register = green_button.Button("REGISTER")
+    register = Gtk.Button("REGISTER")
+    register.get_style_context().add_class("green_button")
 
-    email_entry1.connect("key_release_event", unlock_second_entry, email_entry2, register.button)
-    email_entry2.connect("key_release_event", set_email_icon, email_entry1, password_entry1, password_entry2, register.button)
+    email_entry1.connect("key_release_event", unlock_second_entry, email_entry2, register)
+    email_entry2.connect("key_release_event", set_email_icon, email_entry1, password_entry1, password_entry2, register)
     email_entry2.set_sensitive(False)
-    password_entry1.connect("key_release_event", set_register_button, password_entry2, register.button)
+    password_entry1.connect("key_release_event", set_register_button, password_entry2, register)
     password_entry1.set_sensitive(False)
-    password_entry2.connect("key_release_event", set_register_button, password_entry1, register.button)
+    password_entry2.connect("key_release_event", set_register_button, password_entry1, register)
     password_entry2.set_sensitive(False)
-    register.button.connect("button_press_event", register_user, email_entry1, password_entry1, _win)
-    register.button.set_sensitive(False)
+    register.connect("button_press_event", register_user, email_entry1, password_entry1, _win)
+    register.set_sensitive(False)
 
     subheading = ''
     if win.age < 13:
@@ -74,17 +75,12 @@ def activate(_win, _box):
     entry_container.attach(password_entry1, 0, 2, 1, 1)
     entry_container.attach(password_entry2, 0, 3, 1, 1)
 
-    #container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    #container.pack_start(email_entry, False, False, 0)
-    #container.pack_start(username_entry, False, False, 0)
-    #container.pack_start(password_entry, False, False, 0)
-
     valign = Gtk.Alignment()
     valign.add(entry_container)
     valign.set_padding(0, 0, 100, 0)
     box.pack_start(title.container, False, False, 0)
     box.pack_start(valign, False, False, 0)
-    box.pack_start(register.box, False, False, 15)
+    box.pack_start(register, False, False, 15)
     box.show_all()
 
 

@@ -93,4 +93,5 @@ def log_user_in(button, event, username_entry, password_entry, win):
             Gtk.main_quit()
         else:
             dialog.destroy()
+            Gtk.main_quit()
 

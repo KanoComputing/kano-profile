@@ -1,6 +1,6 @@
 {
   "computer_commander": {
-    "bg_color": "000000",
+    "bg_color": "ffc38b",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Computer Commander"
   },
   "kano_apprentice": {
-    "bg_color": "000000",
+    "bg_color": "f5f5ed",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -17,7 +17,7 @@
     "title": "Kano Apprentice"
   },
   "kano_master": {
-    "bg_color": "000000",
+    "bg_color": "f4ec8b",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -26,7 +26,7 @@
     "title": "Kano Master"
   },
   "minecraft_master": {
-    "bg_color": "000000",
+    "bg_color": "b8e3a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -34,7 +34,7 @@
     "title": "Minecraft Master"
   },
   "music_marvel": {
-    "bg_color": "000000",
+    "bg_color": "ade3ef",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -42,7 +42,7 @@
     "title": "Music Marvel"
   },
   "pong_pro": {
-    "bg_color": "000000",
+    "bg_color": "9f9f9f",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -50,7 +50,7 @@
     "title": "Pong Pro"
   },
   "snake_survivor": {
-    "bg_color": "000000",
+    "bg_color": "ee97a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -58,7 +58,7 @@
     "title": "Snake Survivor"
   },
   "video_voyager": {
-    "bg_color": "000000",
+    "bg_color": "fee8a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

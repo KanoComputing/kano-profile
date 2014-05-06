@@ -99,14 +99,5 @@ def register_user(button, event, password_entry):
 
     # This needs to be adjusted depending on the age of the user
     else:
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
-                                   Gtk.ButtonsType.OK, "Registered!")
-        dialog.format_secondary_text("Activate your account - check " + text + " for an email")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            dialog.destroy()
-        else:
-            dialog.destroy()
-
-    account_confirm.activate(win, box)
-    win.state = win.state + 1
+        account_confirm.activate(win, box)
+        win.state = win.state + 1

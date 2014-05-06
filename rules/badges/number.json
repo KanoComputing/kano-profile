@@ -1,6 +1,6 @@
 {
   "1000_blocks": {
-    "bg_color": "000000",
+    "bg_color": "928c83",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
@@ -9,7 +9,7 @@
     "value": 1000
   },
   "100_blocks": {
-    "bg_color": "000000",
+    "bg_color": "b9b3aa",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
@@ -18,7 +18,7 @@
     "value": 100
   },
   "bronze_medallion": {
-    "bg_color": "000000",
+    "bg_color": "f3c797",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
@@ -32,7 +32,7 @@
     "value": 5
   },
   "gold_medallion": {
-    "bg_color": "000000",
+    "bg_color": "ffe984",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
@@ -46,7 +46,7 @@
     "value": 30
   },
   "platinum_medallion": {
-    "bg_color": "000000",
+    "bg_color": "c9eef8",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
@@ -60,7 +60,7 @@
     "value": -1
   },
   "silver_medallion": {
-    "bg_color": "000000",
+    "bg_color": "eee7e7",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",

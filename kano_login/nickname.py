@@ -60,7 +60,7 @@ def update_register_button(widget, arg2, button):
 def set_nickname(arg1=None, arg2=None, nickname_entry=None):
     global win
 
-    win.nickname = nickname_entry.get_text()
+    win.username = nickname_entry.get_text()
     # TODO: Pop up alert asking if they REALLY want to have this nickname
     # TODO: Check if the nickname is unique
     gender.activate(win, box)

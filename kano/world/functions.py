@@ -33,8 +33,8 @@ def login(email, password):
         try:
             glob_session = KanoWorldSession(profile['token'])
             return True, None
-        except Exception:
-            return False, 'There may be a problem with our servers.  Try again later.'
+        except Exception as e:
+            return False, 'There may be a problem with our servers. Try again later. Error = {}'.format(str(e))
     else:
         return False, 'Cannot log in, problem: {}'.format(text)
 

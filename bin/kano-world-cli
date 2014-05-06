@@ -74,6 +74,7 @@ def do_register():
 def main():
     if len(sys.argv) == 2 and sys.argv[1] == '--reset':
         remove_registration()
+        return()
 
     if not check_login():
         choice = raw_input('Login (L) or Register (R)?: ').lower()

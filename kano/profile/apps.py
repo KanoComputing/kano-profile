@@ -62,6 +62,16 @@ def save_app_state_variable(app_name, variable, value):
     save_app_state(app_name, data)
 
 
+def increment_app_state_variable(app_name, variable, value):
+    if is_unlocked() and variable == 'level':
+        return
+    data = load_app_state(app_name)
+    if not data[variable]:
+        data[variable] = 0
+    data[variable] += value
+    save_app_state(app_name, data)
+
+
 def get_app_list():
     if not os.path.exists(apps_dir):
         return []

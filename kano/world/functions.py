@@ -7,6 +7,7 @@
 import json
 
 from kano.profile.profile import load_profile, save_profile
+from kano.utils import get_user
 
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
@@ -72,6 +73,15 @@ def remove_token():
     save_profile(profile)
 
 
+def remove_registration():
+    profile = load_profile()
+    profile.pop('token', None)
+    profile.pop('kanoworld_username', None)
+    profile.pop('kanoworld_id', None)
+    profile.pop('email', None)
+    save_profile(profile)
+
+
 def login_using_token():
     global glob_session
 
@@ -119,3 +129,12 @@ def restore_content(file_path):
 
 def get_glob_session():
     return glob_session
+
+
+def get_mixed_username():
+    if is_registered():
+        profile = load_profile()
+        username = profile['kanoworld_username']
+    else:
+        username = get_user()
+    return username

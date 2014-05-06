@@ -4,7 +4,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-from ..utils import read_json, write_json, get_cpu_id, get_mac_address, get_date_now, ensure_dir
+from ..utils import read_json, write_json, get_date_now, ensure_dir
 from .paths import profile_file, profile_dir, linux_user
 
 
@@ -15,11 +15,10 @@ def load_profile():
 
     data['username_linux'] = linux_user
 
-    if get_cpu_id():
-        data['cpu_id'] = get_cpu_id()
-
-    if get_mac_address():
-        data['mac_addr'] = get_mac_address()
+    # if get_cpu_id():
+        # data['cpu_id'] = get_cpu_id()
+    # if get_mac_address():
+        # data['mac_addr'] = get_mac_address()
 
     return data
 

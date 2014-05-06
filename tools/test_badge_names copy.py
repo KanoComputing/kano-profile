@@ -13,20 +13,21 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
-from kano_profile_gui.paths import image_dir
-
+from slugify import slugify
 
 all_rules = load_badge_rules()
 
+ok = True
 for category, subcats in all_rules.iteritems():
     for subcat, items in subcats.iteritems():
-        path = os.path.join(image_dir, category, 'originals', subcat)
+        for item, rules in items.iteritems():
+            slug = slugify(rules['title']).replace('-', '_')
+            if item != slug:
+                print item, slug
+                ok = False
 
-        existing_items = os.listdir(path)
-        needed_items = ['{}.png'.format(f) for f in items.keys()]
 
-        if sorted(existing_items) != sorted(needed_items):
-            print 'Existing images:\n{}'.format(', '.join(existing_items))
-            print 'Needed images:\n{}'.format(', '.join(needed_items))
-            print
+if ok:
+    print 'All names are OK'
+
 

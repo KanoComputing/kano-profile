@@ -13,7 +13,7 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world.functions import login_using_token, login, register, remove_token
+from kano.world.functions import login_using_token, login, register, remove_registration
 from kano.world.share import list_shares, delete_share
 from kano.profile.profile import load_profile
 
@@ -54,7 +54,7 @@ def check_login():
 
 
 def do_login():
-    email = raw_input('e-mail: ')
+    email = raw_input('username / e-mail: ')
     password = raw_input('password: ')
     success, error = login(email, password)
     if not success:
@@ -73,7 +73,7 @@ def do_register():
 
 def main():
     if len(sys.argv) == 2 and sys.argv[1] == '--reset':
-        remove_token()
+        remove_registration()
 
     if not check_login():
         choice = raw_input('Login (L) or Register (R)?: ').lower()

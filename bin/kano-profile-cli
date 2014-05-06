@@ -13,7 +13,9 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.profile.apps import get_app_data_dir, load_app_state_variable
 from kano.profile.profile import set_unlocked
-from kano.profile.badges import save_app_state_variable_with_dialog
+from kano.profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
+    calculate_kano_level, increment_app_state_variable_with_dialog
+from kano.world.functions import is_registered, get_mixed_username
 from kano.utils import is_number
 
 variable_not_found_str = "VARIABLE_NOT_FOUND"
@@ -28,61 +30,74 @@ def check_arg_len(number):
 if __name__ != '__main__':
     sys.exit("This is a script, do not import it as a module!")
 
-
 if len(sys.argv) == 1:
     sys.exit("Wrong usage, needs an argument")
 
-
-# usage get_app_data_dir app_name
 if sys.argv[1] == 'get_app_data_dir':
     check_arg_len(2)
-
     app_name = sys.argv[2]
     sys.stdout.write(get_app_data_dir(app_name))
 
-
-# usage load_app_state_variable app_name variable
 elif sys.argv[1] == 'load_app_state_variable':
     check_arg_len(3)
-
     app_name = sys.argv[2]
     variable = sys.argv[3]
-
     value = load_app_state_variable(app_name, variable)
-
     if value:
         sys.stdout.write(str(value))
     else:
         sys.stdout.write(variable_not_found_str)
 
-
-# usage load_app_state_variable app_name variable
 elif sys.argv[1] == 'save_app_state_variable':
     check_arg_len(4)
-
     app_name = sys.argv[2]
     variable = sys.argv[3]
     value = sys.argv[4]
-
     if value.isdigit():
         value = int(value)
     elif is_number(value):
         value = float(value)
-
     save_app_state_variable_with_dialog(app_name, variable, value)
 
+elif sys.argv[1] == 'increment_app_state_variable':
+    check_arg_len(4)
+    app_name = sys.argv[2]
+    variable = sys.argv[3]
+    value = sys.argv[4]
+    if value.isdigit():
+        value = int(value)
+    elif is_number(value):
+        value = float(value)
+    increment_app_state_variable_with_dialog(app_name, variable, value)
 
-# unlock
 elif sys.argv[1] == 'unlock':
     check_arg_len(1)
     set_unlocked(True)
 
-# lock
 elif sys.argv[1] == 'lock':
     check_arg_len(1)
     set_unlocked(False)
 
+elif sys.argv[1] == 'is_registered':
+    check_arg_len(1)
+    print int(is_registered())
 
-# mistyped command
+elif sys.argv[1] == 'get_avatar':
+    check_arg_len(1)
+    print 'judoka judoka_1'
+
+elif sys.argv[1] == 'get_xp':
+    check_arg_len(1)
+    print calculate_xp()
+
+elif sys.argv[1] == 'get_level':
+    check_arg_len(1)
+    level, progress = calculate_kano_level()
+    print level
+
+elif sys.argv[1] == 'get_username':
+    check_arg_len(1)
+    print get_mixed_username()
+
 else:
     sys.exit("wrong usage")

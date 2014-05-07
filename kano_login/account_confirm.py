@@ -23,33 +23,31 @@ def activate(_win, _box):
     win.clear_box()
 
     if win.age < 13:
-        nextB = Gtk.Button("GOT IT")
-        nextB.get_style_context().add_class("green_button")
+        nextB = green_button.Button("GOT IT")
+        nextB.button.connect("button_press_event", confirmation_screen)
 
-        title = heading.Heading("Confirmation email", "An email has been sent to:")
+        title = heading.Heading("Now get your parents to confirm...", "An email has been sent to: ")
 
         label1 = Gtk.Label(win.email)
-        label1.get_style_context().add_class()
+        label1.get_style_context().add_class("confirm_email")
 
-        label2 = Gtk.Label("This needs to be confirmed sometime")
+        # Done by eye
+        label1.set_alignment(0.5, 0)
 
-        label_container = Gtk.Grid(column_homogeneous=False,
-                                   row_spacing=7)
-        label_container.attach(label1, 0, 0, 1, 1)
-        label_container.attach(label2, 0, 1, 1, 1)
+        label2 = Gtk.Label("Bug them to check their email in the next 14 days - \n                         or you'll lose your profile!")
+        label2.get_style_context().add_class("confirm_email_info")
+        label2.set_alignment(0.5, 0)
 
-        valign = Gtk.Alignment()
-        valign.add(label_container)
-        valign.set_padding(0, 0, 100, 0)
         box.pack_start(title.container, False, False, 0)
-        box.pack_start(valign, False, False, 0)
-        box.pack_start(nextB, False, False, 15)
+        box.pack_start(label1, False, False, 5)
+        box.pack_start(label2, False, False, 20)
+        box.pack_start(nextB.box, False, False, 15)
         box.show_all()
     else:
         confirmation_screen()
 
 
-def confirmation_screen():
+def confirmation_screen(widget=None, event=None):
     global win, box
 
     win.clear_box()

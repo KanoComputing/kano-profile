@@ -51,11 +51,13 @@ def activate(_win, _box):
 
     subheading = ''
     if win.age < 13:
-        subheading = "Please provide a parent's email"
+        header = "Permission slip"
+        subheading = "Please provide a parent's or teacher's email"
     else:
+        header = "Login details"
         subheading = "Become a real person"
 
-    title = heading.Heading("Register", subheading)
+    title = heading.Heading(header, subheading)
 
     username_entry.set_placeholder_text("Username")
     email_entry.set_placeholder_text("Email")
@@ -90,13 +92,13 @@ def set_register_sensitive(entry2, event, entry1, entry3, button):
 def register_user(button, event, username_entry, email_entry, password_entry):
     global win
 
-    email_text = email_entry.get_text()
-    username_text = username_entry.get_text()
-    password_text = password_entry.get_text()
+    win.email = email_entry.get_text()
+    win.username = username_entry.get_text()
+    win.password = password_entry.get_text()
 
-    print 'email = {0} , username = {1} , password = {2}'.format(email_text, username_text, password_text)
+    print 'email = {0} , username = {1} , password = {2}'.format(win.email, win.username, win.password)
 
-    success, text = register_(email_text, username_text, password_text)
+    success, text = register_(win.email, win.username, win.password)
 
     if not success:
         print "error = " + str(text)
@@ -113,8 +115,5 @@ def register_user(button, event, username_entry, email_entry, password_entry):
     else:
         account_confirm.activate(win, box)
         win.state = win.state + 1
-        win.email = email_text
-        win.username = username_text
-        win.password = password_text
 
 

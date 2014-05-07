@@ -8,14 +8,22 @@ import requests
 import json
 import os
 
-from kano.utils import get_date_now, download_url
+from kano.utils import download_url, read_json
 from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state, save_app_state
+from kano.profile.paths import app_profiles_file
 
 from .connection import request_wrapper, content_type_json
 
-apps_private = ['kano-settings', 'test']
+app_profiles_data = read_json(app_profiles_file)
+
+
+def is_private(app_name):
+    private = False
+    if app_name in app_profiles_data and 'private' in app_profiles_data[app_name]:
+        private = app_profiles_data[app_name]['private']
+    return private
 
 
 class KanoWorldSession(object):
@@ -31,21 +39,12 @@ class KanoWorldSession(object):
         return request_wrapper('get', '/auth/session', session=self.session)
 
     def upload_profile_stats(self):
-        profile = load_profile()
-
-        # append profile data
         data = dict()
-        for k, v in profile.iteritems():
-            if k in ['save_date', 'username_linux', 'mac_addr', 'cpu_id']:
-                data[k] = v
-
-        # append xp and upload date
         data['xp'] = calculate_xp()
-        data['upload_date'] = get_date_now()
 
         stats = dict()
         for app in get_app_list():
-            if app not in apps_private:
+            if not is_private(app):
                 stats[app] = load_app_state(app)
 
         # append stats
@@ -85,14 +84,14 @@ class KanoWorldSession(object):
         for app, values in app_data.iteritems():
             if not values or (len(values.keys()) == 1 and 'save_date' in values):
                 continue
-            if app not in apps_private:
+            if not is_private(app):
                 save_app_state(app, values)
         return True, None
 
     def upload_private_data(self):
         data = dict()
         for app in get_app_list():
-            if app in apps_private:
+            if is_private(app):
                 data[app] = load_app_state(app)
 
         payload = dict()
@@ -116,7 +115,7 @@ class KanoWorldSession(object):
             return False, 'Data missing missing from payload!'
 
         for app, values in app_data.iteritems():
-            if app in apps_private:
+            if is_private(app):
                 save_app_state(app, values)
         return True, None
 

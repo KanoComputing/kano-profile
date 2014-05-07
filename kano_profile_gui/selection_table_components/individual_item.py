@@ -24,6 +24,7 @@ class IndividualItem():
         self.category = info["category"]
         self.subcategory = info["subcategory"]
         self.badge = info["badge_name"]
+        self.locked_badge = self.badge + "_locked"
         self.subcategory = info["subcategory"]
         self.locked = not info["unlocked"]
         bg_color = '#' + str(info["bg_color"])
@@ -53,12 +54,8 @@ class IndividualItem():
         self.button.connect("leave-notify-event", self.remove_hover_style, self.hover_box)
         self.button.override_background_color(Gtk.StateFlags.NORMAL, self.bg_color)
 
-        self.locked_box = Gtk.EventBox()
-        self.locked_box.get_style_context().add_class("locked_box")
-        self.locked_box.set_size_request(self.width, self.height)
         self.padlock = icons.set_from_name("padlock")
         self.locked_fixed = Gtk.Fixed()
-        self.locked_fixed.put(self.locked_box, 0, 0)
         self.locked_fixed.put(self.padlock, 95, 70)
 
         self.fixed = Gtk.Fixed()
@@ -91,12 +88,10 @@ class IndividualItem():
         return self.locked
 
     def add_locked_style(self):
-        self.locked_box.set_visible_window(True)
         self.padlock.set_visible(True)
         self.button.override_background_color(Gtk.StateFlags.NORMAL, self.grey_bg)
 
     def remove_locked_style(self):
-        self.locked_box.set_visible_window(False)
         self.padlock.set_visible(False)
         self.button.override_background_color(Gtk.StateFlags.NORMAL, self.bg_color)
 
@@ -118,7 +113,10 @@ class IndividualItem():
         self.hover_label.set_visible(False)
 
     def get_filename_at_size(self, width_of_image, height_of_image):
-        return get_image(self.category, self.subcategory, self.badge, str(width_of_image) + "x" + str(height_of_image))
+        if self.get_locked():
+            return get_image(self.category, self.subcategory, self.locked_badge, str(width_of_image) + "x" + str(height_of_image))
+        else:
+            return get_image(self.category, self.subcategory, self.badge, str(width_of_image) + "x" + str(height_of_image))
 
     def get_image_at_size(self):
         image = Gtk.Image()

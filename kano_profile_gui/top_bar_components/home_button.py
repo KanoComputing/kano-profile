@@ -14,13 +14,14 @@ import kano_profile_gui.components.constants as constants
 class HomeButton():
     def __init__(self, level_number):
 
-        self.possible_titles = ["White belt", "Quick learner", "Dragonslayer"]
-
         # Contains the info about the level and the image
         self.container = Gtk.Grid()
 
+        # Get username here
+        self.username = "Username"
+
         # Info about the different settings
-        self.title = Gtk.Label(self.possible_titles[level_number - 1])
+        self.title = Gtk.Label(self.username)
         self.title.get_style_context().add_class("home_button_title")
         self.title.set_alignment(xalign=0, yalign=1)
 
@@ -33,7 +34,7 @@ class HomeButton():
         self.button.get_style_context().add_class("home_button")
         self.button.set_can_focus(False)
         self.img = Gtk.Image()
-        self.img.set_from_file(constants.media + "/icons/Level-" + str(level_number) + ".png")
+        self.img.set_from_file(constants.media + "/images/avatars/avatar-base.png")
 
         self.container.attach(self.title, 2, 0, 1, 1)
         self.container.attach(self.description, 2, 1, 1, 1)

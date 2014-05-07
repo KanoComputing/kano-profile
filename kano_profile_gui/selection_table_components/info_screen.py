@@ -36,9 +36,6 @@ class InfoScreen():
 
         self.image = self.get_image_at_size()
         self.locked_image = self.get_image_at_size()
-        self.greybox = Gtk.EventBox()
-        self.greybox.get_style_context().add_class("locked_box")
-        self.greybox.set_size_request(self.width, self.height)
         self.padlock = icons.set_from_name("padlock")
 
         fixed = Gtk.Fixed()
@@ -46,7 +43,6 @@ class InfoScreen():
 
         locked_fixed = Gtk.Fixed()
         locked_fixed.put(self.locked_image, 0, 0)
-        locked_fixed.put(self.greybox, 0, 0)
         locked_fixed.put(self.padlock, 200, 200)
         locked_fixed.set_size_request(self.width, self.height)
 
@@ -114,8 +110,14 @@ class InfoScreen():
         self.header_label.set_text(self.current.title)
         self.info_text.refresh(self.current.title, self.current.get_description())
         self.set_locked()
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
+        self.refresh_bg_color()
         self.container.show_all()
+
+    def refresh_bg_color(self):
+        if self.current.get_locked():
+            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.grey_bg)
+        else:
+            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
 
     def get_filename_at_size(self):
         return self.current.get_filename_at_size(self.width, self.height)
@@ -130,8 +132,10 @@ class InfoScreen():
 
         if locked:
             self.fixed_container.add(self.locked_fixed)
+            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.grey_bg)
         else:
             self.fixed_container.add(self.fixed)
+            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
 
     def get_image_at_size(self):
         image = Gtk.Image()

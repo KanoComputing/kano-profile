@@ -134,6 +134,9 @@ GtkWindow GtkBox {
 .top_bar_label_active:hover {
     color: @top_bar_active;
 }
+.close_button {
+    padding:8px;
+}
 
 /* Home stats shown on home screen */
 .stat_number {
@@ -155,10 +158,6 @@ GtkWindow GtkBox {
 .padlock_label {
     font: Bariol Bold 15;
     color: @inactive_writing;
-}
-/* Locked screen over locked images */
-.locked_box {
-    background: alpha(#dddddd, 0.2);
 }
 /* Testing classes */
 .white {

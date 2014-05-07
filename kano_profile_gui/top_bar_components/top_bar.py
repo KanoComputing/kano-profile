@@ -50,7 +50,7 @@ class TopBar():
 
             container = Gtk.Box()
             container.pack_start(icon, False, False, 0)
-            container.pack_start(label, False, False, 0)
+            container.pack_start(label, False, False, 10)
 
             button = self.button_array[x]
             button.set_size_request(WINDOW_WIDTH / 5, self.height)
@@ -66,6 +66,7 @@ class TopBar():
         close_button.set_size_request(10, 10)
         close_button.set_can_focus(False)
         close_button.get_style_context().add_class("top_bar_button")
+        close_button.get_style_context().add_class("close_button")
         close_button.connect("button_press_event", close_window)
         close_button.set_alignment(xalign=1, yalign=0)
 

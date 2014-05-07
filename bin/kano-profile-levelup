@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+## TEST COMMAND
+# ./kano-profile-levelup level:5 badges:application:bug_buster environments:all:fields_of_ideas avatars:judoka:judoka_1 avatars:judoka:judoka_2
+
+import os
+import sys
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano.profile.badges import load_badge_rules
+
+all_rules = load_badge_rules()
+
+
+def parse_items(args):
+    new_level = None
+    new_items = dict()
+
+    for arg in args:
+        split = arg.split(':')
+        if split[0] == 'level':
+            new_level = int(split[1])
+        elif split[0] in ['badges', 'avatars', 'environments']:
+            category, subcat, item = split
+            try:
+                new_items.setdefault(category, dict()).setdefault(subcat, dict())[item] \
+                    = all_rules[category][subcat][item]
+            except Exception:
+                print 'item not found: {} {} {}'.format(category, subcat, item)
+    return new_level, new_items
+
+
+def main():
+    new_level, new_items = parse_items(sys.argv[1:])
+
+    if new_level:
+        print 'New level: {}'.format(new_level)
+
+    if new_items:
+        if 'badges' in new_items:
+            print 'New badges:'
+            for subcat, items in new_items['badges'].iteritems():
+                for item, rules in items.iteritems():
+                    print '\t{} {}'.format(item, rules['title'])
+
+        if 'avatars' in new_items:
+            print 'New avatars:'
+            for subcat, items in new_items['avatars'].iteritems():
+                for item, rules in items.iteritems():
+                    print '\t{} {}'.format(item, rules['title'])
+
+        if 'environments' in new_items:
+            print 'New environments:'
+            for subcat, items in new_items['environments'].iteritems():
+                for item, rules in items.iteritems():
+                    print '\t{} {}'.format(item, rules['title'])
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        sys.exit('Nothing to display!')
+    main()

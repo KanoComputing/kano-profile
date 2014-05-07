@@ -61,6 +61,7 @@ class InfoScreen():
         self.header_box.set_size_request(690 + 44, 44)
 
         self.info_text = info_text.InfoText(self.current.title, self.current.get_description(), self.equip)
+        self.info_text.set_equip_locked(self.get_locked())
 
         self.box = Gtk.Box()
         self.box.pack_start(self.fixed_container, False, False, 0)
@@ -112,6 +113,7 @@ class InfoScreen():
         self.set_locked()
         self.refresh_bg_color()
         self.container.show_all()
+        self.info_text.set_equip_locked(self.get_locked())
 
     def refresh_bg_color(self):
         if self.current.get_locked():
@@ -136,6 +138,9 @@ class InfoScreen():
         else:
             self.fixed_container.add(self.fixed)
             self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
+
+    def get_locked(self):
+        return self.current.get_locked()
 
     def get_image_at_size(self):
         image = Gtk.Image()

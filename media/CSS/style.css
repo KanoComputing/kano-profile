@@ -86,6 +86,10 @@ GtkWindow GtkBox {
     color: #ffffff;
     font: Bariol Bold 14px;
 }
+.green_button:insensitive {
+    background: #e1e1e1;
+    color: #ffffff;
+}
 .home_button {
     background: transparent;
     padding-left:20px;

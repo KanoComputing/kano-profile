@@ -13,6 +13,9 @@ from gi.repository import Gtk
 class InfoText():
     def __init__(self, heading, info, equip):
 
+        # self.equip decides whether we include an Equip button on the screen
+        self.equip = equip
+
         self.width = 274
         self.height = 448
         top_padding = 20
@@ -37,7 +40,7 @@ class InfoText():
         self.back_button_box = Gtk.Box()
         self.back_button_box.add(self.back_button)
 
-        if equip:
+        if self.equip:
             self.equip_button = Gtk.Button("EQUIP")
             self.equip_button.get_style_context().add_class("green_button")
             self.equip_button_box = Gtk.Box()
@@ -57,3 +60,10 @@ class InfoText():
     def refresh(self, heading, info):
         self.heading.set_text(heading)
         self.paragraph.get_buffer().set_text(info)
+
+    def set_equip_locked(self, locked):
+        if self.equip:
+            if locked:
+                self.equip_button.set_sensitive(False)
+            else:
+                self.equip_button.set_sensitive(True)

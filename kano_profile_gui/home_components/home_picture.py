@@ -32,7 +32,7 @@ class HomePicture():
             avatar_file = swags.swag_ui.categories[1].get_equipped().get_filename_at_size(self.avatar_width, self.avatar_height)
             self.avatar.set_from_file(avatar_file)
         else:
-            environment_filename = constants.media + "/images/environments/" + str(self.background_width) + "x" + str(self.background_height) + "/arcade_hall.png"
+            environment_filename = constants.media + "/images/environments/" + str(self.background_width) + "x" + str(self.background_height) + "/all/arcade_hall.png"
             print environment_filename
             avatar_filename = constants.media + "/images/avatars/" + str(self.avatar_width) + "x" + str(self.avatar_height) + "/video_dude/video_dude_1.png"
             print avatar_filename

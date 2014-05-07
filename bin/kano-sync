@@ -11,7 +11,7 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world import sync, login_using_token, backup_content, restore_content
+from kano.world.functions import sync, login_using_token, backup_content, restore_content
 from kano.utils import get_home, ensure_dir, run_cmd, delete_dir
 
 content_dirs = ['Snake-content', 'Test2-content', 'Test3-content']

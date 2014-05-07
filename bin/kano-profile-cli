@@ -99,5 +99,13 @@ elif sys.argv[1] == 'get_username':
     check_arg_len(1)
     print get_mixed_username()
 
+elif sys.argv[1] == 'get_stats':
+    check_arg_len(1)
+    print 'is_registered: {}'.format(int(is_registered()))
+    print 'get_avatar: {}'.format('judoka judoka_1')
+    print 'get_xp: {}'.format(calculate_xp())
+    print 'get_level: {}'.format(calculate_kano_level()[0])
+    print 'get_username: {}'.format(get_mixed_username())
+
 else:
     sys.exit("wrong usage")

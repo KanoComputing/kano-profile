@@ -6,9 +6,9 @@
 
 import os
 
-from ..utils import get_user, get_home_by_username
+from ..utils import get_user_unsudoed, get_home_by_username
 
-linux_user = get_user()
+linux_user = get_user_unsudoed()
 home_directory = get_home_by_username(linux_user)
 
 # setting up directories

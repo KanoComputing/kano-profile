@@ -22,7 +22,7 @@ for category, subcats in all_rules.iteritems():
     for subcat, items in subcats.iteritems():
         path = os.path.join(image_dir, category, 'originals', subcat)
 
-        existing_items = os.listdir(path)
+        existing_items = [f for f in os.listdir(path) if not f.endswith('_locked.png')]
         needed_items = ['{}.png'.format(f) for f in items.keys()]
 
         if sorted(existing_items) != sorted(needed_items):

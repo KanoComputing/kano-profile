@@ -6,71 +6,103 @@
 
 import os
 import sys
+import argparse
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world import sync, login_using_token, backup_content, restore_content
-from kano.utils import get_home, ensure_dir, run_cmd, delete_dir
-
-content_dirs = ['Snake-content', 'Test2-content', 'Test3-content']
+from kano.world.functions import sync, login_using_token, backup_content, restore_content
+from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file
+from kano.profile.paths import app_profiles_file
 
 home_dir = get_home()
-os.chdir(home_dir)
 
-if len(sys.argv) < 2:
-    sys.exit('Wrong usage!')
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--silent', action='store_true', help='silent mode')
+parser.add_argument('--sync', action='store_true', help='sync profile data')
+parser.add_argument('--backup', action='store_true', help='backup app content')
+parser.add_argument('--restore', action='store_true', help='restore app content')
+args = parser.parse_args()
 
-# login first with token, if not working then try with dialog
-success, value = login_using_token()
-if not success:
-    run_cmd(dir_path + '/bin/kano-login')
-    success, value = login_using_token()
-    if not success:
-        sys.exit('Login not possible, error: ' + value)
 
-# sync JSON data
-if 'sync' in sys.argv[1:]:
+def do_login():
+    # login first with token, if not working then try with dialog
+    # do not show dialog if in silent mode
+    login_success, value = login_using_token()
+    if not login_success:
+        if args.silent:
+            sys.exit()
+        else:
+            run_cmd(dir_path + '/bin/kano-login')
+            login_success, value = login_using_token()
+            if not login_success:
+                sys.exit('Login not possible, error: ' + value)
+
+
+def do_sync():
     success, value = sync()
     if not success:
         sys.exit('Sync not possible, error: ' + value)
 
-# backup content
-if 'backup_content' in sys.argv[1:]:
+
+def do_backup():
+    os.chdir(home_dir)
+
+    folders = []
+    app_profiles_data = read_json(app_profiles_file)
+    for key, values in app_profiles_data.iteritems():
+        if 'dir' in values:
+            dir_path = values['dir']
+            if os.path.exists(dir_path):
+                folders.append(values['dir'])
+    if not folders:
+        return
+
     tmp_dir = '/tmp/kanoprofile'
-    delete_dir(tmp_dir)
     ensure_dir(tmp_dir)
+    tmp_file = os.path.join(tmp_dir, 'backup.tar.gz')
+    delete_file(tmp_file)
 
-    tmp_file = os.path.join(tmp_dir, 'content.tar.gz')
-
-    folders = [d for d in content_dirs if os.path.exists(d)]
     tar_cmd = 'tar -czf {tmp_file} {folders}'.format(tmp_file=tmp_file, folders=' '.join(folders))
     _, e, _ = run_cmd(tar_cmd)
     if e:
-        print 'Error with backing up data: ' + e
+        print 'Error with compressing backup data: ' + e
 
     success, error = backup_content(tmp_file)
     if not success:
-        print 'Error with backing up data: ' + error
+        print 'Error with uploading backup data: ' + e
 
-    delete_dir(tmp_dir)
 
-# restore content
-if 'restore_content' in sys.argv[1:]:
+def do_restore():
+    os.chdir(home_dir)
+
     tmp_dir = '/tmp/kanoprofile'
-    delete_dir(tmp_dir)
     ensure_dir(tmp_dir)
-
-    tmp_file = os.path.join(tmp_dir, 'content.tar.gz')
+    tmp_file = os.path.join(tmp_dir, 'restore.tar.gz')
+    delete_file(tmp_file)
 
     success, error = restore_content(tmp_file)
     if not success:
-        print 'Error with restoring data: ' + error
+        print 'Error with downloading restore data: ' + error
 
-    tar_cmd = 'tar -xzf --skip-old-files {tmp_file}'.format(tmp_file=tmp_file)
+    tar_cmd = 'tar -kxzf {tmp_file}'.format(tmp_file=tmp_file)
     _, e, _ = run_cmd(tar_cmd)
     if e:
-        print 'Error with restoring data: ' + e
+        print 'Error with uncompressing restore data: ' + e
 
-    delete_dir(tmp_dir)
+
+if __name__ == '__main__':
+    if not (args.sync or args.backup or args.restore):
+        parser.print_help()
+
+    do_login()
+
+    if args.sync:
+        do_sync()
+
+    if args.backup:
+        do_backup()
+
+    if args.restore:
+        do_restore()

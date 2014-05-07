@@ -15,7 +15,7 @@ from kano.profile.apps import get_app_data_dir, load_app_state_variable
 from kano.profile.profile import set_unlocked
 from kano.profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
     calculate_kano_level, increment_app_state_variable_with_dialog
-from kano.world.functions import is_registered, get_mixed_username
+from kano.world.functions import is_registered, get_mixed_username, has_token
 from kano.utils import is_number
 
 variable_not_found_str = "VARIABLE_NOT_FOUND"
@@ -31,7 +31,11 @@ if __name__ != '__main__':
     sys.exit("This is a script, do not import it as a module!")
 
 if len(sys.argv) == 1:
-    sys.exit("Wrong usage, needs an argument")
+    help = 'Wrong usage, needs an argument\n'
+    help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
+    help += 'increment_app_state_variable, unlock, lock, is_registered, get_avatar, get_xp\n'
+    help += 'get_level, get_username, has_token, get_stats'
+    sys.exit(help)
 
 if sys.argv[1] == 'get_app_data_dir':
     check_arg_len(2)
@@ -98,6 +102,19 @@ elif sys.argv[1] == 'get_level':
 elif sys.argv[1] == 'get_username':
     check_arg_len(1)
     print get_mixed_username()
+
+elif sys.argv[1] == 'has_token':
+    check_arg_len(1)
+    print int(has_token())
+
+elif sys.argv[1] == 'get_stats':
+    check_arg_len(1)
+    print 'is_registered: {}'.format(int(is_registered()))
+    print 'get_avatar: {}'.format('judoka judoka_1')
+    print 'get_xp: {}'.format(calculate_xp())
+    print 'get_level: {}'.format(calculate_kano_level()[0])
+    print 'get_username: {}'.format(get_mixed_username())
+    print 'has_token: {}'.format(int(has_token()))
 
 else:
     sys.exit("wrong usage")

@@ -156,11 +156,17 @@ def compare_badges_dict(old, new):
     if old == new:
         return []
     changes = dict()
-    for group, items in new.iteritems():
-        for item, value in items.iteritems():
-            if group in old and item in old[group] and \
-               old[group][item] is False and value is True:
-                changes.setdefault(group, []).append(item)
+
+    for category, subcats in new.iteritems():
+        for subcat, items in subcats.iteritems():
+            for item, rules in items.iteritems():
+                try:
+                    if old[category][subcat][item]['achieved'] is False and \
+                       new[category][subcat][item]['achieved'] is True:
+                        changes.setdefault(category, dict()).setdefault(subcat, dict())[item] \
+                            = new[category][subcat][item]
+                except Exception:
+                    pass
     return changes
 
 
@@ -173,22 +179,28 @@ def save_app_state_with_dialog(app_name, data):
     new_level, _ = calculate_kano_level()
     new_badges = calculate_badges()
 
-    # new level dialog
-    if is_gui() and old_level != new_level:
-        cmd = '{bin_dir}/kano-profile-new-badges-dialog newlevel "{new_level}"'.format(bin_dir=bin_dir, new_level=new_level)
-        run_cmd(cmd)
+    # new level
+    new_level_str = ''
+    if old_level != new_level:
+        new_level_str = 'level:{}'.format(new_level)
 
-    # new badges dialog
+    # new items
+    new_items_str = ''
     badge_changes = compare_badges_dict(old_badges, new_badges)
-    if is_gui() and badge_changes:
-        changes_list = list()
-        for group, items in badge_changes.iteritems():
-            for item in items:
-                changes_list.append((group, item))
+    if badge_changes:
+        for category, subcats in badge_changes.iteritems():
+            for subcat, items in subcats.iteritems():
+                for item, rules in items.iteritems():
+                    new_items_str += ' {}:{}:{}'.format(category, subcat, item)
 
-        chg_str = ' '.join(['{}:{}'.format(group, item) for group, item in changes_list])
-        cmd = '{bin_dir}/kano-profile-new-badges-dialog newbadges {chg_str}'.format(bin_dir=bin_dir, chg_str=chg_str)
-        run_cmd(cmd)
+    if not new_level_str and not new_items_str:
+        return
+
+    if is_gui():
+        cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
+            .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
+        # TODO remove print
+        print run_cmd(cmd)[0]
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
@@ -203,7 +215,7 @@ def increment_app_state_variable_with_dialog(app_name, variable, value):
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
-    if not data[variable]:
+    if variable not in data:
         data[variable] = 0
     data[variable] += value
     save_app_state_with_dialog(app_name, data)

@@ -203,7 +203,7 @@ def increment_app_state_variable_with_dialog(app_name, variable, value):
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
-    if not data[variable]:
+    if variable not in data:
         data[variable] = 0
     data[variable] += value
     save_app_state_with_dialog(app_name, data)

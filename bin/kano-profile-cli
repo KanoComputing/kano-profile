@@ -112,6 +112,5 @@ elif sys.argv[1] == 'get_stats':
     print 'get_username: {}'.format(get_mixed_username())
     print 'has_token: {}'.format(int(has_token()))
 
-
 else:
     sys.exit("wrong usage")

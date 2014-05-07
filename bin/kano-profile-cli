@@ -31,7 +31,11 @@ if __name__ != '__main__':
     sys.exit("This is a script, do not import it as a module!")
 
 if len(sys.argv) == 1:
-    sys.exit("Wrong usage, needs an argument")
+    help = 'Wrong usage, needs an argument\n'
+    help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
+    help += 'increment_app_state_variable, unlock, lock, is_registered, get_avatar, get_xp\n'
+    help += 'get_level, get_username, has_token, get_stats'
+    sys.exit(help)
 
 if sys.argv[1] == 'get_app_data_dir':
     check_arg_len(2)

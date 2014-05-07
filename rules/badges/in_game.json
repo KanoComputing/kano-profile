@@ -36,7 +36,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-pong", "level", 5]],
+    "targets": [["make-pong", "level", 5]],
     "title": "Pong Painter"
   },
   "rule_breaker": {

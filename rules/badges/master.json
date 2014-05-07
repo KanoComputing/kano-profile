@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-world", "setup_completed", 1]],
+    "targets": [["kano-settings", "completed", 1]],
     "title": "Computer Commander"
   },
   "kano_apprentice": {
@@ -13,7 +13,7 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
     "push_back": true,
-    "targets": [["kano-world", "num_offline_badges", 15]],
+    "targets": [["kano-profile", "num_offline_badges", 15]],
     "title": "Kano Apprentice"
   },
   "kano_master": {
@@ -22,7 +22,7 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
     "push_back": true,
-    "targets": [["kano-world", "num_offline_badges", -1]],
+    "targets": [["kano-profile", "num_offline_badges", -1]],
     "title": "Kano Master"
   },
   "minecraft_master": {
@@ -62,7 +62,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["make-video", "level", -1]],
+    "targets": [["kano-video", "level", -1]],
     "title": "Video Voyager"
   }
 }

@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-world", "shares", 5]],
+    "targets": [["online", "shares", 5]],
     "title": "Community Champion"
   },
   "hello_world": {
@@ -12,7 +12,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-world", "chats-sent", 1]],
+    "targets": [["online", "chats-sent", 1]],
     "title": "Hello World"
   },
   "staff_pick": {
@@ -20,7 +20,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-world", "staff_picks", 1]],
+    "targets": [["online", "staff_picks", 1]],
     "title": "Staff Pick"
   },
   "street_cred": {
@@ -28,7 +28,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-world", "shares", 1]],
+    "targets": [["online", "shares", 1]],
     "title": "Street Cred"
   },
   "talent_tracker": {
@@ -36,7 +36,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
-    "targets": [["kano-world", "you_follow", 10]],
+    "targets": [["online", "you_follow", 10]],
     "title": "Talent Tracker"
   }
 }

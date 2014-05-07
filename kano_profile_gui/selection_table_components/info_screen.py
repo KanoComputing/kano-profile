@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+# info_screen2.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# UI over item_group
+
+#!/usr/bin/env python
+
 # info_screen.py
 #
 # Copyright (C) 2014 Kano Computing Ltd.
@@ -7,7 +16,7 @@
 #
 # If an environment/avatar/badge is selected, we go to this screen to show more info
 
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text as info_text
 import kano_profile_gui.components.icons as icons
 
@@ -15,52 +24,40 @@ import kano_profile_gui.components.icons as icons
 class InfoScreen():
     # Pass array of pictures into class then it can control it's own buttons
     # The current item is the screen we're currenty on
-    def __init__(self, category, current_item, equip):
+    def __init__(self, item_group):
 
         # image width and height
         self.width = 460
         self.height = 448
 
-        # Boolean we pass to the text box to decide whether we put an equip button
-        self.equip = equip
-
         # Main container of info screen
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        self.category = category
-        self.array = category.pics
-        self.current = current_item
+
+        self.items = item_group
 
         self.background = Gtk.EventBox()
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.items.get_color())
         self.background.set_size_request(self.width, self.height)
 
-        self.image = self.get_image_at_size()
-        self.locked_image = self.get_image_at_size()
-        self.padlock = icons.set_from_name("padlock")
+        # For now, just show either the locked image or the unlocked image
+        self.image = Gtk.Image()
+        self.get_image_at_size()
 
         fixed = Gtk.Fixed()
         fixed.put(self.image, 0, 0)
 
-        locked_fixed = Gtk.Fixed()
-        locked_fixed.put(self.locked_image, 0, 0)
-        locked_fixed.put(self.padlock, 200, 200)
-        locked_fixed.set_size_request(self.width, self.height)
-
         self.fixed = self.create_fixed(fixed)
-        self.locked_fixed = self.create_fixed(locked_fixed)
         self.fixed_container = Gtk.Box()
-
-        # Make the item who's info screen it is the selected item
-        self.category.set_selected(self.current)
+        self.fixed_container.pack_start(self.fixed, False, False, 0)
 
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
-        self.header_label = Gtk.Label(self.current.title)
+        self.header_label = Gtk.Label(self.items.get_visible().title)
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        self.info_text = info_text.InfoText(self.current.title, self.current.get_description(), self.equip)
+        self.info_text = info_text.InfoText(self.get_visible().title, self.get_visible().get_description(), self.get_visible().get_equipable())
         self.info_text.set_equip_locked(self.get_locked())
 
         self.box = Gtk.Box()
@@ -71,8 +68,6 @@ class InfoScreen():
 
         self.container.pack_start(self.header_box, False, False, 0)
         self.container.pack_start(self.background, False, False, 0)
-
-        self.set_locked()
 
     def create_fixed(self, image):
         prev_arrow = icons.set_from_name("prev_arrow")
@@ -94,61 +89,46 @@ class InfoScreen():
 
         return fixed
 
+    def set_visible(self, item):
+        self.items.set_visible(item)
+        self.get_filename_at_size()
+
+    def get_visible(self):
+        return self.items.get_visible()
+
+    def get_color(self):
+        return self.get_visible().get_color()
+
     def go_to_next(self, arg1=None, arg2=None):
-        index = self.array.index(self.current)
-        self.current = self.array[(index + 1) % len(self.array)]
+        self.items.go_to(1)
         self.refresh()
 
     def go_to_prev(self, arg1=None, arg2=None):
-        index = self.array.index(self.current)
-        self.current = self.array[(index - 1) % len(self.array)]
+        self.items.go_to(-1)
         self.refresh()
 
     def refresh(self):
-        self.category.set_selected(self.current)
-        self.image.set_from_pixbuf(self.get_pixbuf_at_size())
-        self.locked_image.set_from_pixbuf(self.get_pixbuf_at_size())
-        self.header_label.set_text(self.current.title)
-        self.info_text.refresh(self.current.title, self.current.get_description())
-        self.set_locked()
+        current = self.items.get_visible()
+        self.items.set_visible(current)
+        self.image.set_from_file(self.get_filename_at_size())
+        self.header_label.set_text(current.title)
+        self.info_text.refresh(current.title, current.get_description())
         self.refresh_bg_color()
         self.container.show_all()
         self.info_text.set_equip_locked(self.get_locked())
 
     def refresh_bg_color(self):
-        if self.current.get_locked():
-            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.grey_bg)
-        else:
-            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.items.get_visible().get_color())
 
     def get_filename_at_size(self):
-        return self.current.get_filename_at_size(self.width, self.height)
+        return self.items.get_visible().get_filename_at_size(self.width, self.height)
 
-    def set_locked(self, locked=None):
-        if locked is None:
-            locked = self.current.locked
-        else:
-            self.current.locked = locked
-        for child in self.fixed_container.get_children():
-            self.fixed_container.remove(child)
-
-        if locked:
-            self.fixed_container.add(self.locked_fixed)
-            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.grey_bg)
-        else:
-            self.fixed_container.add(self.fixed)
-            self.background.override_background_color(Gtk.StateFlags.NORMAL, self.current.bg_color)
+    def refresh_background(self):
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible.get_color())
 
     def get_locked(self):
-        return self.current.get_locked()
+        return self.get_visible().get_locked()
 
     def get_image_at_size(self):
-        image = Gtk.Image()
         filename = self.get_filename_at_size()
-        image.set_from_file(filename)
-        return image
-
-    def get_pixbuf_at_size(self):
-        filename = self.get_filename_at_size()
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
-        return pixbuf
+        self.image.set_from_file(filename)

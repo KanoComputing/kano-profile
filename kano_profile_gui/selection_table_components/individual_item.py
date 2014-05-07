@@ -9,41 +9,26 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk, Gdk, GdkPixbuf
-from kano_profile_gui.images import get_image
+from gi.repository import Gtk  # , Gdk, GdkPixbuf
 import kano_profile_gui.components.icons as icons
 
 
 class IndividualItem():
-    def __init__(self, info):
+    def __init__(self, items):
         # info is a dictionary containing item and group which we use to find filename, heading, description, colour of background
 
         self.width = 230
         self.height = 180
         self.label_height = 44
-        self.category = info["category"]
-        self.subcategory = info["subcategory"]
-        self.badge = info["badge_name"]
-        self.locked_badge = self.badge + "_locked"
-        self.subcategory = info["subcategory"]
-        self.locked = not info["unlocked"]
-        bg_color = '#' + str(info["bg_color"])
-        self.bg_color = Gdk.RGBA()
-        self.bg_color.parse(bg_color)
-        self.grey_bg = Gdk.RGBA()
-        self.grey_bg.parse("#e7e7e7")
+        self.items = items
 
-        # split info into members
-        self.title = info["title"]
-        self.locked_description = info["locked_description"]
-        self.unlocked_description = info["unlocked_description"]
-
-        self.image = self.get_image_at_size()
+        self.image = Gtk.Image()
+        self.get_image_at_size()
 
         self.hover_box = Gtk.EventBox()
         self.hover_box.get_style_context().add_class("hover_box")
         self.hover_box.set_visible_window(False)
-        self.hover_label = Gtk.Label(self.title)
+        self.hover_label = Gtk.Label(self.get_title())
         self.hover_label.get_style_context().add_class("hover_label")
         self.hover_box.add(self.hover_label)
         self.hover_box.set_size_request(self.width, self.label_height)
@@ -52,7 +37,7 @@ class IndividualItem():
         self.button.set_size_request(self.width, self.height)
         self.button.connect("enter-notify-event", self.add_hover_style, self.hover_box)
         self.button.connect("leave-notify-event", self.remove_hover_style, self.hover_box)
-        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.bg_color)
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible().get_color())
 
         self.padlock = icons.set_from_name("padlock")
         self.locked_fixed = Gtk.Fixed()
@@ -60,48 +45,48 @@ class IndividualItem():
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)
-
         self.fixed.put(self.hover_box, 0, self.height - self.label_height)
         self.fixed.put(self.image, 0, 0)
         self.fixed.put(self.locked_fixed, 0, 0)
 
         self.button.add(self.fixed)
 
-        # No item can be equipped (see extension of this class to equip items)
-        self.equipable = False
+        if self.get_visible().get_equipable():
+             # Event box containing the time and title of the equipped item
+            self.equipped_box = Gtk.EventBox()
+            self.equipped_box.get_style_context().add_class("equipped_box")
+            self.equipped_box.set_visible_window(False)
+            self.equipped_label = Gtk.Label(self.get_title())
+            self.equipped_box.add(self.equipped_label)
+            self.equipped_box.set_size_request(self.width, self.label_height)
 
-        # We're not in the item's info screen
-        self.selected = False
+            # Event box containing the EQUIPPED label
+            self.equipped_label2 = Gtk.Label("EQUIPPED")
+            self.equipped_box2 = Gtk.EventBox()
+            self.equipped_box2.get_style_context().add_class("equipped_box2")
+            self.equipped_box2.add(self.equipped_label2)
+            self.equipped_box2.set_size_request(115, 30)
 
-        self.set_locked(self.locked)
+            # Border box of equipped style
+            self.equipped_border = Gtk.EventBox()
+            self.equipped_border.get_style_context().add_class("equipped_border")
+            self.equipped_border.set_size_request(125, 40)
+
+            self.fixed.put(self.equipped_box, 0, self.height - self.label_height)
+            self.fixed.put(self.equipped_border, 10, 10)
+            self.fixed.put(self.equipped_box2, 15, 15)
 
     # Sets whether the picture has a padlock in front or not.
     # locked = True or False
     def set_locked(self, locked):
-        self.locked = locked
-        if self.locked:
-            self.add_locked_style()
-        else:
-            self.remove_locked_style()
+        self.change_locked_style()
 
     def get_locked(self):
-        return self.locked
+        return self.get_visible().get_locked()
 
-    def add_locked_style(self):
-        self.padlock.set_visible(True)
-        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.grey_bg)
-
-    def remove_locked_style(self):
-        self.padlock.set_visible(False)
-        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.bg_color)
-
-    # Sets whether the picture is selected, ie whether we are in the selection screen
-    # selected = True or False
-    def set_selected(self, selected):
-        self.selected = selected
-
-    def get_selected(self):
-        return self.selected
+    def change_locked_style(self):
+        self.padlock.set_visible(self.get_locked())
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible().get_color())
 
     # This function contains the styling applied to the picture when the mouse hovers over it.
     def add_hover_style(self, arg1=None, arg2=None, hover_box=None):
@@ -113,24 +98,51 @@ class IndividualItem():
         self.hover_label.set_visible(False)
 
     def get_filename_at_size(self, width_of_image, height_of_image):
-        if self.get_locked():
-            return get_image(self.category, self.subcategory, self.locked_badge, str(width_of_image) + "x" + str(height_of_image))
-        else:
-            return get_image(self.category, self.subcategory, self.badge, str(width_of_image) + "x" + str(height_of_image))
+        return self.get_visible().get_filename_at_size(width_of_image, height_of_image)
 
     def get_image_at_size(self):
-        image = Gtk.Image()
         filename = self.get_filename_at_size(self.width, self.height)
-        image.set_from_file(filename)
-        return image
+        self.image.set_from_file(filename)
 
-    def get_pixbuf_at_size(self):
-        filename = self.get_filename_at_size(self.width, self.height)
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file(filename)
-        return pixbuf
+    def get_title(self):
+        return self.get_visible().title
 
     def get_description(self):
-        if self.locked:
-            return self.locked_description
-        else:
-            return self.unlocked_description
+        return self.get_visible().get_description()
+
+    # Sets the visible picture to be equipped
+    def set_equipped_item(self):
+        item = self.get_visible()
+        self.items.set_equipped_item(item)
+        self.change_equipped_style()
+        self.get_image_at_size()
+
+    def unequip_all(self):
+        self.items.unequip_all()
+
+    # Get the equipped item
+    def get_equipped_item(self):
+        return self.items.get_equipped()
+
+    # Get whether the visible item is equipped
+    def get_equipped(self):
+        return self.get_visible().get_equipped()
+
+    def set_visible(self, visible):
+        self.items.set_visible(visible)
+        self.get_image_at_size()
+        self.image.show()
+
+    def get_visible(self):
+        return self.items.get_visible()
+
+    # This function contains the styling applied to the picture when it is equipped.
+    def change_equipped_style(self, arg1=None, arg2=None):
+        self.equipped_box.set_visible_window(self.get_equipped())
+        self.equipped_label.set_visible(self.get_equipped())
+        self.equipped_box2.set_visible_window(self.get_equipped())
+        self.equipped_label2.set_visible(self.get_equipped())
+        self.equipped_border.set_visible_window(self.get_equipped())
+        if not self.get_visible().equipped:
+            self.hover_box.set_visible_window(False)
+            self.hover_label.set_visible(False)

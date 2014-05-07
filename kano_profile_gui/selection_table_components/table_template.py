@@ -35,7 +35,7 @@ class TableTemplate():
 
         for cat in self.categories:
             for pic in cat.pics:
-                pic.button.connect("button_press_event", self.go_to_info_screen, cat, pic)
+                pic.button.connect("button_press_event", self.go_to_info_screen, pic, cat)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add_with_viewport(self.categories[0].grid)
@@ -61,8 +61,8 @@ class TableTemplate():
         self.scrolledwindow.show_all()
         self.hide_labels()
 
-    def go_to_info_screen(self, arg1=None, arg2=None, cat=None, selected_item=None):
-        selected_item_screen = info_screen.InfoScreen(cat, selected_item, self.equipable)
+    def go_to_info_screen(self, arg1=None, arg2=None, pic=None, cat=None):
+        selected_item_screen = info_screen.InfoScreen(pic.items)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)
@@ -71,15 +71,15 @@ class TableTemplate():
             # This doesn't work because we're not changing the selected_item
             # We need to set a flag or self.selected = True
             # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
-            selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, cat)
+            selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, pic, cat)
         self.container.show_all()
 
         # Remove locked images from selected item screen
-        selected_item_screen.set_locked()
+        #selected_item_screen.set_locked()
 
-    def equip(self, arg1=None, arg2=None, cat=None):
-        selected_item = cat.get_selected()
-        cat.set_equipped(selected_item)
+    def equip(self, arg1=None, arg2=None, pic=None, cat=None):
+        cat.unequip_all()
+        pic.set_equipped_item()
         self.leave_info_screen()
 
     def leave_info_screen(self, arg1=None, arg2=None):

@@ -10,7 +10,7 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.individual_item as indiv
-import kano_profile_gui.selection_table_components.equipable as equip
+from kano_profile_gui.selection_table_components import item_info, item_group
 from kano.profile.badges import calculate_badges
 #from .images import get_image
 
@@ -21,6 +21,7 @@ class SelectionTable():
         self.equipped = None
         self.buttons = []
         self.pics = []
+        self.item_groups = []
 
         number_of_badges = 0
         category_dict = calculate_badges()[category_name]
@@ -34,18 +35,29 @@ class SelectionTable():
         # for avatar_cat, avatar_items in all_avatars.iteritems():
         #   print avatar_cat, avatar_items
 
-        for category, items in category_dict.iteritems():
-            for badge, properties in items.iteritems():
-                folder_name = category
-                filename = badge
+        for folder_name, items in category_dict.iteritems():
+            item_array = []
+            for filename, properties in items.iteritems():
                 cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
-                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
-                if self.equipable:
-                    picture = equip.Equipable(cat_dict)
+                            "unlocked": True, "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
+
+                item = item_info.ItemInfo(cat_dict)
+
+                if category_name != "avatars":
+                    group = item_group.ItemGroup([item])
+                    pic = indiv.IndividualItem(group)
+                    self.pics.append(pic)
+                    number_of_badges = number_of_badges + 1
                 else:
-                    picture = indiv.IndividualItem(cat_dict)
-                self.pics.append(picture)
+                    item_array.append(item)
+
+            if category_name == "avatars":
+                group = item_group.ItemGroup(item_array)
+                self.item_groups.append(group)
+                pic = indiv.IndividualItem(group)
+                self.pics.append(pic)
+
                 number_of_badges = number_of_badges + 1
 
         #self.info = info
@@ -71,58 +83,25 @@ class SelectionTable():
             row += 1
 
         # Read config file/ JSON and find equipped picture.  Default to first one
-        self.set_equipped(self.pics[0])
+        #self.set_equipped(self.pics[0])
         self.grid.set_row_spacing(0)
         self.grid.set_column_spacing(0)
-
-    def set_selected(self, item):
-        for pic in self.pics:
-            pic.set_selected(False)
-        item.set_selected(True)
-
-    def get_selected(self):
-        for pic in self.pics:
-            if pic.get_selected():
-                return pic
-        return None
-
-    def set_equipped(self, pic=None):
-        if self.equipable:
-            if pic is not None and not pic.get_locked():
-                self.equipped = pic
-                pic.set_equipped(True)
-                self.set_equipped_style()
-                return
-
-            for pic in self.pics:
-                if pic.get_equipped():
-                    self.equipped = pic
-                    self.set_equipped_style()
-                    return
-
-            self.equipped = None
-            self.set_equipped_style()
-
-    def get_equipped(self):
-        if self.equipable:
-            return self.equipped
-
-    def set_equipped_style(self):
-        if self.equipable:
-            for pic in self.pics:
-                pic.remove_equipped_style()
-                pic.set_equipped(False)
-
-            if self.equipped is not None:
-                self.equipped.add_equipped_style()
-                self.equipped.set_equipped(True)
 
     def hide_labels(self):
         for pic in self.pics:
             pic.hover_box.set_visible_window(False)
             pic.hover_label.set_visible(False)
             if self.equipable and not pic.get_equipped():
-                pic.remove_equipped_style()
+                pic.change_equipped_style()
             if not pic.get_locked():
-                pic.remove_locked_style()
+                pic.change_locked_style()
+
+    def unequip_all(self):
+        for i in self.pics:
+            i.unequip_all()
+
+    def get_equipped(self):
+        for pic in self.pics:
+            if pic.get_equipped():
+                return pic
 

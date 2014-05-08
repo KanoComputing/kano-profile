@@ -95,6 +95,7 @@ def do_restore():
 if __name__ == '__main__':
     if not (args.sync or args.backup or args.restore):
         parser.print_help()
+        sys.exit()
 
     do_login()
 

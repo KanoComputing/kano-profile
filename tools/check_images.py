@@ -18,15 +18,20 @@ from kano_profile_gui.paths import image_dir
 
 all_rules = load_badge_rules()
 
+ok = True
 for category, subcats in all_rules.iteritems():
     for subcat, items in subcats.iteritems():
         path = os.path.join(image_dir, category, 'originals', subcat)
 
-        existing_items = [f for f in os.listdir(path) if not f.endswith('_locked.png')]
-        needed_items = ['{}.png'.format(f) for f in items.keys()]
+        existing_items = sorted([f for f in os.listdir(path) if not f.endswith('_locked.png')])
+        needed_items = sorted(['{}.png'.format(f) for f in items.keys()])
 
         if sorted(existing_items) != sorted(needed_items):
             print 'Existing images:\n{}'.format(', '.join(existing_items))
             print 'Needed images:\n{}'.format(', '.join(needed_items))
             print
+            ok = False
+
+if ok:
+    print 'All images are OK!'
 

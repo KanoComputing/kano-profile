@@ -15,6 +15,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
+from kano.world.functions import get_mixed_username
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
@@ -33,7 +34,9 @@ class MainWindow(Gtk.Window):
         self.state = 0
 
         # Get username
-        self.title = Gtk.Label("Great job!")
+        username = get_mixed_username()
+
+        self.title = Gtk.Label("Great job " + str(username) + "!")
         self.title.get_style_context().add_class("alert_title")
         self.description = Gtk.Label("")
         self.description.get_style_context().add_class("alert_description")
@@ -95,7 +98,6 @@ class MainWindow(Gtk.Window):
                     filename = get_image(category, subcat, item, size_folder)
                     text = rules["title"]
                     color_string = '#' + rules["bg_color"]
-                    print color_string
                     background_color.parse(color_string)
         else:
             self.state = self.state + 1

@@ -113,7 +113,7 @@ def register_user(button, event, username_entry, email_entry, password_entry):
 
     # This needs to be adjusted depending on the age of the user
     else:
+        win.update()
         account_confirm.activate(win, box)
-        win.state = win.state + 1
 
 

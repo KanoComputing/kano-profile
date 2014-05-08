@@ -77,5 +77,5 @@ def update(arg1=None, arg2=None, gender_combo=None):
 
     active_text = gender_combo.get_active_text()
     win.gender = active_text
+    win.update()
     birthday.activate(win, box)
-    win.state = win.state + 1

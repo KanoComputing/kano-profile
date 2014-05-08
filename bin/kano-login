@@ -71,13 +71,12 @@ class MainWindow(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
         self.top_bar = top_bar.Top_bar(self.WINDOW_WIDTH)
-        self.top_bar.prev_button.connect("clicked", self.on_prev)
-        self.top_bar.next_button.connect("clicked", self.on_next)
 
         self.grid.attach(self.top_bar.background, 0, 0, 3, 1)
         self.grid.attach(self.box, 1, 1, 1, 1)
 
         self.top_bar.set_prev_callback(self.on_prev)
+        self.top_bar.set_next_callback(self.on_next)
 
         # init home screen
         if flow is not None:
@@ -86,32 +85,48 @@ class MainWindow(Gtk.Window):
 
         # go directly to login
         else:
-            for i in self.box.get_children():
-                self.box.remove(i)
-
+            self.clear_box()
             login.activate(self, self.box)
-            self.show_all()
 
-    def on_prev(self, arg=None):
+        self.show_all()
+
+    def enable_prev(self):
+        self.top_bar.enable_prev()
+
+    def enable_next(self):
+        self.top_bar.enable_next()
+
+    def disable_prev(self):
+        self.top_bar.disable_prev()
+
+    def disable_next(self):
+        self.top_bar.disable_next()
+
+    # Updates the state of the window on clicking the update button
+    # e.g. whether the prev and next buttons are enabled or disabled
+    def update(self):
+        self.enable_prev()
+        self.disable_next()
+        self.state = self.state + 1
+
+    def on_prev(self, arg1=None, arg2=None):
         self.clear_box()
         self.state = self.state - 1
-        print self.state
         module = refs[self.state]
         if self.state == 0:
             module = refs[0][self.flow]
             self.top_bar.disable_prev()
-        self.goto(self.box, module)
+        self.goto(module)
 
-    def on_next(self, arg=None):
-        self.clear_box()
+    def on_next(self, arg1=None, arg2=None):
         self.state = self.state + 1
         module = refs[self.state]
+        self.top_bar.enable_prev()
         if self.state == 0:
             module = refs[0][self.flow]
-        self.on_prev.set_sensitive(False)
-        self.goto(self.box, module)
+        self.goto(module)
 
-    def goto(self, box, module):
+    def goto(self, module):
         self.clear_box()
         module.activate(self, self.box)
 

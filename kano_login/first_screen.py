@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 # first_screen.py
@@ -47,8 +48,8 @@ def activate(_win, _box):
 def update(widget, event):
     global win, box
 
+    win.update()
     gender.activate(win, box)
-    win.state = win.state + 1
 
 
 def close_window(widget, event):

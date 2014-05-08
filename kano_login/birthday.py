@@ -74,8 +74,8 @@ class Birthday():
         if age == -1:
             return
         self.win.age = age
+        win.update()
         register.activate(self.win, self.box)
-        self.win.state = self.win.state + 1
 
     def calculate_age(self):
         try:

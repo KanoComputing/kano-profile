@@ -28,9 +28,10 @@ class MainWindow(Gtk.Window):
     def __init__(self, new_level, new_items):
         Gtk.Window.__init__(self, title='Kano-Success')
 
-        self.image_width = 230
-        self.image_height = 180
-        self.set_size_request(self.image_width, self.image_width)
+        self.image_width = 590
+        self.image_height = 270
+        self.window_height = 440
+        self.set_size_request(self.image_width, self.window_height)
         self.state = 0
 
         # Get username
@@ -42,6 +43,10 @@ class MainWindow(Gtk.Window):
         self.description.get_style_context().add_class("alert_description")
         self.set_position(Gtk.WindowPosition.CENTER)
 
+        self.label_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.label_container.pack_start(self.title, False, False, 0)
+        self.label_container.pack_start(self.description, False, False, 0)
+
         self.set_decorated(False)
         self.set_resizable(False)
 
@@ -50,7 +55,7 @@ class MainWindow(Gtk.Window):
         self.button_box = Gtk.Box()
         self.button_box.add(self.button)
         self.button_alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
-        self.button_alignment.set_padding(20, 0, (self.image_width / 2) - 40, 0)
+        self.button_alignment.set_padding(00, 0, (self.image_width / 2) - 40, 0)
         self.button_alignment.add(self.button_box)
         self.button.connect("clicked", self.go_to_next, new_items)
 
@@ -62,8 +67,7 @@ class MainWindow(Gtk.Window):
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.background, False, False, 0)
-        self.box.pack_start(self.title, False, False, 10)
-        self.box.pack_start(self.description, False, False, 0)
+        self.box.pack_start(self.label_container, False, False, 20)
         self.box.pack_start(self.button_alignment, False, False, 0)
 
         self.add(self.box)
@@ -71,6 +75,9 @@ class MainWindow(Gtk.Window):
         if new_level:
             # Get image, title and label for new level
             self.set_description("new_level", str(new_level))
+            # temporary filename for level up
+            filename = get_image("level", "", "level-1", str(self.image_width) + 'x' + str(self.image_height))
+            self.image.set_from_file(filename)
         else:
             self.go_to_next(None, new_items)
 
@@ -105,6 +112,13 @@ class MainWindow(Gtk.Window):
             return
 
         self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
+
+        # Placeholder image for badges and avatars:
+        if category == "badges":
+            filename = get_image(category, "", "badge", size_folder)
+        elif category == "avatars":
+            filename = get_image(category, "", "avatar", size_folder)
+
         self.image.set_from_file(filename)
         self.set_description(category, text)
         self.state = self.state + 1

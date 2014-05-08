@@ -32,6 +32,9 @@ class MainWindow(Gtk.Window):
         self.image_height = 270
         self.window_height = 440
         self.set_size_request(self.image_width, self.window_height)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_decorated(False)
+        self.set_resizable(False)
         self.state = 0
 
         # Get username
@@ -41,14 +44,10 @@ class MainWindow(Gtk.Window):
         self.title.get_style_context().add_class("alert_title")
         self.description = Gtk.Label("")
         self.description.get_style_context().add_class("alert_description")
-        self.set_position(Gtk.WindowPosition.CENTER)
 
         self.label_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.label_container.pack_start(self.title, False, False, 0)
         self.label_container.pack_start(self.description, False, False, 0)
-
-        self.set_decorated(False)
-        self.set_resizable(False)
 
         self.button = Gtk.Button("GOT IT")
         self.button.get_style_context().add_class("green_button")

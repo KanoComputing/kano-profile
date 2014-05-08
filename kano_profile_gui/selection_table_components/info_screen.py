@@ -70,22 +70,24 @@ class InfoScreen():
         self.container.pack_start(self.background, False, False, 0)
 
     def create_fixed(self, image):
-        prev_arrow = icons.set_from_name("prev_arrow")
-        next_arrow = icons.set_from_name("next_arrow")
-
-        prevb = Gtk.Button()
-        prevb.set_image(prev_arrow)
-        prevb.get_style_context().add_class("transparent")
-        prevb.connect("button_press_event", self.go_to_prev)
-        nextb = Gtk.Button()
-        nextb.set_image(next_arrow)
-        nextb.get_style_context().add_class("transparent")
-        nextb.connect("button_press_event", self.go_to_next)
-
         fixed = Gtk.Fixed()
-        fixed.put(image, 0, 0)
-        fixed.put(prevb, 0, self.height / 2)
-        fixed.put(nextb, self.width - 35, self.height / 2)
+
+        if self.items.get_number_of_items() > 1:
+            prev_arrow = icons.set_from_name("prev_arrow")
+            next_arrow = icons.set_from_name("next_arrow")
+            prevb = Gtk.Button()
+            prevb.set_image(prev_arrow)
+            prevb.get_style_context().add_class("transparent")
+            prevb.connect("button_press_event", self.go_to_prev)
+            nextb = Gtk.Button()
+            nextb.set_image(next_arrow)
+            nextb.get_style_context().add_class("transparent")
+            nextb.connect("button_press_event", self.go_to_next)
+            fixed.put(image, 0, 0)
+            fixed.put(prevb, 0, self.height / 2)
+            fixed.put(nextb, self.width - 35, self.height / 2)
+        else:
+            fixed.put(image, 0, 0)
 
         return fixed
 

@@ -18,6 +18,7 @@ from kano_profile_gui.paths import image_dir
 
 all_rules = load_badge_rules()
 
+ok = True
 for category, subcats in all_rules.iteritems():
     for subcat, items in subcats.iteritems():
         path = os.path.join(image_dir, category, 'originals', subcat)
@@ -29,4 +30,8 @@ for category, subcats in all_rules.iteritems():
             print 'Existing images:\n{}'.format(', '.join(existing_items))
             print 'Needed images:\n{}'.format(', '.join(needed_items))
             print
+            ok = False
+
+if ok:
+    print 'All images are OK!'
 

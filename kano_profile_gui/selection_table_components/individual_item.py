@@ -14,13 +14,13 @@ import kano_profile_gui.components.icons as icons
 
 
 class IndividualItem():
-    def __init__(self, items):
+    def __init__(self, item_group):
         # info is a dictionary containing item and group which we use to find filename, heading, description, colour of background
 
         self.width = 230
         self.height = 180
         self.label_height = 44
-        self.items = items
+        self.items = item_group
 
         self.image = Gtk.Image()
         self.get_image_at_size()

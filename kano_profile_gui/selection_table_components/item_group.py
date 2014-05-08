@@ -18,6 +18,9 @@ class ItemGroup():
         # Only valid if itams are equipable
         self.equipped = items[0].get_equipped()
 
+    def get_number_of_items(self):
+        return len(self.items)
+
     def get_item_by_index(self, index):
         return self.items[index]
 

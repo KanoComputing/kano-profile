@@ -7,14 +7,6 @@
     "targets": [["online", "shares", 5]],
     "title": "Community Champion"
   },
-  "hello_world": {
-    "bg_color": "000000",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
-    "targets": [["online", "chats-sent", 1]],
-    "title": "Hello World"
-  },
   "staff_pick": {
     "bg_color": "ffe591",
     "desc_locked": "desc_locked",
@@ -22,14 +14,6 @@
     "operation": "stat_gta",
     "targets": [["online", "staff_picks", 1]],
     "title": "Staff Pick"
-  },
-  "street_cred": {
-    "bg_color": "000000",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
-    "targets": [["online", "shares", 1]],
-    "title": "Street Cred"
   },
   "talent_tracker": {
     "bg_color": "bde1a8",

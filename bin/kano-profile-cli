@@ -85,6 +85,7 @@ elif sys.argv[1] == 'lock':
 elif sys.argv[1] == 'is_registered':
     check_arg_len(1)
     print int(is_registered())
+    sys.exit(int(is_registered()))
 
 elif sys.argv[1] == 'get_avatar':
     check_arg_len(1)
@@ -106,6 +107,7 @@ elif sys.argv[1] == 'get_username':
 elif sys.argv[1] == 'has_token':
     check_arg_len(1)
     print int(has_token())
+    sys.exit(int(has_token()))
 
 elif sys.argv[1] == 'get_stats':
     check_arg_len(1)

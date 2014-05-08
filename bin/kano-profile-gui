@@ -38,6 +38,7 @@ class MainWindow(Gtk.Window):
 
         # Remove decoration
         self.set_decorated(False)
+        self.set_resizable(False)
         self.set_position(Gtk.WindowPosition.CENTER)
 
         # Create common elements

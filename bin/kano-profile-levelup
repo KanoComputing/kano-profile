@@ -15,8 +15,103 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
+from gi.repository import Gtk, Gdk
+from kano_profile_gui.images import get_image
+from kano_profile_gui.paths import css_dir
 
 all_rules = load_badge_rules()
+categories = ['badges', 'avatars', 'environments']
+
+
+class MainWindow(Gtk.Window):
+    def __init__(self, new_level, new_items):
+        Gtk.Window.__init__(self, title='Kano-Success')
+
+        self.image_width = 230
+        self.image_height = 180
+        self.set_size_request(self.image_width, self.image_width)
+        self.state = 0
+
+        # Get username
+        self.title = Gtk.Label("Great job!")
+        self.title.get_style_context().add_class("alert_title")
+        self.description = Gtk.Label("")
+        self.description.get_style_context().add_class("alert_description")
+        self.set_position(Gtk.WindowPosition.CENTER)
+
+        self.set_decorated(False)
+        self.set_resizable(False)
+
+        self.button = Gtk.Button("GOT IT")
+        self.button.get_style_context().add_class("green_button")
+        self.button_box = Gtk.Box()
+        self.button_box.add(self.button)
+        self.button_alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
+        self.button_alignment.set_padding(20, 0, (self.image_width / 2) - 40, 0)
+        self.button_alignment.add(self.button_box)
+        self.button.connect("clicked", self.go_to_next, new_items)
+
+        self.image = Gtk.Image()
+
+        self.background = Gtk.EventBox()
+        self.background.set_size_request(self.image_width, self.image_height)
+        self.background.add(self.image)
+
+        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.box.pack_start(self.background, False, False, 0)
+        self.box.pack_start(self.title, False, False, 10)
+        self.box.pack_start(self.description, False, False, 0)
+        self.box.pack_start(self.button_alignment, False, False, 0)
+
+        self.add(self.box)
+
+        if new_level:
+            # Get image, title and label for new level
+            self.set_description("new_level", str(new_level))
+        else:
+            self.go_to_next(None, new_items)
+
+    def go_to_next(self, event=None, new_items=None):
+
+        if self.state >= 3:
+            Gtk.main_quit()
+            exit()
+
+        # This doesn't work reliably because if environments aren't included,
+        # then the final unlocked swag is not in self.state = 2
+        elif self.state == 2:
+            self.button.set_label("FINISH")
+
+        category = categories[self.state]
+        size_folder = str(self.image_width) + 'x' + str(self.image_height)
+        category = categories[self.state]
+        filename = ""
+        text = ""
+        background_color = Gdk.RGBA()
+
+        if category in new_items:
+            for subcat, items in new_items[category].iteritems():
+                for item, rules in items.iteritems():
+                    filename = get_image(category, subcat, item, size_folder)
+                    text = rules["title"]
+                    color_string = '#' + rules["bg_color"]
+                    print color_string
+                    background_color.parse(color_string)
+        else:
+            self.state = self.state + 1
+            self.go_to_next(None, new_items)
+            return
+
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
+        self.image.set_from_file(filename)
+        self.set_description(category, text)
+        self.state = self.state + 1
+
+    def set_description(self, category, text):
+        if category == "new_level":
+            self.description.set_text("You've reached Level " + text)
+        else:
+            self.description.set_text("You've unlocked " + text)
 
 
 def parse_items(args):
@@ -40,27 +135,21 @@ def parse_items(args):
 def main():
     new_level, new_items = parse_items(sys.argv[1:])
 
-    if new_level:
-        print 'New level: {}'.format(new_level)
+    # Create style sheet
+    cssProvider = Gtk.CssProvider()
+    css_file = os.path.join(css_dir, 'login.css')
+    if not os.path.exists(css_file):
+        sys.exit('CSS file missing!')
+    cssProvider.load_from_path(css_file)
 
-    if new_items:
-        if 'badges' in new_items:
-            print 'New badges:'
-            for subcat, items in new_items['badges'].iteritems():
-                for item, rules in items.iteritems():
-                    print '\t{} {}'.format(item, rules['title'])
+    screen = Gdk.Screen.get_default()
+    styleContext = Gtk.StyleContext()
+    styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
-        if 'avatars' in new_items:
-            print 'New avatars:'
-            for subcat, items in new_items['avatars'].iteritems():
-                for item, rules in items.iteritems():
-                    print '\t{} {}'.format(item, rules['title'])
-
-        if 'environments' in new_items:
-            print 'New environments:'
-            for subcat, items in new_items['environments'].iteritems():
-                for item, rules in items.iteritems():
-                    print '\t{} {}'.format(item, rules['title'])
+    win = MainWindow(new_level, new_items)
+    win.connect('delete-event', Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
 
 
 if __name__ == '__main__':

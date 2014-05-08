@@ -155,3 +155,13 @@ GtkImage {
     font: Bariol 14px;
     color: @subheading_color;
 }
+
+.alert_title {
+    font: Bariol Bold 18px;
+    color: @title_color;
+}
+
+.alert_description {
+    font: Bariol Bold 13px;
+    color: @subheading_color;
+}

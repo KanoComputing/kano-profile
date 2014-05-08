@@ -28,7 +28,7 @@ class TopBar():
         self.container = Gtk.Grid()
 
         # Home button
-        self.home_button = home_button.HomeButton(1)
+        self.home_button = home_button.HomeButton()
         self.home_button.button.connect('button_press_event', self.activate_label)
 
         name_array = ['Badges', 'Swag', 'Challenges']

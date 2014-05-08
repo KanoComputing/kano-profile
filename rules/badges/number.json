@@ -4,7 +4,16 @@
     "desc_locked": "Wow - you've mastered the fine art of code execution. 1000 blocks of code have been turned into something beautiful.",
     "desc_unlocked": "How to unlock: Turn 1000 blocks into codev",
     "operation": "stat_sum_gt",
-    "targets": [["make-pong", "blocks_created"], ["make-minecraft", "blocks_created"]],
+    "targets": [
+      [
+        "make-pong",
+        "blocks_created"
+      ],
+      [
+        "make-minecraft",
+        "blocks_created"
+      ]
+    ],
     "title": "1000 Blocks",
     "value": 1000
   },
@@ -13,7 +22,16 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
-    "targets": [["make-pong", "blocks_created"], ["make-minecraft", "blocks_created"]],
+    "targets": [
+      [
+        "make-pong",
+        "blocks_created"
+      ],
+      [
+        "make-minecraft",
+        "blocks_created"
+      ]
+    ],
     "title": "100 Blocks",
     "value": 100
   },
@@ -23,10 +41,22 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-snake", "level"],
-      ["kano-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
+      [
+        "make-snake",
+        "level"
+      ],
+      [
+        "kano-video",
+        "level"
+      ],
+      [
+        "make-pong",
+        "level"
+      ],
+      [
+        "make-minecraft",
+        "level"
+      ]
     ],
     "title": "First Challenge",
     "value": 1
@@ -37,10 +67,22 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-snake", "level"],
-      ["kano-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
+      [
+        "make-snake",
+        "level"
+      ],
+      [
+        "kano-video",
+        "level"
+      ],
+      [
+        "make-pong",
+        "level"
+      ],
+      [
+        "make-minecraft",
+        "level"
+      ]
     ],
     "title": "5 Challenges",
     "value": 5
@@ -51,42 +93,76 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-snake", "level"],
-      ["kano-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
+      [
+        "make-snake",
+        "level"
+      ],
+      [
+        "kano-video",
+        "level"
+      ],
+      [
+        "make-pong",
+        "level"
+      ],
+      [
+        "make-minecraft",
+        "level"
+      ]
     ],
     "title": "10 Challenges",
     "value": 10
-  }
-    "25_challenges": {
+  },
+  "25_challenges": {
     "bg_color": "eee7e7",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-snake", "level"],
-      ["kano-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
+      [
+        "make-snake",
+        "level"
+      ],
+      [
+        "kano-video",
+        "level"
+      ],
+      [
+        "make-pong",
+        "level"
+      ],
+      [
+        "make-minecraft",
+        "level"
+      ]
     ],
     "title": "25 Challenges",
     "value": 25
-  }
-    "50_challenges": {
+  },
+  "50_challenges": {
     "bg_color": "eee7e7",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_sum_gt",
     "targets": [
-      ["make-snake", "level"],
-      ["kano-video", "level"],
-      ["make-pong", "level"],
-      ["make-minecraft", "level"]
+      [
+        "make-snake",
+        "level"
+      ],
+      [
+        "kano-video",
+        "level"
+      ],
+      [
+        "make-pong",
+        "level"
+      ],
+      [
+        "make-minecraft",
+        "level"
+      ]
     ],
     "title": "50 Challenges",
     "value": 50
   }
-}
-}
 }

@@ -41,7 +41,7 @@ def activate(_win, _box):
         box.pack_start(title.container, False, False, 0)
         box.pack_start(label1, False, False, 5)
         box.pack_start(label2, False, False, 20)
-        box.pack_start(nextB.box, False, False, 15)
+        box.pack_start(nextB.align, False, False, 15)
         box.show_all()
     else:
         confirmation_screen()
@@ -58,7 +58,7 @@ def confirmation_screen(widget=None, event=None):
     title = heading.Heading("Profile created!", "Boom")
 
     box.pack_start(title.container, False, False, 0)
-    box.pack_start(doneB.box, False, False, 15)
+    box.pack_start(doneB.align, False, False, 15)
     box.show_all()
 
 

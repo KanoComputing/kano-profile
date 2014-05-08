@@ -40,7 +40,7 @@ def activate(_win, _box):
         done_button = green_button.Button("DONE")
         done_button.button.connect("button_press_event", close_window)
         box.pack_start(title.container, False, False, 0)
-        box.pack_start(done_button.box, False, False, 0)
+        box.pack_start(done_button.align, False, False, 0)
 
     box.show_all()
 

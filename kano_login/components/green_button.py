@@ -19,3 +19,9 @@ class Button():
         self.box.add(self.button)
         self.button.props.halign = Gtk.Align.CENTER
         self.box.props.halign = Gtk.Align.CENTER
+
+        self.align = Gtk.Alignment()
+        self.align.add(self.box)
+
+    def set_padding(self, top, bottom, left, right):
+        self.align.set_padding(top, bottom, left, right)

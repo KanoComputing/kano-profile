@@ -47,7 +47,7 @@ def activate(_win, _box):
 
     box.pack_start(title.container, False, False, 0)
     box.pack_start(gender_combo, False, False, 30)
-    box.pack_start(next_button.box, False, False, 10)
+    box.pack_start(next_button.align, False, False, 10)
     box.show_all()
 
 

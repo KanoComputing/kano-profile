@@ -52,7 +52,7 @@ class Birthday():
 
         self.box.pack_start(title.container, False, False, 0)
         self.box.pack_start(self.halign, False, False, 30)
-        self.box.pack_start(self.next_button.box, False, False, 0)
+        self.box.pack_start(self.next_button.align, False, False, 0)
 
         self.box.show_all()
 
@@ -96,7 +96,6 @@ class Birthday():
             current_year = int(time.strftime("%Y"))
 
             age = current_year - bday_year
-
             if age < 0:
                 raise Exception
 
@@ -107,7 +106,6 @@ class Birthday():
                     age = age - 1
                 elif current_day == bday_day:
                     print "IT'S YOUR BIIIIRTHDAY"
-
             return age
 
         except:
@@ -122,6 +120,7 @@ class Birthday():
             self.day_entry.set_text("")
             self.month_entry.set_text("")
             self.year_entry.set_text("")
+            self.next_button.button.set_sensitive(False)
             return -1
 
 

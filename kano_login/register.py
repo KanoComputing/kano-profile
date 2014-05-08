@@ -75,7 +75,7 @@ def activate(_win, _box):
     valign.set_padding(0, 0, 100, 0)
     box.pack_start(title.container, False, False, 0)
     box.pack_start(valign, False, False, 0)
-    box.pack_start(register.box, False, False, 15)
+    box.pack_start(register.align, False, False, 15)
     box.show_all()
 
 

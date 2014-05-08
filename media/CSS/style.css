@@ -255,7 +255,7 @@ GtkSwitch.slider {
 }
 
 .hover_label {
-    font: Bariol bold 13px;
+    font: Bariol bold 14px;
     color: #ffffff;
 }
 .equipped_box {
@@ -263,22 +263,22 @@ GtkSwitch.slider {
 }
 
 .equipped_box GtkLabel {
-    font: Bariol bold 13px;
+    font: Bariol bold 14px;
     color: #ffffff;
 }
 
 .equipped_box2 {
-    border-radius: 20px;
+    border-radius: 5px;
     background: linear-gradient(to top, @button_color);
 }
 
 .equipped_box2 GtkLabel {
-    font: Bariol bold 13px;
+    font: Bariol bold 11px;
     color: #ffffff;
 }
 
 .equipped_border {
-    border-radius: 20px;
+    border-radius: 7px;
     background: linear-gradient(to top, #ffffff);
 }
 

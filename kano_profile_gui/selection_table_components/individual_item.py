@@ -65,16 +65,16 @@ class IndividualItem():
             self.equipped_box2 = Gtk.EventBox()
             self.equipped_box2.get_style_context().add_class("equipped_box2")
             self.equipped_box2.add(self.equipped_label2)
-            self.equipped_box2.set_size_request(115, 30)
+            self.equipped_box2.set_size_request(90, 25)
 
             # Border box of equipped style
             self.equipped_border = Gtk.EventBox()
             self.equipped_border.get_style_context().add_class("equipped_border")
-            self.equipped_border.set_size_request(125, 40)
+            self.equipped_border.set_size_request(98, 33)
 
             self.fixed.put(self.equipped_box, 0, self.height - self.label_height)
             self.fixed.put(self.equipped_border, 10, 10)
-            self.fixed.put(self.equipped_box2, 15, 15)
+            self.fixed.put(self.equipped_box2, 14, 14)
 
     # Sets whether the picture has a padlock in front or not.
     # locked = True or False
@@ -105,10 +105,14 @@ class IndividualItem():
         self.image.set_from_file(filename)
 
     def get_title(self):
-        return self.get_visible().title
+        return self.get_visible().title.upper()
 
     def get_description(self):
         return self.get_visible().get_description()
+
+    def update_labels(self):
+        self.hover_label.set_text(self.get_title())
+        self.equipped_label.set_text(self.get_title())
 
     # Sets the visible picture to be equipped
     def set_equipped_item(self):
@@ -116,6 +120,7 @@ class IndividualItem():
         self.items.set_equipped_item(item)
         self.change_equipped_style()
         self.get_image_at_size()
+        self.update_labels()
 
     def unequip_all(self):
         self.items.unequip_all()

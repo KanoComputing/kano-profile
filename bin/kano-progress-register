@@ -21,7 +21,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.network import is_internet
 from kano.utils import get_user, delete_file, get_cpu_id
-from kano.profile.profile import load_profile
+from kano.world.functions import get_email
 
 USER = get_user()
 
@@ -53,10 +53,7 @@ def send_form(project):
     # Details of the Google form
     url = "https://docs.google.com/a/kano.me/forms/d/15tfyqx2J0XFjf1rytguy8cFEZ3E20HZ3iU5wVZalyAk/formResponse"
     # User email
-    try:
-        email = load_profile()['email']
-    except Exception:
-        email = 'not registered'
+    email = get_email()
     entryEmail = "entry.1049053909"
     # User name
     entryName = "entry.1615253867"

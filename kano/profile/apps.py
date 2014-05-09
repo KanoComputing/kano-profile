@@ -7,7 +7,7 @@
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path
-from .paths import apps_dir, xp_file
+from .paths import apps_dir, xp_file, kanoprofile_dir
 from .profile import is_unlocked
 
 
@@ -53,6 +53,8 @@ def save_app_state(app_name, data):
     ensure_dir(get_app_dir(app_name))
     write_json(app_state_file, data)
     if 'SUDO_USER' in os.environ:
+        chown_path(kanoprofile_dir)
+        chown_path(apps_dir)
         chown_path(get_app_dir(app_name))
         chown_path(app_state_file)
 

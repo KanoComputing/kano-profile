@@ -7,7 +7,7 @@
 import os
 
 from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path
-from .paths import profile_file, profile_dir, linux_user
+from .paths import profile_file, profile_dir, linux_user, kanoprofile_dir
 
 
 def load_profile():
@@ -32,6 +32,7 @@ def save_profile(data):
     ensure_dir(profile_dir)
     write_json(profile_file, data)
     if 'SUDO_USER' in os.environ:
+        chown_path(kanoprofile_dir)
         chown_path(profile_dir)
         chown_path(profile_file)
 

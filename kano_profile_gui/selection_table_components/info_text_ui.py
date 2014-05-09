@@ -7,27 +7,37 @@
 #
 # Info display next to image on selected screen
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 
 class InfoTextUi():
-    def __init__(self, heading, info, equip):
+    def __init__(self, visible_item):
 
         # self.equip decides whether we include an Equip button on the screen
-        self.equip = equip
+        self.equip = visible_item.equipable
         self.width = 274
         self.height = 448
         top_padding = 20
         bottom_padding = 20
         right_padding = 20
         left_padding = 20
-        self.heading = Gtk.Label(heading)
+        self.heading = Gtk.Label(visible_item.title)
         self.heading.get_style_context().add_class("info_heading")
         self.heading.set_alignment(xalign=0, yalign=0)
         self.paragraph = Gtk.TextView()
         self.paragraph.set_editable(False)
-        self.paragraph.get_buffer().set_text(info)
+        self.paragraph.get_buffer().set_text(visible_item.get_description())
         self.paragraph.get_style_context().add_class("info_paragraph")
+
+        color_str = visible_item.get_color().to_string()
+        transparent = self.change_opacity_of_color(color_str, 0.0)
+        transparent_background = Gdk.RGBA()
+        transparent_background.parse(transparent)
+        pale = self.change_opacity_of_color(color_str, 0.6)
+        pale_background = Gdk.RGBA()
+        pale_background.parse(pale)
+
+        self.paragraph.override_background_color(Gtk.StateFlags.NORMAL, transparent_background)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.heading, False, False, 5)
@@ -57,6 +67,15 @@ class InfoTextUi():
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("info_description_box")
         self.background.add(self.align)
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, pale_background)
+
+    def change_opacity_of_color(self, color_str, opacity):
+        # Make colour less opaque
+        color_str = color_str[:len(color_str) - 1]
+        first_part = color_str[:3]
+        second_part = color_str[3:]
+        color_str = first_part + 'a' + second_part + ',0.6)'
+        return color_str
 
     def refresh(self, heading, info):
         self.heading.set_text(heading)

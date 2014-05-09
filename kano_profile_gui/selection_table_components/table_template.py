@@ -46,6 +46,12 @@ class TableTemplate():
         self.container.pack_start(self.head.box, False, False, 0)
         self.container.pack_start(self.scrolledwindow, False, False, 0)
 
+        # Set the equipped items based on what we read from file
+
+        # Read from file here
+        self.equip_with_tuple("environments", "all", "fields_of_ideas")
+        self.equip_with_tuple("avatars", "gumps", "gumps_2")
+
     def on_button_toggled(self, button):
         in_cat1 = button.get_active()
         for cat in self.categories:
@@ -95,3 +101,16 @@ class TableTemplate():
     def hide_labels(self):
         for cat in self.categories:
             cat.hide_labels()
+
+    def equip_with_tuple(self, category, subcategory, name):
+        for cat in self.categories:
+            for pic in cat.pics:
+                item = pic.items.get_item_from_tuple(category, subcategory, name)
+                if item is not None:
+                    pic.items.set_visible_item(item)
+                    self.equip(None, None, pic, cat)
+
+    def get_equipped_tuple(self):
+        for i in range(2):
+            print self.headers[i], self.categories[i].get_equipped_tuple()
+

@@ -110,4 +110,3 @@ class TableUi():
             if pic.get_equipped_item() is not None:
                 return pic.get_equipped_item().get_tuple()
         return None
-

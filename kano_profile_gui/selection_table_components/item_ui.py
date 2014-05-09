@@ -140,17 +140,17 @@ class ItemUi():
 
     # This function contains the styling applied to the picture when it is equipped.
     def change_equipped_style(self, arg1=None, arg2=None):
+        if self.get_visible_item().equipable:
+            if self.get_equipped_item() is None:
+                equipped = False
+                self.hover_box.set_visible_window(False)
+                self.hover_label.set_visible(False)
+            else:
+                equipped = True
 
-        if self.get_equipped_item() is None:
-            equipped = False
-            self.hover_box.set_visible_window(False)
-            self.hover_label.set_visible(False)
-        else:
-            equipped = True
-
-        self.equipped_box.set_visible_window(equipped)
-        self.equipped_label.set_visible(equipped)
-        self.equipped_box2.set_visible_window(equipped)
-        self.equipped_label2.set_visible(equipped)
-        self.equipped_border.set_visible_window(equipped)
+            self.equipped_box.set_visible_window(equipped)
+            self.equipped_label.set_visible(equipped)
+            self.equipped_box2.set_visible_window(equipped)
+            self.equipped_label2.set_visible(equipped)
+            self.equipped_border.set_visible_window(equipped)
 

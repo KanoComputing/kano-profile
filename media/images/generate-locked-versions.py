@@ -21,7 +21,7 @@ for root, dirs, filenames in os.walk(dirpath):
             continue
         if len(dir_path_split) < 2 or dir_path_split[1] != 'originals':
             continue
-        if basename.endswith('_locked'):
+        if basename.endswith('_locked') or basename.endswith('_circular'):
             continue
 
         new_filename_rel = os.path.join(dir_path_rel, basename + '_locked.png')

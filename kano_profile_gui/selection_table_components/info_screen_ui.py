@@ -17,11 +17,11 @@
 # If an environment/avatar/badge is selected, we go to this screen to show more info
 
 from gi.repository import Gtk
-import kano_profile_gui.selection_table_components.info_text as info_text
+import kano_profile_gui.selection_table_components.info_text_ui as info_text
 import kano_profile_gui.components.icons as icons
 
 
-class InfoScreen():
+class InfoScreenUi():
     # Pass array of pictures into class then it can control it's own buttons
     # The current item is the screen we're currenty on
     def __init__(self, item_group):
@@ -59,7 +59,7 @@ class InfoScreen():
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        self.info_text = info_text.InfoText(visible_item.title, visible_item.get_description(), visible_item.equipable)
+        self.info_text = info_text.InfoTextUi(visible_item.title, visible_item.get_description(), visible_item.equipable)
         self.info_text.set_equip_locked(self.get_locked())
 
         self.box = Gtk.Box()

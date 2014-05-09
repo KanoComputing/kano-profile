@@ -9,11 +9,11 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk  # , Gdk, GdkPixbuf
+from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
 
 
-class IndividualItem():
+class ItemUi():
     def __init__(self, item_group):
         # info is a dictionary containing item and group which we use to find filename, heading, description, colour of background
 

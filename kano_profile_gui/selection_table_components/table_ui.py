@@ -9,13 +9,13 @@
 
 
 from gi.repository import Gtk
-import kano_profile_gui.selection_table_components.individual_item as indiv
+import kano_profile_gui.selection_table_components.item_ui as item_ui
 from kano_profile_gui.selection_table_components import item_info, item_group
 from kano.profile.badges import calculate_badges
 #from .images import get_image
 
 
-class SelectionTable():
+class TableUi():
     def __init__(self, category_name, equipable):
         self.equipable = equipable
         self.buttons = []
@@ -45,7 +45,7 @@ class SelectionTable():
 
                 if category_name != "avatars":
                     group = item_group.ItemGroup([item])
-                    pic = indiv.IndividualItem(group)
+                    pic = item_ui.ItemUi(group)
                     self.pics.append(pic)
                     number_of_badges = number_of_badges + 1
                 else:
@@ -54,7 +54,7 @@ class SelectionTable():
             if category_name == "avatars":
                 group = item_group.ItemGroup(item_array)
                 self.item_groups.append(group)
-                pic = indiv.IndividualItem(group)
+                pic = item_ui.ItemUi(group)
                 self.pics.append(pic)
 
                 number_of_badges = number_of_badges + 1

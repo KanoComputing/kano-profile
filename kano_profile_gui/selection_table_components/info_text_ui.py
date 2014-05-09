@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 
-class InfoText():
+class InfoTextUi():
     def __init__(self, heading, info, equip):
 
         # self.equip decides whether we include an Equip button on the screen

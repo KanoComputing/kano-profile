@@ -8,8 +8,8 @@
 # Controls interaction between table and info screen
 
 from gi.repository import Gtk
-import kano_profile_gui.selection_table_components.selection_table as tab
-import kano_profile_gui.selection_table_components.info_screen as info_screen
+import kano_profile_gui.selection_table_components.table_ui as tab
+import kano_profile_gui.selection_table_components.info_screen_ui as info_screen
 import kano_profile_gui.components.header as header
 
 
@@ -25,7 +25,7 @@ class TableTemplate():
 
         self.categories = []
         for x in range(len(headers)):
-            self.categories.append(tab.SelectionTable(headers[x], self.equipable))
+            self.categories.append(tab.TableUi(headers[x], self.equipable))
 
         if len(headers) == 2:
             self.head = header.Header(headers[0], headers[1])
@@ -62,7 +62,7 @@ class TableTemplate():
         self.hide_labels()
 
     def go_to_info_screen(self, arg1=None, arg2=None, pic=None, cat=None):
-        selected_item_screen = info_screen.InfoScreen(pic.items)
+        selected_item_screen = info_screen.InfoScreenUi(pic.items)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)

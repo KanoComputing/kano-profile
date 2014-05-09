@@ -12,7 +12,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.apps import get_app_data_dir, load_app_state_variable
-from kano.profile.profile import set_unlocked, load_profile
+from kano.profile.profile import set_unlocked, load_profile, get_avatar, get_environment
 from kano.profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
     calculate_kano_level, increment_app_state_variable_with_dialog
 from kano.world.functions import is_registered, get_mixed_username, has_token
@@ -82,28 +82,6 @@ elif sys.argv[1] == 'lock':
     check_arg_len(1)
     set_unlocked(False)
 
-elif sys.argv[1] == 'is_registered':
-    check_arg_len(1)
-    print int(is_registered())
-    sys.exit(int(is_registered()))
-
-elif sys.argv[1] == 'get_avatar':
-    check_arg_len(1)
-    print 'judoka judoka_1'
-
-elif sys.argv[1] == 'get_xp':
-    check_arg_len(1)
-    print calculate_xp()
-
-elif sys.argv[1] == 'get_level':
-    check_arg_len(1)
-    level, progress = calculate_kano_level()
-    print level
-
-elif sys.argv[1] == 'get_username':
-    check_arg_len(1)
-    print get_mixed_username()
-
 elif sys.argv[1] == 'has_token':
     check_arg_len(1)
     print int(has_token())
@@ -111,12 +89,34 @@ elif sys.argv[1] == 'has_token':
 
 elif sys.argv[1] == 'get_stats':
     check_arg_len(1)
+
+    print 'mixed_username: {}'.format(get_mixed_username())
+
     print 'is_registered: {}'.format(int(is_registered()))
-    print 'get_avatar: {}'.format('judoka judoka_1')
-    print 'get_xp: {}'.format(calculate_xp())
-    print 'get_level: {}'.format(calculate_kano_level()[0])
-    print 'get_username: {}'.format(get_mixed_username())
     print 'has_token: {}'.format(int(has_token()))
+
+    print 'xp: {}'.format(calculate_xp())
+
+    level, progress = calculate_kano_level()
+    progress = int(progress * 100)
+    print 'level: {}'.format(level)
+    print 'progress: {}'.format(progress)
+
+    avatar_cat, avatar_item = get_avatar()
+    environment = get_environment()
+    print 'avatar: {} {}'.format(avatar_cat, avatar_item)
+    print 'environment: {}'.format(environment)
+
+    avatar_image_path = os.path.join('/usr/share/kano-profile/media/images/avatars/54x54/', avatar_cat, avatar_item)
+    if not os.path.exists(avatar_image_path):
+        avatar_image_path = 'image_missing'
+    print 'avatar_image_path: {}'.format(avatar_image_path)
+
+    progress_value = max(1, progress / 5)
+    progress_image_path = os.path.join('/usr/share/kano-profile/media/images/progress_icons/90x90/', '{}.png'.format(progress_value))
+    if not os.path.exists(progress_image_path):
+        progress_image_path = 'image_missing'
+    print 'progress_image_path: {}'.format(progress_image_path)
 
 elif sys.argv[1] == 'get_email':
     check_arg_len(1)

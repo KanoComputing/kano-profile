@@ -1,6 +1,6 @@
 {
   "kano_kin_1": {
-    "bg_color": "000000",
+    "bg_color": "d7b6f2",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Kano Kin 1"
   },
   "kano_kin_2": {
-    "bg_color": "000000",
+    "bg_color": "c294e9",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

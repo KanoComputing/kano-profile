@@ -40,7 +40,9 @@ def activate(_win, _box):
 
     login = green_button.Button("LOG IN")
     login.button.connect("button_press_event", log_user_in, username_entry, password_entry, _win)
+    login.set_padding(10, 0, 0, 0)
 
+    # if we want to add a not-registered button, uncomment out the lines below
     not_registered = Gtk.Button("Not registered?")
     not_registered.get_style_context().add_class("not_registered")
     not_registered.connect("clicked", register)
@@ -53,22 +55,25 @@ def activate(_win, _box):
     padding = 10
     valign.set_padding(padding, padding, 0, 0)
     valign.add(container)
+
     _box.pack_start(title.container, False, False, 0)
     _box.pack_start(valign, False, False, 0)
-    _box.pack_start(login.box, False, False, 30)
+    _box.pack_start(login.align, False, False, 10)
     _box.pack_start(not_registered, False, False, 0)
+
+    _win.show_all()
 
 
 def register(event):
     global win, box
+
+    win.update()
     gender.activate(win, box)
-    win.state = win.state + 1
 
 
 def log_user_in(button, event, username_entry, password_entry, win):
     username_text = username_entry.get_text()
     password_text = password_entry.get_text()
-    print 'username = {0} , password = {1}'.format(username_text, password_text)
 
     success, text = login_(username_text, password_text)
 

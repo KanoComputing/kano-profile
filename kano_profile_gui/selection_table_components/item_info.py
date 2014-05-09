@@ -84,9 +84,6 @@ class ItemInfo():
     def get_locked(self):
         return self.locked
 
-    def get_equipable(self):
-        return self.equipable
-
     # Sets whether the item
     # equipped = True or False
     def set_equipped(self, equipped):
@@ -121,3 +118,6 @@ class ItemInfo():
 
     def get_filename_at_size(self, width_of_image, height_of_image):
         return get_image(self.category, self.subcategory, self.get_name(), str(width_of_image) + "x" + str(height_of_image))
+
+    def get_tuple(self):
+        return self.category, self.subcategory, self.name

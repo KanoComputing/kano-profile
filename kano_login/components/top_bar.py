@@ -77,8 +77,11 @@ class Top_bar():
         self.container.attach(self.align_header, 2, 0, 1, 1)
         self.container.attach(self.close_button, 3, 0, 1, 1)
         self.container.set_size_request(WINDOW_WIDTH, 44)
-
         self.background.add(self.container)
+
+        # On start, disable the prev and next buttons
+        self.disable_prev()
+        self.disable_next()
 
     def disable_prev(self):
         self.prev_button.set_sensitive(False)

@@ -39,6 +39,20 @@
     -GtkWidget-separator-height: 0;
 }
 
+/* This is to remove padding */
+GtkBox GtkEventBox,
+GtkBox GtkFixed,
+GtkBox GtkGrid,
+GtkEventBox GtkImage,
+GtkGrid GtkEventBox,
+GtkFixed GtkImage,
+GtkFixed GtkEventBox,
+GtkWindow GtkGrid,
+GtkWindow GtkBox,
+GtkWindow GtkEventBox {
+    padding: 0;
+}
+
 GtkWindow {
     color: #ffffff;
     background: #ffffff;
@@ -152,6 +166,17 @@ GtkImage {
 }
 
 .confirm_email_info {
+    font: Bariol 14px;
+    color: @subheading_color;
+}
+
+/* This is the CSS for the alerts */
+.alert_title {
+    font: Bariol Bold 20px;
+    color: @title_color;
+}
+
+.alert_description {
     font: Bariol 14px;
     color: @subheading_color;
 }

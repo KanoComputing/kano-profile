@@ -1,6 +1,6 @@
 {
   "video_dude_1": {
-    "bg_color": "000000",
+    "bg_color": "fff391",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Video Dude 1"
   },
   "video_dude_2": {
-    "bg_color": "000000",
+    "bg_color": "f0e26d",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

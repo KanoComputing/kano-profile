@@ -15,12 +15,11 @@ class LoggedIn(Gtk.Window):
         Gtk.Window.__init__(self, title='Kano-Profile')
         self.set_size_request(200, 150)
         self.set_decorated(False)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_resizable(False)
         self.ok_button = Gtk.Button("OK")
         self.ok_button.get_style_context().add_class("green_button")
         self.ok_button.connect("clicked", Gtk.main_quit)
-        self.logout_button = Gtk.Button("Log out?")
-        self.logout_button.get_style_context().add_class("logout")
-        self.logout_button.connect("clicked", self.logout)
         self.button_box = Gtk.Box()
         self.button_box.add(self.ok_button)
         self.alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
@@ -31,7 +30,13 @@ class LoggedIn(Gtk.Window):
         self.add(self.main_container)
         self.main_container.pack_start(self.title.container, False, False, 0)
         self.main_container.pack_start(self.alignment, False, False, 0)
-        self.main_container.pack_start(self.logout_button, False, False, 0)
+
+        # To get a logout button, uncomment out the lines below
+        #self.logout_button = Gtk.Button("Log out?")
+        #self.logout_button.get_style_context().add_class("logout")
+        #self.logout_button.connect("clicked", self.logout)
+        #self.main_container.pack_start(self.logout_button, False, False, 0)
+
         self.connect('delete-event', Gtk.main_quit)
         self.show_all()
 

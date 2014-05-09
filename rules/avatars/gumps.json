@@ -1,6 +1,6 @@
 {
   "gumps_1": {
-    "bg_color": "000000",
+    "bg_color": "ffb7b7",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Gumps 1"
   },
   "gumps_2": {
-    "bg_color": "000000",
+    "bg_color": "f6a4a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

@@ -9,23 +9,27 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.components.constants as constants
+from kano.world.functions import get_mixed_username
+from kano.profile.badges import calculate_kano_level
 
 
 class HomeButton():
-    def __init__(self, level_number):
+    def __init__(self):
 
         # Contains the info about the level and the image
         self.container = Gtk.Grid()
 
         # Get username here
-        self.username = "Username"
+        self.username = get_mixed_username()
+
+        level, progress = calculate_kano_level()
 
         # Info about the different settings
         self.title = Gtk.Label(self.username)
         self.title.get_style_context().add_class("home_button_title")
         self.title.set_alignment(xalign=0, yalign=1)
 
-        self.description = Gtk.Label("Level " + str(level_number))
+        self.description = Gtk.Label("Level " + str(level))
         self.description.get_style_context().add_class("home_button_description")
         self.description.set_alignment(xalign=0, yalign=0)
 

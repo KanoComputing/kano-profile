@@ -75,7 +75,7 @@ def activate(_win, _box):
     valign.set_padding(0, 0, 100, 0)
     box.pack_start(title.container, False, False, 0)
     box.pack_start(valign, False, False, 0)
-    box.pack_start(register.box, False, False, 15)
+    box.pack_start(register.align, False, False, 15)
     box.show_all()
 
 
@@ -113,7 +113,7 @@ def register_user(button, event, username_entry, email_entry, password_entry):
 
     # This needs to be adjusted depending on the age of the user
     else:
+        win.update()
         account_confirm.activate(win, box)
-        win.state = win.state + 1
 
 

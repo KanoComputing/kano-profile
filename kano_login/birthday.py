@@ -12,9 +12,15 @@ from gi.repository import Gtk
 from components import heading, green_button
 from kano_login import register
 import time
+import datetime
 
 win = None
 box = None
+
+#try:
+    #datetime.datetime.strptime(date_text, '%Y-%m-%d')
+#except ValueError:
+    #raise ValueError("Incorrect data format, should be YYYY-MM-DD")
 
 
 class Birthday():
@@ -46,7 +52,7 @@ class Birthday():
 
         self.box.pack_start(title.container, False, False, 0)
         self.box.pack_start(self.halign, False, False, 30)
-        self.box.pack_start(self.next_button.box, False, False, 0)
+        self.box.pack_start(self.next_button.align, False, False, 0)
 
         self.box.show_all()
 
@@ -74,16 +80,33 @@ class Birthday():
         if age == -1:
             return
         self.win.age = age
+        win.update()
         register.activate(self.win, self.box)
-        self.win.state = self.win.state + 1
 
     def calculate_age(self):
         try:
             bday_day = int(self.day_entry.get_text())
             bday_month = int(self.month_entry.get_text())
             bday_year = int(self.year_entry.get_text())
-            if bday_day > 31 or bday_month > 12 or bday_year > 2014:
+            datetime.date(bday_year, bday_month, bday_day)
+
+            # Get current date
+            current_day = int(time.strftime("%d"))
+            current_month = int(time.strftime("%m"))
+            current_year = int(time.strftime("%Y"))
+
+            age = current_year - bday_year
+            if age < 0:
                 raise Exception
+
+            if current_month < bday_month:
+                age = age - 1
+            elif current_month == bday_month:
+                if current_day < bday_day:
+                    age = age - 1
+                elif current_day == bday_day:
+                    print "IT'S YOUR BIIIIRTHDAY"
+            return age
 
         except:
             dialog = Gtk.MessageDialog(self.win, 0, Gtk.MessageType.ERROR,
@@ -97,24 +120,8 @@ class Birthday():
             self.day_entry.set_text("")
             self.month_entry.set_text("")
             self.year_entry.set_text("")
+            self.next_button.button.set_sensitive(False)
             return -1
-
-        # Get current date
-        current_day = int(time.strftime("%d"))
-        current_month = int(time.strftime("%m"))
-        current_year = int(time.strftime("%Y"))
-
-        age = current_year - bday_year
-
-        if current_month < bday_month:
-            age = age - 1
-        elif current_month == bday_month:
-            if current_day < bday_day:
-                age = age - 1
-            elif current_day == bday_day:
-                print "IT'S YOUR BIIIIRTHDAY"
-
-        return age
 
 
 def activate(_win, _box):

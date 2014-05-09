@@ -11,6 +11,7 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.table_ui as tab
 import kano_profile_gui.selection_table_components.info_screen_ui as info_screen
 import kano_profile_gui.components.header as header
+from kano.profile.profile import get_avatar, get_environment
 
 
 # headers: category names, e.g. ["badges"] or ["environments"]
@@ -49,8 +50,11 @@ class TableTemplate():
         # Set the equipped items based on what we read from file
 
         # Read from file here
-        self.equip_with_tuple("environments", "all", "fields_of_ideas")
-        self.equip_with_tuple("avatars", "gumps", "gumps_2")
+        subcat, aname = get_avatar()
+        ename = get_environment()
+
+        self.equip_with_tuple("environments", "all", ename)
+        self.equip_with_tuple("avatars", subcat, aname)
 
     def on_button_toggled(self, button):
         in_cat1 = button.get_active()

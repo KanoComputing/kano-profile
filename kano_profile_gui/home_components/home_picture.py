@@ -12,8 +12,8 @@
 # Read from directory /usr/share/kano-profile/media/environments/*
 
 from gi.repository import Gtk
-import kano_profile_gui.swags as swags
 from kano_profile_gui.images import get_image
+from kano.profile.profile import get_avatar, get_environment
 
 
 class HomePicture():
@@ -27,19 +27,11 @@ class HomePicture():
         self.avatar = Gtk.Image()
 
         # This should be changed to reading from the function
+        a_subcategory, a_name = get_avatar()
+        e_name = get_environment()
 
-        if swags.swag_ui is not None and swags.swag_ui.categories[0].get_equipped_picture() is not None and swags.swag_ui.categories[1].get_equipped_picture() is not None:
-            environment_file = swags.swag_ui.categories[0].get_equipped_picture().get_filename_at_size(self.background_width, self.background_height)
-            avatar_file = swags.swag_ui.categories[1].get_equipped_picture().get_filename_at_size(self.avatar_width, self.avatar_height)
-        else:
-            a_category = "avatars"
-            a_subcategory = "video_dude"
-            a_name = "video_dude_2"
-            e_category = "environments"
-            e_subcategory = "all"
-            e_name = "fields_of_ideas"
-            environment_file = get_image(e_category, e_subcategory, e_name, str(self.background_width) + 'x' + str(self.background_height))
-            avatar_file = get_image(a_category, a_subcategory, a_name, str(self.background_width) + 'x' + str(self.background_height))
+        environment_file = get_image("environments", "all", e_name, str(self.background_width) + 'x' + str(self.background_height))
+        avatar_file = get_image("avatars", a_subcategory, a_name, str(self.background_width) + 'x' + str(self.background_height))
 
         self.background.set_from_file(environment_file)
         self.avatar.set_from_file(avatar_file)

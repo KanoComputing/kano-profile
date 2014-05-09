@@ -25,6 +25,7 @@ class InfoTextUi():
         self.heading.get_style_context().add_class("info_heading")
         self.heading.set_alignment(xalign=0, yalign=0)
         self.paragraph = Gtk.TextView()
+        self.paragraph.set_wrap_mode(Gtk.WrapMode.WORD)
         self.paragraph.set_editable(False)
         self.paragraph.get_buffer().set_text(visible_item.get_description())
         self.paragraph.get_style_context().add_class("info_paragraph")

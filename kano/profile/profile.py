@@ -6,7 +6,7 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir, set_chown
+from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path
 from .paths import profile_file, profile_dir, linux_user
 
 
@@ -32,8 +32,8 @@ def save_profile(data):
     ensure_dir(profile_dir)
     write_json(profile_file, data)
     if 'SUDO_USER' in os.environ:
-        set_chown(profile_dir)
-        set_chown(profile_file)
+        chown_path(profile_dir)
+        chown_path(profile_file)
 
 
 def set_unlocked(boolean):

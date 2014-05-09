@@ -152,3 +152,11 @@ def get_token():
         return load_profile()['token']
     except Exception:
         return ''
+
+
+def get_email():
+    try:
+        email = load_profile()['email']
+    except Exception:
+        email = ''
+    return email

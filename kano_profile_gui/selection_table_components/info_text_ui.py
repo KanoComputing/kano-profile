@@ -34,6 +34,7 @@ class InfoTextUi():
         transparent_background = Gdk.RGBA()
         transparent_background.parse(transparent)
         pale = self.change_opacity_of_color(color_str, 0.6)
+        print pale
         pale_background = Gdk.RGBA()
         pale_background.parse(pale)
 
@@ -65,7 +66,6 @@ class InfoTextUi():
         self.align.add(self.box)
 
         self.background = Gtk.EventBox()
-        self.background.get_style_context().add_class("info_description_box")
         self.background.add(self.align)
         self.background.override_background_color(Gtk.StateFlags.NORMAL, pale_background)
 
@@ -74,7 +74,7 @@ class InfoTextUi():
         color_str = color_str[:len(color_str) - 1]
         first_part = color_str[:3]
         second_part = color_str[3:]
-        color_str = first_part + 'a' + second_part + ',0.6)'
+        color_str = first_part + 'a' + second_part + ',' + str(opacity) + ')'
         return color_str
 
     def refresh(self, heading, info):

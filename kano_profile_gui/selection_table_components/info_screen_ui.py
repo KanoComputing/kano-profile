@@ -54,7 +54,7 @@ class InfoScreenUi():
 
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
-        self.header_label = Gtk.Label(visible_item.title)
+        self.header_label = Gtk.Label(visible_item.title.upper())
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)

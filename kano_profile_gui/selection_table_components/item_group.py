@@ -16,7 +16,8 @@ class ItemGroup():
         self.visible = items[0]
 
         # Only valid if itams are equipable
-        self.equipped = items[0].get_equipped()
+        # self.equipped is None or an item
+        self.equipped = None
 
     def get_number_of_items(self):
         return len(self.items)
@@ -24,29 +25,33 @@ class ItemGroup():
     def get_item_by_index(self, index):
         return self.items[index]
 
-    def set_visible(self, item):
+    def set_visible_item(self, item):
         for i in self.items:
             i.set_visible(False)
         self.visible = item
         item.set_visible(True)
 
-    def get_visible(self):
+    def get_visible_item(self):
         return self.visible
 
+    def unequip_all(self):
+        for item in self.items:
+            if item.equipable:
+                item.set_equipped(False)
+                self.set_equipped_item(None)
+
+    def get_equipped_item(self):
+        return self.equipped
+        #return self.get_visible().get_equipped
+
     def set_equipped_item(self, item):
-        if item.get_equipable():
+        if item is None:
+            self.equipped = None
+        elif item.equipable:
             for i in self.items:
                 i.set_equipped(False)
             self.equipped = item
             item.set_equipped(True)
-
-    def unequip_all(self):
-        for item in self.items:
-            if item.get_equipable():
-                item.set_equipped(False)
-
-    def get_equipped(self):
-        return self.get_visible().equipped
 
     def get_color(self):
         return self.visible.get_color()
@@ -60,4 +65,4 @@ class ItemGroup():
             index = 0
         elif index < 0:
             index = len(self.items) - 1
-        self.set_visible(self.items[index])
+        self.set_visible_item(self.items[index])

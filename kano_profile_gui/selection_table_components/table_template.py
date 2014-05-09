@@ -81,6 +81,7 @@ class TableTemplate():
         cat.unequip_all()
         pic.set_equipped_item()
         self.leave_info_screen()
+        print cat.get_equipped_tuple()
 
     def leave_info_screen(self, arg1=None, arg2=None):
         for i in self.container.get_children():

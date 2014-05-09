@@ -18,7 +18,6 @@ from kano.profile.badges import calculate_badges
 class SelectionTable():
     def __init__(self, category_name, equipable):
         self.equipable = equipable
-        self.equipped = None
         self.buttons = []
         self.pics = []
         self.item_groups = []
@@ -91,7 +90,7 @@ class SelectionTable():
         for pic in self.pics:
             pic.hover_box.set_visible_window(False)
             pic.hover_label.set_visible(False)
-            if self.equipable and not pic.get_equipped():
+            if self.equipable and pic.get_equipped_item() is None:
                 pic.change_equipped_style()
             if not pic.get_locked():
                 pic.change_locked_style()
@@ -100,8 +99,15 @@ class SelectionTable():
         for i in self.pics:
             i.unequip_all()
 
-    def get_equipped(self):
+    def get_equipped_picture(self):
         for pic in self.pics:
-            if pic.get_equipped():
+            if pic.get_equipped_item() is not None:
                 return pic
+        return None
+
+    def get_equipped_tuple(self):
+        for pic in self.pics:
+            if pic.get_equipped_item() is not None:
+                return pic.get_equipped_item().get_tuple()
+        return None
 

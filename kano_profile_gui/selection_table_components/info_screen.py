@@ -50,14 +50,16 @@ class InfoScreen():
         self.fixed_container = Gtk.Box()
         self.fixed_container.pack_start(self.fixed, False, False, 0)
 
+        visible_item = self.get_visible_item()
+
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
-        self.header_label = Gtk.Label(self.items.get_visible().title)
+        self.header_label = Gtk.Label(visible_item.title)
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        self.info_text = info_text.InfoText(self.get_visible().title, self.get_visible().get_description(), self.get_visible().get_equipable())
+        self.info_text = info_text.InfoText(visible_item.title, visible_item.get_description(), visible_item.equipable)
         self.info_text.set_equip_locked(self.get_locked())
 
         self.box = Gtk.Box()
@@ -91,15 +93,15 @@ class InfoScreen():
 
         return fixed
 
-    def set_visible(self, item):
-        self.items.set_visible(item)
+    def set_visible_item(self, item):
+        self.items.set_visible_item(item)
         self.get_filename_at_size()
 
-    def get_visible(self):
-        return self.items.get_visible()
+    def get_visible_item(self):
+        return self.items.get_visible_item()
 
     def get_color(self):
-        return self.get_visible().get_color()
+        return self.get_visible_item().get_color()
 
     def go_to_next(self, arg1=None, arg2=None):
         self.items.go_to(1)
@@ -110,8 +112,8 @@ class InfoScreen():
         self.refresh()
 
     def refresh(self):
-        current = self.items.get_visible()
-        self.items.set_visible(current)
+        current = self.get_visible_item()
+        self.items.set_visible_item(current)
         self.image.set_from_file(self.get_filename_at_size())
         self.header_label.set_text(current.title)
         self.info_text.refresh(current.title, current.get_description())
@@ -120,16 +122,16 @@ class InfoScreen():
         self.info_text.set_equip_locked(self.get_locked())
 
     def refresh_bg_color(self):
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.items.get_visible().get_color())
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
 
     def get_filename_at_size(self):
-        return self.items.get_visible().get_filename_at_size(self.width, self.height)
+        return self.get_visible_item().get_filename_at_size(self.width, self.height)
 
     def refresh_background(self):
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible.get_color())
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
 
     def get_locked(self):
-        return self.get_visible().get_locked()
+        return self.get_visible_item().get_locked()
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size()

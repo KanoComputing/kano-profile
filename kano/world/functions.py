@@ -138,3 +138,10 @@ def get_mixed_username():
     else:
         username = get_user_unsudoed()
     return username
+
+
+def get_token():
+    try:
+        return 'token' in load_profile()
+    except Exception:
+        return ''

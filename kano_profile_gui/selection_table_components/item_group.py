@@ -53,6 +53,11 @@ class ItemGroup():
             self.equipped = item
             item.set_equipped(True)
 
+    def get_item_from_tuple(self, category, subcategory, name):
+        for item in self.items:
+            if item.category == category and item.subcategory == subcategory and item.name == name:
+                return item
+
     def get_color(self):
         return self.visible.get_color()
 

@@ -50,26 +50,26 @@ class InfoScreenUi():
         self.fixed_container = Gtk.Box()
         self.fixed_container.pack_start(self.fixed, False, False, 0)
 
+        self.background.add(self.fixed_container)
+
         visible_item = self.get_visible_item()
 
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
-        self.header_label = Gtk.Label(visible_item.title)
+        self.header_label = Gtk.Label(visible_item.title.upper())
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        self.info_text = info_text.InfoTextUi(visible_item.title, visible_item.get_description(), visible_item.equipable)
+        self.info_text = info_text.InfoTextUi(visible_item)
         self.info_text.set_equip_locked(self.get_locked())
 
         self.box = Gtk.Box()
-        self.box.pack_start(self.fixed_container, False, False, 0)
+        self.box.pack_start(self.background, False, False, 0)
         self.box.pack_start(self.info_text.background, False, False, 0)
 
-        self.background.add(self.box)
-
         self.container.pack_start(self.header_box, False, False, 0)
-        self.container.pack_start(self.background, False, False, 0)
+        self.container.pack_start(self.box, False, False, 0)
 
     def create_fixed(self, image):
         fixed = Gtk.Fixed()

@@ -121,3 +121,4 @@ class ItemInfo():
 
     def get_tuple(self):
         return self.category, self.subcategory, self.name
+

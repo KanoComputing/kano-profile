@@ -1,6 +1,6 @@
 {
   "judoka_1": {
-    "bg_color": "000000",
+    "bg_color": "ffd273",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Judoka 1"
   },
   "judoka_2": {
-    "bg_color": "000000",
+    "bg_color": "f2c25c",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -16,7 +16,7 @@
     "title": "Judoka 2"
   },
   "judoka_3": {
-    "bg_color": "000000",
+    "bg_color": "ffc852",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

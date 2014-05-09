@@ -1,6 +1,6 @@
 {
   "conductor_1": {
-    "bg_color": "000000",
+    "bg_color": "ceedfa",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Conductor 1"
   },
   "conductor_2": {
-    "bg_color": "000000",
+    "bg_color": "b4dff1",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

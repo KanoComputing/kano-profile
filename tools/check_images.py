@@ -23,10 +23,20 @@ for category, subcats in all_rules.iteritems():
     for subcat, items in subcats.iteritems():
         path = os.path.join(image_dir, category, 'originals', subcat)
 
-        existing_items = sorted([f for f in os.listdir(path) if not f.endswith('_locked.png')])
-        needed_items = sorted(['{}.png'.format(f) for f in items.keys()])
+        existing_items = sorted([f for f in os.listdir(path)])
+        needed_items_images = ['{}.png'.format(f) for f in items.keys()]
+        needed_items_locked = ['{}_locked.png'.format(f) for f in items.keys()]
+        needed_items_circular = ['{}_circular.png'.format(f) for f in items.keys()]
+
+        if category == 'avatars':
+            needed_items = needed_items_images + needed_items_locked + needed_items_circular
+        else:
+            needed_items = needed_items_images + needed_items_locked
+
+        needed_items = sorted(needed_items)
 
         if sorted(existing_items) != sorted(needed_items):
+            print category, subcat
             print 'Existing images:\n{}'.format(', '.join(existing_items))
             print 'Needed images:\n{}'.format(', '.join(needed_items))
             print

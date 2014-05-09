@@ -1,6 +1,6 @@
 {
   "pongobot_1": {
-    "bg_color": "000000",
+    "bg_color": "a1a1a1",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",
@@ -8,7 +8,7 @@
     "title": "Pongobot 1"
   },
   "pongobot_2": {
-    "bg_color": "000000",
+    "bg_color": "918e8e",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "stat_gta",

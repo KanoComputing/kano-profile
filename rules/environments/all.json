@@ -39,6 +39,14 @@
     "targets": [["kano-profile", "kano_level", -1]],
     "title": "Space"
   },
+  "dojo": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "stat_gta",
+    "targets": [["kano-profile", "kano_level", -1]],
+    "title": "Dojo"
+  },
   "video_set": {
     "bg_color": "000000",
     "desc_locked": "desc_locked",

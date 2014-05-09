@@ -43,3 +43,34 @@ def is_unlocked():
         return load_profile()['unlocked']
     else:
         return False
+
+
+def get_avatar():
+    profile = load_profile()
+    if 'avatar' in profile:
+        subcat, item = profile['avatar']
+    else:
+        subcat = 'judoka'
+        item = 'judoka_1'
+    return subcat, item
+
+
+def set_avatar(subcat, item):
+    profile = load_profile()
+    profile['avatar'] = [subcat, item]
+    save_profile(profile)
+
+
+def get_environment():
+    profile = load_profile()
+    if 'environment' in profile:
+        environment = profile['environment']
+    else:
+        environment = 'dojo'
+    return environment
+
+
+def set_environment(environment):
+    profile = load_profile()
+    profile['environment'] = environment
+    save_profile(profile)

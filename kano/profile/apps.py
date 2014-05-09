@@ -6,7 +6,7 @@
 
 import os
 
-from kano.utils import read_json, write_json, get_date_now, ensure_dir
+from kano.utils import read_json, write_json, get_date_now, ensure_dir, set_chown
 from .paths import apps_dir, xp_file
 from .profile import is_unlocked
 
@@ -52,6 +52,9 @@ def save_app_state(app_name, data):
     data['save_date'] = get_date_now()
     ensure_dir(get_app_dir(app_name))
     write_json(app_state_file, data)
+    if 'SUDO_USER' in os.environ:
+        set_chown(get_app_dir(app_name))
+        set_chown(app_state_file)
 
     # Ask kdesk to refresh the Login/Register icon with new Kano Level
     if os.path.exists('/usr/bin/kdesk'):

@@ -20,7 +20,7 @@
 #include <time.h>
 
 #define NO_LOGIN_ICON "/usr/share/kano-profile/icon/profile-not-login-widget.png"
-#define LOGIN_ICON "/usr/share/kano-profile/icon/widget-no-internet.png"
+#define LOGIN_ICON "/usr/share/kano-profile/icon/profile-login-widget.png"
 #define SYNC_ICON "/usr/share/kano-profile/icon/widget-sync.png"
 #define BACKUP_ICON "/usr/share/kano-profile/icon/widget-backup.png"
 #define RESTORE_ICON "/usr/share/kano-profile/icon/widget-restore.png"

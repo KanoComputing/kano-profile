@@ -142,6 +142,6 @@ def get_mixed_username():
 
 def get_token():
     try:
-        return 'token' in load_profile()
+        load_profile()['token']
     except Exception:
         return ''

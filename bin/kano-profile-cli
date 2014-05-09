@@ -107,13 +107,15 @@ elif sys.argv[1] == 'get_stats':
     print 'avatar: {} {}'.format(avatar_cat, avatar_item)
     print 'environment: {}'.format(environment)
 
-    avatar_image_path = os.path.join('/usr/share/kano-profile/media/images/avatars/54x54/', avatar_cat, avatar_item)
+    avatar_image_path = os.path.join('/usr/share/kano-profile/media/images/avatars/54x54/',
+                                     avatar_cat, '{}_circular.png'.format(avatar_item))
     if not os.path.exists(avatar_image_path):
         avatar_image_path = 'image_missing'
     print 'avatar_image_path: {}'.format(avatar_image_path)
 
     progress_value = max(1, progress / 5)
-    progress_image_path = os.path.join('/usr/share/kano-profile/media/images/progress_icons/90x90/', '{}.png'.format(progress_value))
+    progress_image_path = os.path.join('/usr/share/kano-profile/media/images/progress_icons/90x90/',
+                                       '{}.png'.format(progress_value))
     if not os.path.exists(progress_image_path):
         progress_image_path = 'image_missing'
     print 'progress_image_path: {}'.format(progress_image_path)

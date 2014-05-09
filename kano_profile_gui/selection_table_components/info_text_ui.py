@@ -25,6 +25,7 @@ class InfoTextUi():
         self.heading.get_style_context().add_class("info_heading")
         self.heading.set_alignment(xalign=0, yalign=0)
         self.paragraph = Gtk.TextView()
+        self.paragraph.set_wrap_mode(Gtk.WrapMode.WORD)
         self.paragraph.set_editable(False)
         self.paragraph.get_buffer().set_text(visible_item.get_description())
         self.paragraph.get_style_context().add_class("info_paragraph")
@@ -33,8 +34,7 @@ class InfoTextUi():
         transparent = self.change_opacity_of_color(color_str, 0.0)
         transparent_background = Gdk.RGBA()
         transparent_background.parse(transparent)
-        pale = self.change_opacity_of_color(color_str, 0.6)
-        print pale
+        pale = self.change_opacity_of_color(color_str, 0.3)
         pale_background = Gdk.RGBA()
         pale_background.parse(pale)
 

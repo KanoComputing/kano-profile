@@ -39,7 +39,7 @@ class TableUi():
             for filename, properties in items.iteritems():
                 cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
-                            "unlocked": True, "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
+                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
 
                 item = item_info.ItemInfo(cat_dict)
 

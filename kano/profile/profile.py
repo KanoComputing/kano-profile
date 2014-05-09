@@ -43,3 +43,21 @@ def is_unlocked():
         return load_profile()['unlocked']
     else:
         return False
+
+
+def get_avatar():
+    profile = load_profile()
+    if 'avatar' in profile:
+        print profile['avatar']
+    else:
+        return 'judoka', 'judoka_1'
+
+
+def get_environment():
+    profile = load_profile()
+    if 'environment' in profile:
+        print profile['environment']
+    else:
+        return 'dojo'
+
+

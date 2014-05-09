@@ -22,6 +22,7 @@ def activate(_win, _box):
     if swag_ui is None:
         swag_ui = table_template.TableTemplate(headers, equipable)
 
+    swag_ui.leave_info_screen()
     _box.pack_start(swag_ui.container, False, False, 0)
 
     _win.show_all()

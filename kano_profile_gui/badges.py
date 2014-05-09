@@ -21,6 +21,8 @@ def activate(_win, _box):
     if badge_ui is None:
         badge_ui = table_template.TableTemplate(headers, equipable)
 
+    # Leave the info screen
+    badge_ui.leave_info_screen()
     _box.pack_start(badge_ui.container, False, False, 0)
 
     _win.show_all()

@@ -4,7 +4,9 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir
+import os
+
+from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path
 from .paths import profile_file, profile_dir, linux_user
 
 
@@ -29,6 +31,9 @@ def save_profile(data):
     data['save_date'] = get_date_now()
     ensure_dir(profile_dir)
     write_json(profile_file, data)
+    if 'SUDO_USER' in os.environ:
+        chown_path(profile_dir)
+        chown_path(profile_file)
 
 
 def set_unlocked(boolean):

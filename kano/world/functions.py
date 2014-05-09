@@ -7,7 +7,7 @@
 import json
 
 from kano.profile.profile import load_profile, save_profile
-from kano.utils import get_user
+from kano.utils import get_user_unsudoed
 
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
@@ -136,5 +136,5 @@ def get_mixed_username():
         profile = load_profile()
         username = profile['kanoworld_username']
     else:
-        username = get_user()
+        username = get_user_unsudoed()
     return username

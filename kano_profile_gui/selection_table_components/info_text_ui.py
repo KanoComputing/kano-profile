@@ -33,8 +33,7 @@ class InfoTextUi():
         transparent = self.change_opacity_of_color(color_str, 0.0)
         transparent_background = Gdk.RGBA()
         transparent_background.parse(transparent)
-        pale = self.change_opacity_of_color(color_str, 0.6)
-        print pale
+        pale = self.change_opacity_of_color(color_str, 0.3)
         pale_background = Gdk.RGBA()
         pale_background.parse(pale)
 

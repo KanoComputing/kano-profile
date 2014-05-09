@@ -10,7 +10,6 @@ import os
 from gi.repository import Gtk
 from kano.profile.apps import get_app_list, get_app_data_dir
 from kano.utils import run_print_output_error
-import kano_profile_gui.components.header as header
 
 app_profiles = {
     'make-pong': {
@@ -30,6 +29,10 @@ app_profiles = {
 # The list of the displayed items
 class ProjectList():
     def __init__(self):
+
+        self.width = 734
+        self.height = 44
+
         apps = get_app_list()
 
         self.projects_list = []
@@ -127,10 +130,19 @@ class ProjectItem():
 
 def activate(_win, _box):
     project_list = ProjectList()
-    heading = header.Header("Challenges")
+
+    header_box = Gtk.Box()
+    header_box.set_size_request(734, 44)
+    header_halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
+    header_halign.set_size_request(734, 44)
+    header_title_label = Gtk.Label("CHALLENGES")
+    header_title_label.get_style_context().add_class("heading")
+    header_halign.add(header_title_label)
+    header_box.add(header_halign)
+
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.add_with_viewport(project_list.background)
     scrolledwindow.set_size_request(734, 404)
-    _box.pack_start(heading.box, False, False, 0)
+    _box.pack_start(header_box, False, False, 0)
     _box.pack_start(scrolledwindow, False, False, 0)
     _win.show_all()

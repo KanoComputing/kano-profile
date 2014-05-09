@@ -11,7 +11,7 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.table_ui as tab
 import kano_profile_gui.selection_table_components.info_screen_ui as info_screen
 import kano_profile_gui.components.header as header
-from kano.profile.profile import get_avatar, get_environment
+from kano.profile.profile import get_avatar, get_environment, set_avatar, set_environment
 
 
 # headers: category names, e.g. ["badges"] or ["environments"]
@@ -91,7 +91,11 @@ class TableTemplate():
         cat.unequip_all()
         pic.set_equipped_item()
         self.leave_info_screen()
-        print cat.get_equipped_tuple()
+        category, subcat, name = cat.get_equipped_tuple()
+        if category == "environments":
+            set_environment(name)
+        else:
+            set_avatar(subcat, name)
 
     def leave_info_screen(self, arg1=None, arg2=None):
         for i in self.container.get_children():
@@ -116,5 +120,5 @@ class TableTemplate():
 
     def get_equipped_tuple(self):
         for i in range(2):
-            print self.headers[i], self.categories[i].get_equipped_tuple()
+            return self.categories[i].get_equipped_tuple()
 

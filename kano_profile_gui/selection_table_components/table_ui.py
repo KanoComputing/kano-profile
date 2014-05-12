@@ -12,6 +12,7 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.item_ui as item_ui
 from kano_profile_gui.selection_table_components import item_info, item_group
 from kano.profile.badges import calculate_badges
+import math
 #from .images import get_image
 
 
@@ -47,7 +48,7 @@ class TableUi():
                     group = item_group.ItemGroup([item])
                     pic = item_ui.ItemUi(group)
                     self.pics.append(pic)
-                    number_of_badges = number_of_badges + 1
+                    number_of_badges = number_of_badges + 1.0  # Make a float
                 else:
                     item_array.append(item)
 
@@ -57,11 +58,10 @@ class TableUi():
                 pic = item_ui.ItemUi(group)
                 self.pics.append(pic)
 
-                number_of_badges = number_of_badges + 1
+                number_of_badges = number_of_badges + 1.0  # Make a float
 
-        #self.info = info
         self.number_of_columns = 3
-        self.number_of_rows = (number_of_badges / self.number_of_columns) + (number_of_badges % self.number_of_columns)
+        self.number_of_rows = math.ceil(number_of_badges / self.number_of_columns)
 
         self.grid = Gtk.Grid()
 
@@ -81,8 +81,6 @@ class TableUi():
 
             row += 1
 
-        # Read config file/ JSON and find equipped picture.  Default to first one
-        #self.set_equipped(self.pics[0])
         self.grid.set_row_spacing(0)
         self.grid.set_column_spacing(0)
 

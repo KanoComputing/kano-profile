@@ -1,0 +1,43 @@
+{
+  "kano-feedback": [
+    "bugs_submitted", 
+    "starts"
+  ], 
+  "kano-profile": [
+    "kano_level", 
+    "hidden_file_opened", 
+    "num_offline_badges"
+  ], 
+  "kano-settings": [
+    "completed"
+  ], 
+  "kano-updater": [
+    "updated"
+  ], 
+  "kano-video": [
+    "level"
+  ], 
+  "make-minecraft": [
+    "level", 
+    "blocks_created"
+  ], 
+  "make-music": [
+    "level"
+  ], 
+  "make-pong": [
+    "level", 
+    "blocks_created"
+  ], 
+  "make-snake": [
+    "level", 
+    "apples_eaten"
+  ], 
+  "online": [
+    "staff_picks", 
+    "shares", 
+    "you_follow"
+  ], 
+  "vnc": [
+    "starts"
+  ]
+}

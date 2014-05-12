@@ -116,15 +116,13 @@ def calculate_badges():
                     calculated_badges[category][subcat][item]['achieved'] = achieved
 
     def count_offline_badges():
-        return 18
-
-        # TODO implement proper count
-        # count = 0
-        # for category, items in badges.iteritems():
-        #     for item, value in items.iteritems():
-        #         if value:
-        #             count += 1
-        # return count
+        count = 0
+        for category, subcats in calculated_badges.iteritems():
+            for subcat, items in subcats.iteritems():
+                for item, rules in items.iteritems():
+                    if category == 'badges' and subcat != 'online':
+                        count += 1
+        return count
 
     app_list = get_app_list() + ['kano-world']
     app_state = dict()

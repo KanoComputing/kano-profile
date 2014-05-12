@@ -199,6 +199,9 @@ def save_app_state_with_dialog(app_name, data):
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
         run_bg(cmd)
 
+    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    run_bg(cmd)
+
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
     if is_unlocked() and variable == 'level':

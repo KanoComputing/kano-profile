@@ -18,6 +18,9 @@ glob_session = None
 def login(email, password):
     global glob_session
 
+    email = email.strip()
+    password = password.strip()
+
     payload = {
         'email': email,
         'password': password
@@ -41,6 +44,10 @@ def login(email, password):
 
 
 def register(email, username, password):
+    email = email.strip()
+    username = username.strip()
+    password = password.strip()
+
     payload = {
         'email': email,
         'username': username,
@@ -142,6 +149,14 @@ def get_mixed_username():
 
 def get_token():
     try:
-        load_profile()['token']
+        return load_profile()['token']
     except Exception:
         return ''
+
+
+def get_email():
+    try:
+        email = load_profile()['email']
+    except Exception:
+        email = ''
+    return email

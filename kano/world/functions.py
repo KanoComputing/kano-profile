@@ -15,30 +15,18 @@ from .session import KanoWorldSession
 glob_session = None
 
 
-def login(email, password):
-    global glob_session
-
-    email = email.strip()
+def login(login_name, password):
+    login_name = login_name.strip()
     password = password.strip()
 
     payload = {
-        'email': email,
+        'email': login_name,
         'password': password
     }
 
     success, text, data = request_wrapper('post', '/auth', data=json.dumps(payload), headers=content_type_json)
     if success:
-        profile = load_profile()
-        profile['token'] = data['session']['token']
-        profile['kanoworld_username'] = data['session']['user']['username']
-        profile['kanoworld_id'] = data['session']['user']['id']
-        profile['email'] = email
-        save_profile(profile)
-        try:
-            glob_session = KanoWorldSession(profile['token'])
-            return True, None
-        except Exception as e:
-            return False, 'There may be a problem with our servers. Try again later. Error = {}'.format(str(e))
+        return login_register_data(data)
     else:
         return False, 'Cannot log in, problem: {}'.format(text)
 
@@ -56,14 +44,25 @@ def register(email, username, password):
 
     success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)
     if success:
-        profile = load_profile()
-        profile['kanoworld_username'] = data['user']['username']
-        profile['kanoworld_id'] = data['user']['id']
-        profile['email'] = email
-        save_profile(profile)
-        return True, email
+        return login_register_data(data)
     else:
-        return False, text
+        return False, 'Cannot register, problem: {}'.format(text)
+
+
+def login_register_data(data):
+    global glob_session
+
+    profile = load_profile()
+    profile['token'] = data['session']['token']
+    profile['kanoworld_username'] = data['session']['user']['username']
+    profile['kanoworld_id'] = data['session']['user']['id']
+    profile['email'] = data['session']['user']['email']
+    save_profile(profile)
+    try:
+        glob_session = KanoWorldSession(profile['token'])
+        return True, None
+    except Exception as e:
+        return False, 'There may be a problem with our servers. Try again later. Error = {}'.format(str(e))
 
 
 def is_registered():

@@ -80,14 +80,16 @@ class InfoScreenUi():
             prevb = Gtk.Button()
             prevb.set_image(prev_arrow)
             prevb.get_style_context().add_class("transparent")
+            prevb.set_size_request(50, 50)
             prevb.connect("button_press_event", self.go_to_prev)
             nextb = Gtk.Button()
             nextb.set_image(next_arrow)
             nextb.get_style_context().add_class("transparent")
+            nextb.set_size_request(50, 50)
             nextb.connect("button_press_event", self.go_to_next)
             fixed.put(image, 0, 0)
-            fixed.put(prevb, 0, self.height / 2)
-            fixed.put(nextb, self.width - 35, self.height / 2)
+            fixed.put(prevb, 0, (self.height / 2) - 25)
+            fixed.put(nextb, self.width - 50, (self.height / 2) - 25)
         else:
             fixed.put(image, 0, 0)
 

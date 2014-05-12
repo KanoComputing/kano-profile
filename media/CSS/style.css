@@ -189,9 +189,12 @@ GtkWindow GtkBox {
     background: @kano_orange;
 }
 .progress_label {
-    color: white;
     background: @kano_orange;
     border-radius: 3px;
+}
+.progress_label GtkLabel {
+    color: #ffffff;
+    font: Bariol Bold 13;
 }
 .rest_of_bar {
     color: @inactive_writing;

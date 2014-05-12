@@ -18,26 +18,16 @@ class ProgressBar():
         self.label_height = 30
         self.label_width = 60
         self.total_width = WINDOW_WIDTH
-        self.fraction = fraction
-        self.text_shown = str(self.fraction * 100) + "%"
-
-        # Calculate various widths of bars
-        progress_width = (self.total_width - self.label_width) * self.fraction
-        rest_of_bar_width = (self.total_width - self.label_width) * (1 - self.fraction)
 
         self.progress = Gtk.EventBox()
-        self.progress.set_size_request(progress_width, self.height)
         self.progress.get_style_context().add_class("progress_bar")
 
         self.rest_of_bar = Gtk.EventBox()
-        self.rest_of_bar.set_size_request(rest_of_bar_width, self.height)
         self.rest_of_bar.get_style_context().add_class("rest_of_bar")
 
-        self.label = Gtk.Label(self.text_shown)
-        print str(self.fraction * 100) + "%"
+        self.label = Gtk.Label()
         self.label.set_size_request(self.label_width, self.label_height)
         self.label.set_alignment(xalign=0.5, yalign=0.5)
-        self.label.get_style_context().add_class("white")
 
         self.label_background = Gtk.EventBox()
         self.label_background.get_style_context().add_class("progress_label")
@@ -46,15 +36,15 @@ class ProgressBar():
 
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.total_width, self.label_height)
-        self.fixed.put(self.progress, 0, self.height)
-        self.fixed.put(self.label_background, progress_width, 0)
-        self.fixed.put(self.rest_of_bar, progress_width + self.label_width, self.height)
+
+        self.set_progress(fraction)
 
     def set_progress(self, fraction):
         self.fraction = fraction
         progress_width = (self.total_width - self.label_width) * self.fraction
         rest_of_bar_width = (self.total_width - self.label_width) * (1 - self.fraction)
 
+        self.progress.set_size_request(progress_width, self.height)
         self.rest_of_bar.set_size_request(rest_of_bar_width, self.height)
 
         for child in self.fixed.get_children():

@@ -96,7 +96,7 @@ class Birthday():
             current_year = int(time.strftime("%Y"))
 
             age = current_year - bday_year
-            if age < 0:
+            if age < 0 or age > 114:
                 raise Exception
 
             if current_month < bday_month:

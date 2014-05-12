@@ -37,6 +37,8 @@ class MainWindow(Gtk.Window):
         self.set_resizable(False)
         self.state = 0
 
+        print new_items
+
         # Get username
         username = get_mixed_username()
 
@@ -112,10 +114,7 @@ class MainWindow(Gtk.Window):
 
         self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
 
-        # Placeholder image for badges and avatars:
-        if category == "badges":
-            filename = get_image(category, "", "badge", size_folder)
-        elif category == "avatars":
+        if category == "avatars":
             filename = get_image(category, "", "avatar", size_folder)
 
         self.image.set_from_file(filename)

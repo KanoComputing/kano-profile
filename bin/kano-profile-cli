@@ -82,10 +82,10 @@ elif sys.argv[1] == 'lock':
     check_arg_len(1)
     set_unlocked(False)
 
-elif sys.argv[1] == 'has_token':
+elif sys.argv[1] == 'is_registered':
     check_arg_len(1)
-    print int(has_token())
-    sys.exit(int(has_token()))
+    print int(is_registered())
+    sys.exit(int(is_registered()))
 
 elif sys.argv[1] == 'get_stats':
     check_arg_len(1)

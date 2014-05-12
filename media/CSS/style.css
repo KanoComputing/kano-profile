@@ -94,12 +94,16 @@ GtkWindow GtkBox {
     background: transparent;
     padding-left:20px;
 }
-.home_button_title {
+.home_button .top_bar_button GtkLabel {
+    color: @top_bar_inactive;
+}
+.home_button_active .top_bar_button_active GtkLabel {
     color: @top_bar_active;
-    font: Bariol Bold 16;
+}
+.home_button_title {
+    font: Bariol Bold 17;
 }
 .home_button_description {
-    color: @top_bar_active;
     font: Bariol Bold 13;
 }
 
@@ -125,18 +129,20 @@ GtkWindow GtkBox {
 .top_bar_button {
     background: transparent;
 }
-.top_bar_label {
+.top_bar_button GtkLabel {
     color: @top_bar_inactive;
+}
+.top_bar_button GtkLabel:hover {
+    color: @top_bar_active;
+}
+.top_bar_button_active {
+    background: transparent;
+}
+.top_bar_button_active GtkLabel {
+    color: @top_bar_active;
+}
+.top_bar_label {
     font: Bariol Bold 13;
-}
-.top_bar_label:hover {
-    color: @top_bar_active;
-}
-.top_bar_label_active {
-    color: @top_bar_active;
-}
-.top_bar_label_active:hover {
-    color: @top_bar_active;
 }
 .close_button {
     padding:8px;

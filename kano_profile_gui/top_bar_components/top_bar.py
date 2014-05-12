@@ -7,7 +7,7 @@
 #
 # This controls the styling of the (pretend) top window bar.
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.top_bar_components.home_button as home_button
 
@@ -35,7 +35,7 @@ class TopBar():
         self.badges_button = Gtk.Button()
         self.swag_button = Gtk.Button()
         self.challenges_button = Gtk.Button()
-        self.button_array = [self.badges_button, self.swag_button, self.challenges_button]
+        self.button_array = [self.badges_button, self.swag_button, self.challenges_button, self.home_button.button]
         badges_label = Gtk.Label()
         swag_label = Gtk.Label()
         challenges_label = Gtk.Label()
@@ -81,19 +81,13 @@ class TopBar():
 
     # TODO: Home button uses this function, change this
     def activate_label(self, widget, event):
+        for button in self.button_array:
+            button.get_style_context().remove_class("top_bar_button_active")
+            button.get_style_context().add_class("top_bar_button")
 
-        for label in self.label_array:
-            label.get_style_context().remove_class("top_bar_label_active")
-            label.get_style_context().add_class("top_bar_label")
-            # Doesn't matter the colour you pass here, just needs to force Gtk to re-style the label and notice the change of class
-            label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))
-
-        index = self.button_array.index(widget)
-
-        label_style = self.label_array[index].get_style_context()
-
-        label_style.remove_class("top_bar_label")
-        label_style.add_class("top_bar_label_active")
+        button_style = widget.get_style_context()
+        button_style.remove_class("top_bar_button")
+        button_style.add_class("top_bar_button_active")
 
 
 def close_window(event, button):

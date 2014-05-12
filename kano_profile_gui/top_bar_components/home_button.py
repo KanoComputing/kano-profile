@@ -53,7 +53,6 @@ class HomeButton():
 
         self.button.set_size_request(self.button.width, self.button.height)
 
-    def update_level(self, level_number):
-        self.level_image.set_from_file(constants.media + "/icons/Level-" + str(level_number) + ".png")
-        self.level.set_text("Level " + str(level_number))
-        self.earned_title.set_text(self.possible_titles[level_number])
+    def update_level(self):
+        level, progress = calculate_kano_level()
+        self.level.set_text("Level " + str(level))

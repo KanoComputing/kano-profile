@@ -23,23 +23,23 @@ def activate(_win, _box):
 
     win = _win
     box = _box
-    username_entry = Gtk.Entry()
+    email_entry = Gtk.Entry()
     password_entry = Gtk.Entry()
 
     title = heading.Heading("Log in", "Open up your world")
 
     profile = load_profile()
     if 'email' in profile and profile['email']:
-        username = profile['email']
+        email = profile['email']
     else:
-        username = 'Email'
+        email = 'Email'
 
-    username_entry.props.placeholder_text = username
+    email_entry.props.placeholder_text = email
     password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
     login = green_button.Button("LOG IN")
-    login.button.connect("button_press_event", log_user_in, username_entry, password_entry, _win)
+    login.button.connect("button_press_event", log_user_in, email_entry, password_entry, _win)
     login.set_padding(10, 0, 0, 0)
 
     # if we want to add a not-registered button, uncomment out the lines below
@@ -48,7 +48,7 @@ def activate(_win, _box):
     not_registered.connect("clicked", register)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    container.pack_start(username_entry, False, False, 0)
+    container.pack_start(email_entry, False, False, 0)
     container.pack_start(password_entry, False, False, 0)
 
     valign = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=1)
@@ -71,11 +71,11 @@ def register(event):
     gender.activate(win, box)
 
 
-def log_user_in(button, event, username_entry, password_entry, win):
-    username_text = username_entry.get_text()
+def log_user_in(button, event, email_entry, password_entry, win):
+    email_text = email_entry.get_text()
     password_text = password_entry.get_text()
 
-    success, text = login_(username_text, password_text)
+    success, text = login_(email_text, password_text)
 
     if not success:
         print "error = " + str(text)

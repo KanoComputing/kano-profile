@@ -9,7 +9,7 @@ from __future__ import division
 import os
 
 from ..utils import read_json, is_gui, run_bg
-from .paths import xp_file, levels_file, rules_dir, bin_dir
+from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -82,19 +82,22 @@ def calculate_badges():
                     if target_pushback != select_push_back:
                         continue
 
-                    if rules['operation'] == 'stat_gta':
+                    if rules['operation'] == 'each_greater':
                         achieved = True
                         for target in rules['targets']:
                             app = target[0]
                             variable = target[1]
                             value = target[2]
 
+                            if variable == 'level' and value == -1:
+                                value = app_profiles[app]['max_level']
+
                             if app not in app_list or variable not in app_state[app]:
                                 achieved = False
                                 break
                             achieved &= app_state[app][variable] >= value
 
-                    elif rules['operation'] == 'stat_sum_gt':
+                    elif rules['operation'] == 'sum_greater':
                         sum = 0
                         for target in rules['targets']:
                             app = target[0]
@@ -116,17 +119,19 @@ def calculate_badges():
                     calculated_badges[category][subcat][item]['achieved'] = achieved
 
     def count_offline_badges():
-        return 18
+        count = 0
+        for category, subcats in calculated_badges.iteritems():
+            for subcat, items in subcats.iteritems():
+                for item, rules in items.iteritems():
+                    if category == 'badges' and subcat != 'online':
+                        count += 1
+        return count
 
-        # TODO implement proper count
-        # count = 0
-        # for category, items in badges.iteritems():
-        #     for item, value in items.iteritems():
-        #         if value:
-        #             count += 1
-        # return count
+    app_profiles = read_json(app_profiles_file)
+    if not app_profiles:
+        print 'Error reading app_profiles.json'
 
-    app_list = get_app_list() + ['kano-world']
+    app_list = get_app_list() + ['kano-profile']
     app_state = dict()
     for app in app_list:
         app_state[app] = load_app_state(app)
@@ -135,7 +140,7 @@ def calculate_badges():
     profile_state = dict()
     profile_state['xp'] = calculate_xp()
     profile_state['level'], _ = calculate_kano_level()
-    app_state['kano-world'] = profile_state
+    app_state['kano-profile'] = profile_state
 
     all_rules = load_badge_rules()
     calculated_badges = dict()
@@ -144,7 +149,7 @@ def calculate_badges():
     do_calculate(False)
 
     # count offline badges
-    app_state['kano-world']['num_offline_badges'] = count_offline_badges()
+    app_state['kano-profile']['num_offline_badges'] = count_offline_badges()
 
     # add pushed back ones
     do_calculate(True)
@@ -200,6 +205,9 @@ def save_app_state_with_dialog(app_name, data):
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
         run_bg(cmd)
+
+    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    run_bg(cmd)
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):

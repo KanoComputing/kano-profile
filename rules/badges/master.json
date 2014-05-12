@@ -3,7 +3,7 @@
     "bg_color": "ffc38b",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-settings", "completed", 1]],
     "title": "Computer Commander"
   },
@@ -11,7 +11,7 @@
     "bg_color": "f5f5ed",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "push_back": true,
     "targets": [["kano-profile", "num_offline_badges", 15]],
     "title": "Kano Apprentice"
@@ -20,16 +20,16 @@
     "bg_color": "f4ec8b",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "push_back": true,
-    "targets": [["kano-profile", "num_offline_badges", -1]],
+    "targets": [["kano-profile", "num_offline_badges", 30]],
     "title": "Kano Master"
   },
   "minecraft_master": {
     "bg_color": "b8e3a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-minecraft", "level", -1]],
     "title": "Minecraft Master"
   },
@@ -37,7 +37,7 @@
     "bg_color": "ade3ef",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-music", "level", -1]],
     "title": "Music Marvel"
   },
@@ -45,7 +45,7 @@
     "bg_color": "9f9f9f",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-pong", "level", -1]],
     "title": "Pong Pro"
   },
@@ -53,7 +53,7 @@
     "bg_color": "ee97a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-snake", "level", -1]],
     "title": "Snake Survivor"
   },
@@ -61,7 +61,7 @@
     "bg_color": "fee8a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-video", "level", -1]],
     "title": "Video Voyager"
   }

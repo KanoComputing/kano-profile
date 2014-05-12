@@ -1,10 +1,6 @@
 {
-  "make-pong": {
-    "dir": "Pong-content",
-    "ext": "xml",
-    "cmd": "python /usr/share/make-pong/make-pong {fullpath}",
-    "max_level": 15,
-    "icon": "/usr/share/kano-desktop/icons/pong.png"
+  "kano-video": {
+    "max_level": 3
   },
   "make-minecraft": {
     "dir": "Minecraft-content",
@@ -12,6 +8,16 @@
     "cmd": "python /usr/share/make-minecraft/make-minecraft {fullpath}",
     "max_level": 15,
     "icon": "/usr/share/kano-desktop/icons/minecraft.png"
+  },
+  "make-music": {
+    "max_level": 3
+  },
+  "make-pong": {
+    "dir": "Pong-content",
+    "ext": "xml",
+    "cmd": "python /usr/share/make-pong/make-pong {fullpath}",
+    "max_level": 15,
+    "icon": "/usr/share/kano-desktop/icons/pong.png"
   },
   "make-snake": {
     "dir": "Snake-content",

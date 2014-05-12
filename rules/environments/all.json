@@ -3,7 +3,7 @@
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-pong", "level", -1]],
     "title": "Arcade Hall"
   },
@@ -11,7 +11,7 @@
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-music", "level", -1]],
     "title": "Concert Hall"
   },
@@ -19,7 +19,7 @@
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-minecraft", "level", -1]],
     "title": "Fields of Ideas"
   },
@@ -27,7 +27,7 @@
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-snake", "level", -1]],
     "title": "Jungle"
   },
@@ -35,23 +35,23 @@
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
-    "targets": [["kano-profile", "kano_level", -1]],
+    "operation": "each_greater",
+    "targets": [["kano-profile", "num_offline_badges", 30]],
     "title": "Space"
   },
   "dojo": {
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
-    "targets": [["kano-profile", "kano_level", -1]],
+    "operation": "each_greater",
+    "targets": [["kano-profile", "kano_level", 1]],
     "title": "Dojo"
   },
   "video_set": {
     "bg_color": "000000",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-video", "level", -1]],
     "title": "Video Set"
   }

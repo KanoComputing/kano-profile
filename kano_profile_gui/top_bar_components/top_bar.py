@@ -89,6 +89,8 @@ class TopBar():
         button_style.remove_class("top_bar_button")
         button_style.add_class("top_bar_button_active")
 
+        self.home_button.update()
+
 
 def close_window(event, button):
         Gtk.main_quit()

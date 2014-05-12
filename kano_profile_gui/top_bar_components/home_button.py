@@ -71,7 +71,7 @@ class HomeButton():
 
     def update(self):
         level, progress = calculate_kano_level()
-        self.level.set_text("Level " + str(level))
+        self.description.set_text("Level " + str(level))
         self.set_image()
 
     def set_image(self):

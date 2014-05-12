@@ -30,7 +30,6 @@ refs = {
 }
 
 
-# if flow is not None, this is passed from kano-settings
 class MainWindow(Gtk.Window):
 
     def __init__(self):
@@ -148,10 +147,7 @@ def main():
         Gtk.main()
 
     else:
-        flow = None
-        if len(sys.argv) > 2 and sys.argv[1] == 'flow':
-            flow = int(sys.argv[2])
-        win = MainWindow(flow)
+        win = MainWindow()
         win.connect('delete-event', Gtk.main_quit)
         win.show_all()
         Gtk.main()

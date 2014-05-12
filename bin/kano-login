@@ -17,7 +17,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
 from kano_login.components import top_bar, logged_in
-#from kano.world.functions import is_registered
+from kano.world.functions import is_registered
 from kano.world.functions import login_using_token
 
 
@@ -33,7 +33,7 @@ refs = {
 # if flow is not None, this is passed from kano-settings
 class MainWindow(Gtk.Window):
 
-    def __init__(self, flow=None):
+    def __init__(self):
 
         # Create main window
         Gtk.Window.__init__(self, title='Kano Login')
@@ -41,11 +41,6 @@ class MainWindow(Gtk.Window):
         self.WINDOW_WIDTH = 500
 
         self.last_level_visited = 0
-
-        self.flow = 1
-        # flow = 0 or 1 depending on whether it was launched from kano-settings
-        if flow is not None:
-            self.flow = flow
 
         self.username = ""
         self.email = ""
@@ -78,15 +73,14 @@ class MainWindow(Gtk.Window):
         self.top_bar.set_prev_callback(self.on_prev)
         self.top_bar.set_next_callback(self.on_next)
 
-        # init home screen
-        if flow is not None:
-            self.flow = flow
-            first_screen.activate(self, self.box)
-
-        # go directly to login
-        else:
+        if is_registered():
+            self.flow = 1
             self.clear_box()
             login.activate(self, self.box)
+
+        else:
+            self.flow = 0
+            first_screen.activate(self, self.box)
 
         self.show_all()
 
@@ -146,22 +140,21 @@ def main():
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-
     success, _ = login_using_token()
-    #if success:
-    #    win = logged_in.LoggedIn()
-    #    win.show_all()
-    #    Gtk.main()
 
-    #else:
-    flow = None
-    if len(sys.argv) > 2 and sys.argv[1] == 'flow':
-        flow = int(sys.argv[2])
+    if success:
+        win = logged_in.LoggedIn()
+        win.show_all()
+        Gtk.main()
 
-    win = MainWindow(flow)
-    win.connect('delete-event', Gtk.main_quit)
-    win.show_all()
-    Gtk.main()
+    else:
+        flow = None
+        if len(sys.argv) > 2 and sys.argv[1] == 'flow':
+            flow = int(sys.argv[2])
+        win = MainWindow(flow)
+        win.connect('delete-event', Gtk.main_quit)
+        win.show_all()
+        Gtk.main()
 
 
 if __name__ == '__main__':

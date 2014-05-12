@@ -36,7 +36,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "kano_level", -1]],
+    "targets": [["kano-profile", "num_offline_badges", 30]],
     "title": "Space"
   },
   "dojo": {
@@ -44,7 +44,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "kano_level", -1]],
+    "targets": [["kano-profile", "kano_level", 1]],
     "title": "Dojo"
   },
   "video_set": {

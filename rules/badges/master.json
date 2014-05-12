@@ -22,7 +22,7 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
     "push_back": true,
-    "targets": [["kano-profile", "num_offline_badges", -1]],
+    "targets": [["kano-profile", "num_offline_badges", 30]],
     "title": "Kano Master"
   },
   "minecraft_master": {

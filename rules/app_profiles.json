@@ -1,6 +1,6 @@
 {
   "kano-video": {
-    "max_level": 3,
+    "max_level": 3
   },
   "make-minecraft": {
     "dir": "Minecraft-content",
@@ -10,7 +10,7 @@
     "icon": "/usr/share/kano-desktop/icons/minecraft.png"
   },
   "make-music": {
-    "max_level": 3,
+    "max_level": 3
   },
   "make-pong": {
     "dir": "Pong-content",

@@ -9,7 +9,7 @@ from __future__ import division
 import os
 
 from ..utils import read_json, is_gui, run_bg
-from .paths import xp_file, levels_file, rules_dir, bin_dir
+from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
@@ -89,6 +89,9 @@ def calculate_badges():
                             variable = target[1]
                             value = target[2]
 
+                            if variable == 'level' and value == -1:
+                                value = app_profiles[app]['max_level']
+
                             if app not in app_list or variable not in app_state[app]:
                                 achieved = False
                                 break
@@ -124,7 +127,11 @@ def calculate_badges():
                         count += 1
         return count
 
-    app_list = get_app_list() + ['kano-world']
+    app_profiles = read_json(app_profiles_file)
+    if not app_profiles:
+        print 'Error reading app_profiles.json'
+
+    app_list = get_app_list() + ['kano-profile']
     app_state = dict()
     for app in app_list:
         app_state[app] = load_app_state(app)
@@ -133,7 +140,7 @@ def calculate_badges():
     profile_state = dict()
     profile_state['xp'] = calculate_xp()
     profile_state['level'], _ = calculate_kano_level()
-    app_state['kano-world'] = profile_state
+    app_state['kano-profile'] = profile_state
 
     all_rules = load_badge_rules()
     calculated_badges = dict()
@@ -142,7 +149,7 @@ def calculate_badges():
     do_calculate(False)
 
     # count offline badges
-    app_state['kano-world']['num_offline_badges'] = count_offline_badges()
+    app_state['kano-profile']['num_offline_badges'] = count_offline_badges()
 
     # add pushed back ones
     do_calculate(True)

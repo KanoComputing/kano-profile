@@ -34,7 +34,7 @@ def activate(_win, _box):
         next_button = green_button.Button("NEXT")
         next_button.button.connect("button_press_event", update)
         box.pack_start(title.container, False, False, 0)
-        box.pack_start(next_button.box, False, False, 0)
+        box.pack_start(next_button.align, False, False, 0)
     else:
         title = heading.Heading("You should get an account, but you need internet!", "Come back later")
         done_button = green_button.Button("DONE")

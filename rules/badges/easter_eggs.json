@@ -3,7 +3,7 @@
     "bg_color": "ffe9b1",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "hidden_file_opened", 1]],
     "title": "File Finder"
   }

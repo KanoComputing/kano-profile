@@ -3,7 +3,7 @@
     "bg_color": "d7b6f2",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 7]],
     "title": "Kano Kin 1"
   },
@@ -11,7 +11,7 @@
     "bg_color": "c294e9",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 7]],
     "title": "Kano Kin 2"
   }

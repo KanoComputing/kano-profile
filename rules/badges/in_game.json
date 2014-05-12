@@ -3,7 +3,7 @@
     "bg_color": "f1db9f",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-minecraft", "level", 12]],
     "title": "Amazing Architect"
   },
@@ -11,7 +11,7 @@
     "bg_color": "ff9c9d",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-snake", "apples_eaten", 100]],
     "title": "Appetite for Apples"
   },
@@ -19,7 +19,7 @@
     "bg_color": "928f7e",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-minecraft", "level", 9]],
     "title": "Block Builder"
   },
@@ -27,7 +27,7 @@
     "bg_color": "f38484",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-minecraft", "level", 15]],
     "title": "End Everything"
   },
@@ -35,7 +35,7 @@
     "bg_color": "afe5fa",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-pong", "level", 5]],
     "title": "Pong Painter"
   },
@@ -43,7 +43,7 @@
     "bg_color": "d9c2df",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["make-pong", "level", 8]],
     "title": "Rule Breaker"
   }

@@ -82,7 +82,7 @@ def calculate_badges():
                     if target_pushback != select_push_back:
                         continue
 
-                    if rules['operation'] == 'stat_gta':
+                    if rules['operation'] == 'each_greater':
                         achieved = True
                         for target in rules['targets']:
                             app = target[0]
@@ -94,7 +94,7 @@ def calculate_badges():
                                 break
                             achieved &= app_state[app][variable] >= value
 
-                    elif rules['operation'] == 'stat_sum_gt':
+                    elif rules['operation'] == 'sum_greater':
                         sum = 0
                         for target in rules['targets']:
                             app = target[0]

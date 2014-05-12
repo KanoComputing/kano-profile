@@ -3,7 +3,7 @@
     "bg_color": "c7f4b5",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 5]],
     "title": "Minecrafter 1"
   },
@@ -11,7 +11,7 @@
     "bg_color": "addd99",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 5]],
     "title": "Minecrafter 2"
   }

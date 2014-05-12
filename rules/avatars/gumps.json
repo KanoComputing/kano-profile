@@ -3,7 +3,7 @@
     "bg_color": "ffb7b7",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 3]],
     "title": "Gumps 1"
   },
@@ -11,7 +11,7 @@
     "bg_color": "f6a4a4",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 3]],
     "title": "Gumps 2"
   }

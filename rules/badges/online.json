@@ -3,7 +3,7 @@
     "bg_color": "ffea8c",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["online", "shares", 5]],
     "title": "Community Champion"
   },
@@ -11,7 +11,7 @@
     "bg_color": "ffe591",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["online", "staff_picks", 1]],
     "title": "Staff Pick"
   },
@@ -19,7 +19,7 @@
     "bg_color": "bde1a8",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["online", "you_follow", 10]],
     "title": "Talent Tracker"
   }

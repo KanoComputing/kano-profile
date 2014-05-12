@@ -3,7 +3,7 @@
     "bg_color": "a1a1a1",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 4]],
     "title": "Pongobot 1"
   },
@@ -11,7 +11,7 @@
     "bg_color": "918e8e",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
-    "operation": "stat_gta",
+    "operation": "each_greater",
     "targets": [["kano-profile", "kano_level", 4]],
     "title": "Pongobot 2"
   }

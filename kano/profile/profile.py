@@ -7,21 +7,18 @@
 import os
 
 from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path
-from .paths import profile_file, profile_dir, linux_user, kanoprofile_dir
+from .paths import profile_file, profile_dir, kanoprofile_dir
 
 
 def load_profile():
     data = read_json(profile_file)
     if not data:
         data = dict()
-
-    data['username_linux'] = linux_user
-
+    # data['username_linux'] = linux_user
     # if get_cpu_id():
         # data['cpu_id'] = get_cpu_id()
     # if get_mac_address():
         # data['mac_addr'] = get_mac_address()
-
     return data
 
 

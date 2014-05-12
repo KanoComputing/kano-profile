@@ -7,23 +7,11 @@
 #
 
 import os
+import json
 from gi.repository import Gtk
 from kano.profile.apps import get_app_list, get_app_data_dir
 from kano.utils import run_print_output_error
-
-app_profiles = {
-    'make-pong': {
-        'dir': '~/Pong-content',
-        'ext': 'xml',
-        'cmd': 'python /usr/share/make-pong/make-pong {fullpath}'
-
-    },
-    'make-snake': {
-        'dir': '~/Snake-content',
-        'ext': '',
-        'cmd': 'kano-launcher "rxvt -title \'Make Snake\' -e python /usr/share/make-snake -t custom" "make-snake"'
-    }
-}
+from kano.profile.paths import rules_dir
 
 
 # The list of the displayed items
@@ -34,28 +22,37 @@ class ProjectList():
         self.height = 44
 
         apps = get_app_list()
+        print apps
 
         self.projects_list = []
+        self.app_profiles = {}
+
+        with open(rules_dir + "/app_profiles.json") as json_file:
+            self.app_profiles = json.load(json_file)
 
         for app in apps:
-            if app_profiles[app]['dir'] == 'kanoprofile':
-                data_dir = get_app_data_dir(app)
-            else:
-                data_dir = os.path.expanduser(app_profiles[app]['dir'])
+            if 'ext' in self.app_profiles[app]:
+                if self.app_profiles[app]['dir'] == 'kanoprofile':
+                    data_dir = get_app_data_dir(app)
+                else:
+                    data_dir = os.path.expanduser(self.app_profiles[app]['dir'])
 
-            if not os.path.exists(data_dir):
-                continue
+                icon_path = self.app_profiles[app]['icon']
 
-            files = os.listdir(data_dir)
-            files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == app_profiles[app]['ext']]
+                if not os.path.exists(data_dir):
+                    continue
 
-            for filename in files_filtered:
-                project = dict()
-                project['app'] = app
-                project['data_dir'] = data_dir
-                project['file'] = filename
-                project['display_name'] = os.path.splitext(filename)[0]
-                self.projects_list.append(project)
+                files = os.listdir(data_dir)
+                files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == self.app_profiles[app]['ext']]
+
+                for filename in files_filtered:
+                    project = dict()
+                    project['app'] = app
+                    project['data_dir'] = data_dir
+                    project['file'] = filename
+                    project['display_name'] = os.path.splitext(filename)[0]
+                    project['icon'] = icon_path
+                    self.projects_list.append(project)
 
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("project_list_background")
@@ -81,9 +78,6 @@ class ProjectItem():
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("white")
 
-        image_filename = "/usr/share/kano-desktop/icons/" + str(project['app'])
-        time = "time played"
-
         self.button = Gtk.Button("MAKE")
         self.button.connect("clicked", self.load, project['app'], project['file'], project['data_dir'])
         self.button.get_style_context().add_class("project_make_button")
@@ -95,7 +89,7 @@ class ProjectItem():
         self.title.get_style_context().add_class("project_item_title")
         self.title.set_alignment(xalign=0, yalign=1)
         self.title.set_padding(10, 0)
-        self.time = Gtk.Label(time)
+        self.time = Gtk.Label()
         self.time.get_style_context().add_class("project_item_time")
         self.time.set_alignment(xalign=0, yalign=0.5)
         self.time.set_padding(10, 0)
@@ -109,7 +103,7 @@ class ProjectItem():
         self.label_align.set_padding(10, 10, 10, 0)
 
         self.image = Gtk.Image()
-        self.image.set_from_file(image_filename)
+        self.image.set_from_file(project["icon"])
 
         self.container = Gtk.Box()
         self.container.pack_start(self.image, False, False, 0)
@@ -121,7 +115,7 @@ class ProjectItem():
     def load(self, _button, app, filename, data_dir):
         print 'load', app, filename, data_dir
         fullpath = os.path.join(data_dir, filename)
-        cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
+        cmd = self.app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
         run_print_output_error(cmd)
 
     def share(self, _button, app, filename):

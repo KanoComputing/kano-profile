@@ -21,6 +21,6 @@
     "icon": "/usr/share/kano-desktop/icons/snake.png"
   },
   "kano-settings": {
-    "dir": ".kano-settings",
+    "dir": ".kano-settings"
   }
 }

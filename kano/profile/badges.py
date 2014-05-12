@@ -8,7 +8,7 @@ from __future__ import division
 
 import os
 
-from ..utils import read_json, is_gui, run_cmd
+from ..utils import read_json, is_gui, run_bg
 from .paths import xp_file, levels_file, rules_dir, bin_dir
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -199,8 +199,7 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui():
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
-        # TODO remove print
-        print run_cmd(cmd)[0]
+        run_bg(cmd)
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):

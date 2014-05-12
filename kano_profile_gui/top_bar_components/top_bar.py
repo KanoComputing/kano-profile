@@ -7,7 +7,7 @@
 #
 # This controls the styling of the (pretend) top window bar.
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.top_bar_components.home_button as home_button
 
@@ -35,17 +35,18 @@ class TopBar():
         self.badges_button = Gtk.Button()
         self.swag_button = Gtk.Button()
         self.challenges_button = Gtk.Button()
-        self.button_array = [self.badges_button, self.swag_button, self.challenges_button, self.home_button.button]
-        badges_label = Gtk.Label()
-        swag_label = Gtk.Label()
-        challenges_label = Gtk.Label()
-        self.label_array = [badges_label, swag_label, challenges_label]
+        self.button_array = [self.badges_button, self.swag_button, self.challenges_button]
+        self.badges_label = Gtk.Label()
+        self.swag_label = Gtk.Label()
+        self.challenges_label = Gtk.Label()
+        self.label_array = [self.badges_label, self.swag_label, self.challenges_label]
 
         for x in range(3):
             label = self.label_array[x]
             label.set_text(name_array[x].upper())
-            label.get_style_context().add_class("top_bar_label")
 
+            # This sets the font size, weight and initial colour.  This is only because Gtk 3.4 has a bug in it.
+            label.get_style_context().add_class("top_bar_label")
             icon = icons.set_from_name(name_array[x].lower())
 
             container = Gtk.Box()
@@ -79,15 +80,25 @@ class TopBar():
 
         self.background.add(self.container)
 
-    # TODO: Home button uses this function, change this
     def activate_label(self, widget, event):
-        for button in self.button_array:
-            button.get_style_context().remove_class("top_bar_button_active")
-            button.get_style_context().add_class("top_bar_button")
 
-        button_style = widget.get_style_context()
-        button_style.remove_class("top_bar_button")
-        button_style.add_class("top_bar_button_active")
+        for label in self.label_array:
+            label.get_style_context().remove_class("active_label")
+            label.get_style_context().add_class("inactive_label")
+            # Doesn't matter the colour you pass here, just needs to force Gtk to re-style the label and notice the change of class
+
+        if widget in self.button_array:
+            index = self.button_array.index(widget)
+            label_style = self.label_array[index].get_style_context()
+            label_style.remove_class("inactive_label")
+            label_style.add_class("active_label")
+            self.home_button.set_activate(False)
+        else:
+            self.home_button.set_activate(True)
+
+        for label in self.label_array:
+            # This is to fix bug in Gtk 3.4, otherwise the colour doesn't update when we change the class
+            label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))
 
         self.home_button.update()
 

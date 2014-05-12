@@ -129,20 +129,21 @@ GtkWindow GtkBox {
 .top_bar_button {
     background: transparent;
 }
-.top_bar_button GtkLabel {
-    color: @top_bar_inactive;
-}
-.top_bar_button GtkLabel:hover {
-    color: @top_bar_active;
-}
-.top_bar_button_active {
-    background: transparent;
-}
-.top_bar_button_active GtkLabel {
-    color: @top_bar_active;
-}
 .top_bar_label {
     font: Bariol Bold 13;
+    color: @top_bar_inactive;
+}
+.active_label {
+    color: @top_bar_active;
+}
+.active_label:hover {
+    color: @top_bar_active;
+}
+.inactive_label {
+    color: @top_bar_inactive;
+}
+.inactive_label:hover {
+    color: @top_bar_active;
 }
 .close_button {
     padding:8px;

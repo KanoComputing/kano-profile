@@ -7,7 +7,7 @@
 #
 # This controls the button styling in the default introduction screen which shows all the settings
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 import kano_profile_gui.components.constants as constants
 from kano.world.functions import get_mixed_username
 from kano.profile.badges import calculate_kano_level
@@ -32,14 +32,15 @@ class HomeButton():
         # Info about the different settings
         self.title = Gtk.Label(self.username)
         self.title.get_style_context().add_class("home_button_title")
+        self.title.get_style_context().add_class("active_label")
         self.title.set_alignment(xalign=0, yalign=1)
 
         self.description = Gtk.Label("Level " + str(level))
         self.description.get_style_context().add_class("home_button_description")
+        self.description.get_style_context().add_class("active_label")
         self.description.set_alignment(xalign=0, yalign=0)
 
         self.button = Gtk.Button()
-        self.button.get_style_context().add_class("top_bar_button")
         self.button.get_style_context().add_class("home_button")
         self.button.set_can_focus(False)
 
@@ -78,3 +79,20 @@ class HomeButton():
         subcat, name = get_avatar()
         filename = get_image("avatars", subcat, name + "_circular", str(self.img_width) + 'x' + str(self.img_height))
         self.img.set_from_file(filename)
+
+    def set_activate(self, activate):
+        title_style = self.title.get_style_context()
+        description_style = self.description.get_style_context()
+        if activate:
+            description_style.remove_class("inactive_label")
+            title_style.remove_class("inactive_label")
+            description_style.add_class("active_label")
+            title_style.add_class("active_label")
+        else:
+            description_style.remove_class("active_label")
+            title_style.remove_class("active_label")
+            description_style.add_class("inactive_label")
+            title_style.add_class("inactive_label")
+
+        self.title.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))
+        self.description.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))

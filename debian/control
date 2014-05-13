@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9), build-essential, pkg-config, libgtk2.0-dev,
                libmenu-cache1-dev, lxpanel, libfm-gtk1, libfm-dev
 
 Package: kano-profile
-Architecture: all
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python, kano-toolset
 Recommends: kano-fonts
 Description: Profile app for KANO

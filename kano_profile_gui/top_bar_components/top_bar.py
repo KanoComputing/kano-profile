@@ -25,7 +25,7 @@ class TopBar():
         self.background.style = self.background.get_style_context()
         self.background.style.add_class('top_bar_container')
 
-        self.container = Gtk.Grid()
+        self.container = Gtk.Box()
 
         # Home button
         self.home_button = home_button.HomeButton()
@@ -48,6 +48,7 @@ class TopBar():
             # This sets the font size, weight and initial colour.  This is only because Gtk 3.4 has a bug in it.
             label.get_style_context().add_class("top_bar_label")
             icon = icons.set_from_name(name_array[x].lower())
+            #icon.set_padding(10, 10)
 
             container = Gtk.Box()
             container.pack_start(icon, False, False, 0)
@@ -62,20 +63,20 @@ class TopBar():
 
         # Close button
         cross = icons.set_from_name("cross")
+        cross.set_padding(5, 5)
         close_button = Gtk.Button()
         close_button.set_image(cross)
-        close_button.set_size_request(10, 10)
         close_button.set_can_focus(False)
         close_button.get_style_context().add_class("top_bar_button")
         close_button.get_style_context().add_class("close_button")
         close_button.connect("button_press_event", close_window)
         close_button.set_alignment(xalign=1, yalign=0)
 
-        self.container.attach(self.home_button.button, 0, 0, 1, 3)
-        self.container.attach(self.badges_button, 1, 0, 1, 3)
-        self.container.attach(self.swag_button, 2, 0, 1, 3)
-        self.container.attach(self.challenges_button, 3, 0, 1, 3)
-        self.container.attach(close_button, 4, 0, 1, 1)
+        self.container.pack_start(self.home_button.button, False, False, 0)
+        self.container.pack_start(self.badges_button, False, False, 0)
+        self.container.pack_start(self.swag_button, False, False, 0)
+        self.container.pack_start(self.challenges_button, False, False, 0)
+        self.container.pack_end(close_button, False, False, 0)
         self.container.set_size_request(WINDOW_WIDTH, self.height)
 
         self.background.add(self.container)

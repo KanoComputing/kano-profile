@@ -133,6 +133,9 @@ GtkWindow GtkBox {
     font: Bariol Bold 13;
     color: @top_bar_inactive;
 }
+.top_bar_label:hover {
+    color: @top_bar_active;
+}
 .active_label {
     color: @top_bar_active;
 }

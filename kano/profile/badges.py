@@ -8,7 +8,7 @@ from __future__ import division
 
 import os
 
-from ..utils import read_json, is_gui, run_bg
+from ..utils import read_json, is_gui, run_bg, run_cmd
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -138,8 +138,7 @@ def calculate_badges():
 
     # special app: kanoprofile
     profile_state = dict()
-    profile_state['xp'] = calculate_xp()
-    profile_state['level'], _ = calculate_kano_level()
+    profile_state['kano_level'], _ = calculate_kano_level()
     app_state['kano-profile'] = profile_state
 
     all_rules = load_badge_rules()
@@ -204,7 +203,7 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui():
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
-        run_bg(cmd)
+        run_cmd(cmd)
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)

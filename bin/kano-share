@@ -20,7 +20,7 @@ from kano.utils import download_url, ensure_dir, read_json, get_home
 
 from kano.profile.paths import app_profiles_file
 from kano_profile_gui.paths import css_dir
-from kano_login.components import icons
+from kano_profile_gui.components import icons
 from kano.world.share import list_shares
 
 
@@ -35,7 +35,7 @@ def make_top_bar(title):
     header.get_style_context().add_class('header')
 
     cross = Gtk.Image()
-    cross.set_from_pixbuf(icons.Icons("cross").subpixbuf)
+    cross = icons.set_from_name("cross")
 
     close_button = Gtk.Button()
     close_button.set_image(cross)

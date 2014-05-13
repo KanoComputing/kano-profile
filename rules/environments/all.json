@@ -54,5 +54,13 @@
     "operation": "each_greater",
     "targets": [["kano-video", "level", -1]],
     "title": "Video Set"
+  },
+  "minecraft": {
+    "bg_color": "000000",
+    "desc_locked": "desc_locked",
+    "desc_unlocked": "desc_unlocked",
+    "operation": "each_greater",
+    "targets": [["make-minecraft", "level", 1]],
+    "title": "Minecraft"
   }
 }

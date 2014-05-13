@@ -17,22 +17,24 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
 from kano_login.components import top_bar, logged_in
-from kano.world.functions import is_registered
+#from kano.world.functions import is_registered
 from kano.world.functions import login_using_token
 
 
 refs = {
-    0: [first_screen, login],
+    0: [login, first_screen],
     1: gender,
     2: birthday,
     3: register,
     4: account_confirm,
 }
 
+MAX_LEVEL = 4
+
 
 class MainWindow(Gtk.Window):
 
-    def __init__(self):
+    def __init__(self, first_boot):
 
         # Create main window
         Gtk.Window.__init__(self, title='Kano Login')
@@ -47,6 +49,7 @@ class MainWindow(Gtk.Window):
         self.birthday = ""
         self.age = 0
         self.gender = ""
+        self.first_boot = first_boot
 
         # The state is the current window showing
         self.state = 0
@@ -72,14 +75,12 @@ class MainWindow(Gtk.Window):
         self.top_bar.set_prev_callback(self.on_prev)
         self.top_bar.set_next_callback(self.on_next)
 
-        if is_registered():
-            self.flow = 1
+        if first_boot == 1:
+            self.unpack_grid()
+            first_screen.activate(self)
+        else:
             self.clear_box()
             login.activate(self, self.box)
-
-        else:
-            self.flow = 0
-            first_screen.activate(self, self.box)
 
         self.show_all()
 
@@ -107,16 +108,17 @@ class MainWindow(Gtk.Window):
         self.state = self.state - 1
         module = refs[self.state]
         if self.state == 0:
-            module = refs[0][self.flow]
-            self.top_bar.disable_prev()
+            self.unpack_grid()
+            module = refs[self.state][self.first_boot]
+            # Doesn't make sense to disable prev button anymore
         self.goto(module)
 
     def on_next(self, arg1=None, arg2=None):
         self.state = self.state + 1
         module = refs[self.state]
         self.top_bar.enable_prev()
-        if self.state == 0:
-            module = refs[0][self.flow]
+        if self.state == MAX_LEVEL:
+            self.top_bar.disable_next()
         self.goto(module)
 
     def goto(self, module):
@@ -126,6 +128,12 @@ class MainWindow(Gtk.Window):
     def clear_box(self):
         for i in self.box.get_children():
             self.box.remove(i)
+
+    def unpack_grid(self):
+        self.remove(self.grid)
+
+    def pack_grid(self):
+        self.add(self.grid)
 
 
 def main():
@@ -147,7 +155,10 @@ def main():
         Gtk.main()
 
     else:
-        win = MainWindow()
+        first_boot = 0
+        if len(sys.argv) > 2 and sys.argv[1] == 'first_boot':
+            first_boot = int(sys.argv[2])
+        win = MainWindow(first_boot)
         win.connect('delete-event', Gtk.main_quit)
         win.show_all()
         Gtk.main()

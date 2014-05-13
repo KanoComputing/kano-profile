@@ -56,7 +56,7 @@ class MainWindow(Gtk.Window):
         self.button_box = Gtk.Box()
         self.button_box.add(self.button)
         self.button_alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
-        self.button_alignment.set_padding(00, 0, (self.image_width / 2) - 40, 0)
+        self.button_alignment.set_padding(0, 0, (self.image_width / 2) - 40, 0)
         self.button_alignment.add(self.button_box)
         self.button.connect("clicked", self.go_to_next, new_items)
 

@@ -18,7 +18,7 @@ box = None
 
 
 # TODO: change dropdown to current selected
-# TODO: if "wizard" is selected, pop up should appear saying "You're only fooling yourself...."
+# TODO: change wizard pop up styling
 def activate(_win, _box):
     global win, box
 
@@ -48,7 +48,9 @@ def activate(_win, _box):
     box.pack_start(title.container, False, False, 0)
     box.pack_start(gender_combo, False, False, 30)
     box.pack_start(next_button.align, False, False, 10)
-    box.show_all()
+
+    # At this point the window has not seen the top bar or box child widget yet.
+    win.show_all()
 
 
 def on_gender_combo_changed(gender_combo, button):

@@ -96,8 +96,6 @@ def register_user(button, event, username_entry, email_entry, password_entry):
     win.username = username_entry.get_text()
     win.password = password_entry.get_text()
 
-    print 'email = {0} , username = {1} , password = {2}'.format(win.email, win.username, win.password)
-
     success, text = register_(win.email, win.username, win.password)
 
     if not success:

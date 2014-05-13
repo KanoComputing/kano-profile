@@ -6,7 +6,7 @@
 
 import os
 
-from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path
+from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, run_bg
 from .paths import apps_dir, xp_file, kanoprofile_dir
 from .profile import is_unlocked
 
@@ -60,7 +60,7 @@ def save_app_state(app_name, data):
 
     # Ask kdesk to refresh the Login/Register icon with new Kano Level
     if os.path.exists('/usr/bin/kdesk'):
-        os.system('kdesk -a loginregister')
+        run_bg('kdesk -a loginregister')
 
 
 def save_app_state_variable(app_name, variable, value):

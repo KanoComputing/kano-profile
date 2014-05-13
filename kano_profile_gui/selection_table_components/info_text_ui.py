@@ -23,7 +23,7 @@ class InfoTextUi():
         left_padding = 20
 
         # Computer Commander (a badge title) was too long to fit in a label on the screen - using GtkTextView allows us
-        # to wrap around text if it's too long
+        # to wrap around text automatically
         self.heading = Gtk.TextView()
         self.heading.set_wrap_mode(Gtk.WrapMode.WORD)
         self.heading.set_editable(False)

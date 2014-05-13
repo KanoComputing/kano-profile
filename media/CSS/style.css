@@ -308,7 +308,7 @@ GtkSwitch.slider {
 }
 .info_paragraph {
     font: Bariol Bold 14;
-    color: @inactive_writing;
+    color: @subheading_color;
 }
 
 /********************************************************

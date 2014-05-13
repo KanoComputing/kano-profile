@@ -12,7 +12,6 @@ from gi.repository import Gtk
 from components import heading, green_button
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir
-from kano.profile.profile import load_profile, save_profile_variable
 from kano.world.functions import register as register_
 from kano_login import account_confirm
 import re
@@ -114,18 +113,6 @@ def register_user(button, event, username_entry, email_entry, password_entry):
 
     # This needs to be adjusted depending on the age of the user
     else:
-        # restore on first successful login/restore
-        first_run_done = False
-        try:
-            first_run_done = load_profile()['first_run_done']
-        except Exception:
-            pass
-        if not first_run_done:
-            print 'doing first time restore'
-            cmd = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
-            run_bg(cmd)
-            save_profile_variable('first_run_done', True)
-
         # sync on each successfule login/restore
         cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
         run_bg(cmd)

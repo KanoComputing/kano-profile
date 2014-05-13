@@ -108,7 +108,8 @@ class MainWindow(Gtk.Window):
         self.state = self.state - 1
         module = refs[self.state]
         if self.state == 0:
-            self.unpack_grid()
+            if self.first_boot == 1:
+                self.unpack_grid()
             module = refs[self.state][self.first_boot]
             # Doesn't make sense to disable prev button anymore
         self.goto(module)

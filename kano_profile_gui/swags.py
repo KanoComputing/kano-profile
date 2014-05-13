@@ -16,7 +16,7 @@ swag_ui = None
 def activate(_win, _box):
     global swag_ui
 
-    headers = ["environments", "avatars"]
+    headers = ["avatars", "environments"]
     equipable = True
 
     if swag_ui is None:

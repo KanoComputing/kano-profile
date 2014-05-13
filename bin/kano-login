@@ -156,8 +156,8 @@ def main():
 
     else:
         first_boot = 0
-        if len(sys.argv) > 2 and sys.argv[1] == 'first_boot':
-            first_boot = int(sys.argv[2])
+        if len(sys.argv) == 2 and sys.argv[1] == 'first_boot':
+            first_boot = 1
         win = MainWindow(first_boot)
         win.connect('delete-event', Gtk.main_quit)
         win.show_all()

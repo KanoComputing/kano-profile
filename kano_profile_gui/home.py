@@ -7,19 +7,18 @@
 #
 
 from gi.repository import Gtk
-from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp, calculate_kano_level
 
 import kano_profile_gui.home_components.home_stats as home_stats
 import kano_profile_gui.home_components.home_picture as home_pic
+from kano.world.functions import get_mixed_username
 
 
 def activate(_win, _box):
-    profile = load_profile()
 
     xp = calculate_xp()
     level, progress = calculate_kano_level()
-    name = profile['username_linux']
+    name = get_mixed_username()
 
     # Picture box - contains image depends on level reached
     picture_box = Gtk.Box()
@@ -34,12 +33,6 @@ def activate(_win, _box):
     _box.pack_start(stats.container, False, False, 0)
 
     _win.progress.set_progress(stat_dict["Progress"])
-
-    #msg = 'name: {}\nXP: {}\nLevel: {}\nProgress to next level: {:.0%}'.format(name, xp, level, progress)
-
-    #label = Gtk.Label()
-    #label.set_text(msg)
-    #_box.add(label)
 
     _win.show_all()
 

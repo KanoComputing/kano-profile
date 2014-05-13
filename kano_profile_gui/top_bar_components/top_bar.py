@@ -85,7 +85,6 @@ class TopBar():
         for label in self.label_array:
             label.get_style_context().remove_class("active_label")
             label.get_style_context().add_class("inactive_label")
-            # Doesn't matter the colour you pass here, just needs to force Gtk to re-style the label and notice the change of class
 
         if widget in self.button_array:
             index = self.button_array.index(widget)

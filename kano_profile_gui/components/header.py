@@ -34,6 +34,9 @@ class Header():
         locked_box.pack_start(locked_pic, False, False, 0)
         locked_box.pack_start(self.locked_label, False, False, 0)
         locked_box.set_size_request(padlock_label_width, padlock_label_height)
+        locked_align = Gtk.Alignment()
+        locked_align.set_padding(0, 0, 10, 0)
+        locked_align.add(locked_box)
 
         unlocked_pic = icons.set_from_name("unlocked")
         self.unlocked_label = Gtk.Label(": " + str(self.unlocked_elements))
@@ -42,6 +45,9 @@ class Header():
         unlocked_box.pack_start(unlocked_pic, False, False, 0)
         unlocked_box.pack_start(self.unlocked_label, False, False, 0)
         unlocked_box.set_size_request(padlock_label_width, padlock_label_height)
+        unlocked_align = Gtk.Alignment()
+        unlocked_align.set_padding(0, 0, 0, 0)
+        unlocked_align.add(unlocked_box)
 
         self.halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
         self.halign.set_size_request(halign_width, self.height)
@@ -59,13 +65,12 @@ class Header():
             self.radiobutton1.set_active(True)
             self.radiobutton2.set_active(False)
             self.halign.add(self.container)
-
         else:
             self.halign.add(self.title_label)
 
-        self.box.pack_start(locked_box, False, False, 0)
+        self.box.pack_start(locked_align, False, False, 0)
         self.box.pack_start(self.halign, False, False, 0)
-        self.box.pack_start(unlocked_box, False, False, 0)
+        self.box.pack_end(unlocked_align, False, False, 0)
 
     def set_locked_number(self, number_of_locked):
         self.locked_elements = number_of_locked

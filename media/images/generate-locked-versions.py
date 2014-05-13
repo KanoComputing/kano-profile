@@ -27,7 +27,7 @@ for root, dirs, filenames in os.walk(dirpath):
         new_filename_rel = os.path.join(dir_path_rel, basename + '_locked.png')
         new_filename_abs = os.path.join(dirpath, new_filename_rel)
 
-        convert_cmd = 'convert {} -matte -channel A +level 0,50% +channel {}'.format(path_full, new_filename_abs)
+        convert_cmd = 'convert {} -matte -channel A +level 0,30% +channel {}'.format(path_full, new_filename_abs)
         print path_rel
         os.system(convert_cmd)
 

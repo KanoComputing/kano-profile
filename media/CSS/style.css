@@ -152,6 +152,12 @@ GtkWindow GtkBox {
     padding:8px;
 }
 
+/* This is the empty box on the table UI */
+.emptybox {
+    background: #e7e7e7;
+    color: #e7e7e7;
+}
+
 /* Home stats shown on home screen */
 .stat_number {
     color: @title_color;

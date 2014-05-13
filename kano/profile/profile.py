@@ -6,7 +6,8 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path, get_user_unsudoed
+from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
+    get_user_unsudoed, run_bg
 from .paths import profile_file, profile_dir, kanoprofile_dir
 
 
@@ -28,10 +29,14 @@ def save_profile(data):
     data['save_date'] = get_date_now()
     ensure_dir(profile_dir)
     write_json(profile_file, data)
+
     if 'SUDO_USER' in os.environ:
         chown_path(kanoprofile_dir)
         chown_path(profile_dir)
         chown_path(profile_file)
+
+    if os.path.exists('/usr/bin/kdesk'):
+        run_bg('kdesk -a loginregister')
 
 
 def save_profile_variable(variable, value):

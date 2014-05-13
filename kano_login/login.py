@@ -107,7 +107,7 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
         # restore on first successful login/restore
         first_run_done = False
         try:
-            first_run_done = load_profile()['first_run_done']
+            first_run_done = profile['first_run_done']
         except Exception:
             pass
         if not first_run_done:

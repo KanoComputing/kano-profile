@@ -49,7 +49,6 @@ class MainWindow(Gtk.Window):
         self.birthday = ""
         self.age = 0
         self.gender = ""
-        self.first_boot = first_boot
 
         # The state is the current window showing
         self.state = 0
@@ -75,7 +74,7 @@ class MainWindow(Gtk.Window):
         self.top_bar.set_prev_callback(self.on_prev)
         self.top_bar.set_next_callback(self.on_next)
 
-        if first_boot == 1:
+        if first_boot:
             self.unpack_grid()
             first_screen.activate(self)
         else:
@@ -155,9 +154,9 @@ def main():
         Gtk.main()
 
     else:
-        first_boot = 0
-        if len(sys.argv) > 2 and sys.argv[1] == 'first_boot':
-            first_boot = int(sys.argv[2])
+        first_boot = False
+        if len(sys.argv) == 2 and sys.argv[1] == 'first_boot':
+            first_boot = True
         win = MainWindow(first_boot)
         win.connect('delete-event', Gtk.main_quit)
         win.show_all()

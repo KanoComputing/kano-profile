@@ -29,5 +29,5 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
             return r.ok, None, r.json()
         else:
             return r.ok, r.text, None
-    except requests.exceptions.ConnectionError:
-        return False, 'Connection error', None
+    except requests.exceptions.ConnectionError as e:
+        return False, 'Connection error: {}'.format(str(e)), None

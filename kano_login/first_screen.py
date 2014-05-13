@@ -14,7 +14,7 @@
 from gi.repository import Gtk
 
 from components import heading, green_button
-from kano_login import gender
+from kano_login import gender, login
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
 
@@ -39,18 +39,19 @@ def activate(_win, _box=None):
 
     if is_internet():
         title = heading.Heading("You've made some progress, let's save it!", "Lets create an account")
-        later_button = green_button.Button("LATER")
-        next_button = green_button.Button("NEXT")
+        # This button should send you to the login screen
+        login_button = green_button.Button("I ALREADY HAVE AN ACCOUNT")
+        next_button = green_button.Button("REGISTER")
         button_box = Gtk.Box()
-        button_box.pack_start(later_button.align, False, False, 10)
+        button_box.pack_start(login_button.align, False, False, 10)
         button_box.pack_start(next_button.align, False, False, 10)
 
         button_padding = Gtk.Alignment()
-        button_padding.set_padding(0, 20, 180, 0)
+        button_padding.set_padding(0, 20, 80, 0)
         button_padding.add(button_box)
 
         next_button.button.connect("button_press_event", update)
-        later_button.button.connect("clicked", Gtk.main_quit)
+        login_button.button.connect("button_press_event", login_screen)
         box.pack_start(title.container, False, False, 0)
         box.pack_start(button_padding, False, False, 0)
     else:
@@ -70,9 +71,17 @@ def update(widget, event):
 
     win.remove(box)
     win.pack_grid()
-
     win.update()
     gender.activate(win, win.box)
+
+
+def login_screen(widget, event):
+    global win, box
+
+    win.remove(box)
+    win.pack_grid()
+    win.update()
+    login.activate(win, win.box)
 
 
 def close_window(widget, event):

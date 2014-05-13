@@ -37,7 +37,7 @@ class MainWindow(Gtk.Window):
         self.set_resizable(False)
         self.state = 0
 
-        print new_items
+        # print new_items
 
         # Get username
         username = get_mixed_username()

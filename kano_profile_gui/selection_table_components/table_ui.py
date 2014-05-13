@@ -76,6 +76,7 @@ class TableUi():
                 else:
                     emptybox = Gtk.EventBox()
                     emptybox.set_size_request(230, 180)
+                    emptybox.get_style_context().add_class('emptybox')
                     self.grid.attach(emptybox, j, row, 1, 1)
                 index += 1
 

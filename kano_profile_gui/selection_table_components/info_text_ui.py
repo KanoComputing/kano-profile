@@ -21,9 +21,14 @@ class InfoTextUi():
         bottom_padding = 20
         right_padding = 20
         left_padding = 20
-        self.heading = Gtk.Label(visible_item.title)
+
+        # Computer Commander (a badge title) was too long to fit in a label on the screen - using GtkTextView allows us
+        # to wrap around text if it's too long
+        self.heading = Gtk.TextView()
+        self.heading.set_wrap_mode(Gtk.WrapMode.WORD)
+        self.heading.set_editable(False)
+        self.heading.get_buffer().set_text(visible_item.title)
         self.heading.get_style_context().add_class("info_heading")
-        self.heading.set_alignment(xalign=0, yalign=0)
         self.paragraph = Gtk.TextView()
         self.paragraph.set_wrap_mode(Gtk.WrapMode.WORD)
         self.paragraph.set_editable(False)
@@ -38,6 +43,7 @@ class InfoTextUi():
         pale_background = Gdk.RGBA()
         pale_background.parse(pale)
 
+        self.heading.override_background_color(Gtk.StateFlags.NORMAL, transparent_background)
         self.paragraph.override_background_color(Gtk.StateFlags.NORMAL, transparent_background)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)

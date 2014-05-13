@@ -44,6 +44,7 @@ def do_sync():
     success, value = sync()
     if not success:
         sys.exit('Sync not possible, error: ' + value)
+    print 'sync OK'
 
 
 def do_backup():
@@ -73,6 +74,8 @@ def do_backup():
     if not success:
         print 'Error with uploading backup data: ' + e
 
+    print 'backup OK'
+
 
 def do_restore():
     os.chdir(home_dir)
@@ -90,6 +93,8 @@ def do_restore():
     _, e, _ = run_cmd(tar_cmd)
     if e:
         print 'Error with uncompressing restore data: ' + e
+
+    print 'restore OK'
 
 
 if __name__ == '__main__':

@@ -34,6 +34,12 @@ def save_profile(data):
         chown_path(profile_file)
 
 
+def save_profile_variable(variable, value):
+    profile = load_profile()
+    profile[variable] = value
+    save_profile(profile)
+
+
 def set_unlocked(boolean):
     profile = load_profile()
     profile['unlocked'] = boolean

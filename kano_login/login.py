@@ -37,7 +37,7 @@ def activate(_win, _box):
         username_email_forced_style.add_class('description')
     else:
         username_email_entry = Gtk.Entry()
-        username_email_entry.props.placeholder_text = 'Email'
+        username_email_entry.props.placeholder_text = 'Username or email'
 
     password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)

@@ -12,6 +12,7 @@ from gi.repository import Gtk
 from components import heading, green_button
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir
+from kano.profile.profile import save_profile_variable
 from kano.world.functions import register as register_
 from kano_login import account_confirm
 import re
@@ -113,6 +114,9 @@ def register_user(button, event, username_entry, email_entry, password_entry):
 
     # This needs to be adjusted depending on the age of the user
     else:
+        save_profile_variable('gender', win.gender)
+        save_profile_variable('age', win.age)
+
         # sync on each successfule login/restore
         cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
         run_bg(cmd)

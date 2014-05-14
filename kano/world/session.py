@@ -9,6 +9,7 @@ import json
 import os
 
 from kano.utils import download_url, read_json
+    #, write_json
 from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state, save_app_state
@@ -39,8 +40,29 @@ class KanoWorldSession(object):
         return request_wrapper('get', '/auth/session', session=self.session)
 
     def upload_profile_stats(self):
+        profile = load_profile()
+
         data = dict()
         data['xp'] = calculate_xp()
+
+        try:
+            data['age'] = profile['age']
+        except Exception:
+            pass
+
+        try:
+            data['gender'] = profile['gender']
+        except Exception:
+            pass
+
+        try:
+            avatar_generator = {
+                'avatar': profile['avatar'],
+                'environment': profile['environment']
+            }
+            data['avatar_generator'] = avatar_generator
+        except Exception:
+            pass
 
         stats = dict()
         for app in get_app_list():
@@ -53,11 +75,13 @@ class KanoWorldSession(object):
         payload = dict()
         payload['values'] = data
 
-        success, text, data = request_wrapper('put', '/users/profile', data=json.dumps(payload), headers=content_type_json, session=self.session)
+        # write_json('up.json', data)
+
+        success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(payload), headers=content_type_json, session=self.session)
         if not success:
             return False, text
 
-        return self.download_profile_stats(data)
+        return self.download_profile_stats(response_data)
 
     def download_profile_stats(self, data=None):
         if not data:
@@ -75,6 +99,8 @@ class KanoWorldSession(object):
                     data = data['user']
                 else:
                     return False, 'User field missing from data!'
+
+        # write_json('down.json', data)
 
         if 'profile' in data and 'stats' in data['profile']:
             app_data = data['profile']['stats']

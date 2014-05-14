@@ -110,15 +110,16 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             first_run_done = profile['first_run_done']
         except Exception:
             pass
+
         if not first_run_done:
             print 'doing first time restore'
-            cmd = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
+            cmd = '{bin_dir}/kano-sync --sync --restore -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
             save_profile_variable('first_run_done', True)
-
-        # sync on each successfule login/restore
-        cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-        run_bg(cmd)
+        else:
+            # sync on each successfule login/restore
+            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            run_bg(cmd)
 
         dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
                                    Gtk.ButtonsType.OK, "Logged in!")

@@ -13,7 +13,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.world.functions import sync, login_using_token, backup_content, restore_content
-from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file
+from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg
 from kano.profile.paths import app_profiles_file
 
 home_dir = get_home()
@@ -45,6 +45,10 @@ def do_sync():
     if not success:
         sys.exit('Sync not possible, error: ' + value)
 
+    refresh_kdesk()
+
+    print 'sync OK'
+
 
 def do_backup():
     os.chdir(home_dir)
@@ -73,6 +77,8 @@ def do_backup():
     if not success:
         print 'Error with uploading backup data: ' + e
 
+    print 'backup OK'
+
 
 def do_restore():
     os.chdir(home_dir)
@@ -90,6 +96,19 @@ def do_restore():
     _, e, _ = run_cmd(tar_cmd)
     if e:
         print 'Error with uncompressing restore data: ' + e
+
+    kano_setting_cmd = 'sudo kano-settings auto'
+    o, _, _ = run_cmd(kano_setting_cmd)
+    print o
+
+    refresh_kdesk()
+
+    print 'restore OK'
+
+
+def refresh_kdesk():
+    if os.path.exists('/usr/bin/kdesk'):
+        run_bg('kdesk -a loginregister')
 
 
 if __name__ == '__main__':

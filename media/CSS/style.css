@@ -198,11 +198,19 @@ GtkWindow GtkBox {
     color: @kano_orange;
     background: @kano_orange;
 }
-.progress_label {
+.progress_background {
     background: @kano_orange;
     border-radius: 3px;
 }
-.progress_label GtkLabel {
+.progress_background GtkLabel {
+    color: #ffffff;
+    font: Bariol Bold 13;
+}
+.endpoint_background {
+    background: #939087;
+    /*color: #939087;*/
+}
+.endpoint_background GtkLabel {
     color: #ffffff;
     font: Bariol Bold 13;
 }

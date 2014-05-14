@@ -48,7 +48,6 @@ class TopBar():
             # This sets the font size, weight and initial colour.  This is only because Gtk 3.4 has a bug in it.
             label.get_style_context().add_class("top_bar_label")
             icon = icons.set_from_name(name_array[x].lower())
-            #icon.set_padding(10, 10)
 
             container = Gtk.Box()
             container.pack_start(icon, False, False, 0)

@@ -32,7 +32,7 @@ def activate(_win, _box):
     _box.pack_start(picture_box, False, False, 0)
     _box.pack_start(stats.container, False, False, 0)
 
-    _win.progress.set_progress(stat_dict["Progress"])
+    _win.progress.set_progress()
 
     _win.show_all()
 

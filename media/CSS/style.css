@@ -159,13 +159,13 @@ GtkWindow GtkBox {
 }
 
 /* Home stats shown on home screen */
+.stat_title {
+    color: @subheading_color;
+    font: Bariol Bold 13;
+}
 .stat_number {
     color: @title_color;
     font: Bariol Bold 18;
-}
-.stat_label {
-    color: @subheading_color;
-    font: Bariol Bold 13;
 }
 
 /* The title that appears at the top of Badges, Environments, etc */

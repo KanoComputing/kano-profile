@@ -84,7 +84,7 @@ class InfoTextUi():
         return color_str
 
     def refresh(self, heading, info):
-        self.heading.set_text(heading)
+        self.heading.get_buffer().set_text(heading)
         self.paragraph.get_buffer().set_text(info)
 
     def set_equip_locked(self, locked):

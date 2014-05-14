@@ -161,7 +161,7 @@ def main():
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow(new_level, new_items)
-    win.connect('delete-event', close_window)
+    win.connect('delete-event', Gtk.main_quit)
     win.show_all()
     Gtk.main()
 

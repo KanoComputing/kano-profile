@@ -35,5 +35,3 @@ def activate(_win, _box):
     _win.progress.set_progress()
 
     _win.show_all()
-
-

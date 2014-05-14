@@ -87,9 +87,6 @@ class InfoTextUi():
         self.heading.get_buffer().set_text(heading)
         self.paragraph.get_buffer().set_text(info)
 
-    def set_equip_locked(self, locked):
+    def set_equip_sensitive(self, bool_value):
         if self.equip:
-            if locked:
-                self.equip_button.set_sensitive(False)
-            else:
-                self.equip_button.set_sensitive(True)
+            self.equip_button.set_sensitive(not bool_value)

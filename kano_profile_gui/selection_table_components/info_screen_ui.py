@@ -62,7 +62,7 @@ class InfoScreenUi():
         self.header_box.set_size_request(690 + 44, 44)
 
         self.info_text = info_text.InfoTextUi(visible_item)
-        self.info_text.set_equip_locked(self.get_locked())
+        self.info_text.set_equip_sensitive(self.get_locked() or self.get_equipped())
 
         self.box = Gtk.Box()
         self.box.pack_start(self.background, False, False, 0)
@@ -121,7 +121,7 @@ class InfoScreenUi():
         self.info_text.refresh(current.title, current.get_description())
         self.refresh_bg_color()
         self.container.show_all()
-        self.info_text.set_equip_locked(self.get_locked())
+        self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
 
     def refresh_bg_color(self):
         self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
@@ -134,6 +134,9 @@ class InfoScreenUi():
 
     def get_locked(self):
         return self.get_visible_item().get_locked()
+
+    def get_equipped(self):
+        return self.get_visible_item().get_equipped()
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size()

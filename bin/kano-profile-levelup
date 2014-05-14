@@ -37,8 +37,6 @@ class MainWindow(Gtk.Window):
         self.set_resizable(False)
         self.state = 0
 
-        # print new_items
-
         # Get username
         username = get_mixed_username()
 
@@ -85,7 +83,7 @@ class MainWindow(Gtk.Window):
     def go_to_next(self, event=None, new_items=None):
 
         if self.state >= 3:
-            Gtk.main_quit()
+            close_window()
             exit()
 
         # This doesn't work reliably because if environments aren't included,
@@ -147,6 +145,8 @@ def parse_items(args):
 
 
 def main():
+    os.system("/usr/bin/kdesk -b")
+
     new_level, new_items = parse_items(sys.argv[1:])
 
     # Create style sheet
@@ -161,9 +161,14 @@ def main():
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow(new_level, new_items)
-    win.connect('delete-event', Gtk.main_quit)
+    win.connect('delete-event', close_window)
     win.show_all()
     Gtk.main()
+
+
+def close_window():
+    os.system("/usr/bin/kdesk -b")
+    Gtk.main_quit()
 
 
 if __name__ == '__main__':

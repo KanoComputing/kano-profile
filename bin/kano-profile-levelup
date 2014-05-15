@@ -37,8 +37,6 @@ class MainWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.state = 0
         self.new_items = new_items
-        self.number_of_items = {}
-        self.get_number_of_items()
         self.category = None
 
         minecraft_running = os.system("pidof minecraft-pi")
@@ -95,6 +93,7 @@ class MainWindow(Gtk.Window):
 
         items = None
         item = None
+        subcat = None
 
         size_folder = str(self.image_width) + 'x' + str(self.image_height)
         filename = ""
@@ -121,15 +120,11 @@ class MainWindow(Gtk.Window):
 
         self.image.set_from_file(filename)
         self.set_description(self.category, text)
-        del items[item]
 
-    def get_number_of_items(self):
-        number = 0
-        for category in self.new_items:
-            for subcat, items in self.new_items[category].iteritems():
-                for item, rules in items.iteritems():
-                    number = number + 1
-            self.number_of_items[category] = number
+        if self.category == "avatars":
+            del self.new_items["avatars"][subcat]
+        else:
+            del items[item]
 
     def set_description(self, category, text):
         if category == "new_level":
@@ -156,6 +151,10 @@ class MainWindow(Gtk.Window):
                 if i in self.new_items:
                     self.category = i
                     return
+
+        # We need this for avatars
+        if self.new_items[self.category] == {}:
+            self.next_category()
 
         for i, j in self.new_items[self.category].iteritems():
             if i == {} or j == {}:

@@ -109,17 +109,12 @@ class KanoWorldSession(object):
             success, text, data = request_wrapper('get', '/users/' + user_id, headers=content_type_json, session=self.session)
             if not success:
                 return False, text
-            else:
-                if 'user' in data:
-                    data = data['user']
-                else:
-                    return False, 'User field missing from data!'
 
         # write_json('down.json', data)
 
-        if 'profile' in data and 'stats' in data['profile']:
-            app_data = data['profile']['stats']
-        else:
+        try:
+            app_data = data['user']['profile']['stats']
+        except Exception:
             return False, 'Data missing from payload!'
 
         for app, values in app_data.iteritems():

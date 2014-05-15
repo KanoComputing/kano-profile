@@ -21,11 +21,11 @@ class HomeStats():
 
         # Placeholder info
         completed_challenges = 19
-        shares = 10
         self.get_blocks_used()
+        self.get_shares()
 
         # Stats
-        stat_dict = {"Blocks used": self.blocks_used, "Completed challenges": completed_challenges, "Shares": shares}
+        stat_dict = {"Blocks used": self.blocks_used, "Completed challenges": completed_challenges, "Shares": self.shares}
         number_of_items = 3
 
         index = 0
@@ -64,3 +64,14 @@ class HomeStats():
             minecraft_blocks = 0
 
         self.blocks_used = pong_blocks + minecraft_blocks
+
+    def get_shares(self):
+        pong_shares = load_app_state_variable("make-pong", "shares")
+        if pong_shares is None:
+            pong_shares = 0
+
+        minecraft_shares = load_app_state_variable("make-minecraft", "shares")
+        if minecraft_shares is None:
+            minecraft_shares = 0
+
+        self.shares = pong_shares + minecraft_shares

@@ -8,7 +8,7 @@ from __future__ import division
 
 import os
 
-from ..utils import read_json, is_gui, run_bg, run_cmd
+from ..utils import read_json, is_gui, run_bg, run_cmd, is_installed
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -226,7 +226,12 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui():
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
-        run_cmd(cmd)
+
+        if is_installed('kdesk'):
+            kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
+            run_cmd(kdesk_cmd)
+        else:
+            run_cmd(cmd)
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)

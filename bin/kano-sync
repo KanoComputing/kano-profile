@@ -13,7 +13,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.world.functions import sync, login_using_token, backup_content, restore_content
-from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg
+from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, is_installed
 from kano.profile.paths import app_profiles_file
 
 home_dir = get_home()
@@ -77,6 +77,7 @@ def do_backup():
     if not success:
         print 'Error with uploading backup data: ' + e
 
+    delete_file(tmp_file)
     print 'backup OK'
 
 
@@ -97,11 +98,13 @@ def do_restore():
     if e:
         print 'Error with uncompressing restore data: ' + e
 
-    kano_setting_cmd = 'sudo kano-settings auto'
-    o, _, _ = run_cmd(kano_setting_cmd)
-    print o
+    if is_installed('kano-settings'):
+        kano_setting_cmd = 'sudo kano-settings auto'
+        o, _, _ = run_cmd(kano_setting_cmd)
+        print o
 
     refresh_kdesk()
+    delete_file(tmp_file)
 
     print 'restore OK'
 

@@ -227,7 +227,7 @@ def save_app_state_with_dialog(app_name, data):
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
 
-        if is_installed('kdesk'):
+        if False and is_installed('kdesk'):
             kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
             run_cmd(kdesk_cmd)
         else:

@@ -8,8 +8,7 @@ import requests
 import json
 import os
 
-from kano.utils import download_url, read_json
-    #, write_json
+from kano.utils import download_url, read_json, write_json
 from kano.profile.profile import load_profile
 from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state, save_app_state
@@ -43,13 +42,17 @@ class KanoWorldSession(object):
         profile = load_profile()
 
         data = dict()
+
+        # xp, TODO will be removed
         data['xp'] = calculate_xp()
 
+        # age
         try:
             data['age'] = profile['age']
         except Exception:
             pass
 
+        # gender
         try:
             gender = profile['gender']
             if gender == 'Boy':
@@ -60,6 +63,7 @@ class KanoWorldSession(object):
         except Exception:
             pass
 
+        # avatar_generator
         try:
             avatar_generator = {
                 'character': profile['avatar'],
@@ -69,6 +73,15 @@ class KanoWorldSession(object):
         except Exception:
             pass
 
+        # # location
+        # if 'location' not in profile:
+        #     profile['location'] = get_location(False)
+        # try:
+        #     data['location'] = profile['location']
+        # except Exception:
+        #     pass
+
+        # app states
         stats = dict()
         for app in get_app_list():
             if not is_private(app):
@@ -77,12 +90,9 @@ class KanoWorldSession(object):
         # append stats
         data['stats'] = stats
 
-        payload = dict()
-        payload['values'] = data
-
         # write_json('up.json', data)
 
-        success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(payload), headers=content_type_json, session=self.session)
+        success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(data), headers=content_type_json, session=self.session)
         if not success:
             return False, text
 
@@ -124,6 +134,9 @@ class KanoWorldSession(object):
         for app in get_app_list():
             if is_private(app):
                 data[app] = load_app_state(app)
+
+        if not data:
+            return True, None
 
         payload = dict()
         payload['data'] = data

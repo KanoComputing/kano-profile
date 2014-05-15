@@ -36,6 +36,10 @@ class MainWindow(Gtk.Window):
         self.set_resizable(False)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.state = 0
+        self.new_items = new_items
+        self.number_of_items = {}
+        self.get_number_of_items()
+        self.category = None
 
         minecraft_running = os.system("pidof minecraft-pi")
         if minecraft_running == 0:
@@ -61,7 +65,7 @@ class MainWindow(Gtk.Window):
         self.button_alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
         self.button_alignment.set_padding(0, 0, (self.image_width / 2) - 40, 0)
         self.button_alignment.add(self.button_box)
-        self.button.connect("clicked", self.go_to_next, new_items)
+        self.button.connect("clicked", self.go_to_next)
 
         self.image = Gtk.Image()
 
@@ -79,56 +83,83 @@ class MainWindow(Gtk.Window):
         if new_level:
             # Get image, title and label for new level
             self.set_description("new_level", str(new_level))
-            # temporary filename for level up
+            # TODO: Change temporary filename for level up
             filename = get_image("level", "", "level-1", str(self.image_width) + 'x' + str(self.image_height))
             self.image.set_from_file(filename)
         else:
-            self.go_to_next(None, new_items)
+            self.go_to_next()
 
-    def go_to_next(self, event=None, new_items=None):
+    def go_to_next(self, event=None):
 
-        if self.state >= 3:
-            close_window()
-            exit()
+        self.go_to_next_category()
 
-        # This doesn't work reliably because if environments aren't included,
-        # then the final unlocked swag is not in self.state = 2
-        elif self.state == 2:
-            self.button.set_label("FINISH")
+        items = None
+        item = None
 
-        category = categories[self.state]
         size_folder = str(self.image_width) + 'x' + str(self.image_height)
-        category = categories[self.state]
         filename = ""
         text = ""
         background_color = Gdk.RGBA()
 
-        if category in new_items:
-            for subcat, items in new_items[category].iteritems():
+        if self.category in self.new_items:
+            for subcat, items in self.new_items[self.category].iteritems():
                 for item, rules in items.iteritems():
-                    filename = get_image(category, subcat, item, size_folder)
+                    filename = get_image(self.category, subcat, item, size_folder)
                     text = rules["title"]
                     color_string = '#' + rules["bg_color"]
                     background_color.parse(color_string)
+
         else:
-            self.state = self.state + 1
-            self.go_to_next(None, new_items)
+            self.go_to_next_category()
+            self.go_to_next()
             return
 
         self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
 
-        if category == "avatars":
-            filename = get_image(category, "", "avatar", size_folder)
+        if self.category == "avatars":
+            filename = get_image(self.category, "", "avatar", size_folder)
 
         self.image.set_from_file(filename)
-        self.set_description(category, text)
-        self.state = self.state + 1
+        self.set_description(self.category, text)
+        del items[item]
+
+    def get_number_of_items(self):
+        number = 0
+        for category in self.new_items:
+            for subcat, items in self.new_items[category].iteritems():
+                for item, rules in items.iteritems():
+                    number = number + 1
+            self.number_of_items[category] = number
 
     def set_description(self, category, text):
         if category == "new_level":
             self.description.set_text("You've reached Level " + text)
         else:
             self.description.set_text("You've unlocked " + text)
+
+    def next_category(self):
+        index = categories.index(self.category)
+
+        while True:
+            index = index + 1
+            if index >= len(categories):
+                Gtk.main_quit()
+                exit()
+
+            if categories[index] in self.new_items:
+                self.category = categories[index]
+                return
+
+    def go_to_next_category(self):
+        if self.category is None:
+            for i in categories:
+                if i in self.new_items:
+                    self.category = i
+                    return
+
+        for i, j in self.new_items[self.category].iteritems():
+            if i == {} or j == {}:
+                self.next_category()
 
 
 def parse_items(args):

@@ -51,14 +51,19 @@ class KanoWorldSession(object):
             pass
 
         try:
-            data['gender'] = profile['gender']
+            gender = profile['gender']
+            if gender == 'Boy':
+                gender = 'm'
+            elif gender == 'Girl':
+                gender = 'f'
+            data['gender'] = gender
         except Exception:
             pass
 
         try:
             avatar_generator = {
-                'avatar': profile['avatar'],
-                'environment': profile['environment']
+                'character': profile['avatar'],
+                'environment': ['all', profile['environment']]
             }
             data['avatar_generator'] = avatar_generator
         except Exception:

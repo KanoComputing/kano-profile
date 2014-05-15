@@ -32,10 +32,15 @@ class MainWindow(Gtk.Window):
         self.image_height = 270
         self.window_height = 440
         self.set_size_request(self.image_width, self.window_height)
-        self.set_position(Gtk.WindowPosition.CENTER)
         self.set_decorated(False)
         self.set_resizable(False)
+        self.set_position(Gtk.WindowPosition.CENTER)
         self.state = 0
+
+        minecraft_running = os.system("pidof minecraft-pi")
+        if minecraft_running == 0:
+            # lxde-rc.xml changes positioning of window on the basis of the class name
+            self.set_wmclass('kano-levelup-minecraft', 'Kano-levelup-minecraft')
 
         # Get username
         username = get_mixed_username()
@@ -161,12 +166,13 @@ def main():
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow(new_level, new_items)
-    win.connect('delete-event', Gtk.main_quit)
+    win.connect('delete-event', close_window)
     win.show_all()
+
     Gtk.main()
 
 
-def close_window():
+def close_window(widget=None, event=None):
     os.system("/usr/bin/kdesk -b")
     Gtk.main_quit()
 

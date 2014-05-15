@@ -22,7 +22,6 @@ class ProjectList():
         self.height = 44
 
         apps = get_app_list()
-        print apps
 
         self.projects_list = []
         self.app_profiles = {}
@@ -31,28 +30,29 @@ class ProjectList():
             self.app_profiles = json.load(json_file)
 
         for app in apps:
-            if 'ext' in self.app_profiles[app]:
-                if self.app_profiles[app]['dir'] == 'kanoprofile':
-                    data_dir = get_app_data_dir(app)
-                else:
-                    data_dir = os.path.expanduser(self.app_profiles[app]['dir'])
+            if app in self.app_profiles:
+                if 'ext' in self.app_profiles[app]:
+                    if self.app_profiles[app]['dir'] == 'kanoprofile':
+                        data_dir = get_app_data_dir(app)
+                    else:
+                        data_dir = os.path.expanduser(self.app_profiles[app]['dir'])
 
-                icon_path = self.app_profiles[app]['icon']
+                    icon_path = self.app_profiles[app]['icon']
 
-                if not os.path.exists(data_dir):
-                    continue
+                    if not os.path.exists(data_dir):
+                        continue
 
-                files = os.listdir(data_dir)
-                files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == self.app_profiles[app]['ext']]
+                    files = os.listdir(data_dir)
+                    files_filtered = [f for f in files if os.path.splitext(f)[1][1:] == self.app_profiles[app]['ext']]
 
-                for filename in files_filtered:
-                    project = dict()
-                    project['app'] = app
-                    project['data_dir'] = data_dir
-                    project['file'] = filename
-                    project['display_name'] = os.path.splitext(filename)[0]
-                    project['icon'] = icon_path
-                    self.projects_list.append(project)
+                    for filename in files_filtered:
+                        project = dict()
+                        project['app'] = app
+                        project['data_dir'] = data_dir
+                        project['file'] = filename
+                        project['display_name'] = os.path.splitext(filename)[0]
+                        project['icon'] = icon_path
+                        self.projects_list.append(project)
 
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("project_list_background")

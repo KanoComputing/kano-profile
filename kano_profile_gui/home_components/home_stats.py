@@ -8,6 +8,7 @@
 # Display stats to user on home screen
 
 from gi.repository import Gtk
+from kano.profile.apps import load_app_state_variable
 
 
 class HomeStats():
@@ -19,12 +20,12 @@ class HomeStats():
         self.container.set_size_request(WINDOW_WIDTH, self.height)
 
         # Placeholder info
-        blocks_used = 2355
         completed_challenges = 19
         shares = 10
+        self.get_blocks_used()
 
         # Stats
-        stat_dict = {"Blocks used": blocks_used, "Completed challenges": completed_challenges, "Shares": shares}
+        stat_dict = {"Blocks used": self.blocks_used, "Completed challenges": completed_challenges, "Shares": shares}
         number_of_items = 3
 
         index = 0
@@ -52,3 +53,14 @@ class HomeStats():
 
             self.container.attach(box, index, 0, 1, 1)
             index = index + 1
+
+    def get_blocks_used(self):
+        pong_blocks = load_app_state_variable("make-pong", "blocks_created")
+        if pong_blocks is None:
+            pong_blocks = 0
+
+        minecraft_blocks = load_app_state_variable("make-minecraft", "blocks_created")
+        if minecraft_blocks is None:
+            minecraft_blocks = 0
+
+        self.blocks_used = pong_blocks + minecraft_blocks

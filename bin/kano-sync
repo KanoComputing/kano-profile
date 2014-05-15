@@ -108,7 +108,7 @@ def do_restore():
 
 def refresh_kdesk():
     if os.path.exists('/usr/bin/kdesk'):
-        run_bg('kdesk -a loginregister')
+        run_bg('kdesk -a profile')
 
 
 if __name__ == '__main__':

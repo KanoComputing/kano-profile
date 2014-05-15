@@ -36,7 +36,7 @@ def save_profile(data):
         chown_path(profile_file)
 
     if os.path.exists('/usr/bin/kdesk'):
-        run_bg('kdesk -a loginregister')
+        run_bg('kdesk -a profile')
 
 
 def save_profile_variable(variable, value):

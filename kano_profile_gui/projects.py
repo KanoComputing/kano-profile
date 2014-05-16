@@ -82,20 +82,20 @@ class ProjectItem():
         self.button.connect("clicked", self.load, project['app'], project['file'], project['data_dir'])
         self.button.get_style_context().add_class("project_make_button")
         self.button_padding = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
-        self.button_padding.set_padding(40, 40, 10, 10)
+        self.button_padding.set_padding(25, 25, 10, 10)
         self.button_padding.add(self.button)
 
         self.title = Gtk.Label(project["display_name"])
         self.title.get_style_context().add_class("project_item_title")
         self.title.set_alignment(xalign=0, yalign=1)
-        self.title.set_padding(10, 0)
+        #self.title.set_padding(10, 0)
 
         self.label_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.label_container.pack_start(self.title, False, False, 0)
 
-        self.label_align = Gtk.Alignment(xalign=0, yalign=0.5)
+        self.label_align = Gtk.Alignment(xalign=0, yalign=0.5, xscale=1, yscale=0)
         self.label_align.add(self.label_container)
-        self.label_align.set_padding(40, 10, 10, 0)
+        self.label_align.set_padding(0, 0, 10, 0)
 
         self.image = Gtk.Image()
         self.image.set_from_file(project["icon"])

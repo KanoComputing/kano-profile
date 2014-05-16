@@ -7,24 +7,25 @@
     "ext": "xml",
     "cmd": "python /usr/share/make-minecraft/make-minecraft {fullpath}",
     "max_level": 15,
-    "icon": "/usr/share/kano-desktop/icons/minecraft.png"
+    "icon": "/usr/share/kano-profile/media/images/icons/minecraft.png"
   },
   "make-music": {
-    "max_level": 3
+    "max_level": 3,
+    "icon": "/usr/share/kano-profile/media/images/icons/sonicpi.png"
   },
   "make-pong": {
     "dir": "Pong-content",
     "ext": "xml",
     "cmd": "python /usr/share/make-pong/make-pong {fullpath}",
     "max_level": 15,
-    "icon": "/usr/share/kano-desktop/icons/pong.png"
+    "icon": "/usr/share/kano-profile/media/images/icons/pong.png"
   },
   "make-snake": {
     "dir": "Snake-content",
     "ext": "",
     "cmd": "kano-launcher \"rxvt -title \"Make Snake\" -e python /usr/share/make-snake -t custom\" \"make-snake\"",
     "max_level": 8,
-    "icon": "/usr/share/kano-desktop/icons/snake.png"
+    "icon": "/usr/share/kano-profile/media/images/icons/snake.png"
   },
   "kano-settings": {
     "dir": ".kano-settings"

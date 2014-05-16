@@ -68,6 +68,9 @@ class ProjectList():
         self.background.add(self.align)
 
         if not self.projects_list:
+            empty_label = Gtk.Label("You need to save some work in the challenges, and it will appear here.")
+            empty_label.set_alignment(xalign=0.5, yalign=0.5)
+            self.container.pack_start(empty_label, False, False, 0)
             return
 
         for i, project in enumerate(self.projects_list):

@@ -9,7 +9,7 @@ import json
 import os
 
 from kano.utils import download_url, read_json, write_json
-from kano.profile.profile import load_profile
+from kano.profile.profile import load_profile, set_avatar, set_environment
 from kano.profile.badges import calculate_xp
 from kano.profile.apps import get_app_list, load_app_state, save_app_state
 from kano.profile.paths import app_profiles_file
@@ -112,6 +112,16 @@ class KanoWorldSession(object):
 
         # write_json('down.json', data)
 
+        try:
+            avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
+            set_avatar(avatar_subcat, avatar_item)
+
+            environment = data['user']['avatar']['generator']['environment'][1]
+            set_environment(environment)
+        except Exception:
+            pass
+
+        # app states
         try:
             app_data = data['user']['profile']['stats']
         except Exception:

@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button
+from components import heading, green_button, kano_dialog
 from kano_login import register
 import time
 import datetime
@@ -109,14 +109,7 @@ class Birthday():
             return age
 
         except:
-            dialog = Gtk.MessageDialog(self.win, 0, Gtk.MessageType.ERROR,
-                                       Gtk.ButtonsType.OK, "Houston, we have a problem")
-            dialog.format_secondary_text("You've not entered a valid birthday!!!!")
-            response = dialog.run()
-            if response == Gtk.ResponseType.OK:
-                dialog.destroy()
-            else:
-                dialog.destroy()
+            kano_dialog.KanoDialog("Houston, we have a problem", "You've not entered a valid birthday!!!!")
             self.day_entry.set_text("")
             self.month_entry.set_text("")
             self.year_entry.set_text("")

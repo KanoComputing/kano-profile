@@ -144,6 +144,12 @@ void login_clicked(GtkWidget* widget)
     launch_cmd(cmd);
 }
 
+void launch_profile_clicked(GtkWidget* widget)
+{
+    const char* cmd = "/usr/bin/kano-profile-gui";
+    launch_cmd(cmd);
+}
+
 static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile_plugin_t *plugin)
 {
     GtkWidget *menu = gtk_menu_new();
@@ -179,6 +185,12 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile
         gtk_menu_append(GTK_MENU(menu), restore_item);
         gtk_widget_show(restore_item);
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(restore_item), get_resized_icon(RESTORE_ICON));
+        /* Profile */
+        GtkWidget* profile_item = gtk_image_menu_item_new_with_label("Profile");
+        g_signal_connect(profile_item, "activate", G_CALLBACK(launch_profile_clicked), NULL);
+        gtk_menu_append(GTK_MENU(menu), profile_item);
+        gtk_widget_show(profile_item);
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(profile_item), get_resized_icon(LOGIN_ICON));
     }
     else {
         /* Login app */

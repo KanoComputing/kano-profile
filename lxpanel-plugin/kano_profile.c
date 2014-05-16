@@ -133,7 +133,7 @@ static void launch_cmd(const char *cmd)
 void profile_clicked(GtkWidget* widget, const char* func)
 {
     char cmd[100];
-    strcpy(cmd, "/usr/bin/kano-sync -s ");
+    strcpy(cmd, "/usr/bin/kano-sync -d ");
     strcat(cmd, func);
     launch_cmd(cmd);
 }

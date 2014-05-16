@@ -13,17 +13,28 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.world.functions import sync, login_using_token, backup_content, restore_content
-from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, is_installed
+from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, \
+    is_installed, is_gui
 from kano.profile.paths import app_profiles_file
 
 home_dir = get_home()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--silent', action='store_true', help='silent mode')
+parser.add_argument('-d', '--dialog', action='store_true', help='display dialog')
 parser.add_argument('--sync', action='store_true', help='sync profile data')
 parser.add_argument('--backup', action='store_true', help='backup app content')
 parser.add_argument('--restore', action='store_true', help='restore app content')
 args = parser.parse_args()
+
+enable_dialog = args.dialog and is_gui() and is_installed('zenity')
+
+
+def display_msg(msg):
+    if enable_dialog:
+        run_cmd('zenity --info --text "{}"'.format(msg))
+    else:
+        print msg
 
 
 def do_login():
@@ -37,17 +48,21 @@ def do_login():
             run_cmd(dir_path + '/bin/kano-login')
             login_success, value = login_using_token()
             if not login_success:
-                sys.exit('Login not possible, error: ' + value)
+                display_msg('Login not possible, error: ' + value)
+                sys.exit(1)
 
 
 def do_sync():
     success, value = sync()
     if not success:
-        sys.exit('Sync not possible, error: ' + value)
+        msg = 'Sync not possible, error: {}'.format(value)
+        display_msg(msg)
+        return
 
     refresh_kdesk()
 
-    print 'sync OK'
+    msg = 'Sync OK'
+    display_msg(msg)
 
 
 def do_backup():
@@ -71,14 +86,18 @@ def do_backup():
     tar_cmd = 'tar -czf {tmp_file} {folders}'.format(tmp_file=tmp_file, folders=' '.join(folders))
     _, e, _ = run_cmd(tar_cmd)
     if e:
-        print 'Error with compressing backup data: ' + e
+        msg = 'Error with compressing backup data: {}'.format(e)
+        display_msg(msg)
+        return
 
     success, error = backup_content(tmp_file)
     if not success:
-        print 'Error with uploading backup data: ' + e
+        msg = 'Error with uploading backup data: {}'.format(e)
+        display_msg(msg)
+        return
 
     delete_file(tmp_file)
-    print 'backup OK'
+    display_msg('Backup OK')
 
 
 def do_restore():
@@ -96,17 +115,18 @@ def do_restore():
     tar_cmd = 'tar -kxzf {tmp_file}'.format(tmp_file=tmp_file)
     _, e, _ = run_cmd(tar_cmd)
     if e:
-        print 'Error with uncompressing restore data: ' + e
+        msg = 'Error with uncompressing restore data: {}'.format(e)
+        display_msg(msg)
+        return
 
     if is_installed('kano-settings'):
         kano_setting_cmd = 'sudo kano-settings auto'
-        o, _, _ = run_cmd(kano_setting_cmd)
-        print o
+        run_bg(kano_setting_cmd)
 
     refresh_kdesk()
     delete_file(tmp_file)
 
-    print 'restore OK'
+    display_msg('Restore OK')
 
 
 def refresh_kdesk():

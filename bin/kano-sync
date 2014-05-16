@@ -83,7 +83,7 @@ def do_backup():
     tmp_file = os.path.join(tmp_dir, 'backup.tar.gz')
     delete_file(tmp_file)
 
-    tar_cmd = 'tar -czf {tmp_file} {folders}'.format(tmp_file=tmp_file, folders=' '.join(folders))
+    tar_cmd = 'tar -czf {tmp_file} {folders} --exclude=webload'.format(tmp_file=tmp_file, folders=' '.join(folders))
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with compressing backup data: {}'.format(e)

@@ -17,7 +17,6 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
 from kano_login.components import top_bar, logged_in
-#from kano.world.functions import is_registered
 from kano.world.functions import login_using_token
 
 

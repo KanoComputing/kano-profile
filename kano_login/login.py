@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button
+from components import heading, green_button, kano_dialog
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir
 from kano.profile.profile import load_profile, save_profile_variable
@@ -85,6 +85,10 @@ def register(event):
     gender.activate(win, box)
 
 
+def quit_program():
+    Gtk.main_quit()
+
+
 def log_user_in(button, event, username_email_entry, password_entry, username_email, win):
     if username_email_entry:
         username_email = username_email_entry.get_text()
@@ -93,15 +97,7 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
     success, text = login_(username_email, password_text)
 
     if not success:
-        print "error = " + str(text)
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.ERROR,
-                                   Gtk.ButtonsType.OK, "Houston, we have a problem")
-        dialog.format_secondary_text(text)
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            dialog.destroy()
-        else:
-            dialog.destroy()
+        kano_dialog.KanoDialog("Houston, we have a problem", text)
 
     else:
         # restore on first successful login/restore
@@ -121,14 +117,4 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.INFO,
-                                   Gtk.ButtonsType.OK, "Logged in!")
-        dialog.format_secondary_text("Yay!")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            dialog.destroy()
-            Gtk.main_quit()
-        else:
-            dialog.destroy()
-            Gtk.main_quit()
-
+        kano_dialog.KanoDialog("Logged in", "Yay", quit_program)

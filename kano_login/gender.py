@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button
+from components import heading, green_button, kano_dialog
 from kano_login import birthday
 import kano_profile_gui.components.constants as constants
 
@@ -55,22 +55,9 @@ def activate(_win, _box):
 
 def on_gender_combo_changed(gender_combo, button):
     if gender_combo.get_active_text() == "Wizard":
-        wizard_heading = heading.Heading("You're only fooling yourself...", "")
-        wizard_image = Gtk.Image()
-        wizard_image.set_from_file(constants.media + "/images/icons/you_are_not_a_wizard.png")
-        wizard_button = Gtk.Button("Aww...")
-        wizard_button.get_style_context().add_class("green_button")
-        dialog = Gtk.Dialog()
-        dialog.set_decorated(False)
-        dialog.add_button("Awww..", Gtk.ResponseType.OK)
-        dialog.get_content_area().pack_start(wizard_heading.container, False, False, 0)  # This is a vbox
-        dialog.get_content_area().pack_start(wizard_image, False, False, 0)
-        #dialog.get_action_area().pack_start(wizard_button, False, False, 10)
-        dialog.show_all()
-        response = dialog.run()
-        if response:
-            dialog.destroy()
-        gender_combo.set_active(0)
+        callback = gender_combo.set_active(0)
+        kano_dialog.KanoDialog("You're only fooling yourself...", "I'm afraid you are not a wizard", callback, constants.media + "/images/icons/you_are_not_a_wizard.png")
+
     button.set_sensitive(True)
 
 

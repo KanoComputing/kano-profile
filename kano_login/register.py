@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button
+from components import heading, green_button, kano_dialog
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir
 from kano.profile.profile import save_profile_variable
@@ -103,14 +103,8 @@ def register_user(button, event, username_entry, email_entry, password_entry):
 
     if not success:
         print "error = " + str(text)
-        dialog = Gtk.MessageDialog(win, 0, Gtk.MessageType.ERROR,
-                                   Gtk.ButtonsType.OK, "Houston, we have a problem")
-        dialog.format_secondary_text(text)
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            dialog.destroy()
-        else:
-            dialog.destroy()
+
+        kano_dialog.KanoDialog("Houston, we have a problem", str(text))
 
     # This needs to be adjusted depending on the age of the user
     else:

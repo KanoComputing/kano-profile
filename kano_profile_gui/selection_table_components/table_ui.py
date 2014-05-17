@@ -10,7 +10,8 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.item_ui as item_ui
-from kano_profile_gui.selection_table_components import item_info, item_group
+import kano_profile_gui.selection_table_components.item_group as item_group
+from kano_profile_gui.selection_table_components import item_info
 from kano.profile.badges import calculate_badges
 import math
 #from .images import get_image
@@ -21,8 +22,9 @@ class TableUi():
         self.equipable = equipable
         self.buttons = []
         self.pics = []
-        self.item_groups = []
+        self.group = None
 
+        item_array = []
         number_of_badges = 0
         category_dict = calculate_badges()[category_name]
 
@@ -36,29 +38,18 @@ class TableUi():
         #   print avatar_cat, avatar_items
 
         for folder_name, items in category_dict.iteritems():
-            item_array = []
             for filename, properties in items.iteritems():
                 cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
                             "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
                             "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
 
                 item = item_info.ItemInfo(cat_dict)
-
-                if category_name != "avatars":
-                    group = item_group.ItemGroup([item])
-                    pic = item_ui.ItemUi(group)
-                    self.pics.append(pic)
-                    number_of_badges = number_of_badges + 1.0  # Make a float
-                else:
-                    item_array.append(item)
-
-            if category_name == "avatars":
-                group = item_group.ItemGroup(item_array)
-                self.item_groups.append(group)
-                pic = item_ui.ItemUi(group)
+                pic = item_ui.ItemUi(item)
                 self.pics.append(pic)
-
                 number_of_badges = number_of_badges + 1.0  # Make a float
+                item_array.append(item)
+
+        self.group = item_group.ItemGroup(item_array)
 
         self.number_of_columns = 3
         self.number_of_rows = math.ceil(number_of_badges / self.number_of_columns)
@@ -89,23 +80,28 @@ class TableUi():
         for pic in self.pics:
             pic.hover_box.set_visible_window(False)
             pic.hover_label.set_visible(False)
-            if self.equipable and pic.get_equipped_item() is None:
+            if self.equipable and pic.get_equipped():
                 pic.change_equipped_style()
             if not pic.get_locked():
                 pic.change_locked_style()
 
     def unequip_all(self):
-        for i in self.pics:
-            i.unequip_all()
+        self.group.unequip_all()
+        for pic in self.pics:
+            pic.set_equipped(False)
 
     def get_equipped_picture(self):
         for pic in self.pics:
-            if pic.get_equipped_item() is not None:
+            if pic.get_equipped():
                 return pic
         return None
 
     def get_equipped_tuple(self):
         for pic in self.pics:
-            if pic.get_equipped_item() is not None:
-                return pic.get_equipped_item().get_tuple()
+            if pic.get_equipped():
+                return pic.item.get_tuple()
         return None
+
+    def change_equipped_style(self):
+        for pic in self.pics:
+            pic.change_equipped_style()

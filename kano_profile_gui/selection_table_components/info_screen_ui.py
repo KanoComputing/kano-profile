@@ -19,12 +19,13 @@
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text_ui as info_text
 import kano_profile_gui.components.icons as icons
+from kano.profile.profile import set_avatar, set_environment
 
 
 class InfoScreenUi():
     # Pass array of pictures into class then it can control it's own buttons
     # The current item is the screen we're currenty on
-    def __init__(self, item_group):
+    def __init__(self, item, group):
 
         # image width and height
         self.width = 460
@@ -33,10 +34,12 @@ class InfoScreenUi():
         # Main container of info screen
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
-        self.items = item_group
+        # This means we can control the next and prev controls within the info screen
+        self.item_group = group
+        self.item_group.set_visible_item(item)
 
         self.background = Gtk.EventBox()
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.items.get_color())
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
         self.background.set_size_request(self.width, self.height)
 
         # For now, just show either the locked image or the unlocked image
@@ -52,17 +55,21 @@ class InfoScreenUi():
 
         self.background.add(self.fixed_container)
 
-        visible_item = self.get_visible_item()
-
         # Header - contains heading of the badge/swag
         self.header_box = Gtk.EventBox()
-        self.header_label = Gtk.Label(visible_item.title.upper())
+        self.header_label = Gtk.Label(self.get_visible_item().title.upper())
         self.header_label.get_style_context().add_class("heading")
         self.header_box.add(self.header_label)
         self.header_box.set_size_request(690 + 44, 44)
 
-        self.info_text = info_text.InfoTextUi(visible_item)
+        self.info_text = info_text.InfoTextUi(self.get_visible_item())
         self.info_text.set_equip_sensitive(self.get_locked() or self.get_equipped())
+
+        if self.get_visible_item().equipable:
+            # This doesn't work because we're not changing the selected_item
+            # We need to set a flag or self.selected = True
+            # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
+            self.info_text.equip_button.connect("button_press_event", self.set_equipped)
 
         self.box = Gtk.Box()
         self.box.pack_start(self.background, False, False, 0)
@@ -73,49 +80,46 @@ class InfoScreenUi():
 
     def create_fixed(self, image):
         fixed = Gtk.Fixed()
+        prev_arrow = icons.set_from_name("prev_arrow")
+        next_arrow = icons.set_from_name("next_arrow")
+        prevb = Gtk.Button()
+        prevb.set_image(prev_arrow)
+        prevb.get_style_context().add_class("transparent")
+        prevb.set_size_request(50, 50)
+        #prevb.connect("button_press_event", self.go_to_prev)
+        nextb = Gtk.Button()
+        nextb.set_image(next_arrow)
+        nextb.get_style_context().add_class("transparent")
+        nextb.set_size_request(50, 50)
+        #nextb.connect("button_press_event", self.go_to_next)
 
-        if self.items.get_number_of_items() > 1:
-            prev_arrow = icons.set_from_name("prev_arrow")
-            next_arrow = icons.set_from_name("next_arrow")
-            prevb = Gtk.Button()
-            prevb.set_image(prev_arrow)
-            prevb.get_style_context().add_class("transparent")
-            prevb.set_size_request(50, 50)
-            prevb.connect("button_press_event", self.go_to_prev)
-            nextb = Gtk.Button()
-            nextb.set_image(next_arrow)
-            nextb.get_style_context().add_class("transparent")
-            nextb.set_size_request(50, 50)
-            nextb.connect("button_press_event", self.go_to_next)
-            fixed.put(image, 0, 0)
-            fixed.put(prevb, 0, (self.height / 2) - 25)
-            fixed.put(nextb, self.width - 50, (self.height / 2) - 25)
-        else:
-            fixed.put(image, 0, 0)
+        fixed.put(image, 0, 0)
+        fixed.put(prevb, 0, (self.height / 2) - 25)
+        fixed.put(nextb, self.width - 50, (self.height / 2) - 25)
+
+        if self.get_visible_item().equipable:
+            # Event box containing the EQUIPPED label
+            self.equipped_label = Gtk.Label("EQUIPPED")
+            self.equipped_box = Gtk.EventBox()
+            self.equipped_box.get_style_context().add_class("big_equipped_box")
+            self.equipped_box.add(self.equipped_label)
+            self.equipped_box.set_size_request(120, 40)
+
+            # Border box of equipped style
+            self.equipped_border = Gtk.EventBox()
+            self.equipped_border.get_style_context().add_class("big_equipped_border")
+            self.equipped_border.set_size_request(140, 60)
+            fixed.put(self.equipped_border, 10, 10)
+            fixed.put(self.equipped_box, 20, 20)
 
         return fixed
-
-    def set_visible_item(self, item):
-        self.items.set_visible_item(item)
-        self.get_filename_at_size()
-
-    def get_visible_item(self):
-        return self.items.get_visible_item()
 
     def get_color(self):
         return self.get_visible_item().get_color()
 
-    def go_to_next(self, arg1=None, arg2=None):
-        self.items.go_to(1)
-        self.refresh()
-
-    def go_to_prev(self, arg1=None, arg2=None):
-        self.items.go_to(-1)
-        self.refresh()
-
+    # Update UI of current visible item
     def refresh(self):
         current = self.get_visible_item()
-        self.items.set_visible_item(current)
         self.image.set_from_file(self.get_filename_at_size())
         self.header_label.set_text(current.title)
         self.info_text.refresh(current.title, current.get_description())
@@ -124,20 +128,48 @@ class InfoScreenUi():
         self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
 
     def refresh_bg_color(self):
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
-
-    def get_filename_at_size(self):
-        return self.get_visible_item().get_filename_at_size(self.width, self.height)
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_color())
 
     def refresh_background(self):
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_color())
 
     def get_locked(self):
         return self.get_visible_item().get_locked()
 
+    def get_equipped_item(self):
+        return self.item_group.get_equipped_item()
+
     def get_equipped(self):
         return self.get_visible_item().get_equipped()
+
+    def set_equipped(self, arg1=None, arg2=None):
+        self.item_group.set_equipped_item(self.get_visible_item())
+        category = self.get_visible_item().category
+        name = self.get_visible_item().name
+        subcat = self.get_visible_item().subcategory
+        if category == "environment":
+            set_environment(name)
+        else:
+            set_avatar(subcat, name)
+        self.change_equipped_style()
+
+    def set_visible_item(self, item):
+        self.item_group.set_visible_item(item)
+
+    def get_visible_item(self):
+        return self.item_group.get_visible_item()
+
+    # This function contains the styling applied to the visible item when it is equipped.
+    def change_equipped_style(self):
+        if self.get_visible_item().equipable:
+            self.equipped_box.set_visible_window(self.get_equipped())
+            self.equipped_label.set_visible(self.get_equipped())
+            self.equipped_border.set_visible_window(self.get_equipped())
+        self.refresh()
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size()
         self.image.set_from_file(filename)
+
+    def get_filename_at_size(self):
+        return self.get_visible_item().get_filename_at_size(self.width, self.height)

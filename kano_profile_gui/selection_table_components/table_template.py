@@ -36,7 +36,7 @@ class TableTemplate():
 
         for cat in self.categories:
             for pic in cat.pics:
-                pic.button.connect("button_press_event", self.go_to_info_screen, pic, cat)
+                pic.button.connect("button_press_event", self.go_to_info_screen, pic, cat.group)
 
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.add_with_viewport(self.categories[0].grid)
@@ -48,7 +48,6 @@ class TableTemplate():
         self.container.pack_start(self.scrolledwindow, False, False, 0)
 
         # Set the equipped items based on what we read from file
-
         # Read from file here
         subcat, aname = get_avatar()
         ename = get_environment()
@@ -71,26 +70,30 @@ class TableTemplate():
         self.scrolledwindow.show_all()
         self.hide_labels()
 
-    def go_to_info_screen(self, arg1=None, arg2=None, pic=None, cat=None):
-        selected_item_screen = info_screen.InfoScreenUi(pic.items)
+    def go_to_info_screen(self, arg1=None, arg2=None, pic=None, group=None):
+        selected_item_screen = info_screen.InfoScreenUi(pic.item, group)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)
         selected_item_screen.info_text.back_button.connect("button_press_event", self.leave_info_screen)
-        if self.equipable:
+
+        ######################################################################################################
+
+        # TODO: is this needed anymore?  Since we're equipping within the info screen, maybe can move this there?
+        #if self.equipable:
             # This doesn't work because we're not changing the selected_item
             # We need to set a flag or self.selected = True
             # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
-            selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, pic, cat)
-        self.container.show_all()
+        #    selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, pic, cat)
 
-        # Remove locked images from selected item screen
-        #selected_item_screen.set_locked()
+        ######################################################################################################
+
+        self.container.show_all()
 
     def equip(self, arg1=None, arg2=None, pic=None, cat=None):
         cat.unequip_all()
-        pic.set_equipped_item()
-        self.leave_info_screen()
+        pic.set_equipped(True)
+        #self.leave_info_screen()
         category, subcat, name = cat.get_equipped_tuple()
         if category == "environments":
             set_environment(name)
@@ -105,6 +108,8 @@ class TableTemplate():
         self.container.show_all()
         # Hide all labels on images
         self.hide_labels()
+        for cat in self.categories:
+            cat.change_equipped_style()
 
     def hide_labels(self):
         for cat in self.categories:
@@ -113,10 +118,12 @@ class TableTemplate():
     def equip_with_tuple(self, category, subcategory, name):
         for cat in self.categories:
             for pic in cat.pics:
-                item = pic.items.get_item_from_tuple(category, subcategory, name)
-                if item is not None:
-                    pic.items.set_visible_item(item)
+                if pic.get_item().compare_tuple(category, subcategory, name):
+                    pic.set_equipped(True)
                     self.equip(None, None, pic, cat)
+                    return
+
+        print "Tuple not found"
 
     def get_equipped_tuple(self):
         for i in range(2):

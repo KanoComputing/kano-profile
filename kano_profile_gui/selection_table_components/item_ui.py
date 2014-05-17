@@ -14,13 +14,13 @@ import kano_profile_gui.components.icons as icons
 
 
 class ItemUi():
-    def __init__(self, item_group):
+    def __init__(self, item):
         # info is a dictionary containing item and group which we use to find filename, heading, description, colour of background
 
         self.width = 230
         self.height = 180
         self.label_height = 44
-        self.items = item_group
+        self.item = item
 
         self.image = Gtk.Image()
         self.get_image_at_size()
@@ -37,7 +37,7 @@ class ItemUi():
         self.button.set_size_request(self.width, self.height)
         self.button.connect("enter-notify-event", self.add_hover_style, self.hover_box)
         self.button.connect("leave-notify-event", self.remove_hover_style, self.hover_box)
-        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.item.get_color())
 
         self.padlock = icons.set_from_name("padlock")
         self.locked_fixed = Gtk.Fixed()
@@ -51,7 +51,7 @@ class ItemUi():
 
         self.button.add(self.fixed)
 
-        if self.get_visible_item().equipable:
+        if self.item.equipable:
              # Event box containing the time and title of the equipped item
             self.equipped_box = Gtk.EventBox()
             self.equipped_box.get_style_context().add_class("equipped_box")
@@ -82,11 +82,11 @@ class ItemUi():
         self.change_locked_style()
 
     def get_locked(self):
-        return self.get_visible_item().get_locked()
+        return self.item.get_locked()
 
     def change_locked_style(self):
         self.padlock.set_visible(self.get_locked())
-        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.get_visible_item().get_color())
+        self.button.override_background_color(Gtk.StateFlags.NORMAL, self.item.get_color())
 
     # This function contains the styling applied to the picture when the mouse hovers over it.
     def add_hover_style(self, arg1=None, arg2=None, hover_box=None):
@@ -98,55 +98,49 @@ class ItemUi():
         self.hover_label.set_visible(False)
 
     def get_filename_at_size(self, width_of_image, height_of_image):
-        return self.get_visible_item().get_filename_at_size(width_of_image, height_of_image)
+        return self.item.get_filename_at_size(width_of_image, height_of_image)
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size(self.width, self.height)
         self.image.set_from_file(filename)
 
     def get_title(self):
-        return self.get_visible_item().title.upper()
+        return self.item.title.upper()
 
     def get_description(self):
-        return self.get_visible_item().get_description()
+        return self.item.get_description()
 
     def update_labels(self):
         self.hover_label.set_text(self.get_title())
         self.equipped_label.set_text(self.get_title())
 
     # Sets the visible picture to be equipped
-    def set_equipped_item(self):
-        item = self.get_visible_item()
-        self.items.set_equipped_item(item)
+    def set_equipped(self, equipped):
+        self.item.set_equipped(equipped)
         self.change_equipped_style()
         self.get_image_at_size()
         self.update_labels()
 
-    def unequip_all(self):
-        self.items.unequip_all()
-
     # Get the equipped item
-    def get_equipped_item(self):
-        return self.items.get_equipped_item()
+    def get_equipped(self):
+        return self.item.get_equipped()
 
-    def set_visible_item(self, visible):
-        self.items.set_visible_item(visible)
+    def set_item(self, item):
+        self.item = item
         self.get_image_at_size()
         self.image.show()
 
     # Gets visible item
-    def get_visible_item(self):
-        return self.items.get_visible_item()
+    def get_item(self):
+        return self.item
 
     # This function contains the styling applied to the picture when it is equipped.
     def change_equipped_style(self, arg1=None, arg2=None):
-        if self.get_visible_item().equipable:
-            if self.get_equipped_item() is None:
-                equipped = False
+        if self.item.equipable:
+            equipped = self.get_equipped()
+            if not equipped:
                 self.hover_box.set_visible_window(False)
                 self.hover_label.set_visible(False)
-            else:
-                equipped = True
 
             self.equipped_box.set_visible_window(equipped)
             self.equipped_label.set_visible(equipped)

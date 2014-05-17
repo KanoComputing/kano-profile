@@ -38,16 +38,14 @@ class ItemGroup():
         for item in self.items:
             if item.equipable:
                 item.set_equipped(False)
-                self.set_equipped_item(None)
+                self.equipped = None
 
     def get_equipped_item(self):
         return self.equipped
-        #return self.get_visible().get_equipped
 
     def set_equipped_item(self, item):
-        if item is None:
-            self.equipped = None
-        elif item.equipable:
+        self.unequip_all()
+        if item is not None and item.equipable:
             for i in self.items:
                 i.set_equipped(False)
             self.equipped = item

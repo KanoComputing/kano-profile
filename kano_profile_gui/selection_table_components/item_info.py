@@ -122,3 +122,5 @@ class ItemInfo():
     def get_tuple(self):
         return self.category, self.subcategory, self.name
 
+    def compare_tuple(self, category, subcategory, name):
+        return self.category == category and self.subcategory == subcategory and self.name == name

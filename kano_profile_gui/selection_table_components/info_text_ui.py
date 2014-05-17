@@ -14,6 +14,7 @@ class InfoTextUi():
     def __init__(self, visible_item):
 
         # self.equip decides whether we include an Equip button on the screen
+        self.visible_item = visible_item
         self.equip = visible_item.equipable
         self.width = 274
         self.height = 448
@@ -83,9 +84,17 @@ class InfoTextUi():
         color_str = first_part + 'a' + second_part + ',' + str(opacity) + ')'
         return color_str
 
-    def refresh(self, heading, info):
+    def refresh(self, heading, info, color):
         self.heading.get_buffer().set_text(heading)
         self.paragraph.get_buffer().set_text(info)
+        self.refresh_background(color)
+
+    def refresh_background(self, color):
+        color_str = color.to_string()
+        pale = self.change_opacity_of_color(color_str, 0.3)
+        pale_background = Gdk.RGBA()
+        pale_background.parse(pale)
+        self.background.override_background_color(Gtk.StateFlags.NORMAL, pale_background)
 
     def set_equip_sensitive(self, bool_value):
         if self.equip:

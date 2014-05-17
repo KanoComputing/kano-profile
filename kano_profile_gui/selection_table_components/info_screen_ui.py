@@ -86,12 +86,12 @@ class InfoScreenUi():
         prevb.set_image(prev_arrow)
         prevb.get_style_context().add_class("transparent")
         prevb.set_size_request(50, 50)
-        #prevb.connect("button_press_event", self.go_to_prev)
+        prevb.connect("button_press_event", self.go_to, -1)
         nextb = Gtk.Button()
         nextb.set_image(next_arrow)
         nextb.get_style_context().add_class("transparent")
         nextb.set_size_request(50, 50)
-        #nextb.connect("button_press_event", self.go_to_next)
+        nextb.connect("button_press_event", self.go_to, 1)
 
         fixed.put(image, 0, 0)
         fixed.put(prevb, 0, (self.height / 2) - 25)
@@ -122,13 +122,10 @@ class InfoScreenUi():
         current = self.get_visible_item()
         self.image.set_from_file(self.get_filename_at_size())
         self.header_label.set_text(current.title)
-        self.info_text.refresh(current.title, current.get_description())
-        self.refresh_bg_color()
+        self.info_text.refresh(current.title, current.get_description(), current.get_color())
+        self.refresh_background()
         self.container.show_all()
         self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
-
-    def refresh_bg_color(self):
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_color())
 
     def refresh_background(self):
         self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_color())
@@ -173,3 +170,7 @@ class InfoScreenUi():
 
     def get_filename_at_size(self):
         return self.get_visible_item().get_filename_at_size(self.width, self.height)
+
+    def go_to(self, widget, event, move):
+        self.item_group.go_to(move)
+        self.refresh()

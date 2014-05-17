@@ -80,7 +80,7 @@ class TableUi():
         for pic in self.pics:
             pic.hover_box.set_visible_window(False)
             pic.hover_label.set_visible(False)
-            if self.equipable and pic.get_equipped():
+            if self.equipable:
                 pic.change_equipped_style()
             if not pic.get_locked():
                 pic.change_locked_style()

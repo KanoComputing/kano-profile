@@ -15,6 +15,9 @@ for root, dirs, filenames in os.walk(dirpath):
         basename, ext = os.path.splitext(filename)
         ext = ext[1:]
 
+        if ext != 'png':
+            continue
+
         dir_path_split = dir_path_rel.split('/')
 
         if dir_path_split[0] not in ['environments', 'avatars', 'badges']:
@@ -27,7 +30,16 @@ for root, dirs, filenames in os.walk(dirpath):
         new_filename_rel = os.path.join(dir_path_rel, basename + '_locked.png')
         new_filename_abs = os.path.join(dirpath, new_filename_rel)
 
+        src_date = os.path.getmtime(path_full)
+        if os.path.exists(new_filename_abs):
+            target_date = os.path.getmtime(new_filename_abs)
+            if src_date == target_date:
+                continue
+
         convert_cmd = 'convert {} -matte -channel A +level 0,30% +channel {}'.format(path_full, new_filename_abs)
         print path_rel
         os.system(convert_cmd)
+        os.utime(new_filename_abs, (src_date, src_date))
+
+
 

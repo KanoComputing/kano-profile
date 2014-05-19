@@ -147,6 +147,7 @@ class InfoScreenUi():
             set_environment(name)
         else:
             set_avatar(subcat, name)
+        self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
         self.change_equipped_style()
 
     def set_visible_item(self, item):

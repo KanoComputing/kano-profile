@@ -142,9 +142,10 @@ class ItemUi():
                 self.hover_box.set_visible_window(False)
                 self.hover_label.set_visible(False)
 
+            self.equipped_border.set_visible_window(equipped)
             self.equipped_box.set_visible_window(equipped)
             self.equipped_label.set_visible(equipped)
             self.equipped_box2.set_visible_window(equipped)
             self.equipped_label2.set_visible(equipped)
-            self.equipped_border.set_visible_window(equipped)
+
 

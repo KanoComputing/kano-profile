@@ -89,6 +89,7 @@ class TableTemplate():
         ######################################################################################################
 
         self.container.show_all()
+        selected_item_screen.change_equipped_style()
 
     def equip(self, arg1=None, arg2=None, pic=None, cat=None):
         cat.unequip_all()

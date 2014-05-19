@@ -309,6 +309,22 @@ GtkSwitch.slider {
     background: linear-gradient(to top, #ffffff);
 }
 
+/* Info screen equipped box */
+.big_equipped_box {
+    border-radius: 8px;
+    background: linear-gradient(to top, @button_color)
+}
+
+.big_equipped_box GtkLabel {
+    font: Bariol bold 14px;
+    color: #ffffff;
+}
+/* Info screen equipped border */
+.big_equipped_border {
+    border-radius: 10px;
+    background: linear-gradient(to top, #ffffff);
+}
+
 /* Info screen oof individual badges/environments/avatars */
 .info_heading {
     font: Bariol Bold 20;

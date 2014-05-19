@@ -78,6 +78,8 @@ class InfoScreenUi():
         self.container.pack_start(self.header_box, False, False, 0)
         self.container.pack_start(self.box, False, False, 0)
 
+        self.change_equipped_style()
+
     def create_fixed(self, image):
         fixed = Gtk.Fixed()
         prev_arrow = icons.set_from_name("prev_arrow")
@@ -103,14 +105,14 @@ class InfoScreenUi():
             self.equipped_box = Gtk.EventBox()
             self.equipped_box.get_style_context().add_class("big_equipped_box")
             self.equipped_box.add(self.equipped_label)
-            self.equipped_box.set_size_request(120, 40)
+            self.equipped_box.set_size_request(104, 34)
 
             # Border box of equipped style
             self.equipped_border = Gtk.EventBox()
             self.equipped_border.get_style_context().add_class("big_equipped_border")
-            self.equipped_border.set_size_request(140, 60)
+            self.equipped_border.set_size_request(120, 50)
             fixed.put(self.equipped_border, 10, 10)
-            fixed.put(self.equipped_box, 20, 20)
+            fixed.put(self.equipped_box, 18, 18)
 
         return fixed
 
@@ -123,12 +125,9 @@ class InfoScreenUi():
         self.image.set_from_file(self.get_filename_at_size())
         self.header_label.set_text(current.title)
         self.info_text.refresh(current.title, current.get_description(), current.get_color())
-        self.refresh_background()
-        self.container.show_all()
-        self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
-
-    def refresh_background(self):
         self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_color())
+        self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
+        self.change_equipped_style()
 
     def get_locked(self):
         return self.get_visible_item().get_locked()
@@ -159,10 +158,9 @@ class InfoScreenUi():
     # This function contains the styling applied to the visible item when it is equipped.
     def change_equipped_style(self):
         if self.get_visible_item().equipable:
+            self.equipped_border.set_visible_window(self.get_equipped())
             self.equipped_box.set_visible_window(self.get_equipped())
             self.equipped_label.set_visible(self.get_equipped())
-            self.equipped_border.set_visible_window(self.get_equipped())
-        self.refresh()
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size()

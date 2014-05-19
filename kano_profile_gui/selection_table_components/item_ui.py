@@ -65,12 +65,12 @@ class ItemUi():
             self.equipped_box2 = Gtk.EventBox()
             self.equipped_box2.get_style_context().add_class("equipped_box2")
             self.equipped_box2.add(self.equipped_label2)
-            self.equipped_box2.set_size_request(90, 25)
+            self.equipped_box2.set_size_request(80, 25)
 
             # Border box of equipped style
             self.equipped_border = Gtk.EventBox()
             self.equipped_border.get_style_context().add_class("equipped_border")
-            self.equipped_border.set_size_request(98, 33)
+            self.equipped_border.set_size_request(88, 33)
 
             self.fixed.put(self.equipped_box, 0, self.height - self.label_height)
             self.fixed.put(self.equipped_border, 10, 10)

@@ -155,7 +155,7 @@ class InfoScreenUi():
         category = self.get_visible_item().category
         name = self.get_visible_item().name
         subcat = self.get_visible_item().subcategory
-        if category == "environment":
+        if category == "environments":
             set_environment(name)
         else:
             set_avatar(subcat, name)

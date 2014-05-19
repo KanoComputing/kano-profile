@@ -46,6 +46,9 @@ class InfoScreenUi():
         self.image = Gtk.Image()
         self.get_image_at_size()
 
+        # Padlock icon on top locked screen
+        self.padlock = icons.set_from_name("padlock")
+
         fixed = Gtk.Fixed()
         fixed.put(self.image, 0, 0)
 
@@ -79,6 +82,7 @@ class InfoScreenUi():
         self.container.pack_start(self.box, False, False, 0)
 
         self.change_equipped_style()
+        self.change_locked_style()
 
     def create_fixed(self, image):
         fixed = Gtk.Fixed()
@@ -128,9 +132,17 @@ class InfoScreenUi():
         self.background.override_background_color(Gtk.StateFlags.NORMAL, self.get_color())
         self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
         self.change_equipped_style()
+        self.change_locked_style()
 
     def get_locked(self):
         return self.get_visible_item().get_locked()
+
+    def change_locked_style(self):
+        if self.get_locked() and self.padlock.get_parent() is None:
+            self.fixed.put(self.padlock, 211, 205)
+            self.fixed.show_all()
+        elif not self.get_locked() and self.padlock.get_parent() is not None:
+            self.fixed.remove(self.padlock)
 
     def get_equipped_item(self):
         return self.item_group.get_equipped_item()
@@ -150,18 +162,18 @@ class InfoScreenUi():
         self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
         self.change_equipped_style()
 
-    def set_visible_item(self, item):
-        self.item_group.set_visible_item(item)
-
-    def get_visible_item(self):
-        return self.item_group.get_visible_item()
-
     # This function contains the styling applied to the visible item when it is equipped.
     def change_equipped_style(self):
         if self.get_visible_item().equipable:
             self.equipped_border.set_visible_window(self.get_equipped())
             self.equipped_box.set_visible_window(self.get_equipped())
             self.equipped_label.set_visible(self.get_equipped())
+
+    def set_visible_item(self, item):
+        self.item_group.set_visible_item(item)
+
+    def get_visible_item(self):
+        return self.item_group.get_visible_item()
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size()

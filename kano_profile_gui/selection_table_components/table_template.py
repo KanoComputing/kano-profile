@@ -76,18 +76,6 @@ class TableTemplate():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)
         selected_item_screen.info_text.back_button.connect("button_press_event", self.leave_info_screen)
-
-        ######################################################################################################
-
-        # TODO: is this needed anymore?  Since we're equipping within the info screen, maybe can move this there?
-        #if self.equipable:
-            # This doesn't work because we're not changing the selected_item
-            # We need to set a flag or self.selected = True
-            # selected_item_screen.info.equip_button.connect("button_press_event", self.equip, cat, selected_item)
-        #    selected_item_screen.info_text.equip_button.connect("button_press_event", self.equip, pic, cat)
-
-        ######################################################################################################
-
         self.container.show_all()
         selected_item_screen.change_equipped_style()
 
@@ -123,7 +111,6 @@ class TableTemplate():
                     pic.set_equipped(True)
                     self.equip(None, None, pic, cat)
                     return
-
         print "Tuple not found"
 
     def get_equipped_tuple(self):

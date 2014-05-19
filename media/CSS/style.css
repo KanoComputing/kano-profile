@@ -170,7 +170,7 @@ GtkWindow GtkBox {
 
 /* The title that appears at the top of Badges, Environments, etc */
 .heading {
-    font: Bariol Bold 15;
+    font: Bariol Bold 13px;
     color: @title_color;
 }
 
@@ -282,7 +282,7 @@ GtkSwitch.slider {
 }
 
 .hover_label {
-    font: Bariol bold 14px;
+    font: Bariol bold 13px;
     color: #ffffff;
 }
 .equipped_box {
@@ -290,7 +290,7 @@ GtkSwitch.slider {
 }
 
 .equipped_box GtkLabel {
-    font: Bariol bold 14px;
+    font: Bariol bold 13px;
     color: #ffffff;
 }
 

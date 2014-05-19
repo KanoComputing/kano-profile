@@ -1,6 +1,6 @@
 {
   "arcade_hall": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -8,7 +8,7 @@
     "title": "Arcade Hall"
   },
   "concert_hall": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -16,7 +16,7 @@
     "title": "Concert Hall"
   },
   "fields_of_ideas": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -24,7 +24,7 @@
     "title": "Fields of Ideas"
   },
   "jungle": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -32,7 +32,7 @@
     "title": "Jungle"
   },
   "space": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -40,7 +40,7 @@
     "title": "Space"
   },
   "dojo": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -48,7 +48,7 @@
     "title": "Dojo"
   },
   "video_set": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
@@ -56,7 +56,7 @@
     "title": "Video Set"
   },
   "minecraft": {
-    "bg_color": "000000",
+    "bg_color": "ffffff",
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",

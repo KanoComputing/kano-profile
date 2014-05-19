@@ -188,9 +188,12 @@ class KanoWorldSession(object):
         if not success:
             return False, text
 
-        if 'user_backup' in data and 'file_url' in data['user_backup']:
+        try:
             file_url = data['user_backup']['file_url']
-        else:
+        except Exception:
+            pass
+
+        if not file_url:
             return False, 'file_url not found'
 
         return download_url(file_url, file_path)

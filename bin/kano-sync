@@ -7,6 +7,8 @@
 import os
 import sys
 import argparse
+from sys import platform as _platform
+
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
@@ -84,6 +86,9 @@ def do_backup():
     delete_file(tmp_file)
 
     tar_cmd = 'tar -czf {tmp_file} {folders} --exclude=webload'.format(tmp_file=tmp_file, folders=' '.join(folders))
+    if _platform == 'darwin':
+        tar_cmd = 'g' + tar_cmd
+
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with compressing backup data: {}'.format(e)
@@ -112,12 +117,14 @@ def do_restore():
     if not success:
         print 'Error with downloading restore data: ' + error
 
-    tar_cmd = 'tar -kxzf {tmp_file}'.format(tmp_file=tmp_file)
+    tar_cmd = 'tar -xzf {tmp_file} --skip-old-files'.format(tmp_file=tmp_file)
+    if _platform == 'darwin':
+        tar_cmd = 'g' + tar_cmd
+
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with uncompressing restore data: {}'.format(e)
         display_msg(msg)
-        return
 
     if is_installed('kano-settings'):
         kano_setting_cmd = 'sudo kano-settings auto'

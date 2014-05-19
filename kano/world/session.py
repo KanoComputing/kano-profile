@@ -203,8 +203,11 @@ class KanoWorldSession(object):
             return False, 'File path not found: {}'.format(file_path)
 
         # paths
-        jsonfile_path = file_path[-3:] + 'json'
-        screenshot_path = file_path[-3:] + 'png'
+        jsonfile_path = file_path[:-3] + 'json'
+        screenshot_path = file_path[:-3] + 'png'
+
+        print jsonfile_path
+        print screenshot_path
 
         # attachment
         files = {
@@ -214,7 +217,6 @@ class KanoWorldSession(object):
         # screenshot
         if os.path.exists(screenshot_path):
             files['cover'] = open(screenshot_path, 'rb')
-            print 'using screenshot {}'.format(screenshot_path)
 
         # data
         payload = {
@@ -226,9 +228,11 @@ class KanoWorldSession(object):
         try:
             description = read_json(jsonfile_path)['description']
             payload['description'] = description
-            print 'using description {}'.format(payload)
         except Exception:
             description = None
+
+        print 'payload: ', payload
+        print 'files: ', files
 
         endpoint = '/share/{}'.format(app_name)
 

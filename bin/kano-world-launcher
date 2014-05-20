@@ -16,6 +16,12 @@ from kano.world.functions import is_registered, get_token
 
 app_name = 'kano-world-launcher'
 
+try:
+    from kano.profile.badges import increment_app_state_variable_with_dialog
+    increment_app_state_variable_with_dialog('kano-profile', 'world_launcher_clicked', 1)
+except Exception:
+    pass
+
 
 class Launcher(WebApp):
     def __init__(self):
@@ -30,7 +36,7 @@ class Launcher(WebApp):
 
 # Check internet status
 if not is_internet():
-    os.system('sudo /usr/bin/kano-settings 5')
+    os.system('sudo /usr/bin/kano-settings 4')
     sys.exit()
 
 launcher = Launcher()

@@ -17,7 +17,7 @@ from components import heading, green_button
 from kano_login import gender, login
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
-import common_gui.cursor as cursor
+import kano_login.components.cursor as cursor
 
 
 win = None

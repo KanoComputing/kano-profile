@@ -12,7 +12,6 @@ from gi.repository import Gtk
 from components import heading, green_button, kano_dialog
 from kano_login import birthday
 import kano_profile_gui.components.constants as constants
-#import common_gui.cursor as cursor
 
 win = None
 box = None

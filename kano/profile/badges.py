@@ -7,6 +7,7 @@
 from __future__ import division
 
 import os
+from collections import defaultdict
 
 from ..utils import read_json, is_gui, run_bg, run_cmd, is_installed
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
@@ -227,7 +228,7 @@ def save_app_state_with_dialog(app_name, data):
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
 
-        if is_installed('kdesk'):
+        if False and is_installed('kdesk'):
             kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
             run_cmd(kdesk_cmd)
         else:
@@ -286,3 +287,70 @@ def load_badge_rules():
             merged_rules.setdefault(category, dict())[subcategory] = rule_data
     return merged_rules
 
+
+def count_completed_challenges():
+    allrules = read_json(xp_file)
+    if not allrules:
+        return -1
+
+    completed_challenges = 0
+
+    for app, groups in allrules.iteritems():
+        appstate = load_app_state(app)
+        try:
+            completed_challenges += int(appstate['level'])
+        except Exception:
+            pass
+
+    return completed_challenges
+
+
+def count_badges():
+    all_badges = calculate_badges()
+
+    locked = defaultdict(int)
+    unlocked = defaultdict(int)
+
+    for category, subcats in all_badges.iteritems():
+        for subcat, items in subcats.iteritems():
+            for item, rules in items.iteritems():
+                if rules['achieved']:
+                    unlocked[category] += 1
+                else:
+                    locked[category] += 1
+
+    return dict(unlocked), dict(locked)
+
+
+def count_number_of_blocks():
+    allrules = read_json(xp_file)
+    if not allrules:
+        return -1
+
+    number_of_blocks = 0
+
+    for app, groups in allrules.iteritems():
+        appstate = load_app_state(app)
+        try:
+            number_of_blocks += int(appstate['blocks_created'])
+        except Exception:
+            pass
+
+    return number_of_blocks
+
+
+def count_number_of_shares():
+    allrules = read_json(xp_file)
+    if not allrules:
+        return -1
+
+    number_of_shares = 0
+
+    for app, groups in allrules.iteritems():
+        appstate = load_app_state(app)
+        try:
+            number_of_shares += int(appstate['shared'])
+        except Exception:
+            pass
+
+    return number_of_shares

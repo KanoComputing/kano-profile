@@ -9,6 +9,7 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
+from kano.profile.badges import count_badges
 
 
 class Header():
@@ -16,19 +17,24 @@ class Header():
 
         self.width = 734
         self.height = 44
-        self.locked_elements = 5  # For now
-        self.unlocked_elements = 5  # For now
+
+        self.locked_number = 0
+        self.unlocked_number = 0
 
         padlock_label_width = 60
         padlock_label_height = 44
 
-        halign_width = self.width - self.locked_elements - self.unlocked_elements - 2 * padlock_label_width
+        halign_width = self.width - padlock_label_width * 2
+
+        self.headers = [title1, title2]
+
+        #halign_width = self.width - self.locked_elements - self.unlocked_elements - 2 * padlock_label_width
 
         self.box = Gtk.Box()
         self.box.set_size_request(self.width, self.height)
 
         locked_pic = icons.set_from_name("locked")
-        self.locked_label = Gtk.Label(": " + str(self.locked_elements))
+        self.locked_label = Gtk.Label(": " + str(self.locked_number))
         self.locked_label.get_style_context().add_class("padlock_label")
         locked_box = Gtk.Box()
         locked_box.pack_start(locked_pic, False, False, 0)
@@ -39,7 +45,7 @@ class Header():
         locked_align.add(locked_box)
 
         unlocked_pic = icons.set_from_name("unlocked")
-        self.unlocked_label = Gtk.Label(": " + str(self.unlocked_elements))
+        self.unlocked_label = Gtk.Label(": " + str(self.unlocked_number))
         self.unlocked_label.get_style_context().add_class("padlock_label")
         unlocked_box = Gtk.Box()
         unlocked_box.pack_start(unlocked_pic, False, False, 0)
@@ -48,6 +54,8 @@ class Header():
         unlocked_align = Gtk.Alignment()
         unlocked_align.set_padding(0, 0, 0, 0)
         unlocked_align.add(unlocked_box)
+
+        self.set_locked_unlocked_number(title1)
 
         self.halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
         self.halign.set_size_request(halign_width, self.height)
@@ -65,6 +73,7 @@ class Header():
             self.radiobutton1.set_active(True)
             self.radiobutton2.set_active(False)
             self.halign.add(self.container)
+            self.radiobutton1.connect("toggled", self.update_locked_unlocked_labels)
         else:
             self.halign.add(self.title_label)
 
@@ -72,13 +81,12 @@ class Header():
         self.box.pack_start(self.halign, False, False, 0)
         self.box.pack_end(unlocked_align, False, False, 0)
 
-    def set_locked_number(self, number_of_locked):
-        self.locked_elements = number_of_locked
-        self.locked_label.show()
-
-    def set_unlocked_number(self, number_of_unlocked):
-        self.unlocked_elements = number_of_unlocked
-        self.unlocked_label.show()
+    def set_locked_unlocked_number(self, header):
+        unlocked_elements, locked_elements = count_badges()
+        locked_number = locked_elements[header]
+        unlocked_number = unlocked_elements[header]
+        self.locked_label.set_text(str(locked_number))
+        self.unlocked_label.set_text(str(unlocked_number))
 
     def set_titles(self, title1, title2=None):
         if title2 is not None:
@@ -110,3 +118,10 @@ class Header():
 
     def set_event_listener1(self, callback):
         self.radiobutton1.connect("toggled", callback)
+
+    def update_locked_unlocked_labels(self, widget):
+        print self.radiobutton1.get_active()
+        if self.radiobutton1.get_active():
+            self.set_locked_unlocked_number(self.headers[0])
+        else:
+            self.set_locked_unlocked_number(self.headers[1])

@@ -6,7 +6,7 @@
     "dir": "Minecraft-content",
     "ext": "xml",
     "cmd": "python /usr/share/make-minecraft/make-minecraft {fullpath}",
-    "max_level": 15,
+    "max_level": 13,
     "icon": "/usr/share/kano-profile/media/images/icons/minecraft.png"
   },
   "make-music": {

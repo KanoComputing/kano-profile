@@ -5,7 +5,7 @@
 #
 
 ## TEST COMMAND
-# ./kano-profile-levelup level:5 badges:application:bug_buster environments:all:fields_of_ideas avatars:judoka:judoka_1 avatars:judoka:judoka_2
+# ./kano-profile-levelup level:5 badges:application:bug_buster environments:all:minecraft avatars:judoka:judoka_1 avatars:judoka:judoka_2
 
 import os
 import sys
@@ -103,10 +103,15 @@ class MainWindow(Gtk.Window):
         if self.category in self.new_items:
             for subcat, items in self.new_items[self.category].iteritems():
                 for item, rules in items.iteritems():
-                    filename = get_image(self.category, subcat, item, size_folder)
                     text = rules["title"]
                     color_string = '#' + rules["bg_color"]
                     background_color.parse(color_string)
+                    if self.category == "environments":
+                        filename = get_image(self.category, subcat, item, size_folder)
+                    elif self.category == "avatars":
+                        continue
+                    else:
+                        filename = get_image(self.category, subcat, item + "_levelup", size_folder)
 
         else:
             self.go_to_next_category()

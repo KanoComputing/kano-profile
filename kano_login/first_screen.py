@@ -37,9 +37,6 @@ def activate(_win, _box=None):
     box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
     img = Gtk.Image()
-    # Placeholder image
-    filename = get_image("level", "", "level-1", str(img_width) + 'x' + str(img_height))
-    img.set_from_file(filename)
     box.pack_start(img, False, False, 0)
 
     if is_internet():
@@ -60,6 +57,9 @@ def activate(_win, _box=None):
         box.pack_start(title.container, False, False, 0)
         box.pack_start(button_padding, False, False, 0)
 
+        filename = get_image("login", "", "create-profile", str(img_width) + 'x' + str(img_height))
+        img.set_from_file(filename)
+
     else:
         title = heading.Heading("You should get an account, but you need internet!", "Come back later")
         done_button = green_button.Button("DONE", win)
@@ -67,6 +67,8 @@ def activate(_win, _box=None):
         done_button.set_padding(0, 10, 0, 0)
         box.pack_start(title.container, False, False, 0)
         box.pack_start(done_button.align, False, False, 0)
+        filename = get_image("login", "", "create-profile_noInternet", str(img_width) + 'x' + str(img_height))
+        img.set_from_file(filename)
 
     win.add(box)
     box.show_all()

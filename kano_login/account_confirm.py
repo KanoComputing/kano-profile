@@ -9,6 +9,8 @@
 
 from gi.repository import Gtk
 from components import heading, green_button
+from kano_profile_gui.images import get_image
+#import common_gui.cursor as cursor
 
 win = None
 box = None
@@ -23,7 +25,7 @@ def activate(_win, _box):
     win.clear_box()
 
     if win.age < 13:
-        nextB = green_button.Button("GOT IT")
+        nextB = green_button.Button("GOT IT", win)
         nextB.button.connect("button_press_event", confirmation_screen)
 
         title = heading.Heading("Now get your parents to confirm...", "An email has been sent to: ")
@@ -50,16 +52,30 @@ def activate(_win, _box):
 def confirmation_screen(widget=None, event=None):
     global win, box
 
-    win.clear_box()
+    win.unpack_grid()
 
-    doneB = green_button.Button("DONE")
+    img_width = 590
+    img_height = 270
+
+    win.unpack_grid()
+    img = Gtk.Image()
+    # Placeholder image
+
+    filename = get_image("level", "", "level-1", str(img_width) + 'x' + str(img_height))
+    img.set_from_file(filename)
+
+    doneB = green_button.Button("DONE", win)
     doneB.button.connect("button_press_event", finish)
 
     title = heading.Heading("Profile created!", "Boom")
 
-    box.pack_start(title.container, False, False, 0)
-    box.pack_start(doneB.align, False, False, 15)
-    box.show_all()
+    container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    container.pack_start(img, False, False, 0)
+    container.pack_start(title.container, False, False, 0)
+    container.pack_start(doneB.align, False, False, 15)
+    doneB.set_padding(0, 10, 0, 0)
+    win.add(container)
+    win.show_all()
 
 
 def go_next(button, event, entry1):

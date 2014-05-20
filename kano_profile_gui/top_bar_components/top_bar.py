@@ -99,8 +99,6 @@ class TopBar():
             # This is to fix bug in Gtk 3.4, otherwise the colour doesn't update when we change the class
             label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))
 
-        self.home_button.update()
-
 
 def close_window(event, button):
         Gtk.main_quit()

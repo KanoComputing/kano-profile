@@ -8,6 +8,7 @@
 from kano.world.functions import remove_token
 from kano_login.components import heading
 from gi.repository import Gtk
+import common_gui.cursor as cursor
 
 
 class LoggedIn(Gtk.Window):
@@ -50,4 +51,9 @@ class LoggedIn(Gtk.Window):
     def logout(self, event):
         remove_token()
         self.logged_out_screen()
+
+    def close_window(self, event, button, win):
+        self.ok_button.disconnect_handlers()
+        cursor.arrow_cursor(None, None, win)
+        Gtk.main_quit()
 

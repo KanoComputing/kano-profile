@@ -43,7 +43,7 @@ def activate(_win, _box):
     email_entry = Gtk.Entry()
     password_entry = Gtk.Entry()
 
-    register = green_button.Button("REGISTER")
+    register = green_button.Button("REGISTER", win)
     register.button.set_sensitive(False)
 
     username_entry.connect("key_release_event", set_register_sensitive, email_entry, password_entry, register.button)

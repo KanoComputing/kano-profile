@@ -116,7 +116,7 @@ class MainWindow(Gtk.Window):
         self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
 
         if self.category == "avatars":
-            filename = get_image(self.category, "", "avatar", size_folder)
+            filename = get_image(self.category, subcat, subcat + "_levelup", size_folder)
 
         self.image.set_from_file(filename)
         self.set_description(self.category, text)

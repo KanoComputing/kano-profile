@@ -116,6 +116,7 @@ def do_restore():
     success, error = restore_content(tmp_file)
     if not success:
         print 'Error with downloading restore data: ' + error
+        return
 
     if _platform == 'darwin':
         tar_cmd = 'gtar -xzf {tmp_file} --skip-old-files'.format(tmp_file=tmp_file)

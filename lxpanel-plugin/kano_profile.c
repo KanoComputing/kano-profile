@@ -141,14 +141,14 @@ void profile_clicked(GtkWidget* widget, const char* func)
 void login_clicked(GtkWidget* widget)
 {
     const char* cmd_kanologin = "/usr/bin/kano-login";
-    const char* cmd_isinternet = "/usr/bin/kano-login";
+    const char* cmd_isinternet = "/usr/bin/is_internet";
     const char* cmd_wifisettings = "sudo kano-settings 4";
     int rc=-1;
 
     // Find out if we are online first
     rc = system (cmd_isinternet);
     if (rc != -1 && WEXITSTATUS(rc) != 0) {
-      perror ("We are not online to the Internet, open wifi settings");
+      perror ("We are not online to the Internet, opening wifi settings");
       launch_cmd (cmd_wifisettings);
     }
     else {

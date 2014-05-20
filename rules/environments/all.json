@@ -15,14 +15,6 @@
     "targets": [["make-music", "level", -1]],
     "title": "Concert Hall"
   },
-  "fields_of_ideas": {
-    "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
-    "operation": "each_greater",
-    "targets": [["make-minecraft", "level", -1]],
-    "title": "Fields of Ideas"
-  },
   "jungle": {
     "bg_color": "ffffff",
     "desc_locked": "desc_locked",
@@ -60,7 +52,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["make-minecraft", "level", 1]],
+    "targets": [["make-minecraft", "level", -1]],
     "title": "Minecraft"
   }
 }

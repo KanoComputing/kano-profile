@@ -188,9 +188,12 @@ class KanoWorldSession(object):
         if not success:
             return False, text
 
-        if 'user_backup' in data and 'file_url' in data['user_backup']:
+        try:
             file_url = data['user_backup']['file_url']
-        else:
+        except Exception:
+            pass
+
+        if not file_url:
             return False, 'file_url not found'
 
         return download_url(file_url, file_path)
@@ -199,14 +202,37 @@ class KanoWorldSession(object):
         if not os.path.exists(file_path):
             return False, 'File path not found: {}'.format(file_path)
 
+        # paths
+        jsonfile_path = file_path[:-3] + 'json'
+        screenshot_path = file_path[:-3] + 'png'
+
+        print jsonfile_path
+        print screenshot_path
+
+        # attachment
         files = {
             'attachment': open(file_path, 'rb'),
         }
 
+        # screenshot
+        if os.path.exists(screenshot_path):
+            files['cover'] = open(screenshot_path, 'rb')
+
+        # data
         payload = {
             'title': title,
             'featured': featured
         }
+
+        # description
+        try:
+            description = read_json(jsonfile_path)['description']
+            payload['description'] = description
+        except Exception:
+            description = None
+
+        print 'payload: ', payload
+        print 'files: ', files
 
         endpoint = '/share/{}'.format(app_name)
 

@@ -6,11 +6,11 @@ import kano_login.components.cursor as cursor
 
 class KanoDialog():
 
-    def __init__(self, title_text="", heading_text="", callback=None, filename=None):
+    def __init__(self, title_text="", heading_text="", callback=None, widget=None):
         self.title_text = title_text
         self.heading_text = heading_text
         self.callback = callback
-        self.filename = filename
+        self.widget = widget
         self.launch_dialog()
 
     def launch_dialog(self, widget=None, event=None):
@@ -40,10 +40,8 @@ class KanoDialog():
         alignment = Gtk.Alignment(xscale=0, yscale=1, xalign=0.5, yalign=1)
         alignment.add(button_box)
 
-        if self.filename is not None:
-            image = Gtk.Image()
-            image.set_from_file(self.filename)
-            content_area.pack_start(image, False, False, 0)
+        if self.widget is not None:
+            content_area.pack_start(self.widget, False, False, 0)
 
         content_area.pack_start(alignment, False, False, 10)
         self.dialog.show_all()

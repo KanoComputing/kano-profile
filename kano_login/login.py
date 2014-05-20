@@ -33,9 +33,6 @@ def activate(_win, _box):
 
     title = heading.Heading("Log in", "Open up your world")
 
-    # TEMPORARY - for testing purposes
-    force_login = False
-
     if force_login:
         username = profile['kanoworld_username']
         username_email_forced = Gtk.Label(username)

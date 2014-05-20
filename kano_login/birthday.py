@@ -11,6 +11,7 @@ from gi.repository import Gtk
 
 from components import heading, green_button, kano_dialog
 from kano_login import register
+#import common_gui.cursor as cursor
 import time
 import datetime
 
@@ -42,7 +43,7 @@ class Birthday():
 
         title = heading.Heading("Birthday", "So we know when to send you cake!")
 
-        self.next_button = green_button.Button("NEXT")
+        self.next_button = green_button.Button("NEXT", win)
         self.next_button.button.connect("button_press_event", self.set_birthday)
         self.next_button.button.set_sensitive(False)
 

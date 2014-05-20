@@ -15,6 +15,7 @@ from kano.profile.paths import bin_dir
 from kano.profile.profile import load_profile, save_profile_variable
 from kano.world.functions import login as login_, is_registered
 from kano_login import gender
+import common_gui.cursor as cursor
 
 win = None
 box = None
@@ -32,6 +33,9 @@ def activate(_win, _box):
 
     title = heading.Heading("Log in", "Open up your world")
 
+    # TEMPORARY - for testing purposes
+    force_login = False
+
     if force_login:
         username = profile['kanoworld_username']
         username_email_forced = Gtk.Label(username)
@@ -44,7 +48,7 @@ def activate(_win, _box):
     password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
-    login = green_button.Button("LOG IN")
+    login = green_button.Button("LOG IN", win)
     if force_login:
         login.button.connect("button_press_event", log_user_in, None, password_entry, username, _win)
     else:
@@ -55,6 +59,11 @@ def activate(_win, _box):
         not_registered = Gtk.Button("Not registered?")
         not_registered.get_style_context().add_class("not_registered")
         not_registered.connect("clicked", register)
+        not_registered.connect('enter-notify-event',
+                               cursor.hand_cursor, win)
+        not_registered.connect('leave-notify-event',
+                               cursor.arrow_cursor, win)
+        not_registered.connect('button-press-event', cursor.arrow_cursor, win)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     if force_login:
@@ -85,7 +94,7 @@ def register(event):
     gender.activate(win, box)
 
 
-def quit_program():
+def close_window():
     Gtk.main_quit()
 
 
@@ -117,4 +126,4 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-        kano_dialog.KanoDialog("Logged in", "Yay", quit_program)
+        kano_dialog.KanoDialog("Logged in", "Yay", close_window)

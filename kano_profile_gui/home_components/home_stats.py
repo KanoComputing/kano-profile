@@ -8,7 +8,7 @@
 # Display stats to user on home screen
 
 from gi.repository import Gtk
-from kano.profile.apps import load_app_state_variable
+from kano.profile.badges import count_completed_challenges, count_number_of_blocks, count_number_of_shares
 
 
 class HomeStats():
@@ -20,12 +20,14 @@ class HomeStats():
         self.container.set_size_request(WINDOW_WIDTH, self.height)
 
         # Placeholder info
-        completed_challenges = 19
-        self.get_blocks_used()
-        self.get_shares()
+        #completed_challenges = 19
+
+        self.completed_challenges = count_completed_challenges()
+        self.blocks_used = count_number_of_blocks()
+        self.shares = count_number_of_shares()
 
         # Stats
-        stat_dict = {"Blocks used": self.blocks_used, "Completed challenges": completed_challenges, "Shares": self.shares}
+        stat_dict = {"Blocks used": self.blocks_used, "Completed challenges": self.completed_challenges, "Shares": self.shares}
         number_of_items = 3
 
         index = 0
@@ -53,25 +55,3 @@ class HomeStats():
 
             self.container.attach(box, index, 0, 1, 1)
             index = index + 1
-
-    def get_blocks_used(self):
-        pong_blocks = load_app_state_variable("make-pong", "blocks_created")
-        if pong_blocks is None:
-            pong_blocks = 0
-
-        minecraft_blocks = load_app_state_variable("make-minecraft", "blocks_created")
-        if minecraft_blocks is None:
-            minecraft_blocks = 0
-
-        self.blocks_used = pong_blocks + minecraft_blocks
-
-    def get_shares(self):
-        pong_shares = load_app_state_variable("make-pong", "shares")
-        if pong_shares is None:
-            pong_shares = 0
-
-        minecraft_shares = load_app_state_variable("make-minecraft", "shares")
-        if minecraft_shares is None:
-            minecraft_shares = 0
-
-        self.shares = pong_shares + minecraft_shares

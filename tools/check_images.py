@@ -14,6 +14,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.profile.badges import load_badge_rules
 from kano_profile_gui.paths import image_dir
+from kano.utils import uniqify_list
 
 
 all_rules = load_badge_rules()
@@ -27,18 +28,30 @@ for category, subcats in all_rules.iteritems():
         needed_items_images = ['{}.png'.format(f) for f in items.keys()]
         needed_items_locked = ['{}_locked.png'.format(f) for f in items.keys()]
         needed_items_circular = ['{}_circular.png'.format(f) for f in items.keys()]
+        needed_items_levelup = ['{}_levelup.png'.format(f) for f in items.keys()]
 
         if category == 'avatars':
-            needed_items = needed_items_images + needed_items_locked + needed_items_circular
-        else:
+            needed_items_levelup = uniqify_list(['{}_levelup.png'.format(f[:-2]) for f in items.keys()])
+            needed_items = needed_items_images + needed_items_locked + needed_items_circular + needed_items_levelup
+
+        if category == 'badges':
+            needed_items = needed_items_images + needed_items_locked + needed_items_levelup
+
+        if category == 'environments':
             needed_items = needed_items_images + needed_items_locked
 
         needed_items = sorted(needed_items)
 
         if sorted(existing_items) != sorted(needed_items):
             print category, subcat
-            print 'Existing images:\n{}'.format(', '.join(existing_items))
-            print 'Needed images:\n{}'.format(', '.join(needed_items))
+            for e in existing_items:
+                if e not in needed_items:
+                    print 'Leftover image: {}'.format(e)
+
+            for n in needed_items:
+                if n not in existing_items:
+                    print 'Needed image: {}'.format(e)
+
             print
             ok = False
 

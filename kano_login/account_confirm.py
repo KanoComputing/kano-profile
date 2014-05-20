@@ -58,9 +58,8 @@ def confirmation_screen(widget=None, event=None):
 
     win.unpack_grid()
     img = Gtk.Image()
-    # Placeholder image
 
-    filename = get_image("level", "", "level-1", str(img_width) + 'x' + str(img_height))
+    filename = get_image("login", "", "profile-created", str(img_width) + 'x' + str(img_height))
     img.set_from_file(filename)
 
     doneB = green_button.Button("DONE", win)

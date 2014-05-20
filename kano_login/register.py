@@ -73,13 +73,33 @@ def activate(_win, _box):
     entry_container.attach(email_entry, 0, 1, 1, 1)
     entry_container.attach(password_entry, 0, 2, 1, 1)
 
+    go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
+    go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions)
+    # TODO: change this class
+    go_to_terms_conditions.get_style_context().add_class("not_registered")
+
+    terms_conditions = Gtk.CheckButton()
+    checkbox_box = Gtk.Box()
+    checkbox_box.pack_start(terms_conditions, False, False, 0)
+    checkbox_box.pack_start(go_to_terms_conditions, False, False, 0)
+
     valign = Gtk.Alignment()
     valign.add(entry_container)
     valign.set_padding(0, 0, 100, 0)
     box.pack_start(title.container, False, False, 0)
     box.pack_start(valign, False, False, 0)
     box.pack_start(register.align, False, False, 15)
+    box.pack_start(checkbox_box, False, False, 0)
     box.show_all()
+
+
+def show_terms_and_conditions(widget, event):
+    scrolledwindow = Gtk.ScrolledWindow()
+    lots_of_text = Gtk.TextView()
+    lots_of_text.get_buffer().set_text("Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah")
+    lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
+    scrolledwindow.add(lots_of_text)
+    kano_dialog.KanoDialog("Terms and conditions", "", None, scrolledwindow)
 
 
 def set_register_sensitive(entry2, event, entry1, entry3, button):
@@ -102,8 +122,6 @@ def register_user(button, event, username_entry, email_entry, password_entry):
     success, text = register_(win.email, win.username, win.password)
 
     if not success:
-        print "error = " + str(text)
-
         kano_dialog.KanoDialog("Houston, we have a problem", str(text))
 
     # This needs to be adjusted depending on the age of the user

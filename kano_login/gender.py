@@ -56,7 +56,9 @@ def activate(_win, _box):
 def on_gender_combo_changed(gender_combo, button):
     if gender_combo.get_active_text() == "Wizard":
         callback = gender_combo.set_active(0)
-        kano_dialog.KanoDialog("You're only fooling yourself...", "I'm afraid you are not a wizard", callback, constants.media + "/images/icons/you_are_not_a_wizard.png")
+        image = Gtk.Image()
+        image.set_from_file(constants.media + "/images/icons/you_are_not_a_wizard.png")
+        kano_dialog.KanoDialog("You're only fooling yourself...", "I'm afraid you are not a wizard", callback, image)
 
     button.set_sensitive(True)
 

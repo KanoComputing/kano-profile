@@ -11,7 +11,6 @@ from gi.repository import Gtk
 
 from components import heading, green_button, kano_dialog
 from kano_login import register
-#import common_gui.cursor as cursor
 import time
 import datetime
 

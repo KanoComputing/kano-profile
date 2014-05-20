@@ -8,7 +8,7 @@
 from kano.world.functions import remove_token
 from kano_login.components import heading
 from gi.repository import Gtk
-import common_gui.cursor as cursor
+import kano_login.components.cursor as cursor
 
 
 class LoggedIn(Gtk.Window):

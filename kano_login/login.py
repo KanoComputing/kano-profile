@@ -15,7 +15,7 @@ from kano.profile.paths import bin_dir
 from kano.profile.profile import load_profile, save_profile_variable
 from kano.world.functions import login as login_, is_registered
 from kano_login import gender
-import common_gui.cursor as cursor
+import kano_login.components.cursor as cursor
 
 win = None
 box = None

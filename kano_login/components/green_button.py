@@ -8,7 +8,7 @@
 # Create a green button with white text inside
 
 from gi.repository import Gtk
-import common_gui.cursor as cursor
+import kano_login.components.cursor as cursor
 
 
 class Button():

@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 from . import icons
-import common_gui.cursor as cursor
+import kano_login.components.cursor as cursor
 
 TOP_BAR_HEIGHT = 44
 SPACE_TAKEN = 150

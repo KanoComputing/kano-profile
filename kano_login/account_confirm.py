@@ -10,7 +10,6 @@
 from gi.repository import Gtk
 from components import heading, green_button
 from kano_profile_gui.images import get_image
-#import common_gui.cursor as cursor
 
 win = None
 box = None

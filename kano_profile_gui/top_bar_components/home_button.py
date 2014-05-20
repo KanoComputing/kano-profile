@@ -8,7 +8,6 @@
 # This controls the button styling in the default introduction screen which shows all the settings
 
 from gi.repository import Gtk, Gdk
-import kano_profile_gui.components.constants as constants
 from kano.world.functions import get_mixed_username
 from kano.profile.badges import calculate_kano_level
 from kano_profile_gui.images import get_image
@@ -44,22 +43,14 @@ class HomeButton():
         self.button.get_style_context().add_class("home_button")
         self.button.set_can_focus(False)
 
-        self.avatar = Gtk.Fixed()
-        self.avatar.set_size_request(60, 60)
-
-        self.img_base = Gtk.Image()
-        self.img_base.set_from_file(constants.media + "/images/avatars/avatar-base.png")
         self.img = Gtk.Image()
         subcat, name = get_avatar()
         filename = get_image("avatars", subcat, name + "_circular", str(self.img_width) + 'x' + str(self.img_height))
         self.img.set_from_file(filename)
 
-        self.avatar.put(self.img_base, 0, 0)
-        self.avatar.put(self.img, 3, 3)
-
         self.container.attach(self.title, 2, 0, 1, 1)
         self.container.attach(self.description, 2, 1, 1, 1)
-        self.container.attach(self.avatar, 0, 0, 2, 2)
+        self.container.attach(self.img, 0, 0, 2, 2)
         self.container.set_column_spacing(20)
         self.container.props.valign = Gtk.Align.CENTER
 

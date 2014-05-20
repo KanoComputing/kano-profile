@@ -17,12 +17,14 @@ from kano.profile.profile import get_avatar, get_environment, set_avatar, set_en
 # headers: category names, e.g. ["badges"] or ["environments"]
 # equipable: whether each item in the array is equipable (like avatars or environments)
 class TableTemplate():
-    def __init__(self, headers, equipable):
+    def __init__(self, headers, equipable, home_button=None):
 
         self.equipable = equipable
         self.scrollbar_width = 44
         self.width = 734 - self.scrollbar_width
         self.height = 448
+        # This is the image shown on the top bar
+        self.home_button = home_button
 
         self.categories = []
         for x in range(len(headers)):
@@ -71,7 +73,7 @@ class TableTemplate():
         self.hide_labels()
 
     def go_to_info_screen(self, arg1=None, arg2=None, pic=None, group=None):
-        selected_item_screen = info_screen.InfoScreenUi(pic.item, group)
+        selected_item_screen = info_screen.InfoScreenUi(pic.item, group, self.home_button)
         for i in self.container.get_children():
             self.container.remove(i)
         self.container.add(selected_item_screen.container)

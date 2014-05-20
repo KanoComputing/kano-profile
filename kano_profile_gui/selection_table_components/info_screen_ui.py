@@ -25,7 +25,7 @@ from kano.profile.profile import set_avatar, set_environment
 class InfoScreenUi():
     # Pass array of pictures into class then it can control it's own buttons
     # The current item is the screen we're currenty on
-    def __init__(self, item, group):
+    def __init__(self, item, group, home_button):
 
         # image width and height
         self.width = 460
@@ -83,6 +83,9 @@ class InfoScreenUi():
 
         self.change_equipped_style()
         self.change_locked_style()
+
+        # Need to update home button on equipping from this screen
+        self.home_button = home_button
 
     def create_fixed(self, image):
         fixed = Gtk.Fixed()
@@ -161,6 +164,7 @@ class InfoScreenUi():
             set_avatar(subcat, name)
         self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
         self.change_equipped_style()
+        self.home_button.update()
 
     # This function contains the styling applied to the visible item when it is equipped.
     def change_equipped_style(self):

@@ -17,7 +17,7 @@ class ProgressBar():
         self.height = 10
         # Height of the label
         self.label_height = 30
-        self.label_width = 60
+        self.label_width = 50
         self.total_width = WINDOW_WIDTH
 
         self.progress = Gtk.EventBox()
@@ -62,8 +62,8 @@ class ProgressBar():
         for child in self.fixed.get_children():
             self.fixed.remove(child)
 
-        self.progress_label.set_text(str(xp_progress) + "XP")
-        self.endpoint_label.set_text(str(xp_end) + "XP")
+        self.progress_label.set_text(str(xp_progress))
+        self.endpoint_label.set_text(str(xp_end))
 
         self.fixed.put(self.progress, 0, self.height)
         self.fixed.put(self.rest_of_bar, progress_width + self.label_width, self.height)

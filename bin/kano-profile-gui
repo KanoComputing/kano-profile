@@ -80,7 +80,12 @@ class MainWindow(Gtk.Window):
         for i in self.box.get_children():
             self.box.remove(i)
 
-        module.activate(self, self.box)
+        # Hacky way to get home image changed
+        # self.top_bar.home_button.update() needs to get called on equipping
+        if page == "swags":
+            module.activate(self, self.box, self.top_bar.home_button)
+        else:
+            module.activate(self, self.box)
 
 
 def main():

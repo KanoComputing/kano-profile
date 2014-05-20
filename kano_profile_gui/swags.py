@@ -13,14 +13,16 @@ img_width = 50
 swag_ui = None
 
 
-def activate(_win, _box):
+# _home_button is the avatar face on the home button
+# TODO: find a nicer way to do this
+def activate(_win, _box, _home_button):
     global swag_ui
 
     headers = ["avatars", "environments"]
     equipable = True
 
     if swag_ui is None:
-        swag_ui = table_template.TableTemplate(headers, equipable)
+        swag_ui = table_template.TableTemplate(headers, equipable, _home_button)
 
     swag_ui.leave_info_screen()
     _box.pack_start(swag_ui.container, False, False, 0)

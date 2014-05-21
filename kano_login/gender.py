@@ -27,7 +27,7 @@ def activate(_win, _box):
 
     win.clear_box()
 
-    next_button = green_button.Button("NEXT", win)
+    next_button = green_button.Button("NEXT")
 
     gender_combo = Gtk.ComboBoxText()
     gender_combo.append_text("Girl")

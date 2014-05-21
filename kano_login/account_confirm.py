@@ -24,7 +24,7 @@ def activate(_win, _box):
     win.clear_box()
 
     if win.age < 13:
-        nextB = green_button.Button("GOT IT", win)
+        nextB = green_button.Button("GOT IT")
         nextB.button.connect("button_press_event", confirmation_screen)
 
         title = heading.Heading("Now get your parents to confirm...", "An email has been sent to: ")
@@ -62,7 +62,7 @@ def confirmation_screen(widget=None, event=None):
     filename = get_image("login", "", "profile-created", str(img_width) + 'x' + str(img_height))
     img.set_from_file(filename)
 
-    doneB = green_button.Button("DONE", win)
+    doneB = green_button.Button("DONE")
     doneB.button.connect("button_press_event", finish)
 
     title = heading.Heading("Profile created!", "Boom")

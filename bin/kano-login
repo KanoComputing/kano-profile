@@ -66,7 +66,7 @@ class MainWindow(Gtk.Window):
         # Dynamic box
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
-        self.top_bar = top_bar.Top_bar(self.WINDOW_WIDTH, self)
+        self.top_bar = top_bar.Top_bar(self.WINDOW_WIDTH)
 
         self.grid.attach(self.top_bar.background, 0, 0, 3, 1)
         self.grid.attach(self.box, 1, 1, 1, 1)

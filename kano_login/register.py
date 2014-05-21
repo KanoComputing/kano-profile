@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button, kano_dialog
+from components import heading, green_button, kano_dialog, cursor
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir
 from kano.profile.profile import save_profile_variable
@@ -45,6 +45,7 @@ def activate(_win, _box):
 
     go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
     go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions)
+    cursor.attach_cursor_events(go_to_terms_conditions)
     # TODO: change this class
     go_to_terms_conditions.get_style_context().add_class("not_registered")
     checkbutton = Gtk.CheckButton()
@@ -54,7 +55,7 @@ def activate(_win, _box):
     checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
     checkbox_align.add(checkbox_box)
 
-    register = green_button.Button("REGISTER", win)
+    register = green_button.Button("REGISTER")
     register.button.set_sensitive(False)
 
     username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
@@ -89,8 +90,8 @@ def activate(_win, _box):
     valign.set_padding(0, 0, 100, 0)
     box.pack_start(title.container, False, False, 0)
     box.pack_start(valign, False, False, 0)
-    box.pack_start(register.align, False, False, 15)
-    box.pack_start(checkbox_align, False, False, 0)
+    box.pack_start(checkbox_align, False, False, 2)
+    box.pack_start(register.align, False, False, 5)
     box.show_all()
 
 
@@ -100,6 +101,46 @@ def show_terms_and_conditions(widget, event):
     scrolledwindow.set_size_request(400, 200)
     lots_of_text = Gtk.TextView()
     lots_of_text.get_buffer().set_text("Blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
                                        "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
                                        "blah blah blah blah blah blah blah blah")
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)

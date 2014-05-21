@@ -131,6 +131,7 @@ GtkScrolledWindow {
     font: Bariol Bold 13;
 }
 .gender_dropdown_list .menu {
+    border-style: solid;
     border-color: @active_border;
     border-width: 2px;
     border-radius: 3px;

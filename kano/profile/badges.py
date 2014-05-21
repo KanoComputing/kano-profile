@@ -7,7 +7,6 @@
 from __future__ import division
 
 import os
-from collections import defaultdict
 
 from ..utils import read_json, is_gui, run_bg, run_cmd, is_installed
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
@@ -87,7 +86,7 @@ def calculate_min_current_max_xp():
         level_min = level_rules[str(level)]
 
         if level != max_level:
-            level_max = level_rules[str(level + 1)] - 1
+            level_max = level_rules[str(level + 1)]
         else:
             level_max = float("inf")
 
@@ -95,10 +94,7 @@ def calculate_min_current_max_xp():
             return level_min, xp_now, level_max
 
 
-def calculate_badges():
-
-    DEBUG_MODE = False
-
+def calculate_badges(DEBUG_MODE=False):
     # helper function to calculate operations
     def do_calculate(select_push_back):
         for category, subcats in all_rules.iteritems():
@@ -122,11 +118,11 @@ def calculate_badges():
                             variable = target[1]
                             value = target[2]
 
-                            if DEBUG_MODE:
-                                print '\t', app, variable, value
-
                             if variable == 'level' and value == -1:
                                 value = app_profiles[app]['max_level']
+
+                            if DEBUG_MODE:
+                                print '\t', app, variable, value
 
                             if app not in app_list or variable not in app_state[app]:
                                 achieved = False
@@ -247,6 +243,7 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui():
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
+        # print cmd
 
         if False and is_installed('kdesk'):
             kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
@@ -328,8 +325,17 @@ def count_completed_challenges():
 def count_badges():
     all_badges = calculate_badges()
 
-    locked = defaultdict(int)
-    unlocked = defaultdict(int)
+    locked = {
+        'badges': 0,
+        'environments': 0,
+        'avatars': 0,
+    }
+
+    unlocked = {
+        'badges': 0,
+        'environments': 0,
+        'avatars': 0,
+    }
 
     for category, subcats in all_badges.iteritems():
         for subcat, items in subcats.iteritems():

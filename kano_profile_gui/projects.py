@@ -12,6 +12,7 @@ from gi.repository import Gtk
 from kano.profile.apps import get_app_list, get_app_data_dir
 from kano.utils import run_print_output_error
 from kano.profile.paths import rules_dir
+import kano_profile_gui.components.cursor as cursor
 
 app_profiles = None
 
@@ -87,6 +88,7 @@ class ProjectItem():
         self.button = Gtk.Button("MAKE")
         self.button.connect("clicked", self.load, project['app'], project['file'], project['data_dir'])
         self.button.get_style_context().add_class("project_make_button")
+        cursor.add_cursor_events(self.button)
         self.button_padding = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
         self.button_padding.set_padding(25, 25, 10, 10)
         self.button_padding.add(self.button)

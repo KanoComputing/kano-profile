@@ -11,6 +11,7 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
+import kano_profile_gui.components.cursor as cursor
 
 
 class ItemUi():
@@ -50,6 +51,7 @@ class ItemUi():
         self.fixed.put(self.locked_fixed, 0, 0)
 
         self.button.add(self.fixed)
+        cursor.attach_cursor_events(self.button)
 
         if self.item.equipable:
              # Event box containing the time and title of the equipped item

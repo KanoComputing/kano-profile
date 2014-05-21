@@ -19,6 +19,7 @@
 from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text_ui as info_text
 import kano_profile_gui.components.icons as icons
+import kano_profile_gui.components.cursor as cursor
 from kano.profile.profile import set_avatar, set_environment
 
 
@@ -101,6 +102,9 @@ class InfoScreenUi():
         nextb.get_style_context().add_class("transparent")
         nextb.set_size_request(50, 50)
         nextb.connect("button_press_event", self.go_to, 1)
+
+        cursor.attach_cursor_events(prevb)
+        cursor.attach_cursor_events(nextb)
 
         fixed.put(image, 0, 0)
         fixed.put(prevb, 0, (self.height / 2) - 25)

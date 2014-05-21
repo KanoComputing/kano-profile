@@ -8,6 +8,7 @@
 # Info display next to image on selected screen
 
 from gi.repository import Gtk, Gdk
+import kano_profile_gui.components.cursor as cursor
 
 
 class InfoTextUi():
@@ -56,7 +57,7 @@ class InfoTextUi():
         self.back_button.get_style_context().add_class("green_button")
         self.back_button_box = Gtk.Box()
         self.back_button_box.add(self.back_button)
-
+        cursor.attach_cursor_events(self.back_button)
         self.equip_button = None
 
         if self.equip:
@@ -65,6 +66,7 @@ class InfoTextUi():
             self.equip_button_box = Gtk.Box()
             self.equip_button_box.add(self.equip_button)
             self.box.pack_start(self.equip_button_box, False, False, 3)
+            cursor.attach_cursor_events(self.equip_button)
 
         self.box.pack_start(self.back_button_box, False, False, 3)
 

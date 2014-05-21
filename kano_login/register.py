@@ -43,14 +43,23 @@ def activate(_win, _box):
     email_entry = Gtk.Entry()
     password_entry = Gtk.Entry()
 
+    go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
+    go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions)
+    # TODO: change this class
+    go_to_terms_conditions.get_style_context().add_class("not_registered")
+    checkbutton = Gtk.CheckButton()
+    checkbox_box = Gtk.Box()
+    checkbox_box.pack_start(checkbutton, False, False, 0)
+    checkbox_box.pack_start(go_to_terms_conditions, False, False, 0)
+
     register = green_button.Button("REGISTER", win)
     register.button.set_sensitive(False)
 
-    username_entry.connect("key_release_event", set_register_sensitive, email_entry, password_entry, register.button)
-    email_entry.connect("key_release_event", set_register_sensitive, username_entry, password_entry, register.button)
-    password_entry.connect("key_release_event", set_register_sensitive, username_entry, email_entry, register.button)
-
-    register.button.connect("button_press_event", register_user, username_entry, email_entry, password_entry)
+    username_entry.connect("key_release_event", set_register_sensitive, email_entry, username_entry, password_entry, register.button, checkbutton)
+    email_entry.connect("key_release_event", set_register_sensitive, email_entry, username_entry, password_entry, register.button, checkbutton)
+    password_entry.connect("key_release_event", set_register_sensitive, email_entry, username_entry, password_entry, register.button, checkbutton)
+    checkbutton.connect("toggled", set_register_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
+    register.button.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
 
     subheading = ''
     if win.age < 13:
@@ -73,16 +82,6 @@ def activate(_win, _box):
     entry_container.attach(email_entry, 0, 1, 1, 1)
     entry_container.attach(password_entry, 0, 2, 1, 1)
 
-    go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
-    go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions)
-    # TODO: change this class
-    go_to_terms_conditions.get_style_context().add_class("not_registered")
-
-    terms_conditions = Gtk.CheckButton()
-    checkbox_box = Gtk.Box()
-    checkbox_box.pack_start(terms_conditions, False, False, 0)
-    checkbox_box.pack_start(go_to_terms_conditions, False, False, 0)
-
     valign = Gtk.Alignment()
     valign.add(entry_container)
     valign.set_padding(0, 0, 100, 0)
@@ -96,17 +95,33 @@ def activate(_win, _box):
 def show_terms_and_conditions(widget, event):
     scrolledwindow = Gtk.ScrolledWindow()
     lots_of_text = Gtk.TextView()
-    lots_of_text.get_buffer().set_text("Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah")
+    lots_of_text.get_buffer().set_text("Blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+                                       "blah blah blah blah blah blah blah blah")
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
     scrolledwindow.add(lots_of_text)
     kano_dialog.KanoDialog("Terms and conditions", "", None, scrolledwindow)
 
 
-def set_register_sensitive(entry2, event, entry1, entry3, button):
+def set_register_sensitive(widget, event, entry1, entry2, entry3, button, checkbutton):
     text1 = entry1.get_text()
     text2 = entry2.get_text()
     text3 = entry3.get_text()
-    if text1 != "" and text2 != "" and text3 != "":
+    bool_value = checkbutton.get_active()
+    print "bool_value = " + str(bool_value)
+    if text1 != "" and text2 != "" and text3 != "" and bool_value:
+        button.set_sensitive(True)
+    else:
+        button.set_sensitive(False)
+
+
+def set_register_sensitive_toggled(widget, entry1, entry2, entry3, button, checkbutton):
+    text1 = entry1.get_text()
+    text2 = entry2.get_text()
+    text3 = entry3.get_text()
+    bool_value = checkbutton.get_active()
+    print "bool_value = " + str(bool_value)
+    if text1 != "" and text2 != "" and text3 != "" and bool_value:
         button.set_sensitive(True)
     else:
         button.set_sensitive(False)

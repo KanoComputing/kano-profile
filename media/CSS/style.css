@@ -342,9 +342,9 @@ GtkSwitch.slider {
  * made by John Baer (http://www.j-baer.com/un5-12-04). *
  *******************************************************/
 
-@define-color bg_color #fdfdfd;
+@define-color bg_color #e7e7e7;
 @define-color fg_color #000000;
-@define-color scrollbar_trough shade(@bg_color, 0.9);
+@define-color scrollbar_trough shade(@bg_color, 1);
 @define-color scrollbar_trough_insensitive shade(@bg_color, 0.9);
 @define-color scrollbar_trough_unfocused shade(@bg_color, 0.9);
 

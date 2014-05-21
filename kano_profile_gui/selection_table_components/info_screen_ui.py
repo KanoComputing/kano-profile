@@ -147,7 +147,7 @@ class InfoScreenUi():
     def change_locked_style(self):
         if self.get_locked() and self.padlock.get_parent() is None:
             self.fixed.put(self.padlock, 211, 205)
-            self.fixed.show_all()
+            self.padlock.show()
         elif not self.get_locked() and self.padlock.get_parent() is not None:
             self.fixed.remove(self.padlock)
 

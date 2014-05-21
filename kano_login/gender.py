@@ -32,6 +32,7 @@ def activate(_win, _box):
     gender_combo = Gtk.ComboBoxText()
     gender_combo.append_text("Girl")
     gender_combo.append_text("Boy")
+    gender_combo.append_text("Don't want to say")
     gender_combo.append_text("Wizard")
     gender_combo.connect("changed", on_gender_combo_changed, next_button.button)
     gender_combo.get_style_context().add_class("gender_dropdown_list")

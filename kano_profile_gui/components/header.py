@@ -34,26 +34,26 @@ class Header():
         self.box.set_size_request(self.width, self.height)
 
         locked_pic = icons.set_from_name("locked")
+        locked_alignment = Gtk.Alignment()
+        locked_alignment.set_padding(0, 0, 10, 0)
+        locked_alignment.add(locked_pic)
         self.locked_label = Gtk.Label(": " + str(self.locked_number))
         self.locked_label.get_style_context().add_class("padlock_label")
         locked_box = Gtk.Box()
-        locked_box.pack_start(locked_pic, False, False, 0)
+        locked_box.pack_start(locked_alignment, False, False, 0)
         locked_box.pack_start(self.locked_label, False, False, 0)
         locked_box.set_size_request(padlock_label_width, padlock_label_height)
-        locked_align = Gtk.Alignment()
-        locked_align.set_padding(0, 0, 10, 0)
-        locked_align.add(locked_box)
 
         unlocked_pic = icons.set_from_name("unlocked")
+        unlocked_alignment = Gtk.Alignment()
+        unlocked_alignment.set_padding(0, 0, 10, 0)
+        unlocked_alignment.add(unlocked_pic)
         self.unlocked_label = Gtk.Label(": " + str(self.unlocked_number))
         self.unlocked_label.get_style_context().add_class("padlock_label")
         unlocked_box = Gtk.Box()
-        unlocked_box.pack_start(unlocked_pic, False, False, 0)
+        unlocked_box.pack_start(unlocked_alignment, False, False, 0)
         unlocked_box.pack_start(self.unlocked_label, False, False, 0)
         unlocked_box.set_size_request(padlock_label_width, padlock_label_height)
-        unlocked_align = Gtk.Alignment()
-        unlocked_align.set_padding(0, 0, 0, 0)
-        unlocked_align.add(unlocked_box)
 
         self.set_locked_unlocked_number(title1)
 
@@ -77,9 +77,9 @@ class Header():
         else:
             self.halign.add(self.title_label)
 
-        self.box.pack_start(locked_align, False, False, 0)
+        self.box.pack_start(locked_box, False, False, 0)
         self.box.pack_start(self.halign, False, False, 0)
-        self.box.pack_end(unlocked_align, False, False, 0)
+        self.box.pack_end(unlocked_box, False, False, 0)
 
     def set_locked_unlocked_number(self, header):
         unlocked_elements, locked_elements = count_badges()

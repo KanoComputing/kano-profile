@@ -56,7 +56,6 @@ def confirmation_screen(widget=None, event=None):
     img_width = 590
     img_height = 270
 
-    win.unpack_grid()
     img = Gtk.Image()
 
     filename = get_image("login", "", "profile-created", str(img_width) + 'x' + str(img_height))

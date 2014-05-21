@@ -16,7 +16,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.network import is_internet
-from kano.utils import download_url, ensure_dir, read_json, get_home
+from kano.utils import download_url, ensure_dir, read_json, get_home, write_json
 
 from kano.profile.paths import app_profiles_file
 from kano_profile_gui.paths import css_dir
@@ -91,7 +91,7 @@ def make_share_list():
         if has_url:
             button = Gtk.Button('Download')
             button.set_size_request(100, row_height)
-            button.connect('clicked', load_share, entry['app'], entry['title'], entry['attachment_url'])
+            button.connect('clicked', load_share, entry)
             grid.attach(button, 2, i, 1, 1)
 
     align = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
@@ -102,7 +102,16 @@ def make_share_list():
     return align
 
 
-def load_share(_button, app, title, url):
+def load_share(_button, entry):
+    app = entry['app']
+    title = entry['title']
+    attachment_url = entry['attachment_url']
+
+    data = {
+        'title': title,
+        'description': entry['description']
+    }
+
     app_profiles = read_json(app_profiles_file)
 
     if app not in app_profiles:
@@ -114,15 +123,20 @@ def load_share(_button, app, title, url):
     ensure_dir(folder)
 
     title_slugified = slugify(title)
-    ext = url.split('.')[-1]
-    file_name = '{}.{}'.format(title_slugified, ext)
-    file_path = os.path.join(folder, file_name)
 
-    success, text = download_url(url, file_path)
+    attachment_ext = attachment_url.split('.')[-1]
+    attachment_name = '{}.{}'.format(title_slugified, attachment_ext)
+    attachment_path = os.path.join(folder, attachment_name)
+
+    json_name = '{}.{}'.format(title_slugified, 'json')
+    json_path = os.path.join(folder, json_name)
+
+    success, text = download_url(attachment_url, attachment_path)
     if not success:
         print 'Error with downloading share file: {}'.format(text)
     else:
-        print 'File Path: {}'.format(file_path)
+        write_json(json_path, data)
+        print 'File Path: {}'.format(attachment_path)
         sys.exit()
 
 

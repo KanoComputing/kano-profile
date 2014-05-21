@@ -64,7 +64,7 @@ def confirmation_screen(widget=None, event=None):
     doneB = green_button.Button("DONE")
     doneB.button.connect("button_press_event", finish)
 
-    title = heading.Heading("Profile created!", "Boom")
+    title = heading.Heading("Profile created!", "Now we'll show you some of the cool things you can do")
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     container.pack_start(img, False, False, 0)

@@ -17,11 +17,6 @@ import datetime
 win = None
 box = None
 
-#try:
-    #datetime.datetime.strptime(date_text, '%Y-%m-%d')
-#except ValueError:
-    #raise ValueError("Incorrect data format, should be YYYY-MM-DD")
-
 
 class Birthday():
     def __init__(self, win, box):
@@ -96,20 +91,26 @@ class Birthday():
             current_year = int(time.strftime("%Y"))
 
             age = current_year - bday_year
-            if age < 0 or age > 114:
-                raise Exception
+            if age < 0:
+                raise Exception("Hmmm, really?", "Apparently you haven't been born yet...")
+            elif age > 114:
+                raise Exception("Well done for living this long!", "(But I don't believe you)")
 
             if current_month < bday_month:
                 age = age - 1
             elif current_month == bday_month:
                 if current_day < bday_day:
                     age = age - 1
-                elif current_day == bday_day:
-                    print "IT'S YOUR BIIIIRTHDAY"
+                # TODO: if it's their birthday, do something special?
+                #elif current_day == bday_day:
+                #    print "IT'S YOUR BIIIIRTHDAY"
             return age
 
-        except:
-            kano_dialog.KanoDialog("Houston, we have a problem", "You've not entered a valid birthday!!!!")
+        except Exception as e:
+            if len(e.args) > 1:
+                kano_dialog.KanoDialog(e.args[0], e.args[1])
+            else:
+                kano_dialog.KanoDialog("Houston, we have a problem", "You've not entered a valid birthday!")
             self.day_entry.set_text("")
             self.month_entry.set_text("")
             self.year_entry.set_text("")

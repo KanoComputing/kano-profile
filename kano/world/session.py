@@ -60,7 +60,7 @@ class KanoWorldSession(object):
             elif gender == 'Girl':
                 gender = 'f'
             elif gender == "Don't want to say":
-                gender = 'u'
+                gender = 'x'
             data['gender'] = gender
         except Exception:
             pass

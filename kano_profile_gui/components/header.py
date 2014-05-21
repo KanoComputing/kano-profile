@@ -121,7 +121,6 @@ class Header():
         self.radiobutton1.connect("toggled", callback)
 
     def update_locked_unlocked_labels(self, widget):
-        print self.radiobutton1.get_active()
         if self.radiobutton1.get_active():
             self.set_locked_unlocked_number(self.headers[0])
         else:

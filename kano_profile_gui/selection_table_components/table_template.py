@@ -113,7 +113,6 @@ class TableTemplate():
                     pic.set_equipped(True)
                     self.equip(None, None, pic, cat)
                     return
-        print "Tuple not found"
 
     def get_equipped_tuple(self):
         for i in range(2):

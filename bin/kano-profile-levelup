@@ -84,7 +84,7 @@ class MainWindow(Gtk.Window):
             # Get image, title and label for new level
             self.set_description("new_level", str(new_level))
             # TODO: Change temporary filename for level up
-            filename = get_image("level", "", "level-1", str(self.image_width) + 'x' + str(self.image_height))
+            filename = get_image("level", "", "Level-" + str(new_level), str(self.image_width) + 'x' + str(self.image_height))
             self.image.set_from_file(filename)
         else:
             self.go_to_next()

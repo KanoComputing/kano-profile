@@ -97,6 +97,8 @@ def calculate_min_current_max_xp():
 
 def calculate_badges():
 
+    DEBUG_MODE = False
+
     # helper function to calculate operations
     def do_calculate(select_push_back):
         for category, subcats in all_rules.iteritems():
@@ -106,20 +108,33 @@ def calculate_badges():
                     if target_pushback != select_push_back:
                         continue
 
+                    if DEBUG_MODE:
+                        print category, subcat, item
+
                     if rules['operation'] == 'each_greater':
+
+                        if DEBUG_MODE:
+                            print '\teach_greater'
+
                         achieved = True
                         for target in rules['targets']:
                             app = target[0]
                             variable = target[1]
                             value = target[2]
 
+                            if DEBUG_MODE:
+                                print '\t', app, variable, value
+
                             if variable == 'level' and value == -1:
                                 value = app_profiles[app]['max_level']
 
                             if app not in app_list or variable not in app_state[app]:
-                                # print '\tnot in app list'
                                 achieved = False
                                 break
+
+                            if DEBUG_MODE:
+                                print '\tvalue: {}'.format(app_state[app][variable])
+
                             achieved &= app_state[app][variable] >= value
 
                     elif rules['operation'] == 'sum_greater':
@@ -139,6 +154,9 @@ def calculate_badges():
                         print 'unknown uperation {}'.format(rules['operation'])
                         continue
 
+                    if DEBUG_MODE:
+                        print '\tachieved: {}'.format(achieved)
+
                     calculated_badges.setdefault(category, dict()).setdefault(subcat, dict())[item] \
                         = all_rules[category][subcat][item]
                     calculated_badges[category][subcat][item]['achieved'] = achieved
@@ -148,7 +166,7 @@ def calculate_badges():
         for category, subcats in calculated_badges.iteritems():
             for subcat, items in subcats.iteritems():
                 for item, rules in items.iteritems():
-                    if category == 'badges' and subcat != 'online':
+                    if category == 'badges' and subcat != 'online' and rules['achieved']:
                         count += 1
         return count
 
@@ -163,7 +181,7 @@ def calculate_badges():
 
     # special app: kanoprofile
     computed = {
-        'kano_level': calculate_kano_level()
+        'kano_level': calculate_kano_level()[0]
     }
     app_state['computed'] = computed
 
@@ -318,7 +336,6 @@ def count_badges():
             for item, rules in items.iteritems():
                 if rules['achieved']:
                     unlocked[category] += 1
-                    print category, subcat, item
                 else:
                     locked[category] += 1
 

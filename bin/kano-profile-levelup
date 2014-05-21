@@ -131,7 +131,10 @@ class MainWindow(Gtk.Window):
         if self.category == "avatars":
             del self.new_items["avatars"][subcat]
         else:
+            # So we don't iterate through an empty dictionary on the next loop
             del items[item]
+            if self.new_items[self.category][subcat] == {}:
+                del self.new_items[self.category][subcat]
 
     def set_description(self, category, text):
         if category == "new_level":
@@ -163,9 +166,11 @@ class MainWindow(Gtk.Window):
         if self.new_items[self.category] == {}:
             self.next_category()
 
+        #index = 0
         for i, j in self.new_items[self.category].iteritems():
             if i == {} or j == {}:
                 self.next_category()
+                return
 
 
 def parse_items(args):

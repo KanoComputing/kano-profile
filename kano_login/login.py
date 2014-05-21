@@ -45,7 +45,7 @@ def activate(_win, _box):
     password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
-    login = green_button.Button("LOG IN", win)
+    login = green_button.Button("LOG IN")
     if force_login:
         login.button.connect("button_press_event", log_user_in, None, password_entry, username, _win)
     else:
@@ -56,11 +56,7 @@ def activate(_win, _box):
         not_registered = Gtk.Button("Not registered?")
         not_registered.get_style_context().add_class("not_registered")
         not_registered.connect("clicked", register)
-        not_registered.connect('enter-notify-event',
-                               cursor.hand_cursor, win)
-        not_registered.connect('leave-notify-event',
-                               cursor.arrow_cursor, win)
-        not_registered.connect('button-press-event', cursor.arrow_cursor, win)
+        cursor.attach_cursor_events(not_registered)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     if force_login:

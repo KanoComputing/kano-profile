@@ -30,11 +30,7 @@ class KanoDialog():
         self.dialog_button = Gtk.Button("EXIT")
         self.dialog_button.get_style_context().add_class("green_button")
         self.dialog_button.connect("button_press_event", self.exit_dialog)
-        self.hand_handler = self.dialog_button.connect('enter-notify-event',
-                                                       cursor.hand_cursor, self.dialog)
-        self.arrow_handler = self.dialog_button.connect('leave-notify-event',
-                                                        cursor.arrow_cursor, self.dialog)
-        self.dialog_button.connect('button-press-event', cursor.arrow_cursor, self.dialog)
+        cursor.attach_cursor_events(self.dialog_button)
         button_box = Gtk.Box()
         button_box.add(self.dialog_button)
         alignment = Gtk.Alignment(xscale=0, yscale=1, xalign=0.5, yalign=1)
@@ -49,7 +45,7 @@ class KanoDialog():
 
     def exit_dialog(self, widget, event):
         self.dialog.destroy()
-        cursor.arrow_cursor(None, None, self.dialog)
+        cursor.arrow_cursor(self.dialog, None)
         if self.callback is not None:
             self.callback()
 

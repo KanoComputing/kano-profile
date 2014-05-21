@@ -42,7 +42,7 @@ class Birthday():
 
         title = heading.Heading("Birthday", "So we know when to send you cake!")
 
-        self.next_button = green_button.Button("NEXT", win)
+        self.next_button = green_button.Button("NEXT")
         self.next_button.button.connect("button_press_event", self.set_birthday)
         self.next_button.button.set_sensitive(False)
 

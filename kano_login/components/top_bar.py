@@ -17,7 +17,7 @@ HEADER_SPACE = 25
 
 
 class Top_bar():
-    def __init__(self, WINDOW_WIDTH, win):
+    def __init__(self, WINDOW_WIDTH):
 
         # Makes it easier to centre other widgets even if we change this
         self.height = TOP_BAR_HEIGHT
@@ -69,7 +69,7 @@ class Top_bar():
         self.close_button.set_size_request(TOP_BAR_HEIGHT, TOP_BAR_HEIGHT)
         self.close_button.set_can_focus(False)
         self.close_button.get_style_context().add_class("top_bar_button")
-        self.close_button.connect('button-press-event', self.close_window, win)
+        self.close_button.connect('button-press-event', self.close_window)
 
         # Main container holding everything
         self.container = Gtk.Grid()
@@ -80,18 +80,9 @@ class Top_bar():
         self.container.set_size_request(WINDOW_WIDTH, 44)
         self.background.add(self.container)
 
-        self.close_hand_handler = self.close_button.connect('enter-notify-event',
-                                                            cursor.hand_cursor, win)
-        self.close_arrow_handler = self.close_button.connect('leave-notify-event',
-                                                             cursor.arrow_cursor, win)
-        self.next_hand_handler = self.next_button.connect('enter-notify-event',
-                                                          cursor.hand_cursor, win)
-        self.next_arrow_handler = self.next_button.connect('leave-notify-event',
-                                                           cursor.arrow_cursor, win)
-        self.prev_hand_handler = self.prev_button.connect('enter-notify-event',
-                                                          cursor.hand_cursor, win)
-        self.prev_arrow_handler = self.prev_button.connect('leave-notify-event',
-                                                           cursor.arrow_cursor, win)
+        cursor.attach_cursor_events(self.prev_button)
+        cursor.attach_cursor_events(self.next_button)
+        cursor.attach_cursor_events(self.close_button)
         # On start, disable the prev and next buttons
         self.disable_prev()
         self.disable_next()
@@ -118,16 +109,7 @@ class Top_bar():
     def set_next_callback(self, callback):
         self.next_button.connect("button_press_event", callback)
 
-    def disconnect_handlers(self):
-        self.close_button.disconnect(self.close_hand_handler)
-        self.close_button.disconnect(self.close_arrow_handler)
-        self.next_button.disconnect(self.next_hand_handler)
-        self.next_button.disconnect(self.next_arrow_handler)
-        self.prev_button.disconnect(self.prev_hand_handler)
-        self.prev_button.disconnect(self.prev_arrow_handler)
-
-    def close_window(self, event, button, win):
-        self.disconnect_handlers()
-        cursor.arrow_cursor(None, None, win)
+    def close_window(self, button, event):
+        cursor.arrow_cursor(button, None)
         Gtk.main_quit()
 

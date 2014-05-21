@@ -42,8 +42,8 @@ def activate(_win, _box=None):
     if is_internet():
         title = heading.Heading("You've made some progress, let's save it!", "Lets create an account")
         # This button should send you to the login screen
-        login_button = green_button.Button("I ALREADY HAVE AN ACCOUNT", win)
-        next_button = green_button.Button("REGISTER", win)
+        login_button = green_button.Button("I ALREADY HAVE AN ACCOUNT")
+        next_button = green_button.Button("REGISTER")
         button_box = Gtk.Box()
         button_box.pack_start(login_button.align, False, False, 10)
         button_box.pack_start(next_button.align, False, False, 10)
@@ -62,7 +62,7 @@ def activate(_win, _box=None):
 
     else:
         title = heading.Heading("You should get an account, but you need internet!", "Come back later")
-        done_button = green_button.Button("DONE", win)
+        done_button = green_button.Button("DONE")
         done_button.button.connect("button_press_event", close_window)
         done_button.set_padding(0, 10, 0, 0)
         box.pack_start(title.container, False, False, 0)

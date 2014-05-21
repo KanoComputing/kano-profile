@@ -51,14 +51,16 @@ def activate(_win, _box):
     checkbox_box = Gtk.Box()
     checkbox_box.pack_start(checkbutton, False, False, 0)
     checkbox_box.pack_start(go_to_terms_conditions, False, False, 0)
+    checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
+    checkbox_align.add(checkbox_box)
 
     register = green_button.Button("REGISTER", win)
     register.button.set_sensitive(False)
 
-    username_entry.connect("key_release_event", set_register_sensitive, email_entry, username_entry, password_entry, register.button, checkbutton)
-    email_entry.connect("key_release_event", set_register_sensitive, email_entry, username_entry, password_entry, register.button, checkbutton)
-    password_entry.connect("key_release_event", set_register_sensitive, email_entry, username_entry, password_entry, register.button, checkbutton)
-    checkbutton.connect("toggled", set_register_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
+    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
+    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
+    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
+    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
     register.button.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
 
     subheading = ''
@@ -88,43 +90,41 @@ def activate(_win, _box):
     box.pack_start(title.container, False, False, 0)
     box.pack_start(valign, False, False, 0)
     box.pack_start(register.align, False, False, 15)
-    box.pack_start(checkbox_box, False, False, 0)
+    box.pack_start(checkbox_align, False, False, 0)
     box.show_all()
 
 
 def show_terms_and_conditions(widget, event):
     scrolledwindow = Gtk.ScrolledWindow()
+    scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    scrolledwindow.set_size_request(400, 200)
     lots_of_text = Gtk.TextView()
     lots_of_text.get_buffer().set_text("Blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
                                        "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
                                        "blah blah blah blah blah blah blah blah")
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
+    lots_of_text.set_editable(False)
     scrolledwindow.add(lots_of_text)
     kano_dialog.KanoDialog("Terms and conditions", "", None, scrolledwindow)
 
 
-def set_register_sensitive(widget, event, entry1, entry2, entry3, button, checkbutton):
+def set_register_sensitive(entry1, entry2, entry3, button, checkbutton):
     text1 = entry1.get_text()
     text2 = entry2.get_text()
     text3 = entry3.get_text()
     bool_value = checkbutton.get_active()
-    print "bool_value = " + str(bool_value)
     if text1 != "" and text2 != "" and text3 != "" and bool_value:
         button.set_sensitive(True)
     else:
         button.set_sensitive(False)
 
 
-def set_register_sensitive_toggled(widget, entry1, entry2, entry3, button, checkbutton):
-    text1 = entry1.get_text()
-    text2 = entry2.get_text()
-    text3 = entry3.get_text()
-    bool_value = checkbutton.get_active()
-    print "bool_value = " + str(bool_value)
-    if text1 != "" and text2 != "" and text3 != "" and bool_value:
-        button.set_sensitive(True)
-    else:
-        button.set_sensitive(False)
+def set_sensitive_toggled(widget, entry1, entry2, entry3, button, checkbutton):
+    set_register_sensitive(entry1, entry2, entry3, button, checkbutton)
+
+
+def set_sensitive_on_key_up(widget, event, entry1, entry2, entry3, button, checkbutton):
+    set_register_sensitive(entry1, entry2, entry3, button, checkbutton)
 
 
 def register_user(button, event, username_entry, email_entry, password_entry):

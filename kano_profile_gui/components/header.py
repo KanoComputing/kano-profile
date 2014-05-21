@@ -74,6 +74,7 @@ class Header():
             self.halign.add(self.container)
             cursor.attach_cursor_events(self.radiobutton1)
             cursor.attach_cursor_events(self.radiobutton2)
+            self.radiobutton1.connect("toggled", self.update_locked_unlocked_labels)
         else:
             self.halign.add(self.title_label)
 

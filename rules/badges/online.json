@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["online", "shares", 5]],
+    "targets": [["computed", "online_shares", 5]],
     "title": "Community Champion"
   },
   "staff_pick": {
@@ -12,7 +12,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["online", "staff_picks", 1]],
+    "targets": [["computed", "online_staff_picks", 1]],
     "title": "Staff Pick"
   },
   "talent_tracker": {
@@ -20,7 +20,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["online", "you_follow", 10]],
+    "targets": [["computed", "online_you_follow", 10]],
     "title": "Talent Tracker"
   }
 }

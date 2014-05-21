@@ -99,20 +99,22 @@ class MainWindow(Gtk.Window):
 
         size_folder = str(self.image_width) + 'x' + str(self.image_height)
         filename = ""
-        text = ""
+        title = ""
         background_color = Gdk.RGBA()
 
         if self.category in self.new_items:
             for subcat, items in self.new_items[self.category].iteritems():
                 for item, rules in items.iteritems():
-                    text = rules["title"]
                     color_string = '#' + rules["bg_color"]
                     background_color.parse(color_string)
                     if self.category == "environments":
+                        title = rules["title"]
                         filename = get_image(self.category, subcat, item, size_folder)
                     elif self.category == "avatars":
+                        title = subcat.replace('_', ' ').title()
                         continue
                     else:
+                        title = rules["title"]
                         filename = get_image(self.category, subcat, item + "_levelup", size_folder)
 
         else:
@@ -126,7 +128,7 @@ class MainWindow(Gtk.Window):
             filename = get_image(self.category, subcat, subcat + "_levelup", size_folder)
 
         self.image.set_from_file(filename)
-        self.set_description(self.category, text)
+        self.set_description(self.category, title)
 
         if self.category == "avatars":
             del self.new_items["avatars"][subcat]

@@ -9,9 +9,8 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button, kano_dialog
+from components import heading, green_button
 from kano_login import birthday
-import kano_profile_gui.components.constants as constants
 
 win = None
 box = None
@@ -32,7 +31,6 @@ def activate(_win, _box):
     gender_combo = Gtk.ComboBoxText()
     gender_combo.append_text("Girl")
     gender_combo.append_text("Boy")
-    gender_combo.append_text("Don't want to say")
     gender_combo.append_text("Wizard")
     gender_combo.connect("changed", on_gender_combo_changed, next_button.button)
     gender_combo.get_style_context().add_class("gender_dropdown_list")
@@ -55,12 +53,6 @@ def activate(_win, _box):
 
 
 def on_gender_combo_changed(gender_combo, button):
-    if gender_combo.get_active_text() == "Wizard":
-        callback = gender_combo.set_active(0)
-        image = Gtk.Image()
-        image.set_from_file(constants.media + "/images/icons/you_are_not_a_wizard.png")
-        kano_dialog.KanoDialog("You're only fooling yourself...", "I'm afraid you are not a wizard", callback, image)
-
     button.set_sensitive(True)
 
 

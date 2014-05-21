@@ -14,7 +14,7 @@ import kano_profile_gui.top_bar_components.home_button as home_button
 
 
 class TopBar():
-    def __init__(self, WINDOW_WIDTH, win):
+    def __init__(self, WINDOW_WIDTH):
 
         # Makes it easier to centre other widgets even if we change this
         self.height = 96

@@ -9,11 +9,12 @@
 
 from gi.repository import Gtk, Gdk
 import kano_profile_gui.components.icons as icons
+import kano_profile_gui.components.cursor as cursor
 import kano_profile_gui.top_bar_components.home_button as home_button
 
 
 class TopBar():
-    def __init__(self, WINDOW_WIDTH):
+    def __init__(self, WINDOW_WIDTH, win):
 
         # Makes it easier to centre other widgets even if we change this
         self.height = 96
@@ -63,22 +64,28 @@ class TopBar():
         # Close button
         cross = icons.set_from_name("cross")
         cross.set_padding(5, 5)
-        close_button = Gtk.Button()
-        close_button.set_image(cross)
-        close_button.set_can_focus(False)
-        close_button.get_style_context().add_class("top_bar_button")
-        close_button.get_style_context().add_class("close_button")
-        close_button.connect("button_press_event", close_window)
-        close_button.set_alignment(xalign=1, yalign=0)
+        self.close_button = Gtk.Button()
+        self.close_button.set_image(cross)
+        self.close_button.set_can_focus(False)
+        self.close_button.get_style_context().add_class("top_bar_button")
+        self.close_button.get_style_context().add_class("close_button")
+        self.close_button.connect("button_press_event", self.close_window)
+        self.close_button.set_alignment(xalign=1, yalign=0)
 
         self.container.pack_start(self.home_button.button, False, False, 0)
         self.container.pack_start(self.badges_button, False, False, 0)
         self.container.pack_start(self.swag_button, False, False, 0)
         self.container.pack_start(self.challenges_button, False, False, 0)
-        self.container.pack_end(close_button, False, False, 0)
+        self.container.pack_end(self.close_button, False, False, 0)
         self.container.set_size_request(WINDOW_WIDTH, self.height)
 
         self.background.add(self.container)
+
+        cursor.attach_cursor_events(self.close_button)
+        cursor.attach_cursor_events(self.badges_button)
+        cursor.attach_cursor_events(self.swag_button)
+        cursor.attach_cursor_events(self.challenges_button)
+        cursor.attach_cursor_events(self.home_button.button)
 
     def activate_label(self, widget, event):
 
@@ -99,8 +106,7 @@ class TopBar():
             # This is to fix bug in Gtk 3.4, otherwise the colour doesn't update when we change the class
             label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))
 
-
-def close_window(event, button):
+    def close_window(self, event, button):
         Gtk.main_quit()
 
 

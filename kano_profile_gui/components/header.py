@@ -10,6 +10,7 @@
 from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
 from kano.profile.badges import count_badges
+import kano_profile_gui.components.cursor as cursor
 
 
 class Header():
@@ -27,8 +28,6 @@ class Header():
         halign_width = self.width - padlock_label_width * 2
 
         self.headers = [title1, title2]
-
-        #halign_width = self.width - self.locked_elements - self.unlocked_elements - 2 * padlock_label_width
 
         self.box = Gtk.Box()
         self.box.set_size_request(self.width, self.height)
@@ -73,7 +72,8 @@ class Header():
             self.radiobutton1.set_active(True)
             self.radiobutton2.set_active(False)
             self.halign.add(self.container)
-            self.radiobutton1.connect("toggled", self.update_locked_unlocked_labels)
+            cursor.attach_cursor_events(self.radiobutton1)
+            cursor.attach_cursor_events(self.radiobutton2)
         else:
             self.halign.add(self.title_label)
 

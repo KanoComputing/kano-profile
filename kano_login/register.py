@@ -44,7 +44,6 @@ def activate(_win, _box):
     password_entry = Gtk.Entry()
 
     go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
-    go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions)
     cursor.attach_cursor_events(go_to_terms_conditions)
     # TODO: change this class
     go_to_terms_conditions.get_style_context().add_class("not_registered")
@@ -63,6 +62,7 @@ def activate(_win, _box):
     password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
     checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
     register.button.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
+    go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
 
     subheading = ''
     if win.age < 13:
@@ -95,7 +95,8 @@ def activate(_win, _box):
     box.show_all()
 
 
-def show_terms_and_conditions(widget, event):
+def show_terms_and_conditions(widget, event, checkbutton):
+    checkbutton.set_active(True)
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scrolledwindow.set_size_request(400, 200)

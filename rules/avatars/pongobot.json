@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "kano_level", 4]],
+    "targets": [["computed", "kano_level", 4]],
     "title": "Pongobot 1"
   },
   "pongobot_2": {
@@ -12,7 +12,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "kano_level", 4]],
+    "targets": [["computed", "kano_level", 4]],
     "title": "Pongobot 2"
   }
 }

@@ -57,7 +57,7 @@ def calculate_kano_level():
     max_level = max([int(n) for n in level_rules.keys()])
     xp_now = calculate_xp()
 
-    for level in xrange(1, max_level + 1):
+    for level in xrange(0, max_level + 1):
         level_min = level_rules[str(level)]
 
         if level != max_level:
@@ -83,7 +83,7 @@ def calculate_min_current_max_xp():
     level_min = 0
     level_max = 0
 
-    for level in xrange(1, max_level + 1):
+    for level in xrange(0, max_level + 1):
         level_min = level_rules[str(level)]
 
         if level != max_level:
@@ -117,6 +117,7 @@ def calculate_badges():
                                 value = app_profiles[app]['max_level']
 
                             if app not in app_list or variable not in app_state[app]:
+                                # print '\tnot in app list'
                                 achieved = False
                                 break
                             achieved &= app_state[app][variable] >= value
@@ -155,15 +156,16 @@ def calculate_badges():
     if not app_profiles:
         print 'Error reading app_profiles.json'
 
-    app_list = get_app_list() + ['kano-profile']
+    app_list = get_app_list() + ['computed']
     app_state = dict()
     for app in app_list:
         app_state[app] = load_app_state(app)
 
     # special app: kanoprofile
-    profile_state = dict()
-    profile_state['kano_level'], _ = calculate_kano_level()
-    app_state['kano-profile'] = profile_state
+    computed = {
+        'kano_level': calculate_kano_level()
+    }
+    app_state['computed'] = computed
 
     all_rules = load_badge_rules()
     calculated_badges = dict()
@@ -172,7 +174,7 @@ def calculate_badges():
     do_calculate(False)
 
     # count offline badges
-    app_state['kano-profile']['num_offline_badges'] = count_offline_badges()
+    app_state['computed']['num_offline_badges'] = count_offline_badges()
 
     # add pushed back ones
     do_calculate(True)
@@ -316,6 +318,7 @@ def count_badges():
             for item, rules in items.iteritems():
                 if rules['achieved']:
                     unlocked[category] += 1
+                    print category, subcat, item
                 else:
                     locked[category] += 1
 

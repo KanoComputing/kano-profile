@@ -60,5 +60,10 @@
     "multipliers": {
       "shared": 10
     }
+  },
+  "kano-settings": {
+    "multipliers": {
+      "completed": 1
+    }
   }
 }

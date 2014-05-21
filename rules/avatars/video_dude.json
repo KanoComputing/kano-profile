@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "kano_level", 2]],
+    "targets": [["computed", "kano_level", 2]],
     "title": "Video Dude 1"
   },
   "video_dude_2": {
@@ -12,7 +12,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "kano_level", 2]],
+    "targets": [["computed", "kano_level", 2]],
     "title": "Video Dude 2"
   }
 }

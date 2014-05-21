@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-profile", "hidden_file_opened", 1]],
+    "targets": [["hidden-file", "hidden_file_opened", 1]],
     "title": "File Finder"
   }
 }

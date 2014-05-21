@@ -63,8 +63,8 @@ def do_sync():
 
     refresh_kdesk()
 
-    msg = 'Sync OK'
-    display_msg(msg)
+    # msg = 'Sync OK'
+    # display_msg(msg)
 
 
 def do_backup():

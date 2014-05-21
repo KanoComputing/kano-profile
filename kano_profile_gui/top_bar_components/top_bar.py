@@ -55,7 +55,6 @@ class TopBar():
             container.pack_start(label, False, False, 10)
 
             button = self.button_array[x]
-            button.set_size_request(WINDOW_WIDTH / 5, self.height)
             button.set_can_focus(False)
             button.get_style_context().add_class("top_bar_button")
             button.add(container)
@@ -73,12 +72,11 @@ class TopBar():
         self.close_button.set_alignment(xalign=1, yalign=0)
 
         self.container.pack_start(self.home_button.button, False, False, 0)
-        self.container.pack_start(self.badges_button, False, False, 0)
-        self.container.pack_start(self.swag_button, False, False, 0)
-        self.container.pack_start(self.challenges_button, False, False, 0)
         self.container.pack_end(self.close_button, False, False, 0)
+        self.container.pack_end(self.challenges_button, False, False, 0)
+        self.container.pack_end(self.swag_button, False, False, 0)
+        self.container.pack_end(self.badges_button, False, False, 0)
         self.container.set_size_request(WINDOW_WIDTH, self.height)
-
         self.background.add(self.container)
 
         cursor.attach_cursor_events(self.close_button)

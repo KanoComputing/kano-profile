@@ -56,11 +56,6 @@ class HomeButton():
 
         self.button.add(self.container)
 
-        self.button.height = 100
-        self.button.width = 230
-
-        self.button.set_size_request(self.button.width, self.button.height)
-
     def update(self):
         level, progress = calculate_kano_level()
         self.description.set_text("Level " + str(level))

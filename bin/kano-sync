@@ -31,12 +31,15 @@ args = parser.parse_args()
 
 enable_dialog = args.dialog and is_gui() and is_installed('zenity')
 
+DEBUG_MODE = False
+
 
 def display_msg(msg):
     if enable_dialog:
         run_cmd('zenity --info --text "{}"'.format(msg))
     else:
-        print msg
+        if DEBUG_MODE:
+            print msg
 
 
 def do_login():
@@ -115,7 +118,8 @@ def do_restore():
 
     success, error = restore_content(tmp_file)
     if not success:
-        print 'Error with downloading restore data: ' + error
+        if DEBUG_MODE:
+            print 'Error with downloading restore data: ' + error
         return
 
     if _platform == 'darwin':

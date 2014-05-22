@@ -24,6 +24,8 @@ import kano_profile_gui.components.cursor as cursor
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
 
+DEBUG_MODE = False
+
 
 class MainWindow(Gtk.Window):
     def __init__(self, new_level, new_items):
@@ -189,7 +191,8 @@ def parse_items(args):
                 new_items.setdefault(category, dict()).setdefault(subcat, dict())[item] \
                     = all_rules[category][subcat][item]
             except Exception:
-                print 'item not found: {} {} {}'.format(category, subcat, item)
+                if DEBUG_MODE:
+                    print 'item not found: {} {} {}'.format(category, subcat, item)
     return new_level, new_items
 
 

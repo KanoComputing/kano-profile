@@ -18,6 +18,8 @@ from .connection import request_wrapper, content_type_json
 
 app_profiles_data = read_json(app_profiles_file)
 
+DEBUG_MODE = False
+
 
 def is_private(app_name):
     private = False
@@ -205,8 +207,9 @@ class KanoWorldSession(object):
         jsonfile_path = file_path[:-3] + 'json'
         screenshot_path = file_path[:-3] + 'png'
 
-        print jsonfile_path
-        print screenshot_path
+        if DEBUG_MODE:
+            print jsonfile_path
+            print screenshot_path
 
         # attachment
         files = {
@@ -230,8 +233,9 @@ class KanoWorldSession(object):
         except Exception:
             description = None
 
-        print 'payload: ', payload
-        print 'files: ', files
+        if DEBUG_MODE:
+            print 'payload: ', payload
+            print 'files: ', files
 
         endpoint = '/share/{}'.format(app_name)
 

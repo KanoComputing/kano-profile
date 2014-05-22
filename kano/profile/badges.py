@@ -13,6 +13,8 @@ from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
 
+DEBUG_MODE = False
+
 
 def calculate_xp():
     allrules = read_json(xp_file)
@@ -147,7 +149,8 @@ def calculate_badges(DEBUG_MODE=False):
                         achieved = sum >= rules['value']
 
                     else:
-                        print 'unknown uperation {}'.format(rules['operation'])
+                        if DEBUG_MODE:
+                            print 'unknown uperation {}'.format(rules['operation'])
                         continue
 
                     if DEBUG_MODE:
@@ -168,7 +171,8 @@ def calculate_badges(DEBUG_MODE=False):
 
     app_profiles = read_json(app_profiles_file)
     if not app_profiles:
-        print 'Error reading app_profiles.json'
+        if DEBUG_MODE:
+            print 'Error reading app_profiles.json'
 
     app_list = get_app_list() + ['computed']
     app_state = dict()
@@ -275,7 +279,8 @@ def increment_app_state_variable_with_dialog(app_name, variable, value):
 
 def load_badge_rules():
     if not os.path.exists(rules_dir):
-        print 'rules dir missing'
+        if DEBUG_MODE:
+            print 'rules dir missing'
         return
 
     merged_rules = dict()
@@ -283,19 +288,22 @@ def load_badge_rules():
     for folder in subfolders:
         folder_fullpath = os.path.join(rules_dir, folder)
         if not os.path.exists(folder_fullpath):
-            print 'rules subfolder missing: {}'.format(folder_fullpath)
+            if DEBUG_MODE:
+                print 'rules subfolder missing: {}'.format(folder_fullpath)
             return
 
         rule_files = os.listdir(folder_fullpath)
         if not rule_files:
-            print 'no rule files in subfolder: {}'.format(folder_fullpath)
+            if DEBUG_MODE:
+                print 'no rule files in subfolder: {}'.format(folder_fullpath)
             return
 
         for rule_file in rule_files:
             rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
             rule_data = read_json(rule_file_fullpath)
             if not rule_data:
-                print 'rule file empty: {}'.format(rule_file_fullpath)
+                if DEBUG_MODE:
+                    print 'rule file empty: {}'.format(rule_file_fullpath)
                 continue
 
             category = folder

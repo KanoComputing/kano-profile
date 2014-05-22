@@ -4,7 +4,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["make-minecraft", "level", 11]],
+    "targets": [["make-minecraft", "level", 10]],
     "title": "Amazing Architect"
   },
   "appetite_for_apples": {

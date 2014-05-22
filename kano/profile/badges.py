@@ -8,7 +8,7 @@ from __future__ import division
 
 import os
 
-from ..utils import read_json, is_gui, run_bg, run_cmd, is_installed
+from ..utils import read_json, is_gui, run_bg, run_cmd
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -249,7 +249,10 @@ def save_app_state_with_dialog(app_name, data):
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
         # print cmd
 
-        if False and is_installed('kdesk'):
+        kdesk_running = os.system("pidof kdesk") == 0
+        minecraft_running = os.system("pidof minecraft-pi") == 0
+
+        if kdesk_running and not minecraft_running:
             kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
             run_cmd(kdesk_cmd)
         else:

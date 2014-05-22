@@ -25,6 +25,8 @@ class HomeButton():
 
         # Get username here
         self.username = get_mixed_username()
+        if len(self.username) > 12:
+            self.username = self.username[:12] + '...'
 
         level, progress = calculate_kano_level()
 

@@ -46,7 +46,10 @@ def load_app_state_variable(app_name, variable):
 
 def save_app_state(app_name, data):
     if is_unlocked():
-        data['level'] = load_app_state(app_name)['level']
+        try:
+            data['level'] = load_app_state(app_name)['level']
+        except Exception:
+            pass
 
     app_state_file = get_app_state_file(app_name)
     data['save_date'] = get_date_now()

@@ -83,17 +83,6 @@ def update(widget, event):
     gender.activate(win, win.box)
 
 
-def disconnect_handlers():
-    global done_button, next_button, login_button
-
-    if done_button is not None:
-        done_button.disconnect_handlers()
-    if next_button is not None:
-        next_button.disconnect_handlers()
-    if login_button is not None:
-        login_button.disconnect_handlers()
-
-
 def login_screen(widget, event):
     global win, box
 
@@ -104,6 +93,5 @@ def login_screen(widget, event):
 
 
 def close_window(widget, event):
-    disconnect_handlers()
-    cursor.arrow_cursor(None, None, win)
+    cursor.arrow_cursor(widget, None)
     Gtk.main_quit()

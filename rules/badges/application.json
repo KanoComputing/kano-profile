@@ -28,7 +28,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["kano-updater", "updated", 2]],
+    "targets": [["kano-updater", "updated", 3]],
     "title": "Staying Super"
   }
 }

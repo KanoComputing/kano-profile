@@ -42,6 +42,7 @@ def activate(_win, _box):
     valign.set_padding(padding, padding, 0, 0)
 
     next_button.button.connect("button_press_event", update, gender_combo)
+    next_button.button.connect("key_press_event", update, gender_combo)
     next_button.button.set_sensitive(False)
 
     box.pack_start(title.container, False, False, 0)
@@ -56,10 +57,11 @@ def on_gender_combo_changed(gender_combo, button):
     button.set_sensitive(True)
 
 
-def update(arg1=None, arg2=None, gender_combo=None):
+def update(widget, event, gender_combo=None):
     global win, box
 
-    active_text = gender_combo.get_active_text()
-    win.gender = active_text
-    win.update()
-    birthday.activate(win, box)
+    if not hasattr(event, 'keyval') or event.keyval == 65293:
+        active_text = gender_combo.get_active_text()
+        win.gender = active_text
+        win.update()
+        birthday.activate(win, box)

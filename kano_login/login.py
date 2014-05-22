@@ -48,8 +48,10 @@ def activate(_win, _box):
     login = green_button.Button("LOG IN")
     if force_login:
         login.button.connect("button_press_event", log_user_in, None, password_entry, username, _win)
+        login.button.connect("key-press-event", log_user_in_key, None, password_entry, username, _win)
     else:
         login.button.connect("button_press_event", log_user_in, username_email_entry, password_entry, None, _win)
+        login.button.connect("key-press-event", log_user_in_key, username_email_entry, password_entry, None, _win)
     login.set_padding(10, 0, 0, 0)
 
     if not force_login:
@@ -89,6 +91,11 @@ def register(event):
 
 def close_window():
     Gtk.main_quit()
+
+
+def log_user_in_key(button, event, username_email_entry, password_entry, username_email, win):
+    if event.keyval == 65293:
+        log_user_in(button, event, username_email_entry, password_entry, username_email, win)
 
 
 def log_user_in(button, event, username_email_entry, password_entry, username_email, win):

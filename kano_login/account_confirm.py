@@ -25,7 +25,8 @@ def activate(_win, _box):
 
     if win.age < 13:
         nextB = green_button.Button("GOT IT")
-        nextB.button.connect("button_press_event", confirmation_screen)
+        nextB.button.connect("button_press_event", go_next)
+        nextB.button.connect("key_press_event", go_next)
 
         title = heading.Heading("Now get your parents to confirm...", "An email has been sent to: ")
 
@@ -48,7 +49,7 @@ def activate(_win, _box):
         confirmation_screen()
 
 
-def confirmation_screen(widget=None, event=None):
+def confirmation_screen():
     global win, box
 
     win.unpack_grid()
@@ -63,6 +64,7 @@ def confirmation_screen(widget=None, event=None):
 
     doneB = green_button.Button("DONE")
     doneB.button.connect("button_press_event", finish)
+    doneB.button.connect("key_press_event", finish)
 
     title = heading.Heading("Profile created!", "Now we'll show you some of the cool things you can do")
 
@@ -75,9 +77,11 @@ def confirmation_screen(widget=None, event=None):
     win.show_all()
 
 
-def go_next(button, event, entry1):
-    confirmation_screen()
+def go_next(button, event):
+    if not hasattr(event, 'keyval') or event.keyval == 65293:
+        confirmation_screen()
 
 
 def finish(button, event):
-    Gtk.main_quit()
+    if not hasattr(event, 'keyval') or event.keyval == 65293:
+        Gtk.main_quit()

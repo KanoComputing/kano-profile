@@ -39,6 +39,7 @@ class Birthday():
 
         self.next_button = green_button.Button("NEXT")
         self.next_button.button.connect("button_press_event", self.set_birthday)
+        self.next_button.button.connect("key_press_event", self.set_birthday)
         self.next_button.button.set_sensitive(False)
 
         self.halign = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
@@ -70,13 +71,14 @@ class Birthday():
         else:
             self.next_button.button.set_sensitive(False)
 
-    def set_birthday(self, arg1=None, arg2=None):
-        age = self.calculate_age()
-        if age == -1:
-            return
-        self.win.age = age
-        win.update()
-        register.activate(self.win, self.box)
+    def set_birthday(self, widget, event):
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            age = self.calculate_age()
+            if age == -1:
+                return
+            self.win.age = age
+            win.update()
+            register.activate(self.win, self.box)
 
     def calculate_age(self):
         try:

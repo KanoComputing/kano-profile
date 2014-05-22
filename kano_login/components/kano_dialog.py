@@ -30,6 +30,7 @@ class KanoDialog():
         self.dialog_button = Gtk.Button("EXIT")
         self.dialog_button.get_style_context().add_class("green_button")
         self.dialog_button.connect("button_press_event", self.exit_dialog)
+        self.dialog_button.connect('key-press-event', self.exit_dialog)
         cursor.attach_cursor_events(self.dialog_button)
         button_box = Gtk.Box()
         button_box.add(self.dialog_button)
@@ -44,10 +45,11 @@ class KanoDialog():
         self.dialog.run()
 
     def exit_dialog(self, widget, event):
-        self.dialog.destroy()
-        cursor.arrow_cursor(self.dialog, None)
-        if self.callback is not None:
-            self.callback()
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            self.dialog.destroy()
+            cursor.arrow_cursor(self.dialog, None)
+            if self.callback is not None:
+                self.callback()
 
     def set_callback(self, callback):
         self.callback = callback

@@ -62,6 +62,7 @@ def activate(_win, _box):
     password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
     checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
     register.button.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
+    register.button.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
     go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
 
     subheading = ''
@@ -172,25 +173,27 @@ def set_sensitive_on_key_up(widget, event, entry1, entry2, entry3, button, check
 def register_user(button, event, username_entry, email_entry, password_entry):
     global win
 
-    win.email = email_entry.get_text()
-    win.username = username_entry.get_text()
-    win.password = password_entry.get_text()
+    if not hasattr(event, 'keyval') or event.keyval == 65293:
 
-    success, text = register_(win.email, win.username, win.password)
+        win.email = email_entry.get_text()
+        win.username = username_entry.get_text()
+        win.password = password_entry.get_text()
 
-    if not success:
-        kano_dialog.KanoDialog("Houston, we have a problem", str(text))
+        success, text = register_(win.email, win.username, win.password)
 
-    # This needs to be adjusted depending on the age of the user
-    else:
-        save_profile_variable('gender', win.gender)
-        save_profile_variable('age', win.age)
+        if not success:
+            kano_dialog.KanoDialog("Houston, we have a problem", str(text))
 
-        # sync on each successfule login/restore
-        cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-        run_bg(cmd)
+        # This needs to be adjusted depending on the age of the user
+        else:
+            save_profile_variable('gender', win.gender)
+            save_profile_variable('age', win.age)
 
-        win.update()
-        account_confirm.activate(win, box)
+            # sync on each successfule login/restore
+            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            run_bg(cmd)
+
+            win.update()
+            account_confirm.activate(win, box)
 
 

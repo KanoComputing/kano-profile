@@ -55,6 +55,7 @@ def activate(_win, _box):
     checkbox_align.add(checkbox_box)
 
     register = green_button.Button("REGISTER")
+    register.set_padding(0, 10, 0, 0)
     register.button.set_sensitive(False)
 
     username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)

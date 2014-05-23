@@ -1,32 +1,32 @@
 {
   "bug_buster": {
     "bg_color": "f7e37a",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "See something you want to change on Kano – a pesky bug? Let us know by pushing FN and K on your keyboard!",
+    "desc_unlocked": "You're a hero! You told Team Kano about a bug – now we'll squash it. Thanks Bug Buster!",
     "operation": "each_greater",
     "targets": [["kano-feedback", "bugs_submitted", 1]],
     "title": "Bug Buster"
   },
   "feedbacker": {
     "bg_color": "ff99a0",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "We want to hear from you... Push FN and K on your keyboard to send us anything you want!",
+    "desc_unlocked": "You're a Kano creator, and a funky Feedbacker. You sent us your ideas, and that helps us make your computer even cooler.",
     "operation": "each_greater",
     "targets": [["kano-feedback", "starts", 1]],
     "title": "Feedbacker"
   },
   "remote_roamer": {
     "bg_color": "94b0d8",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Want to use a phone or tablet as your Kano display? Check out VNC in the Apps launcher...",
+    "desc_unlocked": "You made video travel through the internet and appear magically on a wireless screen. With the power of VNC, you are a Remote Roamer.",
     "operation": "each_greater",
     "targets": [["vnc", "starts", 1]],
     "title": "Remote Roamer"
   },
   "staying_super": {
     "bg_color": "a6bac4",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Every day, we add new awesome stuff to Kano. Want the latest and greatest? Click on the Update icon in the bottom bar...",
+    "desc_unlocked": "You connected to us and updated Kano OS. By Staying Super, you're ahead of the game."
     "operation": "each_greater",
     "targets": [["kano-updater", "updated", 3]],
     "title": "Staying Super"

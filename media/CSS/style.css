@@ -104,7 +104,7 @@ GtkWindow GtkBox {
     font: Bariol Bold 17;
 }
 .home_button_description {
-    font: Bariol Bold 13;
+    font: Bariol 13;
 }
 
 /* Environment / avatar toggle buttons */
@@ -162,7 +162,7 @@ GtkWindow GtkBox {
 /* Home stats shown on home screen */
 .stat_title {
     color: @subheading_color;
-    font: Bariol Bold 13;
+    font: Bariol 13;
 }
 .stat_number {
     color: @title_color;
@@ -332,7 +332,7 @@ GtkSwitch.slider {
     color: @title_color;
 }
 .info_paragraph {
-    font: Bariol Bold 14;
+    font: Bariol 14;
     color: @subheading_color;
 }
 

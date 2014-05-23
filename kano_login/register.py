@@ -16,6 +16,7 @@ from kano.profile.profile import save_profile_variable
 from kano.world.functions import register as register_
 from kano_login import account_confirm
 import re
+import os
 #from kano_login import home, login,
 
 win = None
@@ -103,49 +104,15 @@ def show_terms_and_conditions(widget, event, checkbutton):
     scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scrolledwindow.set_size_request(400, 200)
     lots_of_text = Gtk.TextView()
-    lots_of_text.get_buffer().set_text("Blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
-                                       "blah blah blah blah blah blah blah blah")
+
+    legalText = ''
+    legalDir = '/usr/share/kano-profile/legal/'
+    for file in os.listdir(legalDir):
+        with open(legalDir + file, 'r') as f:
+            legalText = legalText + f.read() + '\n\n\n'
+
+    lots_of_text.get_buffer().set_text(legalText)
+
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
     lots_of_text.set_editable(False)
     scrolledwindow.add(lots_of_text)

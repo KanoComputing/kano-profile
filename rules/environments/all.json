@@ -1,32 +1,32 @@
 {
   "arcade_hall": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Beat all the Pong challenges to unlock this awesome background...",
+    "desc_unlocked": "The walls flash with reds and yellows as paddles clack and asteroids go boom. Welcome to The Arcade Hall.",
     "operation": "each_greater",
     "targets": [["make-pong", "level", -1]],
     "title": "Arcade Hall"
   },
   "concert_hall": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Compose your own song in Make Music to unlock this awesome background...",
+    "desc_unlocked": "Beethoven, The Beach Boys, Busta Rhymes... you. You used code to make music, and unlocked this ancient concert hall, where the sounds of synth mingle with trippy bass lines and acid loops.",
     "operation": "each_greater",
     "targets": [["make-music", "level", -1]],
     "title": "Concert Hall"
   },
   "jungle": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Make a snazzy Snake game to unlock this awesome background...",
+    "desc_unlocked": "The rainforest is thick with trees, older than human memory, prowled by jaguar, cougar, anaconda – and species not yet discovered. The trees may be beautiful, but don't lick any frogs!",
     "operation": "each_greater",
     "targets": [["make-snake", "level", -1]],
     "title": "Jungle"
   },
   "space": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete all the Kano challenges to unlock the final frontier...",
+    "desc_unlocked": "The universe is 99.9% empty space – dark, cold, and clear. But we can fill it with ideas. Your Kano is more powerful than the computer that guided the Apollo rockets to the moon. And when you use the internet, your words, pictures, and ideas are sent up and down from space thousands of times. Welcome to the Final Frontier – closer than you think.",
     "operation": "each_greater",
     "push_back": true,
     "targets": [["computed", "num_offline_badges", 30]],
@@ -34,24 +34,24 @@
   },
   "dojo": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Kano Jigoro was a Japanese schoolteacher – he was also a tough dude. He founded judo, the martial art for all ages, all over the world. Judo is about using your creativity to turn your opponent's strengths against him. In the Kano dojo, develop your code powers, and start combining them to change the world – padawan.",
+    "desc_unlocked": "Kano Jigoro was a Japanese schoolteacher – he was also a tough dude. He founded judo, the martial art for all ages, all over the world. Judo is about using your creativity to turn your opponent's strengths against him. In the Kano dojo, develop your code powers, and start combining them to change the world – padawan.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 1]],
     "title": "Dojo"
   },
   "video_set": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Make a video player to unlock this awesome background...",
+    "desc_unlocked": "To make a video, your computer lights up thousands of tiny pixels, one-by-one, across your screen. The rules for how to do this come from data on the Internet or in your memory – all your favorite movies and shows, from Star Trek to The Simpsons, start as stories, then become code – your computer can make them come to life.",
     "operation": "each_greater",
     "targets": [["kano-video", "level", -1]],
     "title": "Video Set"
   },
   "minecraft": {
     "bg_color": "ffffff",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Beat all the Make Minecraft challenges to unlock this awesome background...",
+    "desc_unlocked": "Blocks and towers, water and fire, and a little man with a pick-axe... You can take control of the Minecraft world using Kano code blocks. Keep practicing your skills to become the ultimate Master Builder.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", -1]],
     "title": "Minecraft"

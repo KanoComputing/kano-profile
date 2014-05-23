@@ -1,8 +1,8 @@
 {
   "file_finder": {
     "bg_color": "ffe9b1",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "There's a secret hiding in your computer's files... Can you find it?",
+    "desc_unlocked": "You found the secret file! You're a modern day Sherlock Holmes – except with a mouse and keyboard, and a less silly hat. Nice work File Finder.",
     "operation": "each_greater",
     "targets": [["pcmanfm", "starts", 10]],
     "title": "File Finder"

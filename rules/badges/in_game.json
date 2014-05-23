@@ -1,19 +1,19 @@
 {
   "amazing_architect": {
     "bg_color": "f1db9f",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Beat Make Minecraft challenges to unlock this badge...",
+    "desc_unlocked": "You built a tower, a volcano, a magic floor, and teleported yourself like a wizard – all in Minecraft, all in code. You're an Amazing Architect.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", 10]],
     "title": "Amazing Architect"
   },
   "appetite_for_apples": {
     "bg_color": "ff9c9d",
-    "desc_locked": "desc_locked",
+    "desc_locked": "Play Snake to unlock this badge",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
     "targets": [["make-snake", "apples_eaten", 100]],
-    "title": "Appetite for Apples"
+    "title": "Appletizer"
   },
   "block_builder": {
     "bg_color": "928f7e",

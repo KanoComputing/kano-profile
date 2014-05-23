@@ -24,29 +24,35 @@ def activate(_win, _box):
     win.clear_box()
 
     if win.age < 13:
-        nextB = green_button.Button("GOT IT")
-        nextB.button.connect("button_press_event", go_next)
-        nextB.button.connect("key_press_event", go_next)
-
-        title = heading.Heading("Now get your parents to confirm...", "An email has been sent to: ")
-
-        label1 = Gtk.Label(win.email)
-        label1.get_style_context().add_class("confirm_email")
-
-        # Done by eye
-        label1.set_alignment(0.5, 0)
-
-        label2 = Gtk.Label("Bug them to check their email in the next 14 days - \n                         or you'll lose your profile!")
-        label2.get_style_context().add_class("confirm_email_info")
-        label2.set_alignment(0.5, 0)
-
-        box.pack_start(title.container, False, False, 0)
-        box.pack_start(label1, False, False, 5)
-        box.pack_start(label2, False, False, 20)
-        box.pack_start(nextB.align, False, False, 15)
-        box.show_all()
+        title = "Now get your parents to confirm..."
+        description = "An email has been sent to: "
+        check_your_email = "Bug them to check their email in the next 14 days - \n                         or you'll lose your profile!"
     else:
-        confirmation_screen()
+        title = "At some point check your email..."
+        description = "An email has been sent to: "
+        check_your_email = "Activate your account in the next 14 days - \n               or you'll lose your profile!"
+
+    nextB = green_button.Button("GOT IT")
+    nextB.button.connect("button_press_event", go_next)
+    nextB.button.connect("key_press_event", go_next)
+
+    title = heading.Heading(title, description)
+
+    label1 = Gtk.Label(win.email)
+    label1.get_style_context().add_class("confirm_email")
+
+    # Done by eye
+    label1.set_alignment(0.5, 0)
+
+    label2 = Gtk.Label(check_your_email)
+    label2.get_style_context().add_class("confirm_email_info")
+    label2.set_alignment(0.5, 0)
+
+    box.pack_start(title.container, False, False, 0)
+    box.pack_start(label1, False, False, 5)
+    box.pack_start(label2, False, False, 20)
+    box.pack_start(nextB.align, False, False, 15)
+    box.show_all()
 
 
 def confirmation_screen():

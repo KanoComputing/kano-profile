@@ -31,7 +31,7 @@ def activate(_win, _box):
     box = _box
     password_entry = Gtk.Entry()
 
-    title = heading.Heading("Log in", "Open up your world")
+    title = heading.Heading("Log in", "Bring your Kano to life")
 
     if force_login:
         username = profile['kanoworld_username']

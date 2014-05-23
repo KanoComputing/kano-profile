@@ -71,7 +71,7 @@ def activate(_win, _box):
         subheading = "Please provide a parent's or teacher's email"
     else:
         header = "Login details"
-        subheading = "Become a real person"
+        subheading = "Create your account"
 
     title = heading.Heading(header, subheading)
 

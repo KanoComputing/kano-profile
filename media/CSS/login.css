@@ -194,14 +194,6 @@ GtkScrolledWindow {
     color: @subheading_color;
 }
 
-/* This is the CSS for the alerts */
-.kano_dialog {
-    border-width: 2px;
-    border-style: solid;
-    border-color: #ff0000;
-    background: #eeeeee;
-}
-
 GtkDialog {
     background: #e7e7e7;
 }

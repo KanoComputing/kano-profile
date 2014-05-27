@@ -14,7 +14,7 @@ from kano.utils import run_bg
 from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable
 from kano.world.functions import register as register_
-from kano.gtk3.dialog import kano_dialog
+from kano.gtk3 import kano_dialog
 from kano_login import account_confirm
 import re
 import os

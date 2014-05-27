@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-import kano.gtk3.dialog.kano_dialog as kano_dialog
+import kano.gtk3.kano_dialog as kano_dialog
 from components import heading, green_button
 from kano_login import register
 import time

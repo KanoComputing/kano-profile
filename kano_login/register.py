@@ -116,7 +116,8 @@ def show_terms_and_conditions(widget, event, checkbutton):
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
     lots_of_text.set_editable(False)
     scrolledwindow.add(lots_of_text)
-    kano_dialog.KanoDialog("Terms and conditions", "", None, scrolledwindow)
+    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", None, widget=scrolledwindow)
+    kdialog.run()
 
 
 def set_register_sensitive(entry1, entry2, entry3, button, checkbutton):
@@ -150,7 +151,8 @@ def register_user(button, event, username_entry, email_entry, password_entry):
         success, text = register_(win.email, win.username, win.password)
 
         if not success:
-            kano_dialog.KanoDialog("Houston, we have a problem", str(text))
+            kdialog = kano_dialog.KanoDialog("Houston, we have a problem", str(text))
+            kdialog.run()
 
         # This needs to be adjusted depending on the age of the user
         else:

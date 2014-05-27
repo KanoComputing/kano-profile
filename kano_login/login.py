@@ -107,7 +107,8 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
     success, text = login_(username_email, password_text)
 
     if not success:
-        kano_dialog.KanoDialog("Houston, we have a problem", text)
+        kdialog = kano_dialog.KanoDialog("Houston, we have a problem", text)
+        kdialog.run()
 
     else:
         # restore on first successful login/restore
@@ -127,4 +128,8 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-        kano_dialog.KanoDialog("Success!", "You're in - online features now enabled", close_window)
+        kdialog = kano_dialog.KanoDialog("Success!", "You're in - online features now enabled")
+        response = kdialog.run()
+        # Default response
+        if response == 0:
+            close_window()

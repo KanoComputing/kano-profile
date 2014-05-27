@@ -110,10 +110,12 @@ class Birthday():
             return age
 
         except Exception as e:
+            kdialog = None
             if len(e.args) > 1:
-                kano_dialog.KanoDialog(e.args[0], e.args[1])
+                kdialog = kano_dialog.KanoDialog(e.args[0], e.args[1])
             else:
-                kano_dialog.KanoDialog("Houston, we have a problem", "You've not entered a valid birthday!")
+                kdialog = kano_dialog.KanoDialog("Houston, we have a problem", "You've not entered a valid birthday!")
+            kdialog.run()
             self.day_entry.set_text("")
             self.month_entry.set_text("")
             self.year_entry.set_text("")

@@ -9,11 +9,12 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button, kano_dialog, cursor
+from components import heading, green_button, cursor
 from kano.utils import run_bg
-from kano.profile.paths import bin_dir
+from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable
 from kano.world.functions import register as register_
+from kano.gtk3.dialog import kano_dialog
 from kano_login import account_confirm
 import re
 import os
@@ -105,13 +106,12 @@ def show_terms_and_conditions(widget, event, checkbutton):
     scrolledwindow.set_size_request(400, 200)
     lots_of_text = Gtk.TextView()
 
-    legalText = ''
-    legalDir = '/usr/share/kano-profile/legal/'
-    for file in os.listdir(legalDir):
-        with open(legalDir + file, 'r') as f:
-            legalText = legalText + f.read() + '\n\n\n'
+    legal_text = ''
+    for file in os.listdir(legal_dir):
+        with open(legal_dir + file, 'r') as f:
+            legal_text = legal_text + f.read() + '\n\n\n'
 
-    lots_of_text.get_buffer().set_text(legalText)
+    lots_of_text.get_buffer().set_text(legal_text)
 
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
     lots_of_text.set_editable(False)

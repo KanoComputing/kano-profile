@@ -34,6 +34,17 @@ elif os.path.exists(bin_usr):
 else:
     raise Exception('Neither local nor usr bin found!')
 
+# legal path - containing terms and conditions of use
+legal_dir = ""
+legal_local = os.path.join(dir_path, 'legal/')
+legal_usr = '/usr/share/kano-profile/legal/'
+if os.path.exists(legal_local):
+    legal_dir = legal_local
+elif os.path.exists(legal_usr):
+    legal_dir = legal_usr
+else:
+    raise Exception('Neither local nor usr legal dir found!')
+
 
 # constructing paths of directories, files
 kanoprofile_dir_str = '.kanoprofile'

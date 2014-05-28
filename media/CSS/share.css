@@ -21,7 +21,7 @@
 @define-color top_bar_active #ffffff;
 @define-color top_bar_selected #ff0000;
 @define-color top_bar_inactive #555555;
-@define-color top_bar_background #000000;
+@define-color top_bar_background #eaeaea;
 
 /* All */
 * {
@@ -97,10 +97,10 @@ GtkImage {
 
 /* The bar at the top that mimics the window bar */
 .top_bar_container {
-    background: #eaeaea;
+    background: @top_bar_background;
 }
 .top_bar_button {
-    background: #eaeaea;
+    background: @top_bar_background;
 }
 /* The title of the current level*/
 .title {
@@ -118,4 +118,8 @@ GtkImage {
 .header {
     color: #222222;
     font-weight: bold;
+}
+
+.downloadgrid_grey {
+    background: @top_bar_background;
 }

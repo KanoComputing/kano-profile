@@ -108,21 +108,30 @@ def make_share_list():
         sys.exit('Error with listing shares, error: {}'.format(text))
 
     for i, entry in enumerate(data['entries']):
+        row = Gtk.EventBox()
+        grid.attach(row, 0, i, 1, 1)
+
+        if i % 2:
+            row.get_style_context().add_class('downloadgrid_grey')
+
+        row_grid = Gtk.Grid()
+        row.add(row_grid)
+
         has_url = bool(entry['attachment_url'])
 
         label = Gtk.Label(entry['app'])
         label.set_size_request(50, row_height)
-        grid.attach(label, 0, i, 1, 1)
+        row_grid.attach(label, 0, 0, 1, 1)
 
         label = Gtk.Label(entry['title'])
         label.set_size_request(250, row_height)
-        grid.attach(label, 1, i, 1, 1)
+        row_grid.attach(label, 1, 0, 1, 1)
 
         if has_url:
             button = Gtk.Button('Download')
             button.set_size_request(100, row_height)
             button.connect('clicked', load_share, entry)
-            grid.attach(button, 2, i, 1, 1)
+            row_grid.attach(button, 2, 0, 1, 1)
 
     align = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
     padding = 20

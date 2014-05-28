@@ -43,9 +43,9 @@ class Launcher(WebApp):
 
         target_dir = None
         if app == "make-minecraft":
-            target_dir = os.path.expanduser("~/Minecraft-content")
+            target_dir = os.path.expanduser("~/Minecraft-content/webload")
         elif app == "make-pong":
-            target_dir = os.path.expanduser("~/Pong-content")
+            target_dir = os.path.expanduser("~/Pong-content/webload")
         else:
             return False
 

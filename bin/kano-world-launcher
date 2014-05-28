@@ -37,7 +37,7 @@ class Launcher(WebApp):
 
         self._decoration = True
         self._height = 768
-        self._width = 900
+        self._width = 1024
         self._centered = True
 
     def _download(self, view, req, user=None):

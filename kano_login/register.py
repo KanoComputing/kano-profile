@@ -155,7 +155,7 @@ def register_user(button, event, username_entry, email_entry, password_entry):
         # This needs to be adjusted depending on the age of the user
         else:
             save_profile_variable('gender', win.gender)
-            save_profile_variable('date', win.date)
+            save_profile_variable('birthdate', win.date)
 
             # sync on each successfule login/restore
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)

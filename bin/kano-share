@@ -84,10 +84,10 @@ class TopBar(Gtk.EventBox):
 
 
 def make_share_list():
-    row_height = 30
+    row_height = 60
 
     grid = Gtk.Grid()
-    grid.set_row_spacing(10)
+    grid.set_row_spacing(0)
     grid.set_size_request(400, 400)
 
     if len(sys.argv) == 2:
@@ -121,17 +121,17 @@ def make_share_list():
 
         label = Gtk.Label(entry['app'])
         label.set_size_request(50, row_height)
-        row_grid.attach(label, 0, 0, 1, 1)
+        row_grid.attach(label, 0, 0, 1, 3)
 
         label = Gtk.Label(entry['title'])
         label.set_size_request(250, row_height)
-        row_grid.attach(label, 1, 0, 1, 1)
+        row_grid.attach(label, 1, 0, 1, 3)
 
         if has_url:
             button = Gtk.Button('Download')
-            button.set_size_request(100, row_height)
+            button.set_size_request(100, 30)
             button.connect('clicked', load_share, entry)
-            row_grid.attach(button, 2, 0, 1, 1)
+            row_grid.attach(button, 2, 1, 1, 1)
 
     align = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
     padding = 20

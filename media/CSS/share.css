@@ -61,13 +61,13 @@ GtkEntry:insensitive {
     border-radius:3px;
 }
 GtkButton {
-    color: #ffffff;
     background: @button_color;
     border-radius: 3px;
     border-color: transparent;
 }
 GtkButton GtkLabel {
     color: #ffffff;
+    font: Bariol Bold 16pt;
 }
 GtkImage {
     background: transparent;

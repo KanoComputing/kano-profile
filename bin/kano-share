@@ -128,7 +128,7 @@ def make_share_list():
         row_grid.attach(label, 1, 0, 1, 3)
 
         if has_url:
-            button = Gtk.Button('Download')
+            button = Gtk.Button('DOWNLOAD')
             button.set_size_request(100, 30)
             button.connect('clicked', load_share, entry)
             row_grid.attach(button, 2, 1, 1, 1)

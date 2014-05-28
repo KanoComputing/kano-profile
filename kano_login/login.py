@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components.heading import Heading
+from kano.gtk3.heading import Heading
 from kano.gtk3.green_button import GreenButton
 from kano.utils import run_bg
 from kano.gtk3 import kano_dialog
@@ -17,7 +17,7 @@ from kano.profile.paths import bin_dir
 from kano.profile.profile import load_profile, save_profile_variable
 from kano.world.functions import login as login_, is_registered
 from kano_login import gender
-import kano_login.components.cursor as cursor
+import kano.gtk3.cursor as cursor
 
 win = None
 box = None

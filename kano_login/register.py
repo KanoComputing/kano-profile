@@ -9,9 +9,9 @@
 
 from gi.repository import Gtk
 
-from components.heading import Heading
+from kano.gtk3.heading import Heading
 from kano.gtk3.green_button import GreenButton
-from components import cursor
+from kano.gtk3 import cursor
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable

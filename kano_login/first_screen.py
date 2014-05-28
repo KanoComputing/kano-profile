@@ -13,12 +13,12 @@
 
 from gi.repository import Gtk
 
-from components.heading import Heading
+from kano.gtk3.heading import Heading
 from kano.gtk3.green_button import GreenButton
 from kano_login import gender, login
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
-import kano_login.components.cursor as cursor
+import kano.gtk3.cursor as cursor
 
 
 win = None

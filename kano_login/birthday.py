@@ -11,7 +11,7 @@ from gi.repository import Gtk
 
 import kano.gtk3.kano_dialog as kano_dialog
 from kano.gtk3.green_button import GreenButton
-from components.heading import Heading
+from kano.gtk3.heading import Heading
 from kano_login import register
 import time
 import datetime

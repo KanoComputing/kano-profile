@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 
-from components.heading import Heading
+from kano.gtk3.heading import Heading
 from kano.gtk3.green_button import GreenButton
 from kano_login import birthday
 

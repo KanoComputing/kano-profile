@@ -111,3 +111,8 @@ GtkImage {
     padding-bottom: 18px;
     font: Bariol 14;
 }
+
+.header {
+    color: #222222;
+    font-weight: bold;
+}

@@ -5,7 +5,7 @@
 #
 # UI for login screen
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, Pango
 import os
 import sys
 from slugify import slugify
@@ -26,33 +26,61 @@ from kano.world.share import list_shares
 DEBUG_MODE = False
 
 
-def make_top_bar(title):
-    height = 44
+class TopBar(Gtk.EventBox):
+    _TOP_BAR_HEIGHT = 44
 
-    eb = Gtk.EventBox()
-    eb.get_style_context().add_class('top_bar_container')
+    def __init__(self, title):
+        super(TopBar, self).__init__(hexpand=True, vexpand=True)
 
-    header = Gtk.Label(title)
-    header.set_size_request(400, height)
-    header.get_style_context().add_class('header')
+        self.get_style_context().add_class('top_bar_container')
 
-    cross = Gtk.Image()
-    cross = icons.set_from_name("cross")
+        box = Gtk.Box()
+        box.set_size_request(-1, self._TOP_BAR_HEIGHT)
 
-    close_button = Gtk.Button()
-    close_button.set_image(cross)
-    close_button.set_size_request(height, height)
-    close_button.set_can_focus(False)
-    close_button.get_style_context().add_class("top_bar_button")
-    close_button.connect('clicked', Gtk.main_quit)
+        self._header = Gtk.Label(title, halign=Gtk.Align.CENTER,
+                                 valign=Gtk.Align.CENTER,
+                                 hexpand=True)
+        box.pack_start(self._header, True, True, 0)
 
-    grid = Gtk.Grid()
-    grid.attach(header, 0, 0, 1, 1)
-    grid.attach(close_button, 1, 0, 1, 1)
-    grid.set_size_request(0, height)
+        self._header.modify_font(Pango.FontDescription('Bariol 13'))
+        self._header.get_style_context().add_class('header')
 
-    eb.add(grid)
-    return eb
+        # Close button
+        cross_icon = icons.get_ui_icon('cross')
+
+        self._close_button = Gtk.Button()
+        self._close_button.set_image(cross_icon)
+        self._close_button.props.margin_right = 2
+        self._close_button.set_can_focus(False)
+        self._close_button.get_style_context().add_class('top_bar_button')
+        self._close_button.get_style_context().add_class('no_border')
+
+        self._close_button.connect('clicked', self._close_button_click)
+        self._close_button.connect('enter-notify-event',
+                                   self._close_button_mouse_enter)
+        self._close_button.connect('leave-notify-event',
+                                   self._close_button_mouse_leave)
+
+        box.pack_start(self._close_button, False, False, 0)
+
+        self.add(box)
+
+    def _close_button_mouse_enter(self, button, event):
+        # Change the cursor to hour Glass
+        cursor = Gdk.Cursor.new(Gdk.CursorType.HAND1)
+        self.get_root_window().set_cursor(cursor)
+
+    def _close_button_mouse_leave(self, button, event):
+        # Set the cursor to normal Arrow
+        cursor = Gdk.Cursor.new(Gdk.CursorType.ARROW)
+        self.get_root_window().set_cursor(cursor)
+
+    def _close_button_click(self, event):
+        cursor = Gdk.Cursor.new(Gdk.CursorType.ARROW)
+        self.get_root_window().set_cursor(cursor)
+        Gdk.flush()
+
+        Gtk.main_quit()
 
 
 def make_share_list():
@@ -155,7 +183,7 @@ class MainWindow(Gtk.Window):
         grid = Gtk.Grid()
         self.add(grid)
 
-        top_bar = make_top_bar('Kano Share')
+        top_bar = TopBar('Kano Share')
         grid.attach(top_bar, 0, 0, 1, 1)
 
         share_list = make_share_list()

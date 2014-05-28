@@ -10,7 +10,8 @@
 from gi.repository import Gtk
 
 import kano.gtk3.kano_dialog as kano_dialog
-from components import heading, green_button
+from kano.gtk3.green_button import GreenButton
+from components.heading import Heading
 from kano_login import register
 import time
 import datetime
@@ -36,12 +37,12 @@ class Birthday():
         self.entry_container.pack_start(self.month_box, False, False, 20)
         self.entry_container.pack_start(self.year_box, False, False, 0)
 
-        title = heading.Heading("Birthday", "So we know when to send you cake!")
+        title = Heading("Birthday", "So we know when to send you cake!")
 
-        self.next_button = green_button.Button("NEXT")
-        self.next_button.button.connect("button_press_event", self.set_birthday)
-        self.next_button.button.connect("key_press_event", self.set_birthday)
-        self.next_button.button.set_sensitive(False)
+        self.next_button = GreenButton("NEXT")
+        self.next_button.connect("button_press_event", self.set_birthday)
+        self.next_button.connect("key_press_event", self.set_birthday)
+        self.next_button.set_sensitive(False)
 
         self.halign = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
         self.halign.set_padding(0, 0, 60, 0)
@@ -68,9 +69,9 @@ class Birthday():
 
     def update_next_button(self, arg1=None, arg2=None):
         if self.day_entry.get_text() != "" and self.month_entry.get_text() != "" and self.year_entry.get_text() != "":
-            self.next_button.button.set_sensitive(True)
+            self.next_button.set_sensitive(True)
         else:
-            self.next_button.button.set_sensitive(False)
+            self.next_button.set_sensitive(False)
 
     def set_birthday(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
@@ -119,7 +120,7 @@ class Birthday():
             self.day_entry.set_text("")
             self.month_entry.set_text("")
             self.year_entry.set_text("")
-            self.next_button.button.set_sensitive(False)
+            self.next_button.set_sensitive(False)
             return -1
 
 

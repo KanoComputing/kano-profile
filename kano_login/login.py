@@ -9,7 +9,8 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button
+from components.heading import Heading
+from kano.gtk3.green_button import GreenButton
 from kano.utils import run_bg
 from kano.gtk3 import kano_dialog
 from kano.profile.paths import bin_dir
@@ -32,7 +33,7 @@ def activate(_win, _box):
     box = _box
     password_entry = Gtk.Entry()
 
-    title = heading.Heading("Log in", "Bring your Kano to life")
+    title = Heading("Log in", "Bring your Kano to life")
 
     if force_login:
         username = profile['kanoworld_username']
@@ -46,18 +47,18 @@ def activate(_win, _box):
     password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
-    login = green_button.Button("LOG IN")
+    login = GreenButton("LOG IN")
     if force_login:
-        login.button.connect("button_press_event", log_user_in, None, password_entry, username, _win)
-        login.button.connect("key-press-event", log_user_in_key, None, password_entry, username, _win)
+        login.connect("button_press_event", log_user_in, None, password_entry, username, _win)
+        login.connect("key-press-event", log_user_in_key, None, password_entry, username, _win)
     else:
-        login.button.connect("button_press_event", log_user_in, username_email_entry, password_entry, None, _win)
-        login.button.connect("key-press-event", log_user_in_key, username_email_entry, password_entry, None, _win)
+        login.connect("button_press_event", log_user_in, username_email_entry, password_entry, None, _win)
+        login.connect("key-press-event", log_user_in_key, username_email_entry, password_entry, None, _win)
     login.set_padding(10, 0, 0, 0)
 
     if not force_login:
         not_registered = Gtk.Button("Not registered?")
-        not_registered.get_style_context().add_class("not_registered")
+        not_registered.get_style_context().add_class("orange_button")
         not_registered.connect("clicked", register)
         cursor.attach_cursor_events(not_registered)
 

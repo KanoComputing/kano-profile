@@ -9,7 +9,9 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button, cursor
+from components.heading import Heading
+from kano.gtk3.green_button import GreenButton
+from components import cursor
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable
@@ -48,7 +50,7 @@ def activate(_win, _box):
     go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
     cursor.attach_cursor_events(go_to_terms_conditions)
     # TODO: change this class
-    go_to_terms_conditions.get_style_context().add_class("not_registered")
+    go_to_terms_conditions.get_style_context().add_class("orange_button")
     checkbutton = Gtk.CheckButton()
     checkbox_box = Gtk.Box()
     checkbox_box.pack_start(checkbutton, False, False, 0)
@@ -56,16 +58,16 @@ def activate(_win, _box):
     checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
     checkbox_align.add(checkbox_box)
 
-    register = green_button.Button("REGISTER")
+    register = GreenButton("REGISTER")
     register.set_padding(0, 10, 0, 0)
-    register.button.set_sensitive(False)
+    register.set_sensitive(False)
 
-    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
-    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
-    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
-    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
-    register.button.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
-    register.button.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
+    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
+    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
+    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
+    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register, checkbutton)
+    register.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
+    register.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
     go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
 
     subheading = ''
@@ -76,7 +78,7 @@ def activate(_win, _box):
         header = "Login details"
         subheading = "Create your account"
 
-    title = heading.Heading(header, subheading)
+    title = Heading(header, subheading)
 
     username_entry.set_placeholder_text("Username")
     email_entry.set_placeholder_text("Email")

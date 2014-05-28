@@ -15,6 +15,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile_gui.paths import css_dir
+from kano.paths import common_css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
 from kano_login.components import top_bar, logged_in
 from kano.world.functions import login_using_token
@@ -137,16 +138,22 @@ class MainWindow(Gtk.Window):
 
 
 def main():
-    # Create style sheet
+    # Create multiple css providers for the common style sheet and individual style sheet
     cssProvider = Gtk.CssProvider()
+    cssProvider2 = Gtk.CssProvider()
+    common_css_file = os.path.join(common_css_dir, 'common.css')
+    if not os.path.exists(common_css_file):
+        sys.exit('CSS file missing!')
     css_file = os.path.join(css_dir, 'login.css')
     if not os.path.exists(css_file):
         sys.exit('CSS file missing!')
-    cssProvider.load_from_path(css_file)
+    cssProvider.load_from_path(common_css_file)
+    cssProvider2.load_from_path(css_file)
 
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, cssProvider2, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     success, _ = login_using_token()
 
     if success:

@@ -86,7 +86,7 @@ class Birthday():
             bday_day = int(self.day_entry.get_text())
             bday_month = int(self.month_entry.get_text())
             bday_year = int(self.year_entry.get_text())
-            bday_date = datetime.date(bday_year, bday_month, bday_day)
+            bday_date = str(datetime.date(bday_year, bday_month, bday_day))
 
             # Get current date
             current_day = int(time.strftime("%d"))

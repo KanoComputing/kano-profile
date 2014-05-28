@@ -17,8 +17,9 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano.paths import common_css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
-from kano_login.components import top_bar, logged_in
+from kano_login.components import logged_in
 from kano.world.functions import login_using_token
+from kano.gtk3.top_bar import TopBar
 
 
 refs = {
@@ -67,7 +68,7 @@ class MainWindow(Gtk.Window):
         # Dynamic box
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
-        self.top_bar = top_bar.Top_bar(self.WINDOW_WIDTH)
+        self.top_bar = TopBar(self.WINDOW_WIDTH)
 
         self.grid.attach(self.top_bar.background, 0, 0, 3, 1)
         self.grid.attach(self.box, 1, 1, 1, 1)
@@ -111,7 +112,9 @@ class MainWindow(Gtk.Window):
             if self.first_boot == 1:
                 self.unpack_grid()
             module = refs[self.state][self.first_boot]
-            # Doesn't make sense to disable prev button anymore
+            self.disable_prev()
+        else:
+            self.enable_prev()
         self.goto(module)
 
     def on_next(self, arg1=None, arg2=None):

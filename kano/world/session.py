@@ -50,7 +50,7 @@ class KanoWorldSession(object):
 
         # age
         try:
-            data['age'] = profile['age']
+            data['birthdate'] = profile['birthdate']
         except Exception:
             pass
 

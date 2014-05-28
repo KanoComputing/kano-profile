@@ -10,6 +10,7 @@
 
 import os
 import sys
+from urlparse import urlparse
 from kano.webapp import WebApp
 from kano.network import is_internet
 from kano.world.functions import is_registered, get_token
@@ -33,6 +34,45 @@ class Launcher(WebApp):
 
         self._decoration = True
         self._maximized = True
+
+    def _download(self, view, req, user=None):
+        app = self._get_target_app(req)
+
+        target_dir = None
+        if app == "make-minecraft":
+            target_dir = os.path.expanduser("~/Minecraft-content")
+        elif app == "make-pong":
+            target_dir = os.path.expanduser("~/Pong-content")
+        else:
+            return False
+
+        filename = req.get_suggested_filename()
+        req.set_destination_uri("{}/{}".format(target_dir, filename))
+
+        req.connect("progress", self._download_progress)
+        req.connect("notify::status", self._download_status_change)
+
+        return True
+
+    def _get_target_app(req):
+        response = req.get_network_response()
+        uri = response.get_uri
+
+        o = urlparse(uri)
+        if "app" in o.params:
+            return params["app"]
+
+        return None
+
+    def _download_progress(self, req, progress):
+        if progress == 100:
+            print "Download finished!"
+
+    def _download_status_change(self, req, status):
+        if req.get_status().value_name == 'WEBKIT_DOWNLOAD_STATUS_ERROR':
+            os.system("zenity --info --text 'Download failed!'")
+        elif req.get_status().value_name == 'WEBKIT_DOWNLOAD_STATUS_FINISHED':
+            os.system("zenity --error --text 'Download completed.'")
 
 # Check internet status
 if not is_internet():

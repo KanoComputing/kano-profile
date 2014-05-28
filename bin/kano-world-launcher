@@ -36,7 +36,9 @@ class Launcher(WebApp):
         self._title = "Kano World"
 
         self._decoration = True
-        self._maximized = True
+        self._height = 768
+        self._width = 900
+        self._centered = True
 
     def _download(self, view, req, user=None):
         app = self._get_target_app(req)

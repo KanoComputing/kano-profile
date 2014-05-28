@@ -73,10 +73,11 @@ class Birthday():
 
     def set_birthday(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
-            age = self.calculate_age()
+            age, date = self.calculate_age()
             if age == -1:
                 return
             self.win.age = age
+            self.win.date = date
             win.update()
             register.activate(self.win, self.box)
 
@@ -85,7 +86,7 @@ class Birthday():
             bday_day = int(self.day_entry.get_text())
             bday_month = int(self.month_entry.get_text())
             bday_year = int(self.year_entry.get_text())
-            datetime.date(bday_year, bday_month, bday_day)
+            bday_date = datetime.date(bday_year, bday_month, bday_day)
 
             # Get current date
             current_day = int(time.strftime("%d"))
@@ -106,7 +107,7 @@ class Birthday():
                 # TODO: if it's their birthday, do something special?
                 #elif current_day == bday_day:
                 #    print "IT'S YOUR BIIIIRTHDAY"
-            return age
+            return age, bday_date
 
         except Exception as e:
             if len(e.args) > 1:

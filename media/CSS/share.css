@@ -66,6 +66,9 @@ GtkButton {
     border-radius: 3px;
     border-color: transparent;
 }
+GtkButton GtkLabel {
+    color: #ffffff;
+}
 GtkImage {
     background: transparent;
 }
@@ -94,10 +97,10 @@ GtkImage {
 
 /* The bar at the top that mimics the window bar */
 .top_bar_container {
-    background: #eeeeee;
+    background: #eaeaea;
 }
 .top_bar_button {
-    background: #eeeeee;
+    background: #eaeaea;
 }
 /* The title of the current level*/
 .title {

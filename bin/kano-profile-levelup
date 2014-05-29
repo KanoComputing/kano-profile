@@ -15,7 +15,6 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
-from kano.world.functions import get_mixed_username
 from kano.gtk3.green_button import GreenButton
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
@@ -136,22 +135,22 @@ class MainWindow(Gtk.Window):
         # New level
         if category == "new_level":
             self.title.set_text("Level Up!")
-            self.description.set_text("You made it to Level " + text + "! Congrats, you hero – time for new swag")
+            self.description.set_text("You made it to Level " + str(text) + "! Congrats, you hero – time for new swag")
         # New avatar
         elif self.category == "avatars":
             self.title.set_text("New Avatar!")
-            self.description.set_text("You’ve unlocked a new friend to play as " + text + "! Change your face in your Profile")
+            self.description.set_text("You’ve unlocked a new friend to play as " + str(text) + "! Change your face in your Profile")
         # New environment
         elif self.category == "environments":
             self.title.set_text("New Background!")
-            self.description.set_text("You’ve unlocked " + text + " – change your background in your Profile")
+            self.description.set_text("You’ve unlocked " + str(text) + " – change your background in your Profile")
         # New badges
         elif self.category == "badges":
             self.title.set_text("New Badge!")
-            self.description.set_text("You’ve unlocked " + text + " – check out all your swag in your Profile")
+            self.description.set_text("You’ve unlocked " + str(text) + " – check out all your swag in your Profile")
         else:
             self.title.set_text("Congratulations!")
-            self.description.set_text("You've unlocked " + text)
+            self.description.set_text("You've unlocked " + str(text))
 
     def next_category(self):
         index = categories.index(self.category)

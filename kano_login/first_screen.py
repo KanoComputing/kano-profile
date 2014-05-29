@@ -40,7 +40,7 @@ def activate(_win, _box=None):
     box.pack_start(img, False, False, 0)
 
     if is_internet():
-        title = heading.Heading("You've made some progress, let's save it!", "Lets create an account")
+        title = heading.Heading("Amazing work – now let’s save your progress!", "Let's set up your account")
         # This button should send you to the login screen
         login_button = green_button.Button("I ALREADY HAVE AN ACCOUNT")
         next_button = green_button.Button("REGISTER")

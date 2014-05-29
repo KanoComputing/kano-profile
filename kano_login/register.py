@@ -31,7 +31,7 @@ def is_email(email):
         return False
 
 
-# We calclate age based on the birthday screen - if less than 13,
+# We calculate age based on the birthday screen - if less than 13,
 # we ask for parent's email
 def activate(_win, _box):
     global win, box
@@ -68,12 +68,11 @@ def activate(_win, _box):
     go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
 
     subheading = ''
+    header = "Choose a nickname!"
     if win.age < 13:
-        header = "Permission slip"
         subheading = "Please provide a parent's or teacher's email"
     else:
-        header = "Login details"
-        subheading = "Create your account"
+        subheading = "And set your details"
 
     title = heading.Heading(header, subheading)
 

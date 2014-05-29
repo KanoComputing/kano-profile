@@ -5,7 +5,7 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# Set nickname of user
+# Set birthday of user
 
 from gi.repository import Gtk
 
@@ -35,7 +35,7 @@ class Birthday():
         self.entry_container.pack_start(self.month_box, False, False, 20)
         self.entry_container.pack_start(self.year_box, False, False, 0)
 
-        title = heading.Heading("Birthday", "So we know when to send you cake!")
+        title = heading.Heading("When's your birthday?", "We'll send you a code cake!")
 
         self.next_button = green_button.Button("NEXT")
         self.next_button.button.connect("button_press_event", self.set_birthday)
@@ -130,5 +130,3 @@ def activate(_win, _box):
     win.clear_box()
 
     birthday = Birthday(win, box)
-
-

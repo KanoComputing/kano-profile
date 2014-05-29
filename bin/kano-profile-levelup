@@ -15,10 +15,12 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
+from kano.world.functions import get_mixed_username
+from kano.gtk3.green_button import GreenButton
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
-import kano_profile_gui.components.cursor as cursor
+from kano.paths import common_css_dir
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
@@ -56,16 +58,9 @@ class MainWindow(Gtk.Window):
         self.label_container.pack_start(self.title, False, False, 0)
         self.label_container.pack_start(self.description, False, False, 0)
 
-        # Button
-        self.button = Gtk.Button("GOT IT")
-        self.button.get_style_context().add_class("green_button")
-        self.button_box = Gtk.Box()
-        self.button_box.add(self.button)
-        self.button_alignment = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
-        self.button_alignment.set_padding(0, 0, (self.image_width / 2) - 40, 0)
-        self.button_alignment.add(self.button_box)
+        self.button = GreenButton("GOT IT")
         self.button.connect("clicked", self.go_to_next)
-        cursor.attach_cursor_events(self.button)
+        self.button.pack_and_align()
 
         self.image = Gtk.Image()
 
@@ -76,14 +71,13 @@ class MainWindow(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.background, False, False, 0)
         self.box.pack_start(self.label_container, False, False, 20)
-        self.box.pack_start(self.button_alignment, False, False, 0)
+        self.box.pack_start(self.button.align, False, False, 0)
 
         self.add(self.box)
 
         if new_level:
             # Get image, title and label for new level
             self.set_description("new_level", str(new_level))
-            # TODO: Change temporary filename for level up
             filename = get_image("level", "", "Level-" + str(new_level), str(self.image_width) + 'x' + str(self.image_height))
             self.image.set_from_file(filename)
         else:
@@ -215,15 +209,21 @@ def main():
     new_level, new_items = parse_items(sys.argv[1:])
 
     # Create style sheet
-    cssProvider = Gtk.CssProvider()
-    css_file = os.path.join(css_dir, 'login.css')
-    if not os.path.exists(css_file):
+    levelup_css = Gtk.CssProvider()
+    levelup_file = os.path.join(css_dir, 'levelup.css')
+    if not os.path.exists(levelup_file):
         sys.exit('CSS file missing!')
-    cssProvider.load_from_path(css_file)
+    levelup_css.load_from_path(levelup_file)
+    colours_css = Gtk.CssProvider()
+    colours_file = os.path.join(common_css_dir, 'colours.css')
+    if not os.path.exists(colours_file):
+        sys.exit('CSS file missing!')
+    colours_css.load_from_path(colours_file)
 
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
-    styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, levelup_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, colours_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow(new_level, new_items)
     win.connect('delete-event', close_window)

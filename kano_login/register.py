@@ -9,11 +9,14 @@
 
 from gi.repository import Gtk
 
-from components import heading, green_button, kano_dialog, cursor
+from kano.gtk3.heading import Heading
+from kano.gtk3.green_button import GreenButton
+from kano.gtk3 import cursor
 from kano.utils import run_bg
-from kano.profile.paths import bin_dir
+from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable
 from kano.world.functions import register as register_
+from kano.gtk3 import kano_dialog
 from kano_login import account_confirm
 import re
 import os
@@ -47,7 +50,7 @@ def activate(_win, _box):
     go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
     cursor.attach_cursor_events(go_to_terms_conditions)
     # TODO: change this class
-    go_to_terms_conditions.get_style_context().add_class("not_registered")
+    go_to_terms_conditions.get_style_context().add_class("orange_button")
     checkbutton = Gtk.CheckButton()
     checkbox_box = Gtk.Box()
     checkbox_box.pack_start(checkbutton, False, False, 0)
@@ -55,16 +58,17 @@ def activate(_win, _box):
     checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
     checkbox_align.add(checkbox_box)
 
-    register = green_button.Button("REGISTER")
+    register = GreenButton("REGISTER")
+    register.pack_and_align()
     register.set_padding(0, 10, 0, 0)
-    register.button.set_sensitive(False)
+    register.set_sensitive(False)
 
-    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
-    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
-    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register.button, checkbutton)
-    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register.button, checkbutton)
-    register.button.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
-    register.button.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
+    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
+    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
+    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
+    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register, checkbutton)
+    register.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
+    register.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
     go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
 
     subheading = ''
@@ -74,7 +78,7 @@ def activate(_win, _box):
     else:
         subheading = "And set your details"
 
-    title = heading.Heading(header, subheading)
+    title = Heading(header, subheading)
 
     username_entry.set_placeholder_text("Username")
     email_entry.set_placeholder_text("Email")
@@ -104,18 +108,18 @@ def show_terms_and_conditions(widget, event, checkbutton):
     scrolledwindow.set_size_request(400, 200)
     lots_of_text = Gtk.TextView()
 
-    legalText = ''
-    legalDir = '/usr/share/kano-profile/legal/'
-    for file in os.listdir(legalDir):
-        with open(legalDir + file, 'r') as f:
-            legalText = legalText + f.read() + '\n\n\n'
+    legal_text = ''
+    for file in os.listdir(legal_dir):
+        with open(legal_dir + file, 'r') as f:
+            legal_text = legal_text + f.read() + '\n\n\n'
 
-    lots_of_text.get_buffer().set_text(legalText)
+    lots_of_text.get_buffer().set_text(legal_text)
 
     lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
     lots_of_text.set_editable(False)
     scrolledwindow.add(lots_of_text)
-    kano_dialog.KanoDialog("Terms and conditions", "", None, scrolledwindow)
+    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", None, widget=scrolledwindow)
+    kdialog.run()
 
 
 def set_register_sensitive(entry1, entry2, entry3, button, checkbutton):
@@ -149,7 +153,8 @@ def register_user(button, event, username_entry, email_entry, password_entry):
         success, text = register_(win.email, win.username, win.password)
 
         if not success:
-            kano_dialog.KanoDialog("Houston, we have a problem", str(text))
+            kdialog = kano_dialog.KanoDialog("Houston, we have a problem", str(text))
+            kdialog.run()
 
         # This needs to be adjusted depending on the age of the user
         else:

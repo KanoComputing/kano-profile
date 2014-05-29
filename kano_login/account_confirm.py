@@ -8,7 +8,8 @@
 # UI for confirming to the user they've registered
 
 from gi.repository import Gtk
-from components import heading, green_button
+from kano.gtk3.heading import Heading
+from kano.gtk3.green_button import GreenButton
 from kano_profile_gui.images import get_image
 
 win = None
@@ -32,11 +33,12 @@ def activate(_win, _box):
         description = "To check that you’re the real deal - \n               we sent an email to: "
         check_your_email = "Click on the link within two weeks to confirm your profile"
 
-    nextB = green_button.Button("GOT IT")
-    nextB.button.connect("button_press_event", go_next)
-    nextB.button.connect("key_press_event", go_next)
+    next_button = GreenButton("GOT IT")
+    next_button.pack_and_align()
+    next_button.connect("button_press_event", go_next)
+    next_button.connect("key_press_event", go_next)
 
-    title = heading.Heading(title, description)
+    title = Heading(title, description)
 
     label1 = Gtk.Label(win.email)
     label1.get_style_context().add_class("confirm_email")
@@ -51,7 +53,7 @@ def activate(_win, _box):
     box.pack_start(title.container, False, False, 0)
     box.pack_start(label1, False, False, 5)
     box.pack_start(label2, False, False, 20)
-    box.pack_start(nextB.align, False, False, 15)
+    box.pack_start(next_button.align, False, False, 15)
     box.show_all()
 
 
@@ -68,17 +70,16 @@ def confirmation_screen():
     filename = get_image("login", "", "profile-created", str(img_width) + 'x' + str(img_height))
     img.set_from_file(filename)
 
-    doneB = green_button.Button("DONE")
-    doneB.button.connect("button_press_event", finish)
-    doneB.button.connect("key_press_event", finish)
+    done_button = GreenButton("DONE")
+    done_button.connect("button_press_event", finish)
+    done_button.connect("key_press_event", finish)
 
-    title = heading.Heading("Profile created!", "You’re connected and cool. Let’s check out your character.")
+    title = Heading("Profile created!", "You’re connected and cool. Let’s check out your character.")
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     container.pack_start(img, False, False, 0)
     container.pack_start(title.container, False, False, 0)
-    container.pack_start(doneB.align, False, False, 15)
-    doneB.set_padding(0, 10, 0, 0)
+    container.pack_start(done_button.align, False, False, 15)
     win.add(container)
     win.show_all()
 

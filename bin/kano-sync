@@ -18,6 +18,7 @@ from kano.world.functions import sync, login_using_token, backup_content, restor
 from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, \
     is_installed, is_gui
 from kano.profile.paths import app_profiles_file
+from kano.gtk3.kano_dialog import KanoDialog
 
 home_dir = get_home()
 
@@ -29,14 +30,15 @@ parser.add_argument('--backup', action='store_true', help='backup app content')
 parser.add_argument('--restore', action='store_true', help='restore app content')
 args = parser.parse_args()
 
-enable_dialog = args.dialog and is_gui() and is_installed('zenity')
+enable_dialog = args.dialog and is_gui()
 
 DEBUG_MODE = False
 
 
 def display_msg(msg):
     if enable_dialog:
-        run_cmd('zenity --info --text "{}"'.format(msg))
+        kdialog = KanoDialog(msg, "")
+        kdialog.run()
     else:
         if DEBUG_MODE:
             print msg

@@ -1,0 +1,34 @@
+
+/* Level up styling */
+
+@define-color kano_green #7cc640;
+@define-color title_color #323232;
+@define-color subheading_color #6e6e6e;
+
+/* This is to remove padding */
+GtkBox GtkEventBox,
+GtkBox GtkGrid,
+GtkEventBox GtkImage,
+GtkGrid GtkEventBox,
+GtkFixed GtkImage,
+GtkFixed GtkEventBox,
+GtkWindow GtkImage,
+GtkWindow GtkGrid,
+GtkWindow GtkBox,
+GtkWindow GtkEventBox {
+    padding: 0;
+}
+
+GtkWindow {
+    background: #ffffff;
+}
+
+.alert_title {
+    font: Bariol Bold 20px;
+    color: @title_color;
+}
+
+.alert_description {
+    font: Bariol 14px;
+    color: @subheading_color;
+}

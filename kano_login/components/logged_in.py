@@ -7,9 +7,9 @@
 
 from kano.world.functions import remove_token
 from kano.gtk3.green_button import GreenButton
-from kano_login.components.heading import Heading
+from kano.gtk3.heading import Heading
 from gi.repository import Gtk
-import kano_login.components.cursor as cursor
+import kano.gtk3.cursor as cursor
 
 
 class LoggedIn(Gtk.Window):

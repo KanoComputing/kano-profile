@@ -30,7 +30,7 @@ def activate(_win, _box):
         check_your_email = "Bug them to check their email in 14 days or less - \n                         or you'll lose your profile!"
     else:
         title = "Almost there..."
-        description = "To check that you’re the real deal - \n               we sent an email to: "
+        description = "To check that you're the real deal - \n               we sent an email to: "
         check_your_email = "Click on the link within two weeks to confirm your profile"
 
     next_button = GreenButton("GOT IT")
@@ -73,8 +73,9 @@ def confirmation_screen():
     done_button = GreenButton("DONE")
     done_button.connect("button_press_event", finish)
     done_button.connect("key_press_event", finish)
+    done_button.pack_and_align()
 
-    title = Heading("Profile created!", "You’re connected and cool. Let’s check out your character.")
+    title = Heading("Profile created!", "You're connected and cool. Let's check out your character.")
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     container.pack_start(img, False, False, 0)

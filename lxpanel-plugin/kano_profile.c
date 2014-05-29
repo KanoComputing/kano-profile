@@ -25,7 +25,7 @@
 #define BACKUP_ICON "/usr/share/kano-profile/icon/widget-backup.png"
 #define RESTORE_ICON "/usr/share/kano-profile/icon/widget-restore.png"
 
-#define PLUGIN_TOOLTIP "Kano Profile"
+#define PLUGIN_TOOLTIP "Profile"
 
 #define MINUTE 60
 
@@ -170,7 +170,7 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile
         return FALSE;
 
     /* Create the menu items */
-    header_item = gtk_menu_item_new_with_label("Kano profile");
+    header_item = gtk_menu_item_new_with_label("Profile");
     gtk_widget_set_sensitive(header_item, FALSE);
     gtk_menu_append(GTK_MENU(menu), header_item);
     gtk_widget_show(header_item);
@@ -185,7 +185,7 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile
         gtk_widget_show(sync_item);
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sync_item), get_resized_icon(SYNC_ICON));
         /* Back-up */
-        GtkWidget* backup_item = gtk_image_menu_item_new_with_label("Back-up");
+        GtkWidget* backup_item = gtk_image_menu_item_new_with_label("Back Up");
         g_signal_connect(backup_item, "activate", G_CALLBACK(profile_clicked), "--backup");
         gtk_menu_append(GTK_MENU(menu), backup_item);
         gtk_widget_show(backup_item);

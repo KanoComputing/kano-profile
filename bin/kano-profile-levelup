@@ -48,10 +48,8 @@ class MainWindow(Gtk.Window):
             # lxde-rc.xml changes positioning of window on the basis of the class name
             self.set_wmclass('kano-levelup-minecraft', 'Kano-levelup-minecraft')
 
-        # Get username
-        username = get_mixed_username()
-
-        self.title = Gtk.Label("Great job " + str(username) + "!")
+        # Header
+        self.title = Gtk.Label("Level Up!")
         self.title.get_style_context().add_class("alert_title")
         self.description = Gtk.Label("")
         self.description.get_style_context().add_class("alert_description")
@@ -135,9 +133,24 @@ class MainWindow(Gtk.Window):
                 del self.new_items[self.category][subcat]
 
     def set_description(self, category, text):
+        # New level
         if category == "new_level":
-            self.description.set_text("You've reached Level " + text)
+            self.title.set_text("Level Up!")
+            self.description.set_text("You made it to Level " + text + "! Congrats, you hero – time for new swag")
+        # New avatar
+        elif self.category == "avatars":
+            self.title.set_text("New Avatar!")
+            self.description.set_text("You’ve unlocked a new friend to play as " + text + "! Change your face in your Profile")
+        # New environment
+        elif self.category == "environments":
+            self.title.set_text("New Background!")
+            self.description.set_text("You’ve unlocked " + text + " – change your background in your Profile")
+        # New badges
+        elif self.category == "badges":
+            self.title.set_text("New Badge!")
+            self.description.set_text("You’ve unlocked " + text + " – check out all your swag in your Profile")
         else:
+            self.title.set_text("Congratulations!")
             self.description.set_text("You've unlocked " + text)
 
     def next_category(self):

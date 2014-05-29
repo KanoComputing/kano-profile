@@ -45,8 +45,10 @@ class KanoWorldSession(object):
 
         data = dict()
 
-        # xp, TODO will be removed
-        data['xp'] = calculate_xp()
+        # xp
+        xp = calculate_xp()
+        if xp != 0:
+            data['xp'] = xp
 
         # age
         try:

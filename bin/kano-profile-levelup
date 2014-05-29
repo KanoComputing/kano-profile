@@ -135,7 +135,7 @@ class MainWindow(Gtk.Window):
         # New level
         if category == "new_level":
             self.title.set_text("Level Up!")
-            self.description.set_text("You made it to Level " + str(text) + "! Congrats, you hero – time for new swag")
+            self.description.set_text("You made it to Level " + str(text) + "! Congrats, you hero - time for new swag")
         # New avatar
         elif self.category == "avatars":
             self.title.set_text("New Avatar!")
@@ -143,11 +143,11 @@ class MainWindow(Gtk.Window):
         # New environment
         elif self.category == "environments":
             self.title.set_text("New Background!")
-            self.description.set_text("You’ve unlocked " + str(text) + " – change your background in your Profile")
+            self.description.set_text("You’ve unlocked " + str(text) + " - change your background in your Profile")
         # New badges
         elif self.category == "badges":
             self.title.set_text("New Badge!")
-            self.description.set_text("You’ve unlocked " + str(text) + " – check out all your swag in your Profile")
+            self.description.set_text("You’ve unlocked " + str(text) + " - check out all your swag in your Profile")
         else:
             self.title.set_text("Congratulations!")
             self.description.set_text("You've unlocked " + str(text))

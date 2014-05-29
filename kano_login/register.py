@@ -59,6 +59,7 @@ def activate(_win, _box):
     checkbox_align.add(checkbox_box)
 
     register = GreenButton("REGISTER")
+    register.pack_and_align()
     register.set_padding(0, 10, 0, 0)
     register.set_sensitive(False)
 

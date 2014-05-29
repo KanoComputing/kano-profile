@@ -20,6 +20,7 @@ from kano.gtk3.green_button import GreenButton
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
+from kano.paths import common_css_dir
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
@@ -61,6 +62,7 @@ class MainWindow(Gtk.Window):
 
         self.button = GreenButton("GOT IT")
         self.button.connect("clicked", self.go_to_next)
+        self.button.pack_and_align()
 
         self.image = Gtk.Image()
 
@@ -194,15 +196,21 @@ def main():
     new_level, new_items = parse_items(sys.argv[1:])
 
     # Create style sheet
-    cssProvider = Gtk.CssProvider()
-    css_file = os.path.join(css_dir, 'levelup.css')
-    if not os.path.exists(css_file):
+    levelup_css = Gtk.CssProvider()
+    levelup_file = os.path.join(css_dir, 'levelup.css')
+    if not os.path.exists(levelup_file):
         sys.exit('CSS file missing!')
-    cssProvider.load_from_path(css_file)
+    levelup_css.load_from_path(levelup_file)
+    colours_css = Gtk.CssProvider()
+    colours_file = os.path.join(common_css_dir, 'colours.css')
+    if not os.path.exists(colours_file):
+        sys.exit('CSS file missing!')
+    colours_css.load_from_path(colours_file)
 
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
-    styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, levelup_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, colours_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow(new_level, new_items)
     win.connect('delete-event', close_window)

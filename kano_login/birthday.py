@@ -40,6 +40,7 @@ class Birthday():
         title = Heading("Birthday", "So we know when to send you cake!")
 
         self.next_button = GreenButton("NEXT")
+        self.next_button.pack_and_align()
         self.next_button.connect("button_press_event", self.set_birthday)
         self.next_button.connect("key_press_event", self.set_birthday)
         self.next_button.set_sensitive(False)
@@ -122,7 +123,7 @@ class Birthday():
             self.month_entry.set_text("")
             self.year_entry.set_text("")
             self.next_button.set_sensitive(False)
-            return -1
+            return -1, -1
 
 
 def activate(_win, _box):

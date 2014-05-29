@@ -34,6 +34,7 @@ def activate(_win, _box):
         check_your_email = "Activate your account in the next 14 days - \n               or you'll lose your profile!"
 
     next_button = GreenButton("GOT IT")
+    next_button.pack_and_align()
     next_button.connect("button_press_event", go_next)
     next_button.connect("key_press_event", go_next)
 

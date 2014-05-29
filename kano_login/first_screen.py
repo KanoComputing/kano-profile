@@ -46,8 +46,8 @@ def activate(_win, _box=None):
         login_button = GreenButton("I ALREADY HAVE AN ACCOUNT")
         next_button = GreenButton("REGISTER")
         button_box = Gtk.Box()
-        button_box.pack_start(login_button.align, False, False, 10)
-        button_box.pack_start(next_button.align, False, False, 10)
+        button_box.pack_start(login_button, False, False, 10)
+        button_box.pack_start(next_button, False, False, 10)
 
         button_padding = Gtk.Alignment()
         button_padding.set_padding(0, 20, 80, 0)

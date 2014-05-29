@@ -48,6 +48,7 @@ def activate(_win, _box):
     password_entry.set_visibility(False)
 
     login = GreenButton("LOG IN")
+    login.pack_and_align()
     if force_login:
         login.connect("button_press_event", log_user_in, None, password_entry, username, _win)
         login.connect("key-press-event", log_user_in_key, None, password_entry, username, _win)

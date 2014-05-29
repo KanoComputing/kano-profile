@@ -142,21 +142,27 @@ class MainWindow(Gtk.Window):
 
 def main():
     # Create multiple css providers for the common style sheet and individual style sheet
-    cssProvider = Gtk.CssProvider()
-    cssProvider2 = Gtk.CssProvider()
+    common_css = Gtk.CssProvider()
+    login_css = Gtk.CssProvider()
+    colour_css = Gtk.CssProvider()
     common_css_file = os.path.join(common_css_dir, 'common.css')
     if not os.path.exists(common_css_file):
         sys.exit('CSS file missing!')
-    css_file = os.path.join(css_dir, 'login.css')
-    if not os.path.exists(css_file):
+    login_css_file = os.path.join(css_dir, 'login.css')
+    if not os.path.exists(login_css_file):
         sys.exit('CSS file missing!')
-    cssProvider.load_from_path(common_css_file)
-    cssProvider2.load_from_path(css_file)
+    colour_css_file = os.path.join(common_css_dir, 'colours.css')
+    if not os.path.exists(colour_css_file):
+        sys.exit('CSS file missing!')
+    colour_css.load_from_path(colour_css_file)
+    common_css.load_from_path(common_css_file)
+    login_css.load_from_path(login_css_file)
 
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
-    styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-    styleContext.add_provider_for_screen(screen, cssProvider2, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, colour_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, common_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    styleContext.add_provider_for_screen(screen, login_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     success, _ = login_using_token()
 
     if success:

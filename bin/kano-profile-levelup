@@ -52,6 +52,7 @@ class MainWindow(Gtk.Window):
         self.title.get_style_context().add_class("alert_title")
         self.description = Gtk.Label("")
         self.description.get_style_context().add_class("alert_description")
+        self.description.set_line_wrap(True)
 
         self.label_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.label_container.pack_start(self.title, False, False, 0)
@@ -171,6 +172,9 @@ class MainWindow(Gtk.Window):
                 if i in self.new_items:
                     self.category = i
                     return
+            # if there are no categories, e.g. if only level up
+            Gtk.main_quit()
+            exit()
 
         # We need this for avatars
         if self.new_items[self.category] == {}:

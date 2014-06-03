@@ -128,7 +128,7 @@ def load_share(_button, entry):
 class MainWindow(Gtk.Window):
 
     def __init__(self):
-        self.width = 500
+        self.width = 550
         self.height = 550
 
         Gtk.Window.__init__(self, title='Kano Share')

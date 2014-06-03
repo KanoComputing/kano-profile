@@ -8,7 +8,7 @@
 # Info display next to image on selected screen
 
 from gi.repository import Gtk, Gdk
-import kano_profile_gui.components.cursor as cursor
+from kano.gtk3.green_button import GreenButton
 
 
 class InfoTextUi():
@@ -53,22 +53,18 @@ class InfoTextUi():
         self.box.pack_start(self.paragraph, False, False, 30)
         self.box.set_size_request(self.width - left_padding - right_padding, self.height - top_padding - bottom_padding)
 
-        self.back_button = Gtk.Button("BACK")
-        self.back_button.get_style_context().add_class("green_button")
-        self.back_button_box = Gtk.Box()
-        self.back_button_box.add(self.back_button)
-        cursor.attach_cursor_events(self.back_button)
+        self.back_button = GreenButton("BACK")
+        # Puts the button into a Gtk.Box, to stop it filling up the container
+        self.back_button.pack()
+
         self.equip_button = None
 
         if self.equip:
-            self.equip_button = Gtk.Button("EQUIP")
-            self.equip_button.get_style_context().add_class("green_button")
-            self.equip_button_box = Gtk.Box()
-            self.equip_button_box.add(self.equip_button)
-            self.box.pack_start(self.equip_button_box, False, False, 3)
-            cursor.attach_cursor_events(self.equip_button)
+            self.equip_button = GreenButton("EQUIP")
+            self.equip_button.pack()
+            self.box.pack_start(self.equip_button.box, False, False, 3)
 
-        self.box.pack_start(self.back_button_box, False, False, 3)
+        self.box.pack_start(self.back_button.box, False, False, 3)
 
         self.align = Gtk.Alignment(xalign=0, yalign=0)
         self.align.set_padding(top_padding, bottom_padding, left_padding, right_padding)

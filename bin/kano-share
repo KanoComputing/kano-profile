@@ -5,7 +5,7 @@
 #
 # UI for login screen
 
-from gi.repository import Gtk, Gdk, Pango
+from gi.repository import Gtk, Gdk
 import os
 import sys
 from slugify import slugify
@@ -19,72 +19,16 @@ from kano.network import is_internet
 from kano.utils import download_url, ensure_dir, read_json, get_home, write_json
 
 from kano.profile.paths import app_profiles_file
-from kano_profile_gui.paths import css_dir
-from kano_profile_gui.components import icons
 from kano.world.share import list_shares
+from kano.gtk3.top_bar import TopBar
+from kano.gtk3.green_button import GreenButton
+from kano.paths import common_css_dir
 
 DEBUG_MODE = False
 
 
-class TopBar(Gtk.EventBox):
-    _TOP_BAR_HEIGHT = 44
-
-    def __init__(self, title):
-        super(TopBar, self).__init__(hexpand=True, vexpand=True)
-
-        self.get_style_context().add_class('top_bar_container')
-
-        box = Gtk.Box()
-        box.set_size_request(-1, self._TOP_BAR_HEIGHT)
-
-        self._header = Gtk.Label(title, halign=Gtk.Align.CENTER,
-                                 valign=Gtk.Align.CENTER,
-                                 hexpand=True)
-        box.pack_start(self._header, True, True, 0)
-
-        self._header.modify_font(Pango.FontDescription('Bariol 13'))
-        self._header.get_style_context().add_class('header')
-
-        # Close button
-        cross_icon = icons.get_ui_icon('cross')
-
-        self._close_button = Gtk.Button()
-        self._close_button.set_image(cross_icon)
-        self._close_button.props.margin_right = 2
-        self._close_button.set_can_focus(False)
-        self._close_button.get_style_context().add_class('top_bar_button')
-        self._close_button.get_style_context().add_class('no_border')
-
-        self._close_button.connect('clicked', self._close_button_click)
-        self._close_button.connect('enter-notify-event',
-                                   self._close_button_mouse_enter)
-        self._close_button.connect('leave-notify-event',
-                                   self._close_button_mouse_leave)
-
-        box.pack_start(self._close_button, False, False, 0)
-
-        self.add(box)
-
-    def _close_button_mouse_enter(self, button, event):
-        # Change the cursor to hour Glass
-        cursor = Gdk.Cursor.new(Gdk.CursorType.HAND1)
-        self.get_root_window().set_cursor(cursor)
-
-    def _close_button_mouse_leave(self, button, event):
-        # Set the cursor to normal Arrow
-        cursor = Gdk.Cursor.new(Gdk.CursorType.ARROW)
-        self.get_root_window().set_cursor(cursor)
-
-    def _close_button_click(self, event):
-        cursor = Gdk.Cursor.new(Gdk.CursorType.ARROW)
-        self.get_root_window().set_cursor(cursor)
-        Gdk.flush()
-
-        Gtk.main_quit()
-
-
 def make_share_list():
-    row_height = 60
+    row_height = 70
 
     grid = Gtk.Grid()
     grid.set_row_spacing(0)
@@ -112,7 +56,7 @@ def make_share_list():
         grid.attach(row, 0, i, 1, 1)
 
         if i % 2:
-            row.get_style_context().add_class('downloadgrid_grey')
+            row.get_style_context().add_class('appgrid_grey')
 
         row_grid = Gtk.Grid()
         row.add(row_grid)
@@ -128,7 +72,7 @@ def make_share_list():
         row_grid.attach(label, 1, 0, 1, 3)
 
         if has_url:
-            button = Gtk.Button('DOWNLOAD')
+            button = GreenButton('DOWNLOAD')
             button.set_size_request(100, 30)
             button.connect('clicked', load_share, entry)
             row_grid.attach(button, 2, 1, 1, 1)
@@ -184,19 +128,27 @@ def load_share(_button, entry):
 class MainWindow(Gtk.Window):
 
     def __init__(self):
+        self.width = 500
+        self.height = 550
+
         Gtk.Window.__init__(self, title='Kano Share')
 
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_resizable(False)
 
         grid = Gtk.Grid()
         self.add(grid)
 
-        top_bar = TopBar('Kano Share')
+        top_bar = TopBar('Kano Share', self.width)
+        top_bar.set_close_callback(Gtk.main_quit)
         grid.attach(top_bar, 0, 0, 1, 1)
 
         share_list = make_share_list()
-        grid.attach(share_list, 0, 1, 1, 1)
+        scrolledwindow = Gtk.ScrolledWindow(hexpand=True, vexpand=True)
+        scrolledwindow.add_with_viewport(share_list)
+        scrolledwindow.set_size_request(self.width, self.height - top_bar.height)
+        grid.attach(scrolledwindow, 0, 1, 1, 1)
 
 
 def main():
@@ -204,14 +156,20 @@ def main():
         sys.exit('No internet')
 
     # Create style sheet
+    colourProvider = Gtk.CssProvider()
+    colour_file = os.path.join(common_css_dir, 'colours.css')
+    if not os.path.exists(colour_file):
+        sys.exit('CSS file missing!')
+    colourProvider.load_from_path(colour_file)
     cssProvider = Gtk.CssProvider()
-    css_file = os.path.join(css_dir, 'share.css')
+    css_file = os.path.join(common_css_dir, 'common.css')
     if not os.path.exists(css_file):
         sys.exit('CSS file missing!')
     cssProvider.load_from_path(css_file)
 
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
+    styleContext.add_provider_for_screen(screen, colourProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow()

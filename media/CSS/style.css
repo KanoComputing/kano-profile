@@ -8,20 +8,9 @@
 */
 
 /* Define colours */
-
-@define-color button_color #7cc640;
-@define-color kano_orange #ff842A;
-@define-color title_color #323232;
-@define-color subheading_color #6e6e6e;
-@define-color inactive_writing #cdcdcd;
-@define-color inactive_border #e1e1e1;
-@define-color active_writing #323232;
-@define-color active_border #ababab;
-@define-color hover_color #eeeeee;
-@define-color top_bar_active #ffffff;
-@define-color top_bar_selected #ff0000;
-@define-color top_bar_inactive #555555;
-@define-color top_bar_background #44423d;
+@define-color menu_bar_active #ffffff;
+@define-color menu_bar_inactive #555555;
+@define-color menu_bar_background #44423d;
 
 /* All */
 * {
@@ -76,29 +65,15 @@ GtkWindow GtkBox {
     padding: 0;
 }
 
-/* Green button seen when equipping an item */
-.green_button {
-    background: @button_color;
-    padding: 10px 15px 10px 15px;
-    border-radius: 3px;
-}
-.green_button GtkLabel {
-    color: #ffffff;
-    font: Bariol Bold 14px;
-}
-.green_button:insensitive {
-    background: #e1e1e1;
-    color: #ffffff;
-}
 .home_button {
     background: transparent;
     padding-left:20px;
 }
-.home_button .top_bar_button GtkLabel {
-    color: @top_bar_inactive;
+.home_button .menu_bar_button GtkLabel {
+    color: @menu_bar_inactive;
 }
-.home_button_active .top_bar_button_active GtkLabel {
-    color: @top_bar_active;
+.home_button_active .menu_bar_button_active GtkLabel {
+    color: @menu_bar_active;
 }
 .home_button_title {
     font: Bariol Bold 17;
@@ -117,37 +92,37 @@ GtkWindow GtkBox {
 }
 
 .header_button:active {
-    background: @button_color;
+    background: @kano_green;
 }
 .header_button GtkLabel:active {
     color: #ffffff;
 }
 /* The bar at the top that mimics the window bar */
-.top_bar_container {
-    background: @top_bar_background;
+.menu_bar_container {
+    background: @menu_bar_background;
 }
-.top_bar_button {
+.menu_bar_button {
     background: transparent;
     padding: 0px 14px 0px 14px;
 }
-.top_bar_label {
+.menu_bar_label {
     font: Bariol Bold 13;
-    color: @top_bar_inactive;
+    color: @menu_bar_inactive;
 }
-.top_bar_label:hover {
-    color: @top_bar_active;
+.menu_bar_label:hover {
+    color: @menu_bar_active;
 }
 .active_label {
-    color: @top_bar_active;
+    color: @menu_bar_active;
 }
 .active_label:hover {
-    color: @top_bar_active;
+    color: @menu_bar_active;
 }
 .inactive_label {
-    color: @top_bar_inactive;
+    color: @menu_bar_inactive;
 }
 .inactive_label:hover {
-    color: @top_bar_active;
+    color: @menu_bar_active;
 }
 .close_button {
     padding:8px;
@@ -263,14 +238,14 @@ GtkSwitch {
 
 GtkSwitch.trough {
     border-radius: 20px;
-    background: @button_color;
-    color: @button_color;
+    background: @kano_green;
+    color: @kano_green;
     font: Bariol 5;
 }
 GtkSwitch.slider {
     border-radius: 20px;
     background: #ffffff;
-    border-color: @button_color;
+    border-color: @kano_green;
     border-width: 1px;
     border-style: solid;
     /*padding: 6px;*/
@@ -279,7 +254,7 @@ GtkSwitch.slider {
 /* Styling specific to the grid shown on the swag/badges screen */
 
 .hover_box {
-    background: alpha(@top_bar_background, 0.5);
+    background: alpha(@menu_bar_background, 0.5);
 }
 
 .hover_label {
@@ -287,7 +262,7 @@ GtkSwitch.slider {
     color: #ffffff;
 }
 .equipped_box {
-    background: @button_color;
+    background: @kano_green;
 }
 
 .equipped_box GtkLabel {
@@ -297,7 +272,7 @@ GtkSwitch.slider {
 
 .equipped_box2 {
     border-radius: 5px;
-    background: linear-gradient(to top, @button_color);
+    background: linear-gradient(to top, @kano_green);
 }
 
 .equipped_box2 GtkLabel {
@@ -313,7 +288,7 @@ GtkSwitch.slider {
 /* Info screen equipped box */
 .big_equipped_box {
     border-radius: 8px;
-    background: linear-gradient(to top, @button_color)
+    background: linear-gradient(to top, @kano_green)
 }
 
 .big_equipped_box GtkLabel {

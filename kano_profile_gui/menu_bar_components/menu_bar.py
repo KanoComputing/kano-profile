@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# top_bar.py
+# menu_bar.py
 #
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -10,10 +10,10 @@
 from gi.repository import Gtk, Gdk
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.cursor as cursor
-import kano_profile_gui.top_bar_components.home_button as home_button
+import kano_profile_gui.menu_bar_components.home_button as home_button
 
 
-class TopBar():
+class MenuBar():
     def __init__(self, WINDOW_WIDTH):
 
         # Makes it easier to centre other widgets even if we change this
@@ -24,7 +24,7 @@ class TopBar():
         self.background = Gtk.EventBox()
         self.background.set_size_request(WINDOW_WIDTH, self.height)
         self.background.style = self.background.get_style_context()
-        self.background.style.add_class('top_bar_container')
+        self.background.style.add_class('menu_bar_container')
 
         self.container = Gtk.Box()
 
@@ -47,7 +47,7 @@ class TopBar():
             label.set_text(name_array[x].upper())
 
             # This sets the font size, weight and initial colour.  This is only because Gtk 3.4 has a bug in it.
-            label.get_style_context().add_class("top_bar_label")
+            label.get_style_context().add_class("menu_bar_label")
             icon = icons.set_from_name(name_array[x].lower())
 
             container = Gtk.Box()
@@ -56,7 +56,7 @@ class TopBar():
 
             button = self.button_array[x]
             button.set_can_focus(False)
-            button.get_style_context().add_class("top_bar_button")
+            button.get_style_context().add_class("menu_bar_button")
             button.add(container)
             button.connect('button_press_event', self.activate_label)
 
@@ -66,7 +66,7 @@ class TopBar():
         self.close_button = Gtk.Button()
         self.close_button.set_image(cross)
         self.close_button.set_can_focus(False)
-        self.close_button.get_style_context().add_class("top_bar_button")
+        self.close_button.get_style_context().add_class("menu_bar_button")
         self.close_button.get_style_context().add_class("close_button")
         self.close_button.connect("button_press_event", self.close_window)
         self.close_button.set_alignment(xalign=1, yalign=0)

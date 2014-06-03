@@ -70,11 +70,12 @@ class MainWindow(Gtk.Window):
 
         self.top_bar = TopBar(self.WINDOW_WIDTH)
 
-        self.grid.attach(self.top_bar.background, 0, 0, 3, 1)
+        self.grid.attach(self.top_bar, 0, 0, 3, 1)
         self.grid.attach(self.box, 1, 1, 1, 1)
 
         self.top_bar.set_prev_callback(self.on_prev)
         self.top_bar.set_next_callback(self.on_next)
+        self.top_bar.set_close_callback(self.close_window)
 
         if first_boot == 1:
             self.unpack_grid()
@@ -96,6 +97,9 @@ class MainWindow(Gtk.Window):
 
     def disable_next(self):
         self.top_bar.disable_next()
+
+    def close_window(self, widget, event):
+        Gtk.main_quit()
 
     # Updates the state of the window on clicking the update button
     # e.g. whether the prev and next buttons are enabled or disabled

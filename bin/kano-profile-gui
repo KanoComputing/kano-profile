@@ -17,9 +17,10 @@ import kano_profile_gui.home as home
 import kano_profile_gui.badges as badges
 import kano_profile_gui.projects as projects
 import kano_profile_gui.swags as swags
-import kano_profile_gui.top_bar_components.top_bar as top_bar
+import kano_profile_gui.menu_bar_components.menu_bar as menu_bar
 import kano_profile_gui.components.constants as constants
-import kano_profile_gui.top_bar_components.progress_bar as progress_bar
+import kano_profile_gui.menu_bar_components.progress_bar as progress_bar
+from kano.paths import common_css_dir
 
 
 class MainWindow(Gtk.Window):
@@ -50,22 +51,22 @@ class MainWindow(Gtk.Window):
         # This is the progress bar - it overlaps with the main content in the box
         self.progress = progress_bar.ProgressBar(self.WINDOW_WIDTH)
 
-        self.top_bar = top_bar.TopBar(self.WINDOW_WIDTH)
-        self.top_bar.home_button.button.connect('clicked', self.goto, 'home')
-        self.top_bar.badges_button.connect('clicked', self.goto, 'badges')
-        self.top_bar.swag_button.connect('clicked', self.goto, 'swags')
-        self.top_bar.challenges_button.connect('clicked', self.goto, 'projects')
+        self.menu_bar = menu_bar.MenuBar(self.WINDOW_WIDTH)
+        self.menu_bar.home_button.button.connect('clicked', self.goto, 'home')
+        self.menu_bar.badges_button.connect('clicked', self.goto, 'badges')
+        self.menu_bar.swag_button.connect('clicked', self.goto, 'swags')
+        self.menu_bar.challenges_button.connect('clicked', self.goto, 'projects')
 
         # The first element attached to the grid is GtkFixed so that we can overlay the progress bar
         self.fixed = Gtk.Fixed()
-        self.fixed.put(self.top_bar.background, 0, 0)
-        self.fixed.put(self.progress.fixed, 0, self.top_bar.height - self.progress.height)
-        self.fixed.put(self.box, 0, self.top_bar.height + self.progress.height)
+        self.fixed.put(self.menu_bar.background, 0, 0)
+        self.fixed.put(self.progress.fixed, 0, self.menu_bar.height - self.progress.height)
+        self.fixed.put(self.box, 0, self.menu_bar.height + self.progress.height)
 
         self.grid.attach(self.fixed, 0, 0, 1, 1)
 
         # init home screen
-        self.goto(self.top_bar.home_button, 'home')
+        self.goto(self.menu_bar.home_button, 'home')
 
     def goto(self, button, page):
         refs = {
@@ -81,9 +82,9 @@ class MainWindow(Gtk.Window):
             self.box.remove(i)
 
         # Hacky way to get home image changed
-        # self.top_bar.home_button.update() needs to get called on equipping
+        # self.menu_bar.home_button.update() needs to get called on equipping
         if page == "swags":
-            module.activate(self, self.box, self.top_bar.home_button)
+            module.activate(self, self.box, self.menu_bar.home_button)
         else:
             module.activate(self, self.box)
 
@@ -96,6 +97,11 @@ def main():
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
     styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+    css2Provider = Gtk.CssProvider()
+    path = os.path.join(common_css_dir, 'colours.css')
+    css2Provider.load_from_path(path)
+    styleContext.add_provider_for_screen(screen, css2Provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow()
     win.connect('delete-event', Gtk.main_quit)

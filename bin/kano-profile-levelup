@@ -75,11 +75,15 @@ class MainWindow(Gtk.Window):
         self.add(self.box)
 
         if new_level:
+            # Play sound on the background
+            os.system('kano-sound-cli /usr/share/kano-media/sounds/kano_level_up.wav &')
             # Get image, title and label for new level
             self.set_description("new_level", str(new_level))
             filename = get_image("level", "", "Level-" + str(new_level), str(self.image_width) + 'x' + str(self.image_height))
             self.image.set_from_file(filename)
         else:
+            # Play sound on the background
+            os.system('kano-sound-cli /usr/share/kano-media/sounds/kano_achievement_unlock.wav &')
             self.go_to_next()
 
     def go_to_next(self, event=None):

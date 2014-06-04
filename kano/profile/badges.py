@@ -248,7 +248,7 @@ def save_app_state_with_dialog(app_name, data):
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
 
-        kdesk_running = os.system("pidof kdesk") == 0
+        kdesk_running = os.system("kdesk -q") == 0
         minecraft_running = os.system("pidof minecraft-pi") == 0
 
         if kdesk_running and not minecraft_running:

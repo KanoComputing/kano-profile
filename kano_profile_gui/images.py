@@ -8,7 +8,7 @@
 
 import os
 
-from kano.utils import ensure_dir
+from kano.logging import logger
 from .paths import image_dir
 
 
@@ -18,7 +18,7 @@ def get_image(category, subcategory, name, subfolder_str):
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):
-        print 'missing image: {}'.format(fullpath)
+        logger.error('missing image: {}'.format(fullpath))
         return os.path.join(image_dir, 'icons/50/_missing.png')
         #ensure_dir(folder)
         #open(fullpath, 'w').close()

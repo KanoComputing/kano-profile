@@ -20,11 +20,10 @@ from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
 from kano.paths import common_css_dir
+from kano.logging import logger
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
-
-DEBUG_MODE = False
 
 
 class MainWindow(Gtk.Window):
@@ -201,8 +200,7 @@ def parse_items(args):
                 new_items.setdefault(category, dict()).setdefault(subcat, dict())[item] \
                     = all_rules[category][subcat][item]
             except Exception:
-                if DEBUG_MODE:
-                    print 'item not found: {} {} {}'.format(category, subcat, item)
+                logger.error('item not found: {} {} {}'.format(category, subcat, item))
     return new_level, new_items
 
 

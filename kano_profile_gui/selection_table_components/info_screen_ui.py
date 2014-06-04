@@ -163,9 +163,9 @@ class InfoScreenUi():
         name = self.get_visible_item().name
         subcat = self.get_visible_item().subcategory
         if category == "environments":
-            set_environment(name)
+            set_environment(name, True)
         else:
-            set_avatar(subcat, name)
+            set_avatar(subcat, name, True)
         self.info_text.set_equip_sensitive((self.get_locked() or self.get_equipped()))
         self.change_equipped_style()
         self.home_button.update()

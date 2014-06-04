@@ -7,6 +7,7 @@
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, run_bg
+from kano.logging import logger
 from .paths import apps_dir, xp_file, kanoprofile_dir
 from .profile import is_unlocked
 
@@ -45,6 +46,8 @@ def load_app_state_variable(app_name, variable):
 
 
 def save_app_state(app_name, data):
+    logger.debug('save_app_state {}'.format(app_name))
+
     if is_unlocked():
         try:
             data['level'] = load_app_state(app_name)['level']
@@ -67,20 +70,26 @@ def save_app_state(app_name, data):
 
 
 def save_app_state_variable(app_name, variable, value):
+    logger.debug('save_app_state_variable {} {} {}'.format(app_name, variable, value))
+
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     data[variable] = value
+
     save_app_state(app_name, data)
 
 
 def increment_app_state_variable(app_name, variable, value):
+    logger.debug('increment_app_state_variable {} {} {}'.format(app_name, variable, value))
+
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     if variable not in data:
         data[variable] = 0
     data[variable] += value
+
     save_app_state(app_name, data)
 
 

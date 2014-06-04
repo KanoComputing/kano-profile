@@ -6,9 +6,10 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
+from kano.logging import logger
+from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
     get_user_unsudoed, run_bg
-from .paths import profile_file, profile_dir, kanoprofile_dir
+from .paths import profile_file, profile_dir, kanoprofile_dir, bin_dir
 
 
 def load_profile():
@@ -24,6 +25,8 @@ def load_profile():
 
 
 def save_profile(data):
+    logger.debug('save_profile')
+
     data.pop('cpu_id', None)
     data.pop('mac_addr', None)
     data['save_date'] = get_date_now()
@@ -46,6 +49,8 @@ def save_profile_variable(variable, value):
 
 
 def set_unlocked(boolean):
+    logger.debug('set_unlocked {}'.format(boolean))
+
     profile = load_profile()
     profile['unlocked'] = boolean
     save_profile(profile)
@@ -69,10 +74,12 @@ def get_avatar():
     return subcat, item
 
 
-def set_avatar(subcat, item):
+def set_avatar(subcat, item, sync=False):
     profile = load_profile()
     profile['avatar'] = [subcat, item]
     save_profile(profile)
+    if sync:
+        sync_profile()
 
 
 def get_environment():
@@ -84,7 +91,15 @@ def get_environment():
     return environment
 
 
-def set_environment(environment):
+def set_environment(environment, sync=False):
     profile = load_profile()
     profile['environment'] = environment
     save_profile(profile)
+    if sync:
+        sync_profile()
+
+
+def sync_profile():
+    logger.info('sync_profile')
+    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    run_bg(cmd)

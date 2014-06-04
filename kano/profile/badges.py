@@ -8,12 +8,11 @@ from __future__ import division
 
 import os
 
-from ..utils import read_json, is_gui, run_bg, run_cmd
+from kano.logging import logger
+from kano.utils import read_json, is_gui, run_bg, run_cmd
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
-
-DEBUG_MODE = False
 
 
 def calculate_xp():
@@ -171,8 +170,7 @@ def calculate_badges(DEBUG_MODE=False):
 
     app_profiles = read_json(app_profiles_file)
     if not app_profiles:
-        if DEBUG_MODE:
-            print 'Error reading app_profiles.json'
+        logger.error('Error reading app_profiles.json')
 
     app_list = get_app_list() + ['computed']
     app_state = dict()
@@ -219,6 +217,8 @@ def compare_badges_dict(old, new):
 
 
 def save_app_state_with_dialog(app_name, data):
+    logger.debug('save_app_state_with_dialog {}'.format(app_name))
+
     old_level, _ = calculate_kano_level()
     old_badges = calculate_badges()
 
@@ -247,7 +247,6 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui():
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
-        # print cmd
 
         kdesk_running = os.system("pidof kdesk") == 0
         minecraft_running = os.system("pidof minecraft-pi") == 0
@@ -263,27 +262,32 @@ def save_app_state_with_dialog(app_name, data):
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
+    logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     data[variable] = value
+
     save_app_state_with_dialog(app_name, data)
 
 
 def increment_app_state_variable_with_dialog(app_name, variable, value):
+    logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     if variable not in data:
         data[variable] = 0
     data[variable] += value
+
     save_app_state_with_dialog(app_name, data)
 
 
 def load_badge_rules():
     if not os.path.exists(rules_dir):
-        if DEBUG_MODE:
-            print 'rules dir missing'
+        logger.error('rules dir missing')
         return
 
     merged_rules = dict()
@@ -291,22 +295,19 @@ def load_badge_rules():
     for folder in subfolders:
         folder_fullpath = os.path.join(rules_dir, folder)
         if not os.path.exists(folder_fullpath):
-            if DEBUG_MODE:
-                print 'rules subfolder missing: {}'.format(folder_fullpath)
+            logger.error('rules subfolder missing: {}'.format(folder_fullpath))
             return
 
         rule_files = os.listdir(folder_fullpath)
         if not rule_files:
-            if DEBUG_MODE:
-                print 'no rule files in subfolder: {}'.format(folder_fullpath)
+            logger.error('no rule files in subfolder: {}'.format(folder_fullpath))
             return
 
         for rule_file in rule_files:
             rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
             rule_data = read_json(rule_file_fullpath)
             if not rule_data:
-                if DEBUG_MODE:
-                    print 'rule file empty: {}'.format(rule_file_fullpath)
+                logger.error('rule file empty: {}'.format(rule_file_fullpath))
                 continue
 
             category = folder

@@ -9,6 +9,7 @@
 
 from gi.repository import Gtk
 
+from kano.logging import logger
 from kano.gtk3.heading import Heading
 from kano.gtk3.green_button import GreenButton
 from kano.utils import run_bg
@@ -121,7 +122,7 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             pass
 
         if not first_run_done:
-            print 'doing first time restore'
+            logger.info('doing first time restore')
             cmd = '{bin_dir}/kano-sync --sync --restore -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
             save_profile_variable('first_run_done', True)

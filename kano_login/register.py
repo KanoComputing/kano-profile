@@ -17,6 +17,7 @@ from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable
 from kano.world.functions import register as register_
 from kano.gtk3 import kano_dialog
+from kano.gtk3.scrolled_window import ScrolledWindow
 from kano_login import account_confirm
 import re
 import os
@@ -103,7 +104,7 @@ def activate(_win, _box):
 
 def show_terms_and_conditions(widget, event, checkbutton):
     checkbutton.set_active(True)
-    scrolledwindow = Gtk.ScrolledWindow()
+    scrolledwindow = ScrolledWindow()
     scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scrolledwindow.set_size_request(400, 200)
     lots_of_text = Gtk.TextView()

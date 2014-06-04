@@ -12,6 +12,7 @@ from gi.repository import Gtk
 from kano.profile.apps import get_app_list, get_app_data_dir
 from kano.utils import run_print_output_error
 from kano.profile.paths import rules_dir
+from kano.logging import logger
 import kano_profile_gui.components.cursor as cursor
 
 app_profiles = None
@@ -115,13 +116,13 @@ class ProjectItem():
         self.background.add(self.container)
 
     def load(self, _button, app, filename, data_dir):
-        print 'load', app, filename, data_dir
+        logger.info('load: {} {} {}'.format(app, filename, data_dir))
         fullpath = os.path.join(data_dir, filename)
         cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
         run_print_output_error(cmd)
 
     def share(self, _button, app, filename):
-        print 'share', app, filename
+        logger.info('share: {} {}'.format(app, filename))
 
 
 def activate(_win, _box):

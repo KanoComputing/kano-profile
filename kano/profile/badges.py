@@ -170,8 +170,7 @@ def calculate_badges(DEBUG_MODE=False):
 
     app_profiles = read_json(app_profiles_file)
     if not app_profiles:
-        if DEBUG_MODE:
-            print 'Error reading app_profiles.json'
+        logger.error('Error reading app_profiles.json')
 
     app_list = get_app_list() + ['computed']
     app_state = dict()

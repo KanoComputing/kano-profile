@@ -25,6 +25,8 @@ def load_profile():
 
 
 def save_profile(data):
+    logger.debug('save_profile')
+
     data.pop('cpu_id', None)
     data.pop('mac_addr', None)
     data['save_date'] = get_date_now()
@@ -39,8 +41,6 @@ def save_profile(data):
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
 
-    logger.debug('save_profile')
-
 
 def save_profile_variable(variable, value):
     profile = load_profile()
@@ -49,11 +49,11 @@ def save_profile_variable(variable, value):
 
 
 def set_unlocked(boolean):
+    logger.debug('set_unlocked {}'.format(boolean))
+
     profile = load_profile()
     profile['unlocked'] = boolean
     save_profile(profile)
-
-    logger.debug('set_unlocked {}'.format(boolean))
 
 
 def is_unlocked():

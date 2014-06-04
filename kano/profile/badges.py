@@ -217,6 +217,8 @@ def compare_badges_dict(old, new):
 
 
 def save_app_state_with_dialog(app_name, data):
+    logger.debug('save_app_state_with_dialog {}'.format(app_name))
+
     old_level, _ = calculate_kano_level()
     old_badges = calculate_badges()
 
@@ -258,20 +260,21 @@ def save_app_state_with_dialog(app_name, data):
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)
 
-    logger.debug('save_app_state_with_dialog {}'.format(app_name))
-
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
+    logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     data[variable] = value
 
     save_app_state_with_dialog(app_name, data)
-    logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
 
 
 def increment_app_state_variable_with_dialog(app_name, variable, value):
+    logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
@@ -280,7 +283,6 @@ def increment_app_state_variable_with_dialog(app_name, variable, value):
     data[variable] += value
 
     save_app_state_with_dialog(app_name, data)
-    logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
 
 
 def load_badge_rules():

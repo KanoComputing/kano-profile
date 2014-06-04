@@ -61,7 +61,10 @@ class Launcher(WebApp):
 
         success, data = download_share(share)
         if not success:
-            logger.error('Could not download share, error: {}'.format(data))
+            msg = 'Could not download share, error: {}'.format(data)
+            logger.error(msg)
+            # TODO kano-dialog
+            return
 
         (title, attachment_path) = data
         msg = 'Downloaded share: {}'.format(title)

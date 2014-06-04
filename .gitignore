@@ -11,3 +11,19 @@
 /up.json
 
 /down.json
+
+/kano/logging.py
+
+/kano/gtk3/top_bar.py
+/kano/gtk3/scrolled_window.py
+/kano/gtk3/kano_dialog.py
+/kano/gtk3/icons.py
+/kano/gtk3/heading.py
+/kano/gtk3/cursor.py
+/kano/gtk3/buttons.py
+/kano/gtk3/__init__.py
+
+/kano/window.py
+/kano/webapp.py
+/kano/paths.py
+/kano/colours.py

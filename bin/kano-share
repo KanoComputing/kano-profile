@@ -8,7 +8,6 @@
 from gi.repository import Gtk, Gdk
 import os
 import sys
-from slugify import slugify
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -16,10 +15,10 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.network import is_internet
-from kano.utils import download_url, ensure_dir, read_json, get_home, write_json
+from kano.utils import read_json
 
 from kano.profile.paths import app_profiles_file
-from kano.world.share import list_shares
+from kano.world.share import list_shares, download_share
 from kano.gtk3.top_bar import TopBar
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.kano_dialog import KanoDialog
@@ -87,41 +86,14 @@ def make_share_list():
 
 
 def load_share(_button, entry):
-    app = entry['app']
-    title = entry['title']
-    attachment_url = entry['attachment_url']
-
-    data = {
-        'title': title,
-        'description': entry['description']
-    }
-
-    app_profiles = read_json(app_profiles_file)
-
-    if app not in app_profiles:
-        logger.error('Cannot load, app not found in profiles')
-        return
-    app_profile = app_profiles[app]
-
-    folder = os.path.join(get_home(), app_profile['dir'], 'webload')
-    ensure_dir(folder)
-
-    title_slugified = slugify(title)
-
-    attachment_ext = attachment_url.split('.')[-1]
-    attachment_name = '{}.{}'.format(title_slugified, attachment_ext)
-    attachment_path = os.path.join(folder, attachment_name)
-
-    json_name = '{}.{}'.format(title_slugified, 'json')
-    json_path = os.path.join(folder, json_name)
-
-    success, text = download_url(attachment_url, attachment_path)
+    success, data = download_share(entry)
     if not success:
-        logger.error('Error with downloading share file: {}'.format(text))
-    else:
-        write_json(json_path, data)
-        print 'File Path: {}'.format(attachment_path)
-        sys.exit()
+        logger.error('Could not download share, error: {}'.format(data))
+
+    (title, attachment_path) = data
+    print 'File Path: {}'.format(attachment_path)
+
+    sys.exit()
 
 
 class MainWindow(Gtk.Window):

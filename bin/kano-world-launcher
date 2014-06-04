@@ -9,16 +9,13 @@
 #
 
 import os
-import re
-import errno
 import sys
 from urlparse import urlparse
 from kano.webapp import WebApp
 from kano.network import is_internet
-from kano.utils import ensure_dir
 from kano.world.functions import is_registered, get_token
-
-app_name = 'kano-world-launcher'
+from kano.world.share import get_share_by_id, download_share
+from kano.logging import logger
 
 try:
     from kano.profile.badges import increment_app_state_variable_with_dialog
@@ -40,43 +37,34 @@ class Launcher(WebApp):
         self._width = 1024
         self._centered = True
 
-    def _download(self, view, req, user=None):
-        app = self._get_target_app(req)
+    def _download(self, view, req):
+        url = req.get_uri()
+        query = urlparse(url).query.split('&')
 
-        target_dir = None
-        if app == "make-minecraft":
-            target_dir = os.path.expanduser("~/Minecraft-content/webload")
-        elif app == "make-pong":
-            target_dir = os.path.expanduser("~/Pong-content/webload")
-        else:
-            return False
+        share_id = None
+        for q in query:
+            if q.startswith('id='):
+                share_id = q[3:]
+                break
 
-        ensure_dir(target_dir)
-        filename = req.get_suggested_filename()
-        req.set_destination_uri("file://{}/{}".format(target_dir, filename))
-        req.connect("notify::status", self._download_status_change)
+        success, text, share = get_share_by_id(share_id)
+        if not success:
+            msg = 'Error downloading share: {}'.format(text)
+            logger.error(msg)
+            print msg
+            # TODO kano-dialog
+            return
 
-        return True
+        success, data = download_share(share)
+        if not success:
+            logger.error('Could not download share, error: {}'.format(data))
 
-    def _get_target_app(self, req):
-        uri = req.get_uri()
-        o = urlparse(uri)
+        (title, attachment_path) = data
+        msg = 'Downloaded share: {}'.format(title)
+        logger.info(msg)
+        print msg
+        # TODO kano-dialog
 
-        param_re = re.search("app=([a-zA-Z0-9\-]+)", o.query)
-        if param_re != None:
-            return param_re.group(1)
-
-        return None
-
-    def _download_progress(self, req, progress):
-        if progress == 100:
-            print "Download finished!"
-
-    def _download_status_change(self, req, status):
-        if req.get_status().value_name == 'WEBKIT_DOWNLOAD_STATUS_ERROR':
-            os.system("zenity --error --text 'Download failed!'")
-        elif req.get_status().value_name == 'WEBKIT_DOWNLOAD_STATUS_FINISHED':
-            os.system("zenity --info --text 'Download completed.'")
 
 # Check internet status
 if not is_internet():

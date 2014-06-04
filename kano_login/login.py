@@ -98,6 +98,7 @@ def close_window():
 
 
 def log_user_in_key(button, event, username_email_entry, password_entry, username_email, win):
+    # 65293 is the ENTER keycode.
     if event.keyval == 65293:
         log_user_in(button, event, username_email_entry, password_entry, username_email, win)
 

@@ -8,6 +8,7 @@ import requests
 import json
 import os
 
+from kano.logging import logger
 from kano.utils import download_url, read_json, write_json
 from kano.profile.profile import load_profile, set_avatar, set_environment
 from kano.profile.badges import calculate_xp
@@ -17,8 +18,6 @@ from kano.profile.paths import app_profiles_file
 from .connection import request_wrapper, content_type_json
 
 app_profiles_data = read_json(app_profiles_file)
-
-DEBUG_MODE = False
 
 
 def is_private(app_name):
@@ -209,9 +208,8 @@ class KanoWorldSession(object):
         jsonfile_path = file_path[:-3] + 'json'
         screenshot_path = file_path[:-3] + 'png'
 
-        if DEBUG_MODE:
-            print jsonfile_path
-            print screenshot_path
+        logger.debug('uploading json: {}'.format(jsonfile_path))
+        logger.debug('uploading screenshot: {}'.format(screenshot_path))
 
         # attachment
         files = {
@@ -235,9 +233,8 @@ class KanoWorldSession(object):
         except Exception:
             description = None
 
-        if DEBUG_MODE:
-            print 'payload: ', payload
-            print 'files: ', files
+        logger.debug('uploading payload: {}'.format(payload))
+        logger.debug('uploading files: {}'.format(files))
 
         endpoint = '/share/{}'.format(app_name)
 

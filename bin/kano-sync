@@ -19,6 +19,7 @@ from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, ru
     is_installed, is_gui
 from kano.profile.paths import app_profiles_file
 from kano.gtk3.kano_dialog import KanoDialog
+from kano.logging import logger
 
 home_dir = get_home()
 
@@ -32,16 +33,16 @@ args = parser.parse_args()
 
 enable_dialog = args.dialog and is_gui()
 
-DEBUG_MODE = False
 
-
-def display_msg(msg):
+def display_msg(msg, level):
     if enable_dialog:
         kdialog = KanoDialog(msg, "")
         kdialog.run()
-    else:
-        if DEBUG_MODE:
-            print msg
+
+    if level == 'info':
+        logger.info(msg)
+    elif level == 'error':
+        logger.error(msg)
 
 
 def do_login():
@@ -55,21 +56,19 @@ def do_login():
             run_cmd(dir_path + '/bin/kano-login')
             login_success, value = login_using_token()
             if not login_success:
-                display_msg('Login not possible, error: ' + value)
+                display_msg('Login not possible, error: ' + value, 'error')
                 sys.exit(1)
 
 
 def do_sync():
     success, value = sync()
     if not success:
-        msg = 'Sync not possible, error: {}'.format(value)
-        display_msg(msg)
+        display_msg('Sync not possible, error: {}'.format(value), 'error')
         return
 
     refresh_kdesk()
 
-    # msg = 'Sync OK'
-    # display_msg(msg)
+    display_msg('Sync OK', 'info')
 
 
 def do_backup():
@@ -97,17 +96,17 @@ def do_backup():
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with compressing backup data: {}'.format(e)
-        display_msg(msg)
+        display_msg(msg, 'error')
         return
 
     success, error = backup_content(tmp_file)
     if not success:
         msg = 'Error with uploading backup data: {}'.format(e)
-        display_msg(msg)
+        display_msg(msg, 'error')
         return
 
     delete_file(tmp_file)
-    display_msg('Backup OK')
+    display_msg('Backup OK', 'info')
 
 
 def do_restore():
@@ -120,8 +119,8 @@ def do_restore():
 
     success, error = restore_content(tmp_file)
     if not success:
-        if DEBUG_MODE:
-            print 'Error with downloading restore data: ' + error
+        msg = 'Error with downloading restore data: ' + error
+        display_msg(msg, 'error')
         return
 
     if _platform == 'darwin':
@@ -132,7 +131,7 @@ def do_restore():
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with uncompressing restore data: {}'.format(e)
-        display_msg(msg)
+        display_msg(msg, 'error')
 
     if is_installed('kano-settings'):
         kano_setting_cmd = 'sudo kano-settings auto'
@@ -141,7 +140,7 @@ def do_restore():
     refresh_kdesk()
     delete_file(tmp_file)
 
-    display_msg('Restore OK')
+    display_msg('Restore OK', 'info')
 
 
 def refresh_kdesk():

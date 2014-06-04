@@ -6,7 +6,7 @@
 
 import os
 
-from ..utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
+from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
     get_user_unsudoed, run_bg
 from .paths import profile_file, profile_dir, kanoprofile_dir
 

@@ -23,8 +23,7 @@ from kano.world.share import list_shares
 from kano.gtk3.top_bar import TopBar
 from kano.gtk3.green_button import GreenButton
 from kano.paths import common_css_dir
-
-DEBUG_MODE = False
+from kano.logging import logger
 
 
 def make_share_list():
@@ -98,8 +97,7 @@ def load_share(_button, entry):
     app_profiles = read_json(app_profiles_file)
 
     if app not in app_profiles:
-        if DEBUG_MODE:
-            print 'Cannot load, app not found in profiles'
+        logger.error('Cannot load, app not found in profiles')
         return
     app_profile = app_profiles[app]
 
@@ -117,8 +115,7 @@ def load_share(_button, entry):
 
     success, text = download_url(attachment_url, attachment_path)
     if not success:
-        if DEBUG_MODE:
-            print 'Error with downloading share file: {}'.format(text)
+        logger.error('Error with downloading share file: {}'.format(text))
     else:
         write_json(json_path, data)
         print 'File Path: {}'.format(attachment_path)

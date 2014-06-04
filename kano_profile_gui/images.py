@@ -9,7 +9,7 @@
 import os
 
 from kano.logging import logger
-from kano.paths import image_dir
+from .paths import image_dir
 
 
 # "Badge", folder_name, file_name, width of image

@@ -145,6 +145,8 @@ class MainWindow(Gtk.Window):
 
         share_list = make_share_list()
         scrolledwindow = ScrolledWindow()
+        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_vexpand(True)
         scrolledwindow.add_with_viewport(share_list)
         scrolledwindow.set_size_request(self.width, self.height - top_bar.height)
         grid.attach(scrolledwindow, 0, 1, 1, 1)

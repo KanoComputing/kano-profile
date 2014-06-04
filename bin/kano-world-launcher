@@ -46,12 +46,16 @@ class Launcher(WebApp):
             if q.startswith('id='):
                 share_id = q[3:]
                 break
+        if not share_id:
+            msg = 'Share id not found in url: {}'.format(url)
+            logger.error(msg)
+            # TODO kano-dialog
+            return
 
         success, text, share = get_share_by_id(share_id)
         if not success:
             msg = 'Error downloading share: {}'.format(text)
             logger.error(msg)
-            print msg
             # TODO kano-dialog
             return
 
@@ -62,7 +66,6 @@ class Launcher(WebApp):
         (title, attachment_path) = data
         msg = 'Downloaded share: {}'.format(title)
         logger.info(msg)
-        print msg
         # TODO kano-dialog
 
 

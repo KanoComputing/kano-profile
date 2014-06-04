@@ -8,7 +8,7 @@ import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
     get_user_unsudoed, run_bg
-from .paths import profile_file, profile_dir, kanoprofile_dir
+from .paths import profile_file, profile_dir, kanoprofile_dir, bin_dir
 
 
 def load_profile():
@@ -37,6 +37,9 @@ def save_profile(data):
 
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
+
+    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    run_bg(cmd)
 
 
 def save_profile_variable(variable, value):

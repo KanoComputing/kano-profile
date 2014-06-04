@@ -9,7 +9,7 @@ from __future__ import division
 import os
 
 from kano.logging import logger
-from ..utils import read_json, is_gui, run_bg, run_cmd
+from kano.utils import read_json, is_gui, run_bg, run_cmd
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -258,13 +258,17 @@ def save_app_state_with_dialog(app_name, data):
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)
 
+    logger.debug('save_app_state_with_dialog {}'.format(app_name))
+
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     data[variable] = value
+
     save_app_state_with_dialog(app_name, data)
+    logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
 
 
 def increment_app_state_variable_with_dialog(app_name, variable, value):
@@ -274,7 +278,9 @@ def increment_app_state_variable_with_dialog(app_name, variable, value):
     if variable not in data:
         data[variable] = 0
     data[variable] += value
+
     save_app_state_with_dialog(app_name, data)
+    logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
 
 
 def load_badge_rules():

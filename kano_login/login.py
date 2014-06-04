@@ -11,7 +11,7 @@ from gi.repository import Gtk
 
 from kano.logging import logger
 from kano.gtk3.heading import Heading
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 from kano.utils import run_bg
 from kano.gtk3 import kano_dialog
 from kano.profile.paths import bin_dir
@@ -48,7 +48,7 @@ def activate(_win, _box):
     password_entry.props.placeholder_text = 'Password'
     password_entry.set_visibility(False)
 
-    login = GreenButton("LOG IN")
+    login = KanoButton("LOG IN")
     login.pack_and_align()
     if force_login:
         login.connect("button_press_event", log_user_in, None, password_entry, username, _win)

@@ -10,8 +10,7 @@
 from gi.repository import Gtk
 
 from kano.gtk3.heading import Heading
-from kano.gtk3.green_button import GreenButton
-from kano.gtk3 import cursor
+from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.utils import run_bg
 from kano.profile.paths import bin_dir, legal_dir
 from kano.profile.profile import save_profile_variable
@@ -48,10 +47,7 @@ def activate(_win, _box):
     email_entry = Gtk.Entry()
     password_entry = Gtk.Entry()
 
-    go_to_terms_conditions = Gtk.Button("I accept the terms and conditions")
-    cursor.attach_cursor_events(go_to_terms_conditions)
-    # TODO: change this class
-    go_to_terms_conditions.get_style_context().add_class("orange_button")
+    go_to_terms_conditions = OrangeButton("I accept the terms and conditions")
     checkbutton = Gtk.CheckButton()
     checkbox_box = Gtk.Box()
     checkbox_box.pack_start(checkbutton, False, False, 0)
@@ -59,7 +55,7 @@ def activate(_win, _box):
     checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
     checkbox_align.add(checkbox_box)
 
-    register = GreenButton("REGISTER")
+    register = KanoButton("REGISTER")
     register.pack_and_align()
     register.set_padding(0, 10, 0, 0)
     register.set_sensitive(False)

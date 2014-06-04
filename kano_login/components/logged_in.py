@@ -6,7 +6,7 @@
 # UI for login screen
 
 from kano.world.functions import remove_token
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from gi.repository import Gtk
 import kano.gtk3.cursor as cursor
@@ -19,7 +19,7 @@ class LoggedIn(Gtk.Window):
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_resizable(False)
-        self.ok_button = GreenButton("OK")
+        self.ok_button = KanoButton("OK")
         self.ok_button.pack_and_align()
         self.ok_button.connect("clicked", Gtk.main_quit)
         self.title = Heading("Logged in!", "You're already logged in")
@@ -29,8 +29,7 @@ class LoggedIn(Gtk.Window):
         self.main_container.pack_start(self.ok_button.align, False, False, 0)
 
         # To get a logout button, uncomment out the lines below
-        #self.logout_button = Gtk.Button("Log out?")
-        #self.logout_button.get_style_context().add_class("orange_button")
+        #self.logout_button = OrangeButton("Log out?")
         #self.logout_button.connect("clicked", self.logout)
         #self.main_container.pack_start(self.logout_button, False, False, 0)
 

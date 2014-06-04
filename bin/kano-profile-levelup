@@ -15,7 +15,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.profile.badges import load_badge_rules
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
@@ -57,7 +57,7 @@ class MainWindow(Gtk.Window):
         self.label_container.pack_start(self.title, False, False, 0)
         self.label_container.pack_start(self.description, False, False, 0)
 
-        self.button = GreenButton("GOT IT")
+        self.button = KanoButton("GOT IT")
         self.button.connect("clicked", self.go_to_next)
         self.button.pack_and_align()
 

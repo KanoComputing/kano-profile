@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 from kano.gtk3.heading import Heading
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 from kano_profile_gui.images import get_image
 
 win = None
@@ -33,7 +33,7 @@ def activate(_win, _box):
         description = "To check that you're the real deal - \n               we sent an email to: "
         check_your_email = "Click on the link within two weeks to confirm your profile"
 
-    next_button = GreenButton("GOT IT")
+    next_button = KanoButton("GOT IT")
     next_button.pack_and_align()
     next_button.connect("button_press_event", go_next)
     next_button.connect("key_press_event", go_next)
@@ -70,7 +70,7 @@ def confirmation_screen():
     filename = get_image("login", "", "profile-created", str(img_width) + 'x' + str(img_height))
     img.set_from_file(filename)
 
-    done_button = GreenButton("DONE")
+    done_button = KanoButton("DONE")
     done_button.connect("button_press_event", finish)
     done_button.connect("key_press_event", finish)
     done_button.pack_and_align()

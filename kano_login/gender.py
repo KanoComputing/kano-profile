@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 from kano.gtk3.heading import Heading
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 from kano_login import birthday
 
 win = None
@@ -27,7 +27,7 @@ def activate(_win, _box):
 
     win.clear_box()
 
-    next_button = GreenButton("NEXT")
+    next_button = KanoButton("NEXT")
     next_button.pack_and_align()
 
     gender_combo = Gtk.ComboBoxText.new()

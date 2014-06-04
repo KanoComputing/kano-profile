@@ -8,7 +8,7 @@
 # Info display next to image on selected screen
 
 from gi.repository import Gtk, Gdk
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 
 
 class InfoTextUi():
@@ -53,14 +53,14 @@ class InfoTextUi():
         self.box.pack_start(self.paragraph, False, False, 30)
         self.box.set_size_request(self.width - left_padding - right_padding, self.height - top_padding - bottom_padding)
 
-        self.back_button = GreenButton("BACK")
+        self.back_button = KanoButton("BACK")
         # Puts the button into a Gtk.Box, to stop it filling up the container
         self.back_button.pack()
 
         self.equip_button = None
 
         if self.equip:
-            self.equip_button = GreenButton("EQUIP")
+            self.equip_button = KanoButton("EQUIP")
             self.equip_button.pack()
             self.box.pack_start(self.equip_button.box, False, False, 3)
 

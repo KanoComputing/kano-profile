@@ -10,7 +10,7 @@
 from gi.repository import Gtk
 
 import kano.gtk3.kano_dialog as kano_dialog
-from kano.gtk3.green_button import GreenButton
+from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from kano_login import register
 import time
@@ -39,7 +39,7 @@ class Birthday():
 
         title = Heading("When's your birthday?", "We'll send you a code cake!")
 
-        self.next_button = GreenButton("NEXT")
+        self.next_button = KanoButton("NEXT")
         self.next_button.pack_and_align()
         self.next_button.connect("button_press_event", self.set_birthday)
         self.next_button.connect("key_press_event", self.set_birthday)

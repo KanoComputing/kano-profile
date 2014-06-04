@@ -6,6 +6,7 @@
 
 import os
 
+from kano.logging import logger
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
     get_user_unsudoed, run_bg
 from .paths import profile_file, profile_dir, kanoprofile_dir, bin_dir
@@ -38,8 +39,7 @@ def save_profile(data):
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
 
-    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-    run_bg(cmd)
+    logger.debug('save_profile')
 
 
 def save_profile_variable(variable, value):
@@ -52,6 +52,8 @@ def set_unlocked(boolean):
     profile = load_profile()
     profile['unlocked'] = boolean
     save_profile(profile)
+
+    logger.debug('set_unlocked {}'.format(boolean))
 
 
 def is_unlocked():
@@ -76,6 +78,7 @@ def set_avatar(subcat, item):
     profile = load_profile()
     profile['avatar'] = [subcat, item]
     save_profile(profile)
+    sync_profile()
 
 
 def get_environment():
@@ -91,3 +94,10 @@ def set_environment(environment):
     profile = load_profile()
     profile['environment'] = environment
     save_profile(profile)
+    sync_profile()
+
+
+def sync_profile():
+    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    run_bg(cmd)
+    logger.info('sync_profile')

@@ -7,6 +7,7 @@
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, run_bg
+from kano.logging import logger
 from .paths import apps_dir, xp_file, kanoprofile_dir
 from .profile import is_unlocked
 
@@ -65,13 +66,17 @@ def save_app_state(app_name, data):
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
 
+    logger.debug('save_app_state {}'.format(app_name))
+
 
 def save_app_state_variable(app_name, variable, value):
     if is_unlocked() and variable == 'level':
         return
     data = load_app_state(app_name)
     data[variable] = value
+
     save_app_state(app_name, data)
+    logger.debug('save_app_state_variable {} {} {}'.format(app_name, variable, value))
 
 
 def increment_app_state_variable(app_name, variable, value):
@@ -81,7 +86,9 @@ def increment_app_state_variable(app_name, variable, value):
     if variable not in data:
         data[variable] = 0
     data[variable] += value
+
     save_app_state(app_name, data)
+    logger.debug('increment_app_state_variable {} {} {}'.format(app_name, variable, value))
 
 
 def get_app_list():

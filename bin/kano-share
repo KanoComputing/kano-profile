@@ -23,6 +23,7 @@ from kano.world.share import list_shares
 from kano.gtk3.top_bar import TopBar
 from kano.gtk3.green_button import GreenButton
 from kano.gtk3.kano_dialog import KanoDialog
+from kano.gtk3.scrolled_window import ScrolledWindow
 from kano.paths import common_css_dir
 from kano.logging import logger
 
@@ -126,7 +127,7 @@ def load_share(_button, entry):
 class MainWindow(Gtk.Window):
 
     def __init__(self):
-        self.width = 550
+        self.width = 580
         self.height = 550
 
         Gtk.Window.__init__(self, title='Kano Share')
@@ -143,7 +144,7 @@ class MainWindow(Gtk.Window):
         grid.attach(top_bar, 0, 0, 1, 1)
 
         share_list = make_share_list()
-        scrolledwindow = Gtk.ScrolledWindow(hexpand=True, vexpand=True)
+        scrolledwindow = ScrolledWindow()
         scrolledwindow.add_with_viewport(share_list)
         scrolledwindow.set_size_request(self.width, self.height - top_bar.height)
         grid.attach(scrolledwindow, 0, 1, 1, 1)

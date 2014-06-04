@@ -3,7 +3,7 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# UI for login screen
+# UI for share screen
 
 from gi.repository import Gtk, Gdk
 import os
@@ -22,6 +22,7 @@ from kano.profile.paths import app_profiles_file
 from kano.world.share import list_shares
 from kano.gtk3.top_bar import TopBar
 from kano.gtk3.green_button import GreenButton
+from kano.gtk3.kano_dialog import KanoDialog
 from kano.paths import common_css_dir
 
 DEBUG_MODE = False
@@ -153,6 +154,8 @@ class MainWindow(Gtk.Window):
 
 def main():
     if not is_internet():
+        kdialog = KanoDialog("You don't have internet!", "You need an internet connection to share")
+        kdialog.run()
         sys.exit('No internet')
 
     # Create style sheet

@@ -74,11 +74,12 @@ def get_avatar():
     return subcat, item
 
 
-def set_avatar(subcat, item):
+def set_avatar(subcat, item, sync=False):
     profile = load_profile()
     profile['avatar'] = [subcat, item]
     save_profile(profile)
-    sync_profile()
+    if sync:
+        sync_profile()
 
 
 def get_environment():
@@ -90,14 +91,15 @@ def get_environment():
     return environment
 
 
-def set_environment(environment):
+def set_environment(environment, sync=False):
     profile = load_profile()
     profile['environment'] = environment
     save_profile(profile)
-    sync_profile()
+    if sync:
+        sync_profile()
 
 
 def sync_profile():
+    logger.info('sync_profile')
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)
-    logger.info('sync_profile')

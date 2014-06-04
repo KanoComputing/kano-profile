@@ -11,14 +11,13 @@ from gi.repository import Gtk
 
 from kano.logging import logger
 from kano.gtk3.heading import Heading
-from kano.gtk3.buttons import KanoButton
+from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.utils import run_bg
 from kano.gtk3 import kano_dialog
 from kano.profile.paths import bin_dir
 from kano.profile.profile import load_profile, save_profile_variable
 from kano.world.functions import login as login_, is_registered
 from kano_login import gender
-import kano.gtk3.cursor as cursor
 
 win = None
 box = None
@@ -59,10 +58,8 @@ def activate(_win, _box):
     login.set_padding(10, 0, 0, 0)
 
     if not force_login:
-        not_registered = Gtk.Button("Not registered?")
-        not_registered.get_style_context().add_class("orange_button")
+        not_registered = OrangeButton("Not registered?")
         not_registered.connect("clicked", register)
-        cursor.attach_cursor_events(not_registered)
 
     container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     if force_login:

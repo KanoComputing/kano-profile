@@ -13,7 +13,7 @@
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
     "targets": [["make-snake", "apples_eaten", 100]],
-    "title": "Appletizer"
+    "title": "Appetite for Apples"
   },
   "block_builder": {
     "bg_color": "928f7e",

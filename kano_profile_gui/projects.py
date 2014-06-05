@@ -10,10 +10,11 @@ import os
 import json
 from gi.repository import Gtk
 from kano.profile.apps import get_app_list, get_app_data_dir
-from kano.utils import run_print_output_error
+from kano.utils import run_print_output_error, get_home
 from kano.profile.paths import rules_dir
 from kano.logging import logger
 import kano_profile_gui.components.cursor as cursor
+from .paths import image_dir
 
 app_profiles = None
 
@@ -40,9 +41,9 @@ class ProjectList():
                     if app_profiles[app]['dir'] == 'kanoprofile':
                         data_dir = get_app_data_dir(app)
                     else:
-                        data_dir = os.path.expanduser(app_profiles[app]['dir'])
+                        data_dir = os.path.join(get_home(), app_profiles[app]['dir'])
 
-                    icon_path = app_profiles[app]['icon']
+                    icon_path = os.path.join(image_dir, 'icons', app_profiles[app]['icon'])
 
                     if not os.path.exists(data_dir):
                         continue

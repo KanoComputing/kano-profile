@@ -40,6 +40,8 @@ class MainWindow(Gtk.Window):
         self.state = 0
         self.new_items = new_items
         self.category = None
+        # Make sure this window is always above
+        self.set_keep_above(True)
 
         minecraft_running = os.system("pidof minecraft-pi")
         if minecraft_running == 0:

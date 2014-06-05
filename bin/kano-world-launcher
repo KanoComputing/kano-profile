@@ -11,8 +11,10 @@
 import os
 import sys
 from urlparse import urlparse
+from kano.utils import run_cmd
 from kano.webapp import WebApp
 from kano.network import is_internet
+from kano.profile.apps import launch_project
 from kano.world.functions import is_registered, get_token
 from kano.world.share import get_share_by_id, download_share
 from kano.logging import logger
@@ -66,10 +68,14 @@ class Launcher(WebApp):
             # TODO kano-dialog
             return
 
-        (title, attachment_path) = data
+        (title, attachment_path, app, attachment_name, folder) = data
         msg = 'Downloaded share: {}'.format(title)
         logger.info(msg)
-        # TODO kano-dialog
+
+        cmd = 'kano-dialog title="Download completed successfully" buttons=Launch:green:1,Return:grey:2'
+        _, _, rc = run_cmd(cmd)
+        if rc == 1:
+            launch_project(app, attachment_name, folder)
 
 
 # Check internet status

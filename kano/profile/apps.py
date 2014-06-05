@@ -6,9 +6,9 @@
 
 import os
 
-from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, run_bg
+from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, run_bg, run_print_output_error
 from kano.logging import logger
-from .paths import apps_dir, xp_file, kanoprofile_dir
+from .paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
 from .profile import is_unlocked
 
 
@@ -110,3 +110,13 @@ def get_gamestate_variables(app_name):
     for group, rules in groups.iteritems():
         if group == 'multipliers':
             return [str(key) for key in rules.keys()]
+
+
+def launch_project(app, filename, data_dir):
+    logger.info('launch_project: {} {} {}'.format(app, filename, data_dir))
+
+    app_profiles = read_json(app_profiles_file)
+
+    fullpath = os.path.join(data_dir, filename)
+    cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
+    run_print_output_error(cmd)

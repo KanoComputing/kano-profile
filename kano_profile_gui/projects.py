@@ -7,33 +7,26 @@
 #
 
 import os
-import json
 from gi.repository import Gtk
-from kano.profile.apps import get_app_list, get_app_data_dir
-from kano.utils import run_print_output_error, get_home
-from kano.profile.paths import rules_dir
+from kano.utils import get_home, read_json
+from kano.profile.apps import get_app_list, get_app_data_dir, launch_project
+from kano.profile.paths import app_profiles_file
 from kano.logging import logger
 import kano_profile_gui.components.cursor as cursor
 from .paths import image_dir
 
-app_profiles = None
+app_profiles = read_json(app_profiles_file)
 
 
 # The list of the displayed items
 class ProjectList():
     def __init__(self):
-        global app_profiles
-
         self.width = 646
         self.height = 88
 
         apps = get_app_list()
 
         self.projects_list = []
-        app_profiles = {}
-
-        with open(rules_dir + "/app_profiles.json") as json_file:
-            app_profiles = json.load(json_file)
 
         for app in apps:
             if app in app_profiles:
@@ -117,10 +110,7 @@ class ProjectItem():
         self.background.add(self.container)
 
     def load(self, _button, app, filename, data_dir):
-        logger.info('load: {} {} {}'.format(app, filename, data_dir))
-        fullpath = os.path.join(data_dir, filename)
-        cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
-        run_print_output_error(cmd)
+        launch_project(app, filename, data_dir)
 
     def share(self, _button, app, filename):
         logger.info('share: {} {}'.format(app, filename))

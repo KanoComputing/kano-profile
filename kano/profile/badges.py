@@ -9,7 +9,7 @@ from __future__ import division
 import os
 
 from kano.logging import logger
-from kano.utils import read_json, is_gui, run_bg, run_cmd
+from kano.utils import read_json, is_gui, run_bg, run_cmd, is_running
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked
@@ -248,10 +248,7 @@ def save_app_state_with_dialog(app_name, data):
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
 
-        kdesk_running = os.system("kdesk -q") == 0
-        minecraft_running = os.system("pidof minecraft-pi") == 0
-
-        if kdesk_running and not minecraft_running:
+        if is_running('kdesk') and not is_running('minecraft'):
             kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
             run_cmd(kdesk_cmd)
         else:

@@ -21,6 +21,7 @@ from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
 from kano.paths import common_css_dir
 from kano.logging import logger
+from kano.utils import is_running
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
@@ -43,8 +44,7 @@ class MainWindow(Gtk.Window):
         # Make sure this window is always above
         self.set_keep_above(True)
 
-        minecraft_running = os.system("pidof minecraft-pi")
-        if minecraft_running == 0:
+        if is_running('minecraft'):
             # lxde-rc.xml changes positioning of window on the basis of the class name
             self.set_wmclass('kano-levelup-minecraft', 'Kano-levelup-minecraft')
 

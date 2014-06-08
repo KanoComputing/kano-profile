@@ -1,7 +1,7 @@
 bin/* /usr/bin
 
-kano/profile /usr/lib/python2.7/dist-packages/kano
-kano/world /usr/lib/python2.7/dist-packages/kano
+kano_profile /usr/lib/python2.7/dist-packages
+kano_world /usr/lib/python2.7/dist-packages
 kano_login /usr/lib/python2.7/dist-packages
 kano_profile_gui /usr/lib/python2.7/dist-packages
 

@@ -9,10 +9,10 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-# from kano.profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
+# from kano_profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
 from kano.utils import run_cmd
-from kano.world.functions import login_using_token
-from kano.world.share import upload_share
+from kano_world.functions import login_using_token
+from kano_world.share import upload_share
 
 success, value = login_using_token()
 if not success:

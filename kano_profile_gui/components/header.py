@@ -9,7 +9,7 @@
 
 from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
-from kano.profile.badges import count_badges
+from kano_profile.badges import count_badges
 import kano_profile_gui.components.cursor as cursor
 
 

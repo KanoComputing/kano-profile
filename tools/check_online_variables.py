@@ -12,7 +12,7 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.profile.badges import load_badge_rules
+from kano_profile.badges import load_badge_rules
 
 all_rules = load_badge_rules()
 

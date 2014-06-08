@@ -14,7 +14,7 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.profile.badges import load_badge_rules
+from kano_profile.badges import load_badge_rules
 from kano.gtk3.buttons import KanoButton
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image

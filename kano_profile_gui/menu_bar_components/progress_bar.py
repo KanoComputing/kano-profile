@@ -8,7 +8,7 @@
 # This displays orange progress bar along top of each screen
 
 from gi.repository import Gtk
-from kano.profile.badges import calculate_min_current_max_xp
+from kano_profile.badges import calculate_min_current_max_xp
 
 
 class ProgressBar():

@@ -8,10 +8,10 @@
 # This controls the button styling in the default introduction screen which shows all the settings
 
 from gi.repository import Gtk, Gdk
-from kano.world.functions import get_mixed_username
-from kano.profile.badges import calculate_kano_level
+from kano_world.functions import get_mixed_username
+from kano_profile.badges import calculate_kano_level
 from kano_profile_gui.images import get_image
-from kano.profile.profile import get_avatar
+from kano_profile.profile import get_avatar
 
 
 class HomeButton():

@@ -8,7 +8,7 @@
 # Display stats to user on home screen
 
 from gi.repository import Gtk
-from kano.profile.badges import count_completed_challenges, count_number_of_blocks, count_number_of_shares
+from kano_profile.badges import count_completed_challenges, count_number_of_blocks, count_number_of_shares
 
 
 class HomeStats():

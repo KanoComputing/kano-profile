@@ -9,8 +9,8 @@
 import os
 from gi.repository import Gtk
 from kano.utils import get_home, read_json
-from kano.profile.apps import get_app_list, get_app_data_dir, launch_project
-from kano.profile.paths import app_profiles_file
+from kano_profile.apps import get_app_list, get_app_data_dir, launch_project
+from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 import kano_profile_gui.components.cursor as cursor
 from .paths import image_dir

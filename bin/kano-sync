@@ -14,10 +14,10 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world.functions import sync, login_using_token, backup_content, restore_content
+from kano_world.functions import sync, login_using_token, backup_content, restore_content
 from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, \
     is_installed, is_gui
-from kano.profile.paths import app_profiles_file
+from kano_profile.paths import app_profiles_file
 from kano.gtk3.kano_dialog import KanoDialog
 from kano.logging import logger
 

@@ -8,7 +8,7 @@ import os
 from slugify import slugify
 
 from kano.utils import get_home, download_url, ensure_dir, read_json, write_json
-from kano.profile.paths import app_profiles_file
+from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 from .connection import request_wrapper, content_type_json
 from .functions import get_glob_session

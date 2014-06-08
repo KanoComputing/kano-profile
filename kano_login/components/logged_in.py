@@ -5,7 +5,7 @@
 #
 # UI for login screen
 
-from kano.world.functions import remove_token
+from kano_world.functions import remove_token
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from gi.repository import Gtk

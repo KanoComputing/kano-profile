@@ -10,7 +10,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 
-from kano.world.connection import api_url
+from kano_world.connection import api_url
 
 
 if len(sys.argv) != 2:

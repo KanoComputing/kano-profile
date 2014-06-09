@@ -13,7 +13,7 @@ linux_user = get_user_unsudoed()
 home_directory = get_home_by_username(linux_user)
 
 # setting up directories
-dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # rules path
 rules_local = os.path.join(dir_path, 'rules')

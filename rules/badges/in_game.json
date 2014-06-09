@@ -4,7 +4,7 @@
     "desc_locked": "Beat Make Minecraft challenges to unlock this badge...",
     "desc_unlocked": "You built a tower, a volcano, a magic floor, and teleported yourself like a wizard – all in Minecraft, all in code. You're an Amazing Architect.",
     "operation": "each_greater",
-    "targets": [["make-minecraft", "level", 10]],
+    "targets": [["make-minecraft", "level", 9]],
     "title": "Amazing Architect"
   },
   "appetite_for_apples": {
@@ -20,7 +20,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["make-minecraft", "level", 6]],
+    "targets": [["make-minecraft", "level", 5]],
     "title": "Block Builder"
   },
   "end_everything": {
@@ -36,7 +36,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["make-pong", "level", 6]],
+    "targets": [["make-pong", "level", 5]],
     "title": "Pong Painter"
   },
   "rule_breaker": {
@@ -44,7 +44,7 @@
     "desc_locked": "desc_locked",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
-    "targets": [["make-pong", "level", 9]],
+    "targets": [["make-pong", "level", 8]],
     "title": "Rule Breaker"
   }
 }

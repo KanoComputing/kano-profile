@@ -6,7 +6,7 @@
     "dir": "Minecraft-content",
     "ext": "xml",
     "cmd": "/usr/bin/kano-launcher \"/usr/bin/make-minecraft {fullpath}\"",
-    "max_level": 14,
+    "max_level": 13,
     "icon": "minecraft.png"
   },
   "make-music": {
@@ -17,7 +17,7 @@
     "dir": "Pong-content",
     "ext": "xml",
     "cmd": "/usr/bin/kano-launcher \"/usr/bin/make-pong {fullpath}\"",
-    "max_level": 16,
+    "max_level": 15,
     "icon": "pong.png"
   },
   "make-snake": {

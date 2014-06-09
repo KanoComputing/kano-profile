@@ -177,11 +177,7 @@ def calculate_badges(DEBUG_MODE=False):
     for app in app_list:
         app_state[app] = load_app_state(app)
 
-    # special app: kanoprofile
-    computed = {
-        'kano_level': calculate_kano_level()[0]
-    }
-    app_state['computed'] = computed
+    app_state.setdefault('computed', dict())['kano_level'] = calculate_kano_level()[0]
 
     all_rules = load_badge_rules()
     calculated_badges = dict()

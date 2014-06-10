@@ -211,7 +211,6 @@ def parse_items(args):
 
 
 def main():
-    # os.system("/usr/bin/kdesk -b")
 
     new_level, new_items = parse_items(sys.argv[1:])
 
@@ -240,7 +239,7 @@ def main():
 
 
 def close_window(widget=None, event=None):
-    # os.system("/usr/bin/kdesk -b")
+
     Gtk.main_quit()
 
 

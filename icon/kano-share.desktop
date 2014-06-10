@@ -8,3 +8,4 @@ Exec=/usr/bin/kano-share
 Comment[en_GB]=Share your creations with your friends
 Categories=Extras;
 StartupNotify=true
+Help=Check out the amazing projects people from around the world have been making and try them yourself! You can even mod them and make them your own!

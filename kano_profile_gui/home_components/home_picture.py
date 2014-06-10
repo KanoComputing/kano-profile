@@ -13,7 +13,7 @@
 
 from gi.repository import Gtk
 from kano_profile_gui.images import get_image
-from kano.profile.profile import get_avatar, get_environment
+from kano_profile.profile import get_avatar, get_environment
 
 
 class HomePicture():

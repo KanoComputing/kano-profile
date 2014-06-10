@@ -18,7 +18,7 @@ from kano_profile_gui.paths import css_dir
 from kano.paths import common_css_dir
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
 from kano_login.components import logged_in
-from kano.world.functions import login_using_token
+from kano_world.functions import login_using_token
 from kano.gtk3.top_bar import TopBar
 
 

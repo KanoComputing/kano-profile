@@ -11,7 +11,7 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.table_ui as tab
 import kano_profile_gui.selection_table_components.info_screen_ui as info_screen
 import kano_profile_gui.components.header as header
-from kano.profile.profile import get_avatar, get_environment, set_avatar, set_environment
+from kano_profile.profile import get_avatar, get_environment, set_avatar, set_environment
 
 
 # headers: category names, e.g. ["badges"] or ["environments"]

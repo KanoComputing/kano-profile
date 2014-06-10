@@ -12,9 +12,9 @@ from gi.repository import Gtk
 from kano.gtk3.heading import Heading
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.utils import run_bg
-from kano.profile.paths import bin_dir, legal_dir
-from kano.profile.profile import save_profile_variable
-from kano.world.functions import register as register_
+from kano_profile.paths import bin_dir, legal_dir
+from kano_profile.profile import save_profile_variable
+from kano_world.functions import register as register_
 from kano.gtk3 import kano_dialog
 from kano.gtk3.scrolled_window import ScrolledWindow
 from kano_login import account_confirm

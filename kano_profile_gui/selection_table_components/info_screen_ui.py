@@ -20,7 +20,7 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.info_text_ui as info_text
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.cursor as cursor
-from kano.profile.profile import set_avatar, set_environment
+from kano_profile.profile import set_avatar, set_environment
 
 
 class InfoScreenUi():

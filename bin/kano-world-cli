@@ -13,9 +13,9 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.world.functions import login_using_token, login, register, remove_registration
-from kano.world.share import list_shares, delete_share
-from kano.profile.profile import load_profile
+from kano_world.functions import login_using_token, login, register, remove_registration
+from kano_world.share import list_shares, delete_share
+from kano_profile.profile import load_profile
 
 
 def list_all_shares():

@@ -10,10 +10,10 @@ import os
 
 from kano.logging import logger
 from kano.utils import download_url, read_json, write_json
-from kano.profile.profile import load_profile, set_avatar, set_environment
-from kano.profile.badges import calculate_xp
-from kano.profile.apps import get_app_list, load_app_state, save_app_state
-from kano.profile.paths import app_profiles_file
+from kano_profile.profile import load_profile, set_avatar, set_environment
+from kano_profile.badges import calculate_xp
+from kano_profile.apps import get_app_list, load_app_state, save_app_state
+from kano_profile.paths import app_profiles_file
 
 from .connection import request_wrapper, content_type_json
 
@@ -45,9 +45,7 @@ class KanoWorldSession(object):
         data = dict()
 
         # xp
-        xp = calculate_xp()
-        if xp > 1:
-            data['xp'] = xp
+        data['xp'] = calculate_xp()
 
         # age
         try:

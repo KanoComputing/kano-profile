@@ -6,7 +6,7 @@
 
 import json
 
-from kano.profile.profile import load_profile, save_profile
+from kano_profile.profile import load_profile, save_profile
 from kano.utils import get_user_unsudoed
 
 from .connection import request_wrapper, content_type_json

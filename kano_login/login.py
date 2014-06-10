@@ -12,11 +12,11 @@ from gi.repository import Gtk
 from kano.logging import logger
 from kano.gtk3.heading import Heading
 from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano.utils import run_bg
+from kano.utils import run_cmd, run_bg
 from kano.gtk3 import kano_dialog
-from kano.profile.paths import bin_dir
-from kano.profile.profile import load_profile, save_profile_variable
-from kano.world.functions import login as login_, is_registered
+from kano_profile.paths import bin_dir
+from kano_profile.profile import load_profile, save_profile_variable
+from kano_world.functions import login as login_, is_registered
 from kano_login import gender
 
 win = None
@@ -122,13 +122,16 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
 
         if not first_run_done:
             logger.info('doing first time restore')
+
+            # doing first sync and restore
             cmd = '{bin_dir}/kano-sync --sync --restore -s'.format(bin_dir=bin_dir)
-            run_bg(cmd)
+            run_cmd(cmd)
+
             save_profile_variable('first_run_done', True)
-        else:
-            # sync on each successfule login/restore
-            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-            run_bg(cmd)
+
+        # sync on each successfule login/restore
+        cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+        run_bg(cmd)
 
         kdialog = kano_dialog.KanoDialog("Success!", "You're in - online features now enabled")
         response = kdialog.run()

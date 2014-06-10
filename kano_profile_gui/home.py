@@ -7,11 +7,11 @@
 #
 
 from gi.repository import Gtk
-#from kano.profile.badges import calculate_xp, calculate_kano_level
+#from kano_profile.badges import calculate_xp, calculate_kano_level
 
 import kano_profile_gui.home_components.home_stats as home_stats
 import kano_profile_gui.home_components.home_picture as home_pic
-#from kano.world.functions import get_mixed_username
+#from kano_world.functions import get_mixed_username
 
 
 def activate(_win, _box):

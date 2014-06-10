@@ -101,6 +101,7 @@ def log_user_in_key(button, event, username_email_entry, password_entry, usernam
 
 
 def log_user_in(button, event, username_email_entry, password_entry, username_email, win):
+    button.set_sensitive(False)
     if username_email_entry:
         username_email = username_email_entry.get_text()
     password_text = password_entry.get_text()
@@ -134,3 +135,5 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
         # Default response
         if response == 0:
             close_window()
+
+    button.set_sensitive(True)

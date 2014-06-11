@@ -1,24 +1,24 @@
 {
   "community_champion": {
     "bg_color": "ffea8c",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Share five challenges to unlock this badge!",
+    "desc_unlocked": "You clicked that big blue button, and shared your creations five times with a world of thousands. You're gaining a following! Connect with other Community Champions on Kano World.",
     "operation": "each_greater",
     "targets": [["computed", "online_shares", 5]],
     "title": "Community Champion"
   },
   "staff_pick": {
     "bg_color": "ffe591",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Share challenges in Pong, Minecraft, and Music to unlock this badge. We'll feature your creation on Kano World for thousands to see!",
+    "desc_unlocked": "Booyah! You created a truly wow-worthy project with Kano, and got Staff Picked! We'll feature your creation on Kano World.",
     "operation": "each_greater",
     "targets": [["computed", "online_staff_picks", 1]],
     "title": "Staff Pick"
   },
   "talent_tracker": {
     "bg_color": "bde1a8",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Follow 10 people on Kano World to unlock this badge.",
+    "desc_unlocked": "Computers are about dreaming, doing, and making together. By following some friends in Kano World, you can help bring cool ideas to life faster -- and give people some love. You're a Talent Tracker.",
     "operation": "each_greater",
     "targets": [["computed", "online_you_follow", 10]],
     "title": "Talent Tracker"

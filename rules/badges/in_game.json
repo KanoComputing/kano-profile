@@ -10,39 +10,39 @@
   "appetite_for_apples": {
     "bg_color": "ff9c9d",
     "desc_locked": "Play Snake to unlock this badge",
-    "desc_unlocked": "desc_unlocked",
+    "desc_unlocked": "Nice! By guzzling apples in Snake you unlocked this badge.",
     "operation": "each_greater",
     "targets": [["make-snake", "apples_eaten", 100]],
     "title": "Appetite for Apples"
   },
   "block_builder": {
     "bg_color": "928f7e",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete the biggest block challenge in Minecraft to unlock this badge.",
+    "desc_unlocked": "Wow – you made a massive block, all with simple code. You are a serious Block Builder.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", 5]],
     "title": "Block Builder"
   },
   "end_everything": {
     "bg_color": "f38484",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Find the End Everything block in Minecraft to unlock this badge.",
+    "desc_unlocked": "You have become death, destroyer of Minecraft Worlds. By bringing on the apocalypse, you managed to End Everything.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", 999]],
     "title": "End Everything"
   },
   "pong_painter": {
     "bg_color": "afe5fa",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete the Paint the Board challenge in Pong to unlock this badge.",
+    "desc_unlocked": "Beautiful! You added your own colors to the world of Pong and made the world’s oldest videogame seem fresh and sexy. You’re a true Pong Painter.",
     "operation": "each_greater",
     "targets": [["make-pong", "level", 5]],
     "title": "Pong Painter"
   },
   "rule_breaker": {
     "bg_color": "d9c2df",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete the Zippy Balls challenge in Pong to unlock this badge.",
+    "desc_unlocked": "Whoa! Did you know that the dude who invented Pong, Al Alcorn at Atari, also gave Steve Jobs his first job? Like those two guys, you're a Rule Breaker.",
     "operation": "each_greater",
     "targets": [["make-pong", "level", 8]],
     "title": "Rule Breaker"

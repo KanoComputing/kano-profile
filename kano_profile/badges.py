@@ -245,7 +245,7 @@ def save_app_state_with_dialog(app_name, data):
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
 
         if is_running('kdesk') and not is_running('minecraft'):
-            kdesk_cmd = '/usr/bin/kdesk -b "{}"'.format(cmd)
+            kdesk_cmd = '/usr/bin/kdesk-blur "{}"'.format(cmd)
             run_cmd(kdesk_cmd)
         else:
             run_cmd(cmd)

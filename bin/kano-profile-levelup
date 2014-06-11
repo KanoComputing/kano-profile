@@ -5,7 +5,7 @@
 #
 
 ## TEST COMMAND
-# ./kano-profile-levelup level:5 badges:application:bug_buster environments:all:minecraft avatars:judoka:judoka_1 avatars:judoka:judoka_2
+# ./kano-profile-levelup level:5 badges:application:bug_buster badges:application:feedbacker environments:all:minecraft environments:all:video_set avatars:judoka:judoka_1 avatars:judoka:judoka_2 avatars:gumps:gumps_1 avatars:gumps:gumps_2
 
 import os
 import sys
@@ -61,7 +61,10 @@ class MainWindow(Gtk.Window):
 
         self.button = KanoButton("GOT IT")
         self.button.connect("clicked", self.go_to_next)
-        self.button.pack_and_align()
+        self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.button_box.pack_start(self.button, False, False, 0)
+        self.button_alignment = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
+        self.button_alignment.add(self.button_box)
 
         self.image = Gtk.Image()
 
@@ -72,7 +75,7 @@ class MainWindow(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.background, False, False, 0)
         self.box.pack_start(self.label_container, False, False, 20)
-        self.box.pack_start(self.button.align, False, False, 0)
+        self.box.pack_start(self.button_alignment, False, False, 0)
 
         self.add(self.box)
 
@@ -117,7 +120,6 @@ class MainWindow(Gtk.Window):
                         filename = get_image(self.category, subcat, item + "_levelup", size_folder)
 
         else:
-            self.go_to_next_category()
             self.go_to_next()
             return
 
@@ -136,6 +138,20 @@ class MainWindow(Gtk.Window):
             del items[item]
             if self.new_items[self.category][subcat] == {}:
                 del self.new_items[self.category][subcat]
+
+        if self.last_level():
+            # Add new button
+            # Name them FINISH, LAUNCH PROFILE
+            profile = KanoButton("LAUNCH PROFILE")
+            profile.connect("button-press-event", self.launch_profile)
+            self.button_box.pack_start(profile, False, False, 0)
+            self.button.set_label("FINISH")
+            self.show_all()
+
+    def launch_profile(self, widget, event):
+        # TODO check this is right
+        os.system("kano-launcher kano-profile-gui")
+        sys.exit(0)
 
     def set_description(self, category, text):
         # New level
@@ -191,6 +207,14 @@ class MainWindow(Gtk.Window):
                 self.next_category()
                 return
 
+    # Return True if the level is the last level,
+    # or if self.new items = {avatars: {}, environment:{}, badges:{}}
+    def last_level(self):
+        for category in categories:
+            if self.new_items[category] != {}:
+                return False
+        return True
+
 
 def parse_items(args):
     new_level = None
@@ -224,7 +248,7 @@ def main():
     colours_css = Gtk.CssProvider()
     colours_file = os.path.join(common_css_dir, 'colours.css')
     if not os.path.exists(colours_file):
-        sys.exit('CSS file missing!')
+        sys.exit('colour CSS file missing!')
     colours_css.load_from_path(colours_file)
 
     screen = Gdk.Screen.get_default()

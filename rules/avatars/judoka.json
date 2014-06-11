@@ -1,23 +1,23 @@
 {
   "judoka_1": {
     "bg_color": "ffd273",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Judoka",
+    "desc_unlocked": "The Judoka has the power to control computers with the mind, and guides new wizards through the worlds of Kano.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 1]],
     "title": "Judoka 1"
   },
   "judoka_2": {
     "bg_color": "f2c25c",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Judoka",
+    "desc_unlocked": "Judoka can travel around the world through the Internet, and loves sea-urchin sushi and throwing code blocks at bad guys – the evil Robotniks, who eat up beautiful computers and turn them into boring grey boxes.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 1]],
     "title": "Judoka 2"
   },
   "judoka_3": {
     "bg_color": "ffc852",
-    "desc_locked": "desc_locked",
+    "desc_locked": "Judoka",
     "desc_unlocked": "desc_unlocked",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 1]],

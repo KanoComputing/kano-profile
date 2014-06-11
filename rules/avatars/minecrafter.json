@@ -1,16 +1,16 @@
 {
   "minecrafter_1": {
     "bg_color": "c7f4b5",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Unlock Natch by reaching level 5",
+    "desc_unlocked": "Natch turns simple things into super structures. He’s an expert builder, and an even better miner. A lifelong inventor who has seven university degrees, he built the Judoka’s dojo on a Saturday afternoon.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 5]],
     "title": "Minecrafter 1"
   },
   "minecrafter_2": {
     "bg_color": "addd99",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Unlock Natch by reaching level 5",
+    "desc_unlocked": "He has such a powerful brain that it sometimes makes him a bit too confident – he walks around multiplying 7-digit numbers just to show off!",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 5]],
     "title": "Minecrafter 2"

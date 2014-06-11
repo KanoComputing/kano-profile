@@ -1,8 +1,8 @@
 {
   "1000_blocks": {
     "bg_color": "928c83",
-    "desc_locked": "Wow - you've mastered the fine art of code execution. 1000 blocks of code have been turned into something beautiful.",
-    "desc_unlocked": "How to unlock: Turn 1000 blocks into codev",
+    "desc_locked": "How to unlock: Turn 1000 blocks into codev",
+    "desc_unlocked": "Wow - you've mastered the fine art of code execution. 1000 blocks of code have been turned into something beautiful.",
     "operation": "sum_greater",
     "targets": [
       [
@@ -19,8 +19,8 @@
   },
   "100_blocks": {
     "bg_color": "b9b3aa",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Use 100 Kano Blocks in Pong and Minecraft to unlock this challenge.",
+    "desc_unlocked": "100 code blocks made -- you're well on your way to becoming a code creator. Did you know that your blocks get translated into Python language?",
     "operation": "sum_greater",
     "targets": [
       [
@@ -37,8 +37,8 @@
   },
   "first_challenge": {
     "bg_color": "f3c797",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Start a Kano Level to unlock this badge.",
+    "desc_unlocked": "All great journeys begin with a single step – congrats on your First Challenge.",
     "operation": "sum_greater",
     "targets": [
       [
@@ -63,8 +63,8 @@
   },
   "5_challenges": {
     "bg_color": "ffe984",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete 5 challenges to unlock this badge.",
+    "desc_unlocked": "You beat 5 challenges!!!",
     "operation": "sum_greater",
     "targets": [
       [
@@ -89,8 +89,8 @@
   },
   "10_challenges": {
     "bg_color": "eee7e7",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete 10 challenges to unlock this badge.",
+    "desc_unlocked": "You beat 10 challenges!!!",
     "operation": "sum_greater",
     "targets": [
       [
@@ -115,8 +115,8 @@
   },
   "25_challenges": {
     "bg_color": "eee7e7",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete 25 challenges to unlock this badge.",
+    "desc_unlocked": "You beat 25 challenges!!!",
     "operation": "sum_greater",
     "targets": [
       [
@@ -141,8 +141,8 @@
   },
   "50_challenges": {
     "bg_color": "eee7e7",
-    "desc_locked": "desc_locked",
-    "desc_unlocked": "desc_unlocked",
+    "desc_locked": "Complete 50 challenges to unlock this badge.",
+    "desc_unlocked": "You beat 50 challenges!!!",
     "operation": "sum_greater",
     "targets": [
       [

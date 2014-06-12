@@ -47,13 +47,18 @@ def display_msg(msg, level):
 
 
 def do_login():
+    logger.debug('do_login')
+
     # login first with token, if not working then try with dialog
     # do not show dialog if in silent mode
     login_success, value = login_using_token()
     if not login_success:
+        logger.debug('token login not successful')
         if args.silent:
+            logger.debug('exiting because of --silent')
             sys.exit()
         else:
+            logger.debug('trying to log in with kano-login')
             run_cmd(dir_path + '/bin/kano-login')
             login_success, value = login_using_token()
             if not login_success:
@@ -62,6 +67,8 @@ def do_login():
 
 
 def do_sync():
+    logger.debug('do_sync')
+
     success, value = sync()
     if not success:
         display_msg('Sync not possible, error: {}'.format(value), 'error')
@@ -73,6 +80,8 @@ def do_sync():
 
 
 def do_backup():
+    logger.debug('do_backup')
+
     os.chdir(home_dir)
 
     folders = []
@@ -93,7 +102,6 @@ def do_backup():
     tar_cmd = 'tar -czf {tmp_file} {folders} --exclude=webload'.format(tmp_file=tmp_file, folders=' '.join(folders))
     if _platform == 'darwin':
         tar_cmd = 'g' + tar_cmd
-
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with compressing backup data: {}'.format(e)
@@ -111,6 +119,8 @@ def do_backup():
 
 
 def do_restore():
+    logger.debug('do_restore')
+
     os.chdir(home_dir)
 
     tmp_dir = '/tmp/kanoprofile'
@@ -145,6 +155,7 @@ def do_restore():
 
 
 def refresh_kdesk():
+    logger.debug('refresh_kdesk')
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
 

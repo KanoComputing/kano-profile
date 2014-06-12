@@ -12,7 +12,7 @@ from gi.repository import Gtk
 from kano.logging import logger
 from kano.gtk3.heading import Heading
 from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano.utils import run_cmd, run_bg
+from kano.utils import run_bg
 from kano.gtk3 import kano_dialog
 from kano_profile.paths import bin_dir
 from kano_profile.profile import load_profile, save_profile_variable
@@ -114,24 +114,30 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
 
     else:
         # restore on first successful login/restore
-        first_run_done = False
+        first_sync_done = False
         try:
-            first_run_done = profile['first_run_done']
+            first_sync_done = profile['first_sync_done']
         except Exception:
             pass
 
-        if not first_run_done:
-            logger.info('doing first time restore')
+        if not first_sync_done:
+            logger.info('doing first time sync and restore')
 
             # doing first sync and restore
-            cmd = '{bin_dir}/kano-sync --sync --restore -s'.format(bin_dir=bin_dir)
-            run_cmd(cmd)
+            cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
+            cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
+            run_bg(cmd)
 
-            save_profile_variable('first_run_done', True)
+            save_profile_variable('first_sync_done', True)
 
-        # sync on each successfule login/restore
-        cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-        run_bg(cmd)
+        else:
+            logger.info('doing sync on non-first login')
+
+            # sync on each successfule login
+            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            run_bg(cmd)
 
         kdialog = kano_dialog.KanoDialog("Success!", "You're in - online features now enabled")
         response = kdialog.run()

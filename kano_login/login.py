@@ -109,10 +109,13 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
     success, text = login_(username_email, password_text)
 
     if not success:
+        logger.info('problem with login: {}'.format(text))
         kdialog = kano_dialog.KanoDialog("Houston, we have a problem", text)
         kdialog.run()
 
     else:
+        logger.info('login successful')
+
         # restore on first successful login/restore
         first_sync_done = False
         try:
@@ -121,7 +124,7 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             pass
 
         if not first_sync_done:
-            logger.info('doing first time sync and restore')
+            logger.info('running kano-sync --sync && --sync && --restore after first time login')
 
             # doing first sync and restore
             cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
@@ -133,9 +136,9 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             save_profile_variable('first_sync_done', True)
 
         else:
-            logger.info('doing sync on non-first login')
+            logger.info('running kano-sync --sync after non-first login')
 
-            # sync on each successfule login
+            # sync on each successful login
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 

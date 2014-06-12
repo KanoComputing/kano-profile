@@ -8,7 +8,6 @@
 # Launcher app for kano world
 #
 
-import os
 import sys
 from urlparse import urlparse
 from kano.utils import run_cmd
@@ -80,8 +79,15 @@ class Launcher(WebApp):
 
 # Check internet status
 if not is_internet():
-    os.system('sudo /usr/bin/kano-settings 4')
-    sys.exit()
+    run_cmd('sudo /usr/bin/kano-settings 4')
+    if not is_internet():
+        sys.exit(1)
+
+# Check if user is registered
+if not is_registered():
+    run_cmd('/usr/bin/kano-login')
+    if not is_registered():
+        sys.exit(2)
 
 launcher = Launcher()
 launcher.run()

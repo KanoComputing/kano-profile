@@ -133,7 +133,9 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             save_profile_variable('first_sync_done', True)
 
         else:
-            # sync on each successfule login/restore
+            logger.info('doing sync on non-first login')
+
+            # sync on each successfule login
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 

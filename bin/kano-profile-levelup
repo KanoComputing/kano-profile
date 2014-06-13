@@ -144,7 +144,7 @@ class MainWindow(Gtk.Window):
         if self.last_level():
             self.button.set_label("FINISH")
 
-            if kdesk_running():
+            if is_running('kdesk'):
                 # Add new button
                 profile = KanoButton("LAUNCH PROFILE")
                 profile.connect("button-press-event", self.launch_profile)
@@ -217,10 +217,6 @@ class MainWindow(Gtk.Window):
             if self.new_items[category] != {}:
                 return False
         return True
-
-
-def kdesk_running():
-    return (os.system('kdesk -q') == 0)
 
 
 def parse_items(args):

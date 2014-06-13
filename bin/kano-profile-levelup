@@ -140,16 +140,17 @@ class MainWindow(Gtk.Window):
                 del self.new_items[self.category][subcat]
 
         if self.last_level():
-            # Add new button
-            # Name them FINISH, LAUNCH PROFILE
-            profile = KanoButton("LAUNCH PROFILE")
-            profile.connect("button-press-event", self.launch_profile)
-            self.button_box.pack_start(profile, False, False, 0)
             self.button.set_label("FINISH")
-            self.show_all()
+
+            if kdesk_running():
+                # Add new button
+                profile = KanoButton("LAUNCH PROFILE")
+                profile.connect("button-press-event", self.launch_profile)
+                self.button_box.pack_start(profile, False, False, 0)
+
+        self.show_all()
 
     def launch_profile(self, widget, event):
-        # TODO check this is right
         os.system("kano-launcher kano-profile-gui")
         sys.exit(0)
 
@@ -214,6 +215,10 @@ class MainWindow(Gtk.Window):
             if self.new_items[category] != {}:
                 return False
         return True
+
+
+def kdesk_running():
+    return (os.system('kdesk -q') == 0)
 
 
 def parse_items(args):

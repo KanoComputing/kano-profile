@@ -118,6 +118,7 @@ class MainWindow(Gtk.Window):
                         title = subcat.replace('_', ' ').title()
                         continue
                     else:
+                        self.go_to_next_category()
                         title = rules["title"]
                         filename = get_image(self.category, subcat, item + "_levelup", size_folder)
 
@@ -214,7 +215,7 @@ class MainWindow(Gtk.Window):
     # or if self.new items = {avatars: {}, environment:{}, badges:{}}
     def last_level(self):
         for category in categories:
-            if self.new_items[category] != {}:
+            if category in self.new_items and self.new_items[category] != {}:
                 return False
         return True
 

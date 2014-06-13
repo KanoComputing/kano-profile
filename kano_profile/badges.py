@@ -246,6 +246,8 @@ def save_app_state_with_dialog(app_name, data):
         cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
             .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
 
+        logger.debug('calling kano-profile-levelup with the following command:\n{}'.format(cmd))
+
         if is_running('kdesk') and not is_running('minecraft'):
             kdesk_cmd = '/usr/bin/kdesk-blur "{}"'.format(cmd)
             run_cmd(kdesk_cmd)

@@ -145,7 +145,7 @@ class MainWindow(Gtk.Window):
         if self.last_level():
             self.button.set_label("FINISH")
 
-            if kdesk_running():
+            if is_running('kdesk'):
                 # Add new button
                 profile = KanoButton("LAUNCH PROFILE")
                 profile.connect("button-press-event", self.launch_profile)
@@ -220,10 +220,6 @@ class MainWindow(Gtk.Window):
         return True
 
 
-def kdesk_running():
-    return (os.system('kdesk -q') == 0)
-
-
 def parse_items(args):
     new_level = None
     new_items = dict()
@@ -243,8 +239,10 @@ def parse_items(args):
 
 
 def main():
+    logger.info('args:{}'.format(sys.argv[1:]))
 
     new_level, new_items = parse_items(sys.argv[1:])
+    logger.info('new_level:{} new_items:{}'.format(new_level, new_items))
 
     # Create style sheet
     levelup_css = Gtk.CssProvider()

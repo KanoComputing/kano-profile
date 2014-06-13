@@ -12,7 +12,7 @@
     "desc_locked": "Play Snake to unlock this badge",
     "desc_unlocked": "Nice! By guzzling apples in Snake you unlocked this badge.",
     "operation": "each_greater",
-    "targets": [["make-snake", "apples_eaten", 100]],
+    "targets": [["make-snake", "total_number_of_apples", 100]],
     "title": "Appetite for Apples"
   },
   "block_builder": {

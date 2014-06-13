@@ -40,7 +40,7 @@ else:
 # legal path - containing terms and conditions of use
 legal_dir = ""
 legal_local = os.path.join(dir_path, 'legal/')
-legal_usr = '/usr/share/kano-profile/legal/'
+legal_usr = '/usr/share/kano-desktop/Legal/'
 if os.path.exists(legal_local):
     legal_dir = legal_local
 elif os.path.exists(legal_usr):

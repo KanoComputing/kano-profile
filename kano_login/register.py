@@ -9,6 +9,7 @@
 
 from gi.repository import Gtk
 
+from kano.logging import logger
 from kano.gtk3.heading import Heading
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.utils import run_bg
@@ -147,18 +148,23 @@ def register_user(button, event, username_entry, email_entry, password_entry):
         win.username = username_entry.get_text()
         win.password = password_entry.get_text()
 
+        logger.info('trying to register user')
         success, text = register_(win.email, win.username, win.password)
 
         if not success:
+            logger.info('problem with registration: {}'.format(text))
             kdialog = kano_dialog.KanoDialog("Houston, we have a problem", str(text))
             kdialog.run()
 
         # This needs to be adjusted depending on the age of the user
         else:
+            logger.info('registration successful')
+
             save_profile_variable('gender', win.gender)
             save_profile_variable('birthdate', win.date)
 
-            # sync on each successfule login/restore
+            # running kano-sync after registration
+            logger.info('running kano-sync after successful registration')
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 

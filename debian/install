@@ -7,7 +7,6 @@ kano_profile_gui /usr/lib/python2.7/dist-packages
 
 media /usr/share/kano-profile
 rules /usr/share/kano-profile
-legal /usr/share/kano-profile
 
 icon/kano-share.desktop /usr/share/kano-apps/extras
 icon/kano-share.png /usr/share/kano-apps/icons

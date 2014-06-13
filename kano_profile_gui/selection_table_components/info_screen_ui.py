@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 
-# info_screen2.py
-#
-# Copyright (C) 2014 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
-#
-# UI over item_group
-
-#!/usr/bin/env python
-
-# info_screen.py
+# info_screen_ui.py
 #
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2

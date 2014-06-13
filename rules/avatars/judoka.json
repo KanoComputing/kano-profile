@@ -18,7 +18,7 @@
   "judoka_3": {
     "bg_color": "ffc852",
     "desc_locked": "Judoka",
-    "desc_unlocked": "desc_unlocked",
+    "desc_unlocked": "Judoka has the power to go from real, to digital all the way to terminal based – in the blink of an eye! Sometimes the effect runs off over time, so 0's and 1's can hang around like a digital aura.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 1]],
     "title": "Judoka 3"

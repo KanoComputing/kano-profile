@@ -118,7 +118,6 @@ class MainWindow(Gtk.Window):
                         title = subcat.replace('_', ' ').title()
                         continue
                     else:
-                        self.go_to_next_category()
                         title = rules["title"]
                         filename = get_image(self.category, subcat, item + "_levelup", size_folder)
 

@@ -148,13 +148,15 @@ class MainWindow(Gtk.Window):
                 # Add new button
                 profile = KanoButton("LAUNCH PROFILE")
                 profile.connect("button-press-event", self.launch_profile)
+                profile.connect("key-press-event", self.launch_profile)
                 self.button_box.pack_start(profile, False, False, 0)
 
         self.show_all()
 
     def launch_profile(self, widget, event):
-        os.system("kano-launcher kano-profile-gui")
-        sys.exit(0)
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            os.system("kano-launcher kano-profile-gui")
+            sys.exit(0)
 
     def set_description(self, category, text):
         # New level

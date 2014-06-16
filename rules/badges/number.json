@@ -1,7 +1,7 @@
 {
   "1000_blocks": {
     "bg_color": "928c83",
-    "desc_locked": "How to unlock: Turn 1000 blocks into codev",
+    "desc_locked": "Turn 1000 blocks into code.",
     "desc_unlocked": "Wow - you've mastered the fine art of code execution. 1000 blocks of code have been turned into something beautiful.",
     "operation": "sum_greater",
     "targets": [

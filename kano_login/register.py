@@ -101,22 +101,13 @@ def activate(_win, _box):
 
 def show_terms_and_conditions(widget, event, checkbutton):
     checkbutton.set_active(True)
-    scrolledwindow = ScrolledWindow()
-    scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    scrolledwindow.set_size_request(400, 200)
-    lots_of_text = Gtk.TextView()
 
     legal_text = ''
     for file in os.listdir(legal_dir):
         with open(legal_dir + file, 'r') as f:
             legal_text = legal_text + f.read() + '\n\n\n'
 
-    lots_of_text.get_buffer().set_text(legal_text)
-
-    lots_of_text.set_wrap_mode(Gtk.WrapMode.WORD)
-    lots_of_text.set_editable(False)
-    scrolledwindow.add(lots_of_text)
-    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", None, widget=scrolledwindow)
+    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", None)
     kdialog.run()
 
 

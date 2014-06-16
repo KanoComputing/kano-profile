@@ -1,7 +1,7 @@
 {
   "bug_buster": {
     "bg_color": "f7e37a",
-    "desc_locked": "See something you want to change on Kano – a pesky bug? Let us know by using the Feedback app!",
+    "desc_locked": "See something you want to change on Kano – a pesky bug? Let us know by using the Help tool!",
     "desc_unlocked": "You're a hero! You told Team Kano about a bug – now we'll squash it. Thanks Bug Buster!",
     "operation": "each_greater",
     "targets": [["kano-feedback", "bugs_submitted", 1]],
@@ -9,7 +9,7 @@
   },
   "feedbacker": {
     "bg_color": "ff99a0",
-    "desc_locked": "We want to hear from you! So, open Feedback and send us your thoughts.",
+    "desc_locked": "We want to hear from you! So, open the Help tool and send us your thoughts.",
     "desc_unlocked": "You're a Kano creator, and a funky Feedbacker. You sent us your ideas, and that helps us make your computer even cooler.",
     "operation": "each_greater",
     "targets": [["kano-feedback", "starts", 1]],

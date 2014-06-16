@@ -17,7 +17,6 @@ from kano_profile.paths import bin_dir, legal_dir
 from kano_profile.profile import save_profile_variable
 from kano_world.functions import register as register_
 from kano.gtk3 import kano_dialog
-from kano.gtk3.scrolled_window import ScrolledWindow
 from kano_login import account_confirm
 import re
 import os
@@ -107,7 +106,7 @@ def show_terms_and_conditions(widget, event, checkbutton):
         with open(legal_dir + file, 'r') as f:
             legal_text = legal_text + f.read() + '\n\n\n'
 
-    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", None)
+    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", scrolled_text=legal_text)
     kdialog.run()
 
 

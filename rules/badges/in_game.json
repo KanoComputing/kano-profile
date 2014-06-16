@@ -1,8 +1,8 @@
 {
   "amazing_architect": {
     "bg_color": "f1db9f",
-    "desc_locked": "Beat Make Minecraft challenges to unlock this badge...",
-    "desc_unlocked": "You built a tower, a volcano, a magic floor, and teleported yourself like a wizard – all in Minecraft, all in code. You're an Amazing Architect.",
+    "desc_locked": "Complete the Build a Tower challenge to unlock this badge.",
+    "desc_unlocked": "You built a tower, a volcano, a lake, and teleported yourself like a wizard – all in Minecraft, all in code. You're an Amazing Architect.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", 9]],
     "title": "Amazing Architect"
@@ -17,7 +17,7 @@
   },
   "block_builder": {
     "bg_color": "928f7e",
-    "desc_locked": "Complete the biggest block challenge in Minecraft to unlock this badge.",
+    "desc_locked": "Complete the Biggest Block challenge in Minecraft to unlock this badge.",
     "desc_unlocked": "Wow – you made a massive block, all with simple code. You are a serious Block Builder.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", 5]],
@@ -36,15 +36,15 @@
     "desc_locked": "Complete the Paint the Board challenge in Pong to unlock this badge.",
     "desc_unlocked": "Beautiful! You added your own colors to the world of Pong and made the world’s oldest videogame seem fresh and sexy. You’re a true Pong Painter.",
     "operation": "each_greater",
-    "targets": [["make-pong", "level", 5]],
+    "targets": [["make-pong", "level", 2]],
     "title": "Pong Painter"
   },
   "rule_breaker": {
     "bg_color": "d9c2df",
-    "desc_locked": "Complete the Zippy Balls challenge in Pong to unlock this badge.",
+    "desc_locked": "Complete the Instant Win challenge in Pong to unlock this badge.",
     "desc_unlocked": "Whoa! Did you know that the dude who invented Pong, Al Alcorn at Atari, also gave Steve Jobs his first job? Like those two guys, you're a Rule Breaker.",
     "operation": "each_greater",
-    "targets": [["make-pong", "level", 8]],
+    "targets": [["make-pong", "level", 7]],
     "title": "Rule Breaker"
   }
 }

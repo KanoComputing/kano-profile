@@ -55,6 +55,8 @@ def activate(_win, _box=None):
 
         next_button.connect("button_press_event", update)
         login_button.connect("button_press_event", login_screen)
+        next_button.connect("key_press_event", update)
+        login_button.connect("key_press_event", login_screen)
         box.pack_start(title.container, False, False, 0)
         box.pack_start(button_padding, False, False, 0)
 
@@ -78,19 +80,21 @@ def activate(_win, _box=None):
 def update(widget, event):
     global win, box
 
-    win.remove(box)
-    win.pack_grid()
-    win.update()
-    gender.activate(win, win.box)
+    if not hasattr(event, 'keyval') or event.keyval == 65293:
+        win.remove(box)
+        win.pack_grid()
+        win.update()
+        gender.activate(win, win.box)
 
 
 def login_screen(widget, event):
     global win, box
 
-    win.remove(box)
-    win.pack_grid()
-    win.update()
-    login.activate(win, win.box)
+    if not hasattr(event, 'keyval') or event.keyval == 65293:
+        win.remove(box)
+        win.pack_grid()
+        win.update()
+        login.activate(win, win.box)
 
 
 def close_window(widget, event):

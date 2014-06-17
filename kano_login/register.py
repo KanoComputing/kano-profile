@@ -146,7 +146,6 @@ def register_user(button, event, username_entry, email_entry, password_entry):
             kdialog = kano_dialog.KanoDialog("Houston, we have a problem", str(text))
             kdialog.run()
 
-        # This needs to be adjusted depending on the age of the user
         else:
             logger.info('registration successful')
 
@@ -159,6 +158,6 @@ def register_user(button, event, username_entry, email_entry, password_entry):
             run_bg(cmd)
 
             win.update()
+            # Show confirmation message
             account_confirm.activate(win, box)
-
 

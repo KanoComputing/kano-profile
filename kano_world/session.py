@@ -244,7 +244,7 @@ class KanoWorldSession(object):
 
         success = 'success' in data and data['success']
         if not success:
-            return False, 'Backup not successful!'
+            return False, 'Share upload not successful!'
         return True, None
 
     def delete_share(self, share_id):

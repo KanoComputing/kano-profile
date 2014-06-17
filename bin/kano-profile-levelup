@@ -46,7 +46,7 @@ class MainWindow(Gtk.Window):
         # Make sure this window is always above
         self.set_keep_above(True)
 
-        if is_running('minecraft'):
+        if is_running('minecraft-pi'):
             # lxde-rc.xml changes positioning of window on the basis of the class name
             self.set_wmclass('kano-levelup-minecraft', 'Kano-levelup-minecraft')
 

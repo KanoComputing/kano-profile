@@ -21,7 +21,7 @@ from kano.gtk3.buttons import KanoButton
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
-from kano.paths import common_css_dir
+from kano.gtk3.apply_styles import apply_colours
 from kano.logging import logger
 from kano.utils import is_running
 
@@ -245,22 +245,17 @@ def main():
     new_level, new_items = parse_items(sys.argv[1:])
     logger.info('new_level:{} new_items:{}'.format(new_level, new_items))
 
+    apply_colours()
+
     # Create style sheet
     levelup_css = Gtk.CssProvider()
     levelup_file = os.path.join(css_dir, 'levelup.css')
     if not os.path.exists(levelup_file):
         sys.exit('CSS file missing!')
     levelup_css.load_from_path(levelup_file)
-    colours_css = Gtk.CssProvider()
-    colours_file = os.path.join(common_css_dir, 'colours.css')
-    if not os.path.exists(colours_file):
-        sys.exit('colour CSS file missing!')
-    colours_css.load_from_path(colours_file)
-
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
     styleContext.add_provider_for_screen(screen, levelup_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-    styleContext.add_provider_for_screen(screen, colours_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
     win = MainWindow(new_level, new_items)
     win.connect('delete-event', close_window)

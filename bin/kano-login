@@ -18,12 +18,12 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_profile_gui.paths import css_dir
 from kano.utils import run_cmd
-from kano.paths import common_css_dir
 from kano.network import is_internet
 from kano_login import login, first_screen, gender, birthday, register, account_confirm
 from kano_login.components import logged_in
 from kano_world.functions import login_using_token
 from kano.gtk3.top_bar import TopBar
+from kano.gtk3.apply_styles import apply_styles
 
 
 refs = {
@@ -150,26 +150,15 @@ class MainWindow(Gtk.Window):
 
 def main(first_boot):
     # Create multiple css providers for the common style sheet and individual style sheet
-    common_css = Gtk.CssProvider()
     login_css = Gtk.CssProvider()
-    colour_css = Gtk.CssProvider()
-    common_css_file = os.path.join(common_css_dir, 'common.css')
-    if not os.path.exists(common_css_file):
-        sys.exit('CSS file missing!')
     login_css_file = os.path.join(css_dir, 'login.css')
     if not os.path.exists(login_css_file):
         sys.exit('CSS file missing!')
-    colour_css_file = os.path.join(common_css_dir, 'colours.css')
-    if not os.path.exists(colour_css_file):
-        sys.exit('CSS file missing!')
-    colour_css.load_from_path(colour_css_file)
-    common_css.load_from_path(common_css_file)
     login_css.load_from_path(login_css_file)
 
+    apply_styles()
     screen = Gdk.Screen.get_default()
     styleContext = Gtk.StyleContext()
-    styleContext.add_provider_for_screen(screen, colour_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-    styleContext.add_provider_for_screen(screen, common_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     styleContext.add_provider_for_screen(screen, login_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     success, _ = login_using_token()
 

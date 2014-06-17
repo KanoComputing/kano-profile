@@ -162,7 +162,7 @@ class MainWindow(Gtk.Window):
         # New level
         if category == "new_level":
             self.title.set_text("Level Up!")
-            self.description.set_text("You made it to Level " + str(text) + "! Congrats, you hero - time for new swag")
+            self.description.set_text("You made it to Level " + str(text) + "! Time for new swag")
         # New avatar
         elif self.category == "avatars":
             self.title.set_text("New Avatar!")

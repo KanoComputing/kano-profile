@@ -22,16 +22,21 @@ def activate(_win, _box):
     win = _win
     box = _box
 
+    # So verification screen if under 13
+    if win.age < 13:
+        verification_screen()
+    else:
+        confirmation_screen()
+
+
+def verification_screen():
+    global win, box
+
     win.clear_box()
 
-    if win.age < 13:
-        title = "Now get your parents to confirm..."
-        description = "We've sent an email to: "
-        check_your_email = "Bug them to check their email in 14 days or less - \n                         or you'll lose your profile!"
-    else:
-        title = "Almost there..."
-        description = "To check that you're the real deal - \n               we sent an email to: "
-        check_your_email = "Click on the link within two weeks to confirm your profile"
+    title = "Now get your parents to confirm..."
+    description = "We've sent an email to: "
+    check_your_email = "Bug them to check their email in 14 days or less - \n                         or you'll lose your profile!"
 
     next_button = KanoButton("GOT IT")
     next_button.pack_and_align()

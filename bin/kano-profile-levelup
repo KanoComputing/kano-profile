@@ -144,7 +144,7 @@ class MainWindow(Gtk.Window):
         if self.last_level():
             self.button.set_label("FINISH")
 
-            if is_running('kdesk'):
+            if is_running('kdesk') and not is_running('kano-updater'):
                 # Add new button
                 profile = KanoButton("LAUNCH PROFILE")
                 profile.connect("button-press-event", self.launch_profile)

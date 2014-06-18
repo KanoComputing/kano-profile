@@ -155,7 +155,10 @@ class MainWindow(Gtk.Window):
 
     def launch_profile(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
-            os.system("kano-launcher kano-profile-gui")
+            # Make sure minecraft-pi game is not running
+            if is_running('minecraft-pi'):
+                os.system("killall -q minecraft-pi")
+            os.system("kano-profile-gui")
             sys.exit(0)
 
     def set_description(self, category, text):

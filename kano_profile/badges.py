@@ -250,9 +250,9 @@ def save_app_state_with_dialog(app_name, data):
 
         if is_running('kdesk') and not is_running('minecraft-pi'):
             kdesk_cmd = '/usr/bin/kdesk-blur "{}"'.format(cmd)
-            run_cmd(kdesk_cmd)
+            os.system(kdesk_cmd)
         else:
-            run_cmd(cmd)
+            os.system(cmd)
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)

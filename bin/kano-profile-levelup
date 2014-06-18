@@ -11,7 +11,6 @@
 
 import os
 import sys
-import subprocess
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -25,7 +24,7 @@ from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
 from kano.gtk3.apply_styles import apply_colours
 from kano.logging import logger
-from kano.utils import is_running, run_bg
+from kano.utils import is_running
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
@@ -273,7 +272,7 @@ def main():
     Gtk.main()
 
     if launch_profile:
-        subprocess.Popen("kano-profile-gui")
+        os.system("/usr/bin/kano-profile-gui &")
 
 
 def close_window(widget=None, event=None):

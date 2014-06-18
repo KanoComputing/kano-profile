@@ -11,6 +11,8 @@
 
 import os
 import sys
+import subprocess
+
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
@@ -23,10 +25,11 @@ from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
 from kano.gtk3.apply_styles import apply_colours
 from kano.logging import logger
-from kano.utils import is_running
+from kano.utils import is_running, run_bg
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
+launch_profile = False
 
 
 class MainWindow(Gtk.Window):
@@ -158,8 +161,11 @@ class MainWindow(Gtk.Window):
             # Make sure minecraft-pi game is not running
             if is_running('minecraft-pi'):
                 os.system("killall -q minecraft-pi")
-            os.system("kano-profile-gui")
-            sys.exit(0)
+
+            global launch_profile
+            launch_profile = True
+            self.destroy()
+            Gtk.main_quit()
 
     def set_description(self, category, text):
         # New level
@@ -266,11 +272,12 @@ def main():
 
     Gtk.main()
 
+    if launch_profile:
+        subprocess.Popen("kano-profile-gui")
+
 
 def close_window(widget=None, event=None):
-
     Gtk.main_quit()
-
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

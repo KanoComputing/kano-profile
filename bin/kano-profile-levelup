@@ -250,7 +250,7 @@ def main():
     logger.info('args:{}'.format(sys.argv[1:]))
 
     new_level, new_items = parse_items(sys.argv[1:])
-    logger.info('new_level:{} new_items:{}'.format(new_level, new_items))
+    # logger.info('new_level:{} new_items:{}'.format(new_level, new_items))
 
     apply_colours()
 

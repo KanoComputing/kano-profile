@@ -64,9 +64,10 @@ class ProjectList():
         self.background.add(self.align)
 
         if not self.projects_list:
-            empty_label = Gtk.Label("Check out Kano challenges to fill up your powers!")
-            empty_label.set_alignment(xalign=0.5, yalign=0.5)
-            self.container.pack_start(empty_label, False, False, 0)
+            image_no_projects = Gtk.Image()
+            image_no_projects.set_from_file("/usr/share/kano-profile/media/images/icons/no_challenges")
+            image_no_projects.set_alignment(xalign=0.5, yalign=0.5)
+            self.container.pack_start(image_no_projects, False, False, 0)
             return
 
         for i, project in enumerate(self.projects_list):

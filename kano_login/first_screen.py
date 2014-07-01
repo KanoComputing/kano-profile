@@ -14,7 +14,7 @@
 from gi.repository import Gtk
 
 from kano.gtk3.heading import Heading
-from kano.gtk3.buttons import KanoButton
+from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano_login import gender, login
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
@@ -43,14 +43,12 @@ def activate(_win, _box=None):
     if is_internet():
         title = Heading("Amazing work - now let's save your progress!", "Let's set up your account")
         # This button should send you to the login screen
-        login_button = KanoButton("I ALREADY HAVE AN ACCOUNT")
+        login_button = OrangeButton("I have an account")
         next_button = KanoButton("REGISTER")
-        button_box = Gtk.Box()
-        button_box.pack_start(login_button, False, False, 10)
-        button_box.pack_start(next_button, False, False, 10)
-
-        button_padding = Gtk.Alignment()
-        button_padding.set_padding(0, 20, 80, 0)
+        button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        button_box.pack_start(next_button, False, False, 0)
+        button_box.pack_start(login_button, False, False, 0)
+        button_padding = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
         button_padding.add(button_box)
 
         next_button.connect("button_press_event", update)

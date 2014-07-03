@@ -173,15 +173,15 @@ class MainWindow(Gtk.Window):
         # New avatar
         elif self.category == "avatars":
             self.title.set_text("New Avatar!")
-            self.description.set_text("You unlocked Avatar " + str(text) + "! Change your face in your Profile")
+            self.description.set_text("You unlocked " + str(text) + "! Change your face in your Profile")
         # New environment
         elif self.category == "environments":
             self.title.set_text("New Background!")
-            self.description.set_text("You unlocked Background " + str(text) + "! Check it out in your Profile")
+            self.description.set_text("You unlocked " + str(text) + "! Check it out in your Profile")
         # New badges
         elif self.category == "badges":
             self.title.set_text("New Badge!")
-            self.description.set_text("You unlocked Badge " + str(text) + "! Check it out in your Profile")
+            self.description.set_text("You unlocked " + str(text) + "! Check it out in your Profile")
         else:
             self.title.set_text("Congratulations!")
             self.description.set_text("You unlocked " + str(text))

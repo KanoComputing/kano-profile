@@ -33,7 +33,7 @@ launch_profile = False
 
 class MainWindow(Gtk.Window):
     def __init__(self, new_level, new_items):
-        Gtk.Window.__init__(self, title='Kano-Success')
+        Gtk.Window.__init__(self, title='Success')
 
         self.image_width = 590
         self.image_height = 270

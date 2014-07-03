@@ -16,7 +16,7 @@ import kano.gtk3.cursor as cursor
 
 class LoggedIn(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title='Kano-Profile')
+        Gtk.Window.__init__(self, title='Profile')
         self.set_size_request(200, 150)
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)

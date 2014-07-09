@@ -35,8 +35,8 @@ if __name__ != '__main__':
 if len(sys.argv) == 1:
     help = 'Wrong usage, needs an argument\n'
     help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
-    help += 'increment_app_state_variable, unlock, lock, is_registered, get_avatar, get_xp\n'
-    help += 'get_level, get_username, has_token, get_stats'
+    help += 'increment_app_state_variable, unlock, lock, is_registered\n'
+    help += 'get_xp, get_stats'
     sys.exit(help)
 
 if sys.argv[1] == 'get_app_data_dir':
@@ -88,6 +88,10 @@ elif sys.argv[1] == 'is_registered':
     check_arg_len(1)
     print int(is_registered())
     sys.exit(int(is_registered()))
+
+elif sys.argv[1] == 'get_xp':
+    check_arg_len(1)
+    print calculate_xp()
 
 elif sys.argv[1] == 'get_stats':
     check_arg_len(1)

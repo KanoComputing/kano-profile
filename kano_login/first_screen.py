@@ -67,6 +67,7 @@ def activate(_win, _box=None):
         title = Heading("You should get an account, but you need internet!", "Come back later")
         done_button = KanoButton("DONE")
         done_button.connect("button_press_event", close_window)
+        done_button.pack_and_align()
         done_button.set_padding(0, 10, 0, 0)
         box.pack_start(title.container, False, False, 0)
         box.pack_start(done_button.align, False, False, 0)

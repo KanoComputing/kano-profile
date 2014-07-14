@@ -42,7 +42,7 @@ class MainWindow(Gtk.Window):
     def __init__(self, first_boot):
 
         # Create main window
-        Gtk.Window.__init__(self, title='Kano Login')
+        Gtk.Window.__init__(self, title='Login')
         self.WINDOW_HEIGHT = 380
         self.WINDOW_WIDTH = 500
 
@@ -72,7 +72,7 @@ class MainWindow(Gtk.Window):
         # Dynamic box
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
-        self.top_bar = TopBar(title='Kano Login', window_width=self.WINDOW_WIDTH)
+        self.top_bar = TopBar(title='Login', window_width=self.WINDOW_WIDTH)
 
         self.grid.attach(self.top_bar, 0, 0, 3, 1)
         self.grid.attach(self.box, 1, 1, 1, 1)

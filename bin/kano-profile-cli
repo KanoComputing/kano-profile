@@ -35,8 +35,8 @@ if __name__ != '__main__':
 if len(sys.argv) == 1:
     help = 'Wrong usage, needs an argument\n'
     help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
-    help += 'increment_app_state_variable, unlock, lock, is_registered, get_avatar, get_xp\n'
-    help += 'get_level, get_username, has_token, get_stats'
+    help += 'save_app_state_variable_get_xp_diff, increment_app_state_variable\n'
+    help += 'unlock, lock, is_registered, get_stats'
     sys.exit(help)
 
 if sys.argv[1] == 'get_app_data_dir':
@@ -64,6 +64,20 @@ elif sys.argv[1] == 'save_app_state_variable':
     elif is_number(value):
         value = float(value)
     save_app_state_variable_with_dialog(app_name, variable, value)
+
+elif sys.argv[1] == 'save_app_state_variable_get_xp_diff':
+    check_arg_len(4)
+    app_name = sys.argv[2]
+    variable = sys.argv[3]
+    value = sys.argv[4]
+    if value.isdigit():
+        value = int(value)
+    elif is_number(value):
+        value = float(value)
+    old_xp = calculate_xp()
+    save_app_state_variable_with_dialog(app_name, variable, value)
+    new_xp = calculate_xp()
+    sys.stdout.write(str(new_xp - old_xp))
 
 elif sys.argv[1] == 'increment_app_state_variable':
     check_arg_len(4)

@@ -13,6 +13,7 @@ from kano_profile.apps import get_app_list, get_app_data_dir, launch_project
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 import kano_profile_gui.components.cursor as cursor
+import kano_profile_gui.components.icons as icons
 from .paths import image_dir
 
 app_profiles = read_json(app_profiles_file)
@@ -64,9 +65,9 @@ class ProjectList():
         self.background.add(self.align)
 
         if not self.projects_list:
-            empty_label = Gtk.Label("Check out Kano challenges to fill up your powers!")
-            empty_label.set_alignment(xalign=0.5, yalign=0.5)
-            self.container.pack_start(empty_label, False, False, 0)
+            image_no_projects = icons.set_from_name("no_challenges")
+            image_no_projects.set_alignment(xalign=0.5, yalign=0.5)
+            self.container.pack_start(image_no_projects, False, False, 0)
             return
 
         for i, project in enumerate(self.projects_list):

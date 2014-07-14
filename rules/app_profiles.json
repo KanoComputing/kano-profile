@@ -24,7 +24,7 @@
     "dir": "Snake-content",
     "ext": "",
     "cmd": "kano-launcher \"rxvt -title \\\"Make Snake\\\" -e python /usr/share/make-snake -t custom\" \"make-snake\"",
-    "max_level": 8,
+    "max_level": 9,
     "icon": "snake.png"
   },
   "kano-settings": {

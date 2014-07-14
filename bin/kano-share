@@ -104,7 +104,7 @@ class MainWindow(Gtk.Window):
         self.width = 580
         self.height = 550
 
-        Gtk.Window.__init__(self, title='Kano Share')
+        Gtk.Window.__init__(self, title='Share')
 
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)

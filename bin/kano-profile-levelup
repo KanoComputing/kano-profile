@@ -11,6 +11,7 @@
 
 import os
 import sys
+
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
@@ -23,15 +24,16 @@ from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
 from kano.gtk3.apply_styles import apply_colours
 from kano.logging import logger
-from kano.utils import is_running
+from kano.utils import is_running, play_sound
 
 all_rules = load_badge_rules()
 categories = ['badges', 'avatars', 'environments']
+launch_profile = False
 
 
 class MainWindow(Gtk.Window):
     def __init__(self, new_level, new_items):
-        Gtk.Window.__init__(self, title='Kano-Success')
+        Gtk.Window.__init__(self, title='Success')
 
         self.image_width = 590
         self.image_height = 270
@@ -82,15 +84,14 @@ class MainWindow(Gtk.Window):
         self.add(self.box)
 
         if new_level:
-            # Play sound on the background
-            os.system('kano-sound-cli /usr/share/kano-media/sounds/kano_level_up.wav &')
+            play_sound('/usr/share/kano-media/sounds/kano_level_up.wav', background=True)
+
             # Get image, title and label for new level
             self.set_description("new_level", str(new_level))
             filename = get_image("level", "", "Level-" + str(new_level), str(self.image_width) + 'x' + str(self.image_height))
             self.image.set_from_file(filename)
         else:
-            # Play sound on the background
-            os.system('kano-sound-cli /usr/share/kano-media/sounds/kano_achievement_unlock.wav &')
+            play_sound('/usr/share/kano-media/sounds/kano_achievement_unlock.wav', background=True)
             self.go_to_next()
 
     def go_to_next(self, event=None):
@@ -158,8 +159,11 @@ class MainWindow(Gtk.Window):
             # Make sure minecraft-pi game is not running
             if is_running('minecraft-pi'):
                 os.system("killall -q minecraft-pi")
-            os.system("kano-profile-gui")
-            sys.exit(0)
+
+            global launch_profile
+            launch_profile = True
+            self.destroy()
+            Gtk.main_quit()
 
     def set_description(self, category, text):
         # New level
@@ -169,15 +173,15 @@ class MainWindow(Gtk.Window):
         # New avatar
         elif self.category == "avatars":
             self.title.set_text("New Avatar!")
-            self.description.set_text("You unlocked Avatar " + str(text) + "! Change your face in your Profile")
+            self.description.set_text("You unlocked " + str(text) + "! Change your face in your Profile")
         # New environment
         elif self.category == "environments":
             self.title.set_text("New Background!")
-            self.description.set_text("You unlocked Background " + str(text) + "! Check it out in your Profile")
+            self.description.set_text("You unlocked " + str(text) + "! Check it out in your Profile")
         # New badges
         elif self.category == "badges":
             self.title.set_text("New Badge!")
-            self.description.set_text("You unlocked Badge " + str(text) + "! Check it out in your Profile")
+            self.description.set_text("You unlocked " + str(text) + "! Check it out in your Profile")
         else:
             self.title.set_text("Congratulations!")
             self.description.set_text("You unlocked " + str(text))
@@ -246,7 +250,7 @@ def main():
     logger.info('args:{}'.format(sys.argv[1:]))
 
     new_level, new_items = parse_items(sys.argv[1:])
-    logger.info('new_level:{} new_items:{}'.format(new_level, new_items))
+    # logger.info('new_level:{} new_items:{}'.format(new_level, new_items))
 
     apply_colours()
 
@@ -266,11 +270,12 @@ def main():
 
     Gtk.main()
 
+    if launch_profile:
+        os.system("/usr/bin/kano-profile-gui &")
+
 
 def close_window(widget=None, event=None):
-
     Gtk.main_quit()
-
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

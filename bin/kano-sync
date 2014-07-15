@@ -153,7 +153,7 @@ def do_restore():
 
 
 def refresh_kdesk():
-    logger.debug('refresh_kdesk')
+    logger.info('refreshing kdesk from kano-sync')
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
 

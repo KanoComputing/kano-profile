@@ -41,6 +41,7 @@ def save_profile(data):
         chown_path(profile_file)
 
     if os.path.exists('/usr/bin/kdesk'):
+        logger.info('refreshing kdesk from save_profile')
         run_bg('kdesk -a profile')
 
 

@@ -18,7 +18,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_world.functions import sync, login_using_token, backup_content, restore_content
 from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, \
-    is_installed, is_gui
+    is_gui
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 
@@ -145,10 +145,6 @@ def do_restore():
     if e:
         msg = 'Error with uncompressing restore data: {}'.format(e)
         display_msg(msg, 'error')
-
-    if is_installed('kano-settings'):
-        kano_setting_cmd = 'sudo kano-settings auto'
-        run_bg(kano_setting_cmd)
 
     refresh_kdesk()
     delete_file(tmp_file)

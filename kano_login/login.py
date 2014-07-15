@@ -127,8 +127,8 @@ def log_user_in(button, event, username_email_entry, password_entry, username_em
             logger.info('running kano-sync --sync && --sync && --restore after first time login')
 
             # doing first sync and restore
-            cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-            cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            cmd1 = '{bin_dir}/kano-sync --sync --skip-kdesk -s'.format(bin_dir=bin_dir)
+            cmd2 = '{bin_dir}/kano-sync --sync --skip-kdesk -s'.format(bin_dir=bin_dir)
             cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
             cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
             run_bg(cmd)

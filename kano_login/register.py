@@ -100,9 +100,9 @@ def show_terms_and_conditions(widget, event, checkbutton):
 
 def set_register_sensitive(entries_container, button, checkbutton):
     entry_text = entries_container.get_entry_text()
-    text1 = entry_text[1]
-    text2 = entry_text[2]
-    text3 = entry_text[3]
+    text1 = entry_text[0]
+    text2 = entry_text[1]
+    text3 = entry_text[2]
     bool_value = checkbutton.get_active()
     if text1 != "" and text2 != "" and text3 != "" and bool_value:
         button.set_sensitive(True)

@@ -67,4 +67,8 @@ class PermissionSlip():
             # Launch dialog if unsuccessful?
             # else...
             self.win.clear_box()
-            register.activate(self.win, self.box)
+            register.activate(self.win, self.box, False)
+
+        else:
+            pass
+            # Launch dialog

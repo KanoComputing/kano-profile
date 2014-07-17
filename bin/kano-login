@@ -19,7 +19,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano.utils import run_cmd
 from kano.network import is_internet
-from kano_login import login, first_screen, gender, birthday, register, account_confirm
+from kano_login import login, first_screen, about_you, permission_slip, register
 from kano_login.components import logged_in
 from kano_world.functions import login_using_token
 from kano.gtk3.top_bar import TopBar
@@ -28,10 +28,9 @@ from kano.gtk3.apply_styles import apply_styles
 
 refs = {
     0: [login, first_screen],
-    1: gender,
-    2: birthday,
-    3: register,
-    4: account_confirm,
+    1: about_you,
+    2: permission_slip,
+    3: register
 }
 
 MAX_LEVEL = 4
@@ -43,8 +42,8 @@ class MainWindow(Gtk.Window):
 
         # Create main window
         Gtk.Window.__init__(self, title='Login')
-        self.WINDOW_HEIGHT = 380
-        self.WINDOW_WIDTH = 500
+        self.WINDOW_HEIGHT = 450
+        self.WINDOW_WIDTH = 550
 
         self.last_level_visited = 0
 

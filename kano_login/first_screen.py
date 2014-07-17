@@ -15,7 +15,7 @@ from gi.repository import Gtk
 
 from kano.gtk3.heading import Heading
 from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano_login import gender, login
+from kano_login import about_you, login
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
 import kano.gtk3.cursor as cursor
@@ -83,7 +83,7 @@ def update(widget, event):
         win.remove(box)
         win.pack_grid()
         win.update()
-        gender.activate(win, win.box)
+        about_you.AboutYou(win, win.box)
 
 
 def login_screen(widget, event):

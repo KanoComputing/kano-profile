@@ -13,3 +13,7 @@
     font: Bariol 14px;
     color: @subheading_color;
 }
+
+.bold {
+    font: Bariol Bold 14px;
+}

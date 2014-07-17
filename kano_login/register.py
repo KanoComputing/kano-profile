@@ -17,13 +17,14 @@ from kano_profile.paths import bin_dir, legal_dir
 from kano_profile.profile import save_profile_variable
 from kano_world.functions import register as register_
 from kano.gtk3 import kano_dialog
-from kano_login import account_confirm
+from kano_login.labelled_entries import LabelledEntries
 import re
 import os
-#from kano_login import home, login,
+import sys
 
 win = None
 box = None
+over_13 = True
 
 
 def is_email(email):
@@ -36,16 +37,24 @@ def is_email(email):
 
 # We calculate age based on the birthday screen - if less than 13,
 # we ask for parent's email
-def activate(_win, _box):
-    global win, box
+def activate(_win, _box, _over_13=True):
+    global win, box, over_13
 
     win = _win
     box = _box
+    over_13 = _over_13
 
-    win.clear_box()
-    username_entry = Gtk.Entry()
-    email_entry = Gtk.Entry()
-    password_entry = Gtk.Entry()
+    header = "Login details"
+    subheading = ""
+
+    if over_13:
+        subheading = "Pick a cool name, add an email and set a password"
+        entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": ""}])
+    else:
+        subheading = "Pick a cool name and a secret password"
+        entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
+
+    title = Heading(header, subheading)
 
     go_to_terms_conditions = OrangeButton("I accept the terms and conditions")
     checkbutton = Gtk.CheckButton()
@@ -60,40 +69,19 @@ def activate(_win, _box):
     register.set_padding(0, 10, 0, 0)
     register.set_sensitive(False)
 
-    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
-    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
-    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
-    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register, checkbutton)
-    register.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
-    register.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
+    entries = entries_container.get_entries()
+
+    for entry in entries:
+        entry.connect("key_release_event", set_sensitive_on_key_up, entries_container, register, checkbutton)
+
+    checkbutton.connect("toggled", set_sensitive_toggled, entries_container, register, checkbutton)
+    register.connect("button-press-event", register_user, entries)
+    register.connect("key-press-event", register_user, entries)
     go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
 
-    subheading = ''
-    header = "Choose a nickname!"
-    if win.age < 13:
-        subheading = "Please provide a parent's or teacher's email"
-    else:
-        subheading = "And set your details"
-
-    title = Heading(header, subheading)
-
-    username_entry.set_placeholder_text("Username")
-    email_entry.set_placeholder_text("Email")
-    password_entry.set_placeholder_text("Password")
-    password_entry.set_visibility(False)
-
-    entry_container = Gtk.Grid(column_homogeneous=False,
-                               row_spacing=7)
-    entry_container.attach(username_entry, 0, 0, 1, 1)
-    entry_container.attach(email_entry, 0, 1, 1, 1)
-    entry_container.attach(password_entry, 0, 2, 1, 1)
-
-    valign = Gtk.Alignment()
-    valign.add(entry_container)
-    valign.set_padding(0, 0, 100, 0)
     box.pack_start(title.container, False, False, 0)
-    box.pack_start(valign, False, False, 0)
-    box.pack_start(checkbox_align, False, False, 2)
+    box.pack_start(entries_container, False, False, 5)
+    box.pack_start(checkbox_align, False, False, 5)
     box.pack_start(register.align, False, False, 5)
     box.show_all()
 
@@ -110,10 +98,11 @@ def show_terms_and_conditions(widget, event, checkbutton):
     kdialog.run()
 
 
-def set_register_sensitive(entry1, entry2, entry3, button, checkbutton):
-    text1 = entry1.get_text()
-    text2 = entry2.get_text()
-    text3 = entry3.get_text()
+def set_register_sensitive(entries_container, button, checkbutton):
+    entry_text = entries_container.get_entry_text()
+    text1 = entry_text[1]
+    text2 = entry_text[2]
+    text3 = entry_text[3]
     bool_value = checkbutton.get_active()
     if text1 != "" and text2 != "" and text3 != "" and bool_value:
         button.set_sensitive(True)
@@ -121,22 +110,26 @@ def set_register_sensitive(entry1, entry2, entry3, button, checkbutton):
         button.set_sensitive(False)
 
 
-def set_sensitive_toggled(widget, entry1, entry2, entry3, button, checkbutton):
-    set_register_sensitive(entry1, entry2, entry3, button, checkbutton)
+def set_sensitive_toggled(widget, entries_container, button, checkbutton):
+    set_register_sensitive(entries_container, button, checkbutton)
 
 
-def set_sensitive_on_key_up(widget, event, entry1, entry2, entry3, button, checkbutton):
-    set_register_sensitive(entry1, entry2, entry3, button, checkbutton)
+def set_sensitive_on_key_up(widget, event, entries_container, button, checkbutton):
+    set_register_sensitive(entries_container, button, checkbutton)
 
 
-def register_user(button, event, username_entry, email_entry, password_entry):
+def register_user(button, event, entries):
     global win
 
     if not hasattr(event, 'keyval') or event.keyval == 65293:
 
-        win.email = email_entry.get_text()
-        win.username = username_entry.get_text()
-        win.password = password_entry.get_text()
+        win.username = entries[0].get_text()
+
+        if over_13:
+            win.email = entries[1].get_text()
+            win.password = entries[2].get_text()
+        else:
+            win.password = entries[1].get_text()
 
         logger.info('trying to register user')
         success, text = register_(win.email, win.username, win.password)
@@ -158,6 +151,7 @@ def register_user(button, event, username_entry, email_entry, password_entry):
             run_bg(cmd)
 
             win.update()
-            # Show confirmation message
-            account_confirm.activate(win, box)
+
+            #close window
+            sys.exit(0)
 

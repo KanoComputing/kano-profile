@@ -43,6 +43,7 @@ class PermissionSlip(TopBarTemplate):
         title = Heading(header, description)
 
         self.entries_container = LabelledEntries([{"heading": "Email", "subheading": ""}, {"heading": "Confirm Email", "subheading": ""}])
+        self.entries_container.set_spacing(15)
 
         # set callbacks to the entries
         for entry in self.entries_container.get_entries():
@@ -53,9 +54,9 @@ class PermissionSlip(TopBarTemplate):
         self.next_button.set_sensitive(False)
         self.next_button.connect("button-release-event", self.send_email)
 
-        self.box.pack_start(title.container, False, False, 0)
-        self.box.pack_start(self.entries_container, False, False, 30)
-        self.box.pack_start(self.next_button.align, False, False, 0)
+        self.box.pack_start(title.container, False, False, 10)
+        self.box.pack_start(self.entries_container, False, False, 15)
+        self.box.pack_start(self.next_button.align, False, False, 30)
 
         self.win.show_all()
 

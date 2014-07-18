@@ -40,7 +40,7 @@ refs = {
 
 class MainWindow(Gtk.Window):
 
-    def __init__(self, first_boot):
+    def __init__(self, first_boot, page_number):
 
         # Create main window
         Gtk.Window.__init__(self, title='Login')
@@ -57,7 +57,7 @@ class MainWindow(Gtk.Window):
 
         # The state is the current window showing
         # CHange this according to the bash argument
-        self.state = 0
+        self.state = page_number
 
         self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
@@ -69,20 +69,20 @@ class MainWindow(Gtk.Window):
         if first_boot == 1:
             FirstScreen(self)
         else:
-            Login(self)
+            self.goto(self.state)
 
         self.show_all()
 
     def goto(self, module):
         self.clear_win()
-        module.activate(self, self.box)
+        refs[self.state](self)
 
     def clear_win(self):
         for i in self.get_children():
             self.remove(i)
 
 
-def main(first_boot):
+def main(first_boot, page_number=0):
 
     login_css = Gtk.CssProvider()
     login_css_file = os.path.join(css_dir, 'login.css')
@@ -102,7 +102,7 @@ def main(first_boot):
         Gtk.main()
 
     else:
-        win = MainWindow(first_boot)
+        win = MainWindow(first_boot, page_number)
         win.connect('delete-event', Gtk.main_quit)
         win.show_all()
         Gtk.main()
@@ -112,13 +112,15 @@ def main(first_boot):
 if __name__ == '__main__':
 
     first_boot = 0
+    page_number = 0
     if len(sys.argv) == 2 and sys.argv[1] == 'first_boot':
         first_boot = 1
-
+    elif len(sys.argv) == 2:
+        page_number = int(sys.argv[1])
     # Check for internet if not first boot
     if (first_boot == 0) and not is_internet():
         run_cmd('sudo /usr/bin/kano-settings 4')
         if not is_internet():
             sys.exit(1)
 
-    sys.exit(main(first_boot))
+    sys.exit(main(first_boot, page_number))

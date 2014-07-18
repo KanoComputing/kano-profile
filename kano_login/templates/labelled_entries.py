@@ -44,3 +44,6 @@ class LabelledEntries(Gtk.Alignment):
 
         return all_text
 
+    def set_spacing(self, number):
+        self.box.set_spacing(number)
+

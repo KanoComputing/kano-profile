@@ -41,9 +41,9 @@ class AboutYou(TopBarTemplate):
         self.next_button.connect("button_release_event", self.save_info)
         self.next_button.connect("key_press_event", self.save_info)
 
-        self.box.pack_start(title.container, False, False, 0)
-        self.box.pack_start(self.gender_widget, False, False, 7)
-        self.box.pack_start(self.birthday_widget, False, False, 7)
+        self.box.pack_start(title.container, False, False, 3)
+        self.box.pack_start(self.gender_widget, False, False, 10)
+        self.box.pack_start(self.birthday_widget, False, False, 10)
         self.box.pack_start(self.next_button.align, False, False, 20)
 
         self.win.show_all()
@@ -58,17 +58,17 @@ class AboutYou(TopBarTemplate):
 
         self.selected_gender = "Boy"
 
-        box = Gtk.Box()
-        box.pack_start(self.boy_widget, False, False, 10)
-        box.pack_start(self.girl_widget, False, False, 10)
-        box.pack_start(self.wizard_widget, False, False, 10)
+        box = Gtk.Box(spacing=20)
+        box.pack_start(self.boy_widget, False, False, 0)
+        box.pack_start(self.girl_widget, False, False, 0)
+        box.pack_start(self.wizard_widget, False, False, 0)
 
         new_box = add_heading("Gender", box, True)
 
         self.gender_widget = new_box
 
     def create_birthday_widget(self):
-        box = Gtk.Box()
+        box = Gtk.Box(spacing=20)
 
         self.day_widget = Gtk.ComboBoxText()
         for i in range(1, 31):
@@ -84,14 +84,19 @@ class AboutYou(TopBarTemplate):
         self.year_widget = Gtk.Entry()
         self.year_widget.set_placeholder_text("1990")
         self.year_widget.set_width_chars(4)
+        self.year_widget.set_size_request(45, 47)
 
         labelled_day = add_heading("DAY", self.day_widget)
         labelled_month = add_heading("MONTH", self.month_widget)
         labelled_year = add_heading("YEAR", self.year_widget)
 
-        box.pack_start(labelled_day, False, False, 10)
-        box.pack_start(labelled_month, False, False, 10)
-        box.pack_start(labelled_year, False, False, 10)
+        year_align = Gtk.Alignment()
+        year_align.set_padding(2, 0, 0, 0)
+        year_align.add(labelled_year)
+
+        box.pack_start(labelled_day, False, False, 0)
+        box.pack_start(labelled_month, False, False, 0)
+        box.pack_start(year_align, False, False, 0)
 
         new_box = add_heading("Birthday", box, True)
 
@@ -122,7 +127,6 @@ class AboutYou(TopBarTemplate):
         if widget.get_active():
             label = widget.get_label()
             self.selected_gender = label
-            print self.selected_gender
 
     def calculate_age(self):
         try:

@@ -17,8 +17,8 @@ class KanoButtonBox(Gtk.ButtonBox):
 
     def __init__(self, kano_button_text, orange_button_text):
 
-        Gtk.ButtonBox.__init__(self, spacing=10)
-        self.set_layout(Gtk.ButtonBoxStyle.SPREAD)
+        Gtk.ButtonBox.__init__(self)
+        self.set_layout(Gtk.ButtonBoxStyle.EDGE)
 
         self.kano_button = KanoButton(kano_button_text)
 

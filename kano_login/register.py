@@ -41,32 +41,13 @@ class Register(TopBarTemplate):
     data_over_13 = get_data("REGISTER_OVER_13")
     data_under_13 = get_data("REGISTER_UNDER_13")
 
-    def __init__(self, win, over_13=True):
+    def __init__(self, win, over_13=False):
         TopBarTemplate.__init__(self)
 
         self.win = win
         self.win.add(self)
 
         self.over_13 = over_13
-
-        if self.over_13:
-            header = self.data_over_13["LABEL_1"]
-            subheading = self.data_over_13["LABEL_2"]
-            self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": ""}])
-        else:
-            header = self.data_under_13["LABEL_1"]
-            subheading = self.data_under_13["LABEL_2"]
-            self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
-
-        entries = self.entries_container.get_entries()
-        for entry in entries:
-            entry.connect("key_release_event", self.set_sensitive_on_key_up)
-
-        # password entry
-        entry = entries[len(entries) - 1]
-        entry.set_visibility(False)
-
-        title = Heading(header, subheading)
 
         self.go_to_terms_conditions = OrangeButton("I accept the terms and conditions")
         self.checkbutton = Gtk.CheckButton()
@@ -85,10 +66,33 @@ class Register(TopBarTemplate):
         self.kano_button.connect("button-release-event", self.register_user)
         self.kano_button.connect("key-press-event", self.register_user)
 
-        self.box.pack_start(title.container, False, False, 0)
-        self.box.pack_start(self.entries_container, False, False, 10)
-        self.box.pack_start(checkbox_align, False, False, 5)
-        self.box.pack_start(self.kano_button.align, False, False, 10)
+        if self.over_13:
+            header = self.data_over_13["LABEL_1"]
+            subheading = self.data_over_13["LABEL_2"]
+            title = Heading(header, subheading)
+            self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
+            self.box.pack_start(title.container, False, False, 0)
+            self.box.pack_start(self.entries_container, False, False, 10)
+            self.box.pack_start(checkbox_align, False, False, 5)
+            self.box.pack_start(self.kano_button.align, False, False, 10)
+        else:
+            header = self.data_under_13["LABEL_1"]
+            subheading = self.data_under_13["LABEL_2"]
+            title = Heading(header, subheading)
+            self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
+            self.entries_container.set_spacing(10)
+            self.box.pack_start(title.container, False, False, 10)
+            self.box.pack_start(self.entries_container, False, False, 10)
+            self.box.pack_start(checkbox_align, False, False, 5)
+            self.box.pack_start(self.kano_button.align, False, False, 20)
+
+        entries = self.entries_container.get_entries()
+        for entry in entries:
+            entry.connect("key_release_event", self.set_sensitive_on_key_up)
+
+        # password entry
+        entry = entries[len(entries) - 1]
+        entry.set_visibility(False)
 
         self.win.show_all()
 

@@ -9,22 +9,25 @@
 
 from gi.repository import Gtk
 from kano_login.misc import add_heading
-from kano_login import register
+from kano_login.register import Register
 from kano_login.permission_slip import PermissionSlip
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
+from kano_login.templates.top_bar_template import TopBarTemplate
 import time
 import datetime
 
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 
-class AboutYou():
-    def __init__(self, win, box):
+class AboutYou(TopBarTemplate):
+    def __init__(self, win):
+
+        TopBarTemplate.__init__(self)
 
         self.win = win
-        self.box = box
+        self.win.add(self)
 
         title = Heading("About you", "")
 
@@ -94,7 +97,7 @@ class AboutYou():
 
         self.birthday_widget = new_box
 
-    def save_info(self, widget, event):
+    def save_info(self, widget, event, args=[]):
         age, bday_date = self.calculate_age()
 
         if age == -1:
@@ -108,12 +111,12 @@ class AboutYou():
         self.win.gender = gender
 
         if age < 13:
-            self.win.clear_box()
-            PermissionSlip(self.win, self.box)
+            self.win.clear_win()
+            PermissionSlip(self.win)
 
         else:
-            self.win.clear_box()
-            register.activate(self.win, self.box)
+            self.win.clear_win()
+            Register(self.win, True)
 
     def get_gender(self, widget):
         if widget.get_active():

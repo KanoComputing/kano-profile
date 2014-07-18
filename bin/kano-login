@@ -19,21 +19,23 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile_gui.paths import css_dir
 from kano.utils import run_cmd
 from kano.network import is_internet
-from kano_login import login, first_screen, about_you, permission_slip, register
-from kano_login.components import logged_in
+from kano_login.login import Login
+from kano_login.first_screen import FirstScreen
+from kano_login.about_you import AboutYou
+from kano_login.permission_slip import PermissionSlip
+from kano_login.register import Register
+from kano_login.components.logged_in import LoggedIn
 from kano_world.functions import login_using_token
-from kano.gtk3.top_bar import TopBar
 from kano.gtk3.apply_styles import apply_styles
 
 
+# These are the screens we want to be able to access from the comand line e.g. via ./kano-login 3
 refs = {
-    0: [login, first_screen],
-    1: about_you,
-    2: permission_slip,
-    3: register
+    0: [Login, FirstScreen],
+    1: AboutYou,
+    2: PermissionSlip,
+    3: Register
 }
-
-MAX_LEVEL = 4
 
 
 class MainWindow(Gtk.Window):
@@ -43,9 +45,7 @@ class MainWindow(Gtk.Window):
         # Create main window
         Gtk.Window.__init__(self, title='Login')
         self.WINDOW_HEIGHT = 450
-        self.WINDOW_WIDTH = 550
-
-        self.last_level_visited = 0
+        self.WINDOW_WIDTH = 590
 
         self.username = ""
         self.email = ""
@@ -56,10 +56,8 @@ class MainWindow(Gtk.Window):
         self.first_boot = first_boot
 
         # The state is the current window showing
+        # CHange this according to the bash argument
         self.state = 0
-
-        self.grid = Gtk.Grid()
-        self.add(self.grid)
 
         self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
@@ -68,87 +66,24 @@ class MainWindow(Gtk.Window):
         self.set_resizable(False)
         self.set_position(Gtk.WindowPosition.CENTER)
 
-        # Dynamic box
-        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-
-        self.top_bar = TopBar(title='Login', window_width=self.WINDOW_WIDTH)
-
-        self.grid.attach(self.top_bar, 0, 0, 3, 1)
-        self.grid.attach(self.box, 1, 1, 1, 1)
-
-        self.top_bar.set_prev_callback(self.on_prev)
-        self.top_bar.set_next_callback(self.on_next)
-        self.top_bar.set_close_callback(self.close_window)
-
         if first_boot == 1:
-            self.unpack_grid()
-            first_screen.activate(self)
+            FirstScreen(self)
         else:
-            self.clear_box()
-            login.activate(self, self.box)
+            Login(self)
 
         self.show_all()
 
-    def enable_prev(self):
-        self.top_bar.enable_prev()
-
-    def enable_next(self):
-        self.top_bar.enable_next()
-
-    def disable_prev(self):
-        self.top_bar.disable_prev()
-
-    def disable_next(self):
-        self.top_bar.disable_next()
-
-    def close_window(self, widget, event):
-        Gtk.main_quit()
-
-    # Updates the state of the window on clicking the update button
-    # e.g. whether the prev and next buttons are enabled or disabled
-    def update(self):
-        self.enable_prev()
-        self.disable_next()
-        self.state = self.state + 1
-
-    def on_prev(self, arg1=None, arg2=None):
-        self.clear_box()
-        self.state = self.state - 1
-        module = refs[self.state]
-        if self.state == 0:
-            if self.first_boot == 1:
-                self.unpack_grid()
-            module = refs[self.state][self.first_boot]
-            self.disable_prev()
-        else:
-            self.enable_prev()
-        self.goto(module)
-
-    def on_next(self, arg1=None, arg2=None):
-        self.state = self.state + 1
-        module = refs[self.state]
-        self.top_bar.enable_prev()
-        if self.state == MAX_LEVEL:
-            self.top_bar.disable_next()
-        self.goto(module)
-
     def goto(self, module):
-        self.clear_box()
+        self.clear_win()
         module.activate(self, self.box)
 
-    def clear_box(self):
-        for i in self.box.get_children():
-            self.box.remove(i)
-
-    def unpack_grid(self):
-        self.remove(self.grid)
-
-    def pack_grid(self):
-        self.add(self.grid)
+    def clear_win(self):
+        for i in self.get_children():
+            self.remove(i)
 
 
 def main(first_boot):
-    # Create multiple css providers for the common style sheet and individual style sheet
+
     login_css = Gtk.CssProvider()
     login_css_file = os.path.join(css_dir, 'login.css')
     if not os.path.exists(login_css_file):
@@ -162,7 +97,7 @@ def main(first_boot):
     success, _ = login_using_token()
 
     if success:
-        win = logged_in.LoggedIn()
+        win = LoggedIn()
         win.show_all()
         Gtk.main()
 

@@ -18,7 +18,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_world.functions import sync, login_using_token, backup_content, restore_content
 from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, \
-    is_installed, is_gui
+    is_gui
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 
@@ -30,6 +30,7 @@ parser.add_argument('-d', '--dialog', action='store_true', help='display dialog'
 parser.add_argument('--sync', action='store_true', help='sync profile data')
 parser.add_argument('--backup', action='store_true', help='backup app content')
 parser.add_argument('--restore', action='store_true', help='restore app content')
+parser.add_argument('--skip-kdesk', action='store_true', help='skip kdesk refresh')
 args = parser.parse_args()
 
 enable_dialog = args.dialog and is_gui()
@@ -146,10 +147,6 @@ def do_restore():
         msg = 'Error with uncompressing restore data: {}'.format(e)
         display_msg(msg, 'error')
 
-    if is_installed('kano-settings'):
-        kano_setting_cmd = 'sudo kano-settings auto'
-        run_bg(kano_setting_cmd)
-
     refresh_kdesk()
     delete_file(tmp_file)
 
@@ -157,7 +154,10 @@ def do_restore():
 
 
 def refresh_kdesk():
-    logger.debug('refresh_kdesk')
+    if args.skip_kdesk:
+        return
+
+    logger.info('refreshing kdesk from kano-sync')
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile')
 

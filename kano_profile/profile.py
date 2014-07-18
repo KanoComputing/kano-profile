@@ -10,7 +10,7 @@ import os
 
 from kano.logging import logger
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
-    get_user_unsudoed, run_bg
+    get_user_unsudoed, run_bg, is_running
 from .paths import profile_file, profile_dir, kanoprofile_dir, bin_dir
 
 
@@ -40,7 +40,8 @@ def save_profile(data):
         chown_path(profile_dir)
         chown_path(profile_file)
 
-    if os.path.exists('/usr/bin/kdesk'):
+    if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
+        logger.info('refreshing kdesk from save_profile')
         run_bg('kdesk -a profile')
 
 

@@ -43,7 +43,7 @@ class MainWindow(Gtk.Window):
     def __init__(self, first_boot, page_number):
 
         # Create main window
-        Gtk.Window.__init__(self, title='Login')
+        Gtk.Window.__init__(self, title='Kano')
         self.WINDOW_HEIGHT = 450
         self.WINDOW_WIDTH = 590
 

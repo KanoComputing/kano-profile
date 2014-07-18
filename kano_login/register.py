@@ -7,22 +7,26 @@
 #
 # UI for register screen
 
-from gi.repository import Gtk
-
-from kano.logging import logger
-from kano.gtk3.heading import Heading
-from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano.utils import run_bg
-from kano_profile.paths import bin_dir, legal_dir
-from kano_profile.profile import save_profile_variable
-from kano_world.functions import register as register_
-from kano.gtk3.kano_dialog import KanoDialog
-from kano_login.templates.labelled_entries import LabelledEntries
-from kano_login.templates.top_bar_template import TopBarTemplate
-from kano_login.data import get_data
 import re
 import os
 import sys
+from gi.repository import Gtk
+
+from kano.logging import logger
+from kano.utils import run_bg
+
+from kano.gtk3.kano_dialog import KanoDialog
+from kano.gtk3.heading import Heading
+from kano.gtk3.buttons import KanoButton, OrangeButton
+
+from kano_profile.paths import bin_dir, legal_dir
+from kano_profile.profile import save_profile_variable
+from kano_world.functions import register as register_
+
+from kano_login.templates.labelled_entries import LabelledEntries
+from kano_login.templates.top_bar_template import TopBarTemplate
+from kano_login.data import get_data
+
 
 win = None
 box = None
@@ -46,6 +50,7 @@ class Register(TopBarTemplate):
 
         self.win = win
         self.win.add(self)
+        self.enable_prev()
 
         self.over_13 = over_13
 
@@ -156,6 +161,5 @@ class Register(TopBarTemplate):
                 cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
                 run_bg(cmd)
 
-                self.win.update()
                 sys.exit(0)
 

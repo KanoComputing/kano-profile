@@ -7,24 +7,28 @@
 #
 # Set age and gender of user
 
+import time
+import datetime
 from gi.repository import Gtk
-from kano_login.misc import add_heading
-from kano_login.register import Register
-from kano_login.permission_slip import PermissionSlip
+
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
+
 from kano_login.templates.top_bar_template import TopBarTemplate
-import time
-import datetime
+from kano_login.misc import add_heading
+from kano_login.register import Register
+from kano_login.permission_slip import PermissionSlip
+
 
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 
 class AboutYou(TopBarTemplate):
+    # add argument to say which screen we came from - Login or FirstScreen
     def __init__(self, win):
 
-        TopBarTemplate.__init__(self)
+        TopBarTemplate.__init__(self, "About You")
 
         self.win = win
         self.win.add(self)

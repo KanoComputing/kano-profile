@@ -30,10 +30,11 @@ class PermissionSlip(TopBarTemplate):
     data = get_data("PERMISSION_SLIP")
 
     def __init__(self, win):
-        TopBarTemplate.__init__(self)
+        TopBarTemplate.__init__(self, "Permission Slip")
 
         self.win = win
         self.win.add(self)
+        self.enable_prev()
 
         # get data
         header = self.data["LABEL_1"]

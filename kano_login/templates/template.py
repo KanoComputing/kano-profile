@@ -30,11 +30,13 @@ class Template(Gtk.Box):
     def __init__(self, img_filename, title, description, kano_button_text, orange_button_text):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
-        self.image = Gtk.Image.new_from_file(img_filename)
+        if img_filename:
+            self.image = Gtk.Image.new_from_file(img_filename)
+            self.pack_start(self.image, False, False, 0)
+
         self.heading = Heading(title, description)
         self.kano_button = KanoButton(kano_button_text)
 
-        self.pack_start(self.image, False, False, 0)
         self.pack_start(self.heading.container, False, False, 0)
 
         button_box = Gtk.ButtonBox(spacing=10)

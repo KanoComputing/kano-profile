@@ -18,14 +18,6 @@ from kano_login.templates.template import Template
 from kano_login.data import get_data
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
-#import kano.gtk3.cursor as cursor
-
-
-win = None
-box = None
-login_button = None
-next_button = None
-done_button = None
 
 
 def create_template(string):

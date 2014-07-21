@@ -20,7 +20,7 @@ from kano_profile_gui.paths import css_dir
 from kano.utils import run_cmd
 from kano.network import is_internet
 from kano_login.login import Login
-from kano_login.first_screen import FirstScreen
+from kano_login.setup_successful import SetupSuccessful
 from kano_login.about_you import AboutYou
 from kano_login.register import Register
 from kano_login.components.logged_in import LoggedIn
@@ -30,7 +30,7 @@ from kano.gtk3.apply_styles import apply_styles
 
 # These are the screens we want to be able to access from the comand line e.g. via ./kano-login 3
 refs = {
-    0: [Login, FirstScreen],
+    0: [Login, SetupSuccessful],
     1: AboutYou,
     2: Register,
 }
@@ -61,7 +61,7 @@ class MainWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
 
         if first_boot == 1:
-            FirstScreen(self)
+            SetupSuccessful(self)
         elif state == 0:
             Login(self)
         else:

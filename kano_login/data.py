@@ -13,7 +13,7 @@ import os
 
 def get_data(string):
 
-    filename = os.path.join("..", "kano_login", "data", "login.json")
+    filename = os.path.join("/usr/lib/python2.7/dist-packages/kano_login/data/login.json")
     json_data = open(filename)
     data = json.load(json_data)
     stage_data = data[string]

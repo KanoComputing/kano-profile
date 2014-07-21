@@ -74,22 +74,17 @@ class Register(TopBarTemplate):
         if self.over_13:
             header = self.data_over_13["LABEL_1"]
             subheading = self.data_over_13["LABEL_2"]
-            title = Heading(header, subheading)
-            self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
-            self.box.pack_start(title.container, False, False, 0)
-            self.box.pack_start(self.entries_container, False, False, 10)
-            self.box.pack_start(checkbox_align, False, False, 5)
-            self.box.pack_start(self.kano_button.align, False, False, 10)
+
         else:
             header = self.data_under_13["LABEL_1"]
             subheading = self.data_under_13["LABEL_2"]
-            title = Heading(header, subheading)
-            self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
-            self.entries_container.set_spacing(10)
-            self.box.pack_start(title.container, False, False, 10)
-            self.box.pack_start(self.entries_container, False, False, 10)
-            self.box.pack_start(checkbox_align, False, False, 5)
-            self.box.pack_start(self.kano_button.align, False, False, 20)
+
+        title = Heading(header, subheading)
+        self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
+        self.box.pack_start(title.container, False, False, 5)
+        self.box.pack_start(self.entries_container, False, False, 10)
+        self.box.pack_start(checkbox_align, False, False, 5)
+        self.box.pack_start(self.kano_button.align, False, False, 10)
 
         entries = self.entries_container.get_entries()
         for entry in entries:

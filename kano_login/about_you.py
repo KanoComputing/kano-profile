@@ -18,7 +18,6 @@ from kano.gtk3.kano_dialog import KanoDialog
 from kano_login.templates.top_bar_template import TopBarTemplate
 from kano_login.misc import add_heading
 from kano_login.register import Register
-from kano_login.permission_slip import PermissionSlip
 
 
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -118,13 +117,12 @@ class AboutYou(TopBarTemplate):
 
         gender = self.selected_gender
         self.win.gender = gender
+        self.win.clear_win()
 
         if age < 13:
-            self.win.clear_win()
-            PermissionSlip(self.win)
+            Register(self.win, False)
 
         else:
-            self.win.clear_win()
             Register(self.win, True)
 
     def get_gender(self, widget):

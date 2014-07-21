@@ -26,14 +26,9 @@
     "ORANGE_BUTTON": "Create New",
     "KANO_BUTTON": "Login"
   },
-  "PERMISSION_SLIP": {
-    "LABEL_1": "Permission Slip",
-    "LABEL_2": "Add a parent's or teacher's email",
-    "KANO_BUTTON": "SEND EMAIL"
-  },
   "REGISTER_UNDER_13": {
-    "LABEL_1": "Login details",
-    "LABEL_2": "Pick a cool name and a secret password",
+    "LABEL_1": "Permission Slip",
+    "LABEL_2": "Add a parent's or teacher's email, then pick a cool name and a secret password",
     "KANO_BUTTON": "REGISTER"
   },
   "REGISTER_OVER_13": {

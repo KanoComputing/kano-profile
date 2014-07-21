@@ -43,6 +43,7 @@ class Login(TopBarTemplate):
 
         self.labelled_entries = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
         self.labelled_entries.get_entry(1).set_visibility(False)
+        self.labelled_entries.set_spacing(15)
         self.box.pack_start(self.labelled_entries, False, False, 15)
 
         self.button_box = KanoButtonBox("LOGIN", "Create New")

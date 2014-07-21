@@ -7,23 +7,30 @@
 #
 # UI for register screen
 
+import re
+import os
+import sys
 from gi.repository import Gtk
 
 from kano.logging import logger
+from kano.utils import run_bg
+
+from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
 from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano.utils import run_bg
+
 from kano_profile.paths import bin_dir, legal_dir
 from kano_profile.profile import save_profile_variable
 from kano_world.functions import register as register_
-from kano.gtk3 import kano_dialog
-from kano_login import account_confirm
-import re
-import os
-#from kano_login import home, login,
+
+from kano_login.templates.labelled_entries import LabelledEntries
+from kano_login.templates.top_bar_template import TopBarTemplate
+from kano_login.data import get_data
+
 
 win = None
 box = None
+over_13 = True
 
 
 def is_email(email):
@@ -34,130 +41,120 @@ def is_email(email):
         return False
 
 
-# We calculate age based on the birthday screen - if less than 13,
-# we ask for parent's email
-def activate(_win, _box):
-    global win, box
+class Register(TopBarTemplate):
+    data_over_13 = get_data("REGISTER_OVER_13")
+    data_under_13 = get_data("REGISTER_UNDER_13")
 
-    win = _win
-    box = _box
+    def __init__(self, win, over_13=False):
+        TopBarTemplate.__init__(self)
 
-    win.clear_box()
-    username_entry = Gtk.Entry()
-    email_entry = Gtk.Entry()
-    password_entry = Gtk.Entry()
+        self.win = win
+        self.win.add(self)
+        self.enable_prev()
 
-    go_to_terms_conditions = OrangeButton("I accept the terms and conditions")
-    checkbutton = Gtk.CheckButton()
-    checkbox_box = Gtk.Box()
-    checkbox_box.pack_start(checkbutton, False, False, 0)
-    checkbox_box.pack_start(go_to_terms_conditions, False, False, 0)
-    checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
-    checkbox_align.add(checkbox_box)
+        self.over_13 = over_13
 
-    register = KanoButton("REGISTER")
-    register.pack_and_align()
-    register.set_padding(0, 10, 0, 0)
-    register.set_sensitive(False)
+        self.go_to_terms_conditions = OrangeButton("I accept the terms and conditions")
+        self.checkbutton = Gtk.CheckButton()
+        checkbox_box = Gtk.Box()
+        checkbox_box.pack_start(self.checkbutton, False, False, 0)
+        checkbox_box.pack_start(self.go_to_terms_conditions, False, False, 0)
+        checkbox_align = Gtk.Alignment(xscale=0, xalign=0.5)
+        checkbox_align.add(checkbox_box)
 
-    username_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
-    email_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
-    password_entry.connect("key_release_event", set_sensitive_on_key_up, email_entry, username_entry, password_entry, register, checkbutton)
-    checkbutton.connect("toggled", set_sensitive_toggled, email_entry, username_entry, password_entry, register, checkbutton)
-    register.connect("button-press-event", register_user, username_entry, email_entry, password_entry)
-    register.connect("key-press-event", register_user, username_entry, email_entry, password_entry)
-    go_to_terms_conditions.connect("button_press_event", show_terms_and_conditions, checkbutton)
+        self.checkbutton.connect("toggled", self.set_sensitive_toggled)
+        self.go_to_terms_conditions.connect("button_press_event", self.show_terms_and_conditions)
 
-    subheading = ''
-    header = "Choose a nickname!"
-    if win.age < 13:
-        subheading = "Please provide a parent's or teacher's email"
-    else:
-        subheading = "And set your details"
+        self.kano_button = KanoButton("REGISTER")
+        self.kano_button.set_sensitive(False)
+        self.kano_button.pack_and_align()
+        self.kano_button.connect("button-release-event", self.register_user)
+        self.kano_button.connect("key-press-event", self.register_user)
 
-    title = Heading(header, subheading)
-
-    username_entry.set_placeholder_text("Username")
-    email_entry.set_placeholder_text("Email")
-    password_entry.set_placeholder_text("Password")
-    password_entry.set_visibility(False)
-
-    entry_container = Gtk.Grid(column_homogeneous=False,
-                               row_spacing=7)
-    entry_container.attach(username_entry, 0, 0, 1, 1)
-    entry_container.attach(email_entry, 0, 1, 1, 1)
-    entry_container.attach(password_entry, 0, 2, 1, 1)
-
-    valign = Gtk.Alignment()
-    valign.add(entry_container)
-    valign.set_padding(0, 0, 100, 0)
-    box.pack_start(title.container, False, False, 0)
-    box.pack_start(valign, False, False, 0)
-    box.pack_start(checkbox_align, False, False, 2)
-    box.pack_start(register.align, False, False, 5)
-    box.show_all()
-
-
-def show_terms_and_conditions(widget, event, checkbutton):
-    checkbutton.set_active(True)
-
-    legal_text = ''
-    for file in os.listdir(legal_dir):
-        with open(legal_dir + file, 'r') as f:
-            legal_text = legal_text + f.read() + '\n\n\n'
-
-    kdialog = kano_dialog.KanoDialog("Terms and conditions", "", scrolled_text=legal_text)
-    kdialog.run()
-
-
-def set_register_sensitive(entry1, entry2, entry3, button, checkbutton):
-    text1 = entry1.get_text()
-    text2 = entry2.get_text()
-    text3 = entry3.get_text()
-    bool_value = checkbutton.get_active()
-    if text1 != "" and text2 != "" and text3 != "" and bool_value:
-        button.set_sensitive(True)
-    else:
-        button.set_sensitive(False)
-
-
-def set_sensitive_toggled(widget, entry1, entry2, entry3, button, checkbutton):
-    set_register_sensitive(entry1, entry2, entry3, button, checkbutton)
-
-
-def set_sensitive_on_key_up(widget, event, entry1, entry2, entry3, button, checkbutton):
-    set_register_sensitive(entry1, entry2, entry3, button, checkbutton)
-
-
-def register_user(button, event, username_entry, email_entry, password_entry):
-    global win
-
-    if not hasattr(event, 'keyval') or event.keyval == 65293:
-
-        win.email = email_entry.get_text()
-        win.username = username_entry.get_text()
-        win.password = password_entry.get_text()
-
-        logger.info('trying to register user')
-        success, text = register_(win.email, win.username, win.password)
-
-        if not success:
-            logger.info('problem with registration: {}'.format(text))
-            kdialog = kano_dialog.KanoDialog("Houston, we have a problem", str(text))
-            kdialog.run()
+        if self.over_13:
+            header = self.data_over_13["LABEL_1"]
+            subheading = self.data_over_13["LABEL_2"]
 
         else:
-            logger.info('registration successful')
+            header = self.data_under_13["LABEL_1"]
+            subheading = self.data_under_13["LABEL_2"]
 
-            save_profile_variable('gender', win.gender)
-            save_profile_variable('birthdate', win.date)
+        title = Heading(header, subheading)
+        self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
+        self.box.pack_start(title.container, False, False, 5)
+        self.box.pack_start(self.entries_container, False, False, 10)
+        self.box.pack_start(checkbox_align, False, False, 5)
+        self.box.pack_start(self.kano_button.align, False, False, 10)
 
-            # running kano-sync after registration
-            logger.info('running kano-sync after successful registration')
-            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-            run_bg(cmd)
+        entries = self.entries_container.get_entries()
+        for entry in entries:
+            entry.connect("key_release_event", self.set_sensitive_on_key_up)
 
-            win.update()
-            # Show confirmation message
-            account_confirm.activate(win, box)
+        # password entry
+        entry = entries[len(entries) - 1]
+        entry.set_visibility(False)
+
+        self.win.show_all()
+
+    def show_terms_and_conditions(self, widget, event):
+        self.checkbutton.set_active(True)
+
+        legal_text = ''
+        for file in os.listdir(legal_dir):
+            with open(legal_dir + file, 'r') as f:
+                legal_text = legal_text + f.read() + '\n\n\n'
+
+        kdialog = KanoDialog("Terms and conditions", "", scrolled_text=legal_text)
+        kdialog.run()
+
+    def set_register_sensitive(self):
+        entry_text = self.entries_container.get_entry_text()
+        bool_value = True
+
+        for text in entry_text:
+            bool_value = bool_value and (text != "")
+
+        if bool_value and self.checkbutton.get_active():
+            self.kano_button.set_sensitive(True)
+        else:
+            self.kano_button.set_sensitive(False)
+
+    def set_sensitive_toggled(self, widget):
+        self.set_register_sensitive()
+
+    def set_sensitive_on_key_up(self, widget, event):
+        self.set_register_sensitive()
+
+    def register_user(self, widget, event):
+
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            entries = self.entries_container.get_entries()
+            self.win.username = entries[0].get_text()
+
+            if self.over_13:
+                self.win.email = entries[1].get_text()
+                self.win.password = entries[2].get_text()
+            else:
+                self.win.password = entries[1].get_text()
+
+            logger.info('trying to register user')
+            success, text = register_(self.win.email, self.win.username, self.win.password)
+
+            if not success:
+                logger.info('problem with registration: {}'.format(text))
+                kdialog = KanoDialog("Houston, we have a problem", str(text))
+                kdialog.run()
+
+            else:
+                logger.info('registration successful')
+
+                save_profile_variable('gender', self.win.gender)
+                save_profile_variable('birthdate', self.win.bday_date)
+
+                # running kano-sync after registration
+                logger.info('running kano-sync after successful registration')
+                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                run_bg(cmd)
+
+                sys.exit(0)
 

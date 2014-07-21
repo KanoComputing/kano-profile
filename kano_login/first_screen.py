@@ -11,14 +11,14 @@
 # Dependent on internet connection
 
 
-from gi.repository import Gtk
-
-from kano.gtk3.heading import Heading
-from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano_login import gender, login
+import sys
+from kano_login.login import Login
+from kano_login.about_you import AboutYou
+from kano_login.templates.template import Template
+from kano_login.data import get_data
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
-import kano.gtk3.cursor as cursor
+#import kano.gtk3.cursor as cursor
 
 
 win = None
@@ -28,74 +28,73 @@ next_button = None
 done_button = None
 
 
-def activate(_win, _box=None):
-    global win, box, login_button, done_button, next_button
-
+def create_template(string):
+    data = get_data(string)
     img_width = 590
     img_height = 270
 
-    win = _win
-    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-
-    img = Gtk.Image()
-    box.pack_start(img, False, False, 0)
-
-    if is_internet():
-        title = Heading("Amazing work - now let's save your progress!", "Let's set up your account")
-        # This button should send you to the login screen
-        login_button = OrangeButton("I have an account")
-        next_button = KanoButton("REGISTER")
-        button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        button_box.pack_start(next_button, False, False, 0)
-        button_box.pack_start(login_button, False, False, 0)
-        button_padding = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-        button_padding.add(button_box)
-
-        next_button.connect("button_press_event", update)
-        login_button.connect("button_press_event", login_screen)
-        next_button.connect("key_press_event", update)
-        login_button.connect("key_press_event", login_screen)
-        box.pack_start(title.container, False, False, 0)
-        box.pack_start(button_padding, False, False, 0)
-
-        filename = get_image("login", "", "create-profile", str(img_width) + 'x' + str(img_height))
-        img.set_from_file(filename)
-
-    else:
-        title = Heading("You should get an account, but you need internet!", "Come back later")
-        done_button = KanoButton("DONE")
-        done_button.connect("button_press_event", close_window)
-        done_button.pack_and_align()
-        done_button.set_padding(0, 10, 0, 0)
-        box.pack_start(title.container, False, False, 0)
-        box.pack_start(done_button.align, False, False, 0)
-        filename = get_image("login", "", "create-profile_noInternet", str(img_width) + 'x' + str(img_height))
-        img.set_from_file(filename)
-
-    win.add(box)
-    box.show_all()
+    header = data["LABEL_1"]
+    subheader = data["LABEL_2"]
+    image_filename = get_image("login", "", data["TOP_PIC"], str(img_width) + 'x' + str(img_height))
+    kano_button_label = data["KANO_BUTTON"]
+    orange_button_label = data["ORANGE_BUTTON"]
+    template = Template(image_filename, header, subheader, kano_button_label, orange_button_label)
+    return template
 
 
-def update(widget, event):
-    global win, box
+class FirstScreen():
+    def __init__(self, win):
 
-    if not hasattr(event, 'keyval') or event.keyval == 65293:
-        win.remove(box)
-        win.pack_grid()
-        win.update()
-        gender.activate(win, win.box)
+        self.win = win
+        self.template = create_template("FIRST_SCREEN")
+
+        self.win.add(self.template)
+        self.template.kano_button.connect("button_release_event", self.next_screen)
+        self.template.orange_button.connect("button_release_event", self.login_screen)
+        self.win.show_all()
+
+    def login_screen(self, widget, event):
+        self.win.clear_win()
+        Login(self.win)
+
+    def next_screen(self, widget, event):
+        self.win.clear_win()
+
+        if is_internet:
+            AboutYou(self.win)
+        else:
+            NoInternet(self.win)
 
 
-def login_screen(widget, event):
-    global win, box
+class NoInternet():
+    def __init__(self, win):
 
-    if not hasattr(event, 'keyval') or event.keyval == 65293:
-        win.remove(box)
-        win.pack_grid()
-        win.update()
-        login.activate(win, win.box)
+        self.win = win
+        self.template = create_template("NO_INTERNET")
+
+        self.win.add(self.template)
+        self.template.kano_button.connect("button_release_event", self.next)
+        self.template.orange_button.connect("button_release_event", self.login)
+        self.win.show_all()
+
+    def connect(self, widget, event):
+        # close window and launch wifi config
+        sys.exit(0)
+
+    def register_later(self, widget, event):
+        self.win.clear_win()
+        RegisterLater(self.win)
 
 
-def close_window(widget, event):
-    cursor.arrow_cursor(widget, None)
-    Gtk.main_quit()
+class RegisterLater():
+    def __init__(self, win):
+        self.win = win
+        self.template = create_template("REGISTER_LATER")
+
+        self.win.add(self.template)
+        self.template.kano_button.connect("button_release_event", self.exit)
+        self.win.show_all()
+
+    def exit(self, widget, event):
+        # close window and launch wifi config
+        sys.exit(0)

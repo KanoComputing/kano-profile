@@ -1,0 +1,39 @@
+{
+  "FIRST_SCREEN": {
+    "TOP_PIC": "profile-created",
+    "LABEL_1": "Now let's make a cool profile",
+    "LABEL_2": "So now you can save badges, games, and projects",
+    "ORANGE_BUTTON": "I have a profile",
+    "KANO_BUTTON": "CREATE"
+  },
+  "NO_INTERNET": {
+    "TOP_PIC": "create-profile_noInternet",
+    "LABEL_1": "Oops! Internet required for profile",
+    "LABEL_2": "But you can skip this if you have no connection right now",
+    "ORANGE_BUTTON": "Register Later",
+    "KANO_BUTTON": "CONNECT"
+  },
+  "REGISTER_LATER": {
+    "TOP_PIC": "create-profile",
+    "LABEL_1": "No online profile - for now",
+    "LABEL_2": "Your profile stores all your badges, projects, and swag.  But fear not - we'll save everything for when you have internet",
+    "ORANGE_BUTTON": "",
+    "KANO_BUTTON": "GET REWARDS"
+  },
+  "LOGIN": {
+    "LABEL_1": "Login",
+    "LABEL_2": "Enter your existing login and password",
+    "ORANGE_BUTTON": "Create New",
+    "KANO_BUTTON": "Login"
+  },
+  "REGISTER_UNDER_13": {
+    "LABEL_1": "Permission Slip",
+    "LABEL_2": "Add a parent's or teacher's email, then pick a cool name and a secret password",
+    "KANO_BUTTON": "REGISTER"
+  },
+  "REGISTER_OVER_13": {
+    "LABEL_1": "Login details",
+    "LABEL_2": "Pick a cool name, add your email and set your password",
+    "KANO_BUTTON": "REGISTER"
+  }
+}

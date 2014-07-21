@@ -40,7 +40,7 @@ refs = {
 
 class MainWindow(Gtk.Window):
 
-    def __init__(self, first_boot, page_number):
+    def __init__(self, first_boot, state):
 
         # Create main window
         Gtk.Window.__init__(self, title='Kano')
@@ -55,10 +55,6 @@ class MainWindow(Gtk.Window):
         self.gender = ""
         self.first_boot = first_boot
 
-        # The state is the current window showing
-        # CHange this according to the bash argument
-        self.state = page_number
-
         self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
         # Remove decoration
@@ -68,14 +64,16 @@ class MainWindow(Gtk.Window):
 
         if first_boot == 1:
             FirstScreen(self)
+        elif state == 0:
+            Login(self)
         else:
-            self.goto(self.state)
+            self.goto(state)
 
         self.show_all()
 
-    def goto(self, module):
+    def goto(self, state):
         self.clear_win()
-        refs[self.state](self)
+        refs[state](self)
 
     def clear_win(self):
         for i in self.get_children():

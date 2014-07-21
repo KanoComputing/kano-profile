@@ -1,18 +1,11 @@
-
-
-/* */
-
-/* This is the label that contains the email */
-/* Specific to kano-login */
-.confirm_email {
-    font: Bariol Bold 14px;
-    color: @title_color;
-}
-
-.confirm_email_info {
-    font: Bariol 14px;
-    color: @subheading_color;
-}
+/*
+# login.css
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# This contains the login specific styling
+*/
 
 .bold_label {
     font: Bariol Bold 14px;

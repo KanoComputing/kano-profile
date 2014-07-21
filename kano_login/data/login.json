@@ -30,7 +30,7 @@
       "ALERT_DESCRIPTION_TOO_YOUNG": "Apparently you haven't been born yet...",
       "ALERT_TITLE_TOO_OLD": "Well done for living this long!",
       "ALERT_DESCRIPTION_TOO_OLD": "(But I don't believe you)",
-      "ALERT_TITLE_DEFAULT": "Housten we have a problem",
+      "ALERT_TITLE_DEFAULT": "Houston we have a problem",
       "ALERT_DESCRIPTION_DEFAULT": "Invalid birthday"
     },
   "LOGIN": {

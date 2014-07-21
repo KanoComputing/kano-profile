@@ -44,6 +44,7 @@ def is_email(email):
 class Register(TopBarTemplate):
     data_over_13 = get_data("REGISTER_OVER_13")
     data_under_13 = get_data("REGISTER_UNDER_13")
+    data = get_data("REGISTER")
 
     def __init__(self, win, over_13=False):
         TopBarTemplate.__init__(self)
@@ -54,7 +55,7 @@ class Register(TopBarTemplate):
 
         self.over_13 = over_13
 
-        self.go_to_terms_conditions = OrangeButton("I accept the terms and conditions")
+        self.go_to_terms_conditions = OrangeButton(self.data["TERMS_AND_CONDITIONS"])
         self.checkbutton = Gtk.CheckButton()
         checkbox_box = Gtk.Box()
         checkbox_box.pack_start(self.checkbutton, False, False, 0)
@@ -65,7 +66,7 @@ class Register(TopBarTemplate):
         self.checkbutton.connect("toggled", self.set_sensitive_toggled)
         self.go_to_terms_conditions.connect("button_press_event", self.show_terms_and_conditions)
 
-        self.kano_button = KanoButton("REGISTER")
+        self.kano_button = KanoButton(self.data["KANO_BUTTON"])
         self.kano_button.set_sensitive(False)
         self.kano_button.pack_and_align()
         self.kano_button.connect("button-release-event", self.register_user)

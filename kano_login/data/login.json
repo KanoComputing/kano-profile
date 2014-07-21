@@ -1,4 +1,9 @@
 {
+  "SETUP_SUCCESSFUL": {
+    "LABEL_1": "Setup successful!",
+    "LABEL_2": "You can change the sound, screen size, and more any time by clicking on Settings in the bottom bar",
+    "KANO_BUTTON": "CONTINUE"
+  },
   "FIRST_SCREEN": {
     "TOP_PIC": "profile-created",
     "LABEL_1": "Now let's make a cool profile",
@@ -34,14 +39,16 @@
     "ORANGE_BUTTON": "Create New",
     "KANO_BUTTON": "Login"
   },
+  "REGISTER": {
+      "TERMS_AND_CONDITIONS": "I accept the terms and conditions",
+      "KANO_BUTTON": "REGISTER"
+    },
   "REGISTER_UNDER_13": {
     "LABEL_1": "Permission Slip",
-    "LABEL_2": "Pick a cool name, add a parent's or teacher's email and set your password",
-    "KANO_BUTTON": "REGISTER"
+    "LABEL_2": "Pick a cool name, add a parent's or teacher's email and set your password"
   },
   "REGISTER_OVER_13": {
     "LABEL_1": "Login details",
-    "LABEL_2": "Pick a cool name, add your email and set your password",
-    "KANO_BUTTON": "REGISTER"
+    "LABEL_2": "Pick a cool name, add your email and set your password"
   }
 }

@@ -13,13 +13,17 @@
 
 from kano_login.first_screen import FirstScreen
 from kano_login.templates.template import Template
+from kano_login.data import get_data
 
 
 class SetupSuccessful():
+
+    data = get_data("SETUP_SUCCESSFUL")
+
     def __init__(self, win):
 
         self.win = win
-        self.template = Template(None, "Setup successful!", "You can change the sound, screen size, and more any time by clicking on Settings in the bottom bar ", "CONTINUE", "")
+        self.template = Template(None, self.data["LABEL_1"], self.data["LABEL_2"], self.data["KANO_BUTTON"], "")
 
         self.win.add(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)

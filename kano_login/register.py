@@ -81,7 +81,7 @@ class Register(TopBarTemplate):
 
         title = Heading(header, subheading)
         self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
-        self.box.pack_start(title.container, False, False, 5)
+        self.box.pack_start(title.container, False, False, 0)
         self.box.pack_start(self.entries_container, False, False, 10)
         self.box.pack_start(checkbox_align, False, False, 5)
         self.box.pack_start(self.kano_button.align, False, False, 10)
@@ -130,12 +130,8 @@ class Register(TopBarTemplate):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             entries = self.entries_container.get_entries()
             self.win.username = entries[0].get_text()
-
-            if self.over_13:
-                self.win.email = entries[1].get_text()
-                self.win.password = entries[2].get_text()
-            else:
-                self.win.password = entries[1].get_text()
+            self.win.email = entries[1].get_text()
+            self.win.password = entries[2].get_text()
 
             logger.info('trying to register user')
             success, text = register_(self.win.email, self.win.username, self.win.password)

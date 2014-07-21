@@ -18,12 +18,15 @@ from kano.gtk3.kano_dialog import KanoDialog
 from kano_login.templates.top_bar_template import TopBarTemplate
 from kano_login.misc import add_heading
 from kano_login.register import Register
+from kano_login.data import get_data
 
 
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 
 class AboutYou(TopBarTemplate):
+    data = get_data("ABOUT_YOU")
+
     # add argument to say which screen we came from - Login or FirstScreen
     def __init__(self, win):
 
@@ -139,6 +142,12 @@ class AboutYou(TopBarTemplate):
 
             bday_date = str(datetime.date(bday_year, bday_month, bday_day))
 
+            # To allow people to enter their year as a two digit number
+            if bday_year < 15 and bday_year >= 0:
+                bday_year = bday_year + 2000
+            elif bday_year >= 15 and bday_year <= 99:
+                bday_year = bday_year + 1900
+
             # Get current date
             current_day = int(time.strftime("%d"))
             current_month = int(time.strftime("%m"))
@@ -146,9 +155,9 @@ class AboutYou(TopBarTemplate):
 
             age = current_year - bday_year
             if age < 0:
-                raise Exception("Hmmm, really?", "Apparently you haven't been born yet...")
+                raise Exception(self.data["ALERT_TITLE_TOO_YOUNG"], self.data["ALERT_DESCRIPTION_TOO_YOUNG"])
             elif age > 114:
-                raise Exception("Well done for living this long!", "(But I don't believe you)")
+                raise Exception(self.data["ALERT_TITLE_TOO_OLD"], self.data["ALERT_DESCRIPTION_TOO_OLD"])
 
             if current_month < bday_month:
                 age = age - 1
@@ -165,6 +174,6 @@ class AboutYou(TopBarTemplate):
             if len(e.args) > 1:
                 kdialog = KanoDialog(e.args[0], e.args[1])
             else:
-                kdialog = KanoDialog("Houston, we have a problem", "You've not entered a valid birthday!")
+                kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"], self.data["ALERT_DESCRIPTION_DEFAULT"])
             kdialog.run()
             return -1, -1

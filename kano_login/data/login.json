@@ -20,6 +20,14 @@
     "ORANGE_BUTTON": "",
     "KANO_BUTTON": "GET REWARDS"
   },
+  "ABOUT_YOU": {
+      "ALERT_TITLE_TOO_YOUNG": "Hmmm, really?",
+      "ALERT_DESCRIPTION_TOO_YOUNG": "Apparently you haven't been born yet...",
+      "ALERT_TITLE_TOO_OLD": "Well done for living this long!",
+      "ALERT_DESCRIPTION_TOO_OLD": "(But I don't believe you)",
+      "ALERT_TITLE_DEFAULT": "Housten we have a problem",
+      "ALERT_DESCRIPTION_DEFAULT": "Invalid birthday"
+    },
   "LOGIN": {
     "LABEL_1": "Login",
     "LABEL_2": "Enter your existing login and password",
@@ -28,7 +36,7 @@
   },
   "REGISTER_UNDER_13": {
     "LABEL_1": "Permission Slip",
-    "LABEL_2": "Add a parent's or teacher's email, then pick a cool name and a secret password",
+    "LABEL_2": "Pick a cool name, add a parent's or teacher's email and set your password",
     "KANO_BUTTON": "REGISTER"
   },
   "REGISTER_OVER_13": {

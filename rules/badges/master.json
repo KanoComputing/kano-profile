@@ -4,7 +4,7 @@
     "desc_locked": "Build a computer",
     "desc_unlocked": "You built a computer, powered it up with sound and wireless, connected its brain to a memory, and brought it to life on your screen. You are a Computer Commander.",
     "operation": "each_greater",
-    "targets": [["kano-settings", "completed", 1]],
+    "targets": [["computed", "kano_level", 1]],
     "title": "Computer Commander"
   },
   "minecraft_master": {

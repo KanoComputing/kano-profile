@@ -59,7 +59,7 @@ def calculate_kano_level():
     max_level = max([int(n) for n in level_rules.keys()])
     xp_now = calculate_xp()
 
-    for level in xrange(0, max_level + 1):
+    for level in xrange(1, max_level + 1):
         level_min = level_rules[str(level)]
 
         if level != max_level:
@@ -85,7 +85,7 @@ def calculate_min_current_max_xp():
     level_min = 0
     level_max = 0
 
-    for level in xrange(0, max_level + 1):
+    for level in xrange(1, max_level + 1):
         level_min = level_rules[str(level)]
 
         if level != max_level:

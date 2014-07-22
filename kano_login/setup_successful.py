@@ -10,7 +10,6 @@
 # Launched on straight after kano-settings
 # Dependent on internet connection
 
-
 from kano_login.first_screen import FirstScreen
 from kano_login.templates.template import Template
 from kano_login.data import get_data

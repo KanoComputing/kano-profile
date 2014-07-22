@@ -10,6 +10,7 @@
 # Launched on straight after kano-settings
 # Dependent on internet connection
 
+#from gi.repository import Gtk
 
 import sys
 from kano_login.login import Login
@@ -38,8 +39,13 @@ class FirstScreen():
     def __init__(self, win):
 
         self.win = win
-        self.template = create_template("FIRST_SCREEN")
 
+        # Hacky way of moving the window back to the centre
+        # Get current coordinates, then move the window up by 100 pixels
+        x, y = self.win.get_position()
+        self.win.move(x, y - 100)
+
+        self.template = create_template("FIRST_SCREEN")
         self.win.add(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
         self.template.orange_button.connect("button_release_event", self.login_screen)

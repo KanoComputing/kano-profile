@@ -155,9 +155,9 @@ class AboutYou(TopBarTemplate):
 
             age = current_year - bday_year
             if age < 0:
-                raise Exception(self.data["ALERT_TITLE_TOO_YOUNG"], self.data["ALERT_DESCRIPTION_TOO_YOUNG"])
+                raise Exception(self.data["ALERT_TITLE_DEFAULT"], self.data["ALERT_DESCRIPTION_DEFAULT"])
             elif age > 114:
-                raise Exception(self.data["ALERT_TITLE_TOO_OLD"], self.data["ALERT_DESCRIPTION_TOO_OLD"])
+                raise Exception(self.data["ALERT_TITLE_DEFAULT"], self.data["ALERT_DESCRIPTION_DEFAULT"])
 
             if current_month < bday_month:
                 age = age - 1

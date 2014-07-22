@@ -30,9 +30,9 @@
       "ALERT_DESCRIPTION_TOO_YOUNG": "Apparently you haven't been born yet...",
       "ALERT_TITLE_TOO_OLD": "Well done for living this long!",
       "ALERT_DESCRIPTION_TOO_OLD": "(But I don't believe you)",
-      "ALERT_TITLE_DEFAULT": "Houston we have a problem",
-      "ALERT_DESCRIPTION_DEFAULT": "Invalid birthday"
-    },
+      "ALERT_TITLE_DEFAULT": "Nice try!",
+      "ALERT_DESCRIPTION_DEFAULT": " Your year has to be between 1900 and 2013"
+  },
   "LOGIN": {
     "LABEL_1": "Login",
     "LABEL_2": "Enter your existing login and password",

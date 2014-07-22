@@ -51,7 +51,6 @@ class Register(TopBarTemplate):
 
         self.win = win
         self.win.add(self)
-        self.enable_prev()
 
         self.over_13 = over_13
 

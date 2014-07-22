@@ -1,20 +1,21 @@
-bin/* /usr/bin
+bin/* usr/bin
 
-kano_profile /usr/lib/python2.7/dist-packages
-kano_world /usr/lib/python2.7/dist-packages
-kano_login /usr/lib/python2.7/dist-packages
-kano_profile_gui /usr/lib/python2.7/dist-packages
+kano_profile usr/lib/python2.7/dist-packages
+kano_world usr/lib/python2.7/dist-packages
+kano_login usr/lib/python2.7/dist-packages
+kano_profile_gui usr/lib/python2.7/dist-packages
 
-media /usr/share/kano-profile
-rules /usr/share/kano-profile
+media usr/share/kano-profile
+rules usr/share/kano-profile
 
-icon/kano-share.desktop /usr/share/kano-apps/extras
-icon/kano-share.png /usr/share/kano-apps/icons
+icon/kano-share.desktop usr/share/kano-apps/extras
+icon/kano-share.png usr/share/kano-apps/icons
 
-icon/profile-login-widget.png /usr/share/kano-profile/icon
-icon/profile-not-login-widget.png /usr/share/kano-profile/icon
-icon/widget-backup.png /usr/share/kano-profile/icon
-icon/widget-restore.png /usr/share/kano-profile/icon
-icon/widget-sync.png /usr/share/kano-profile/icon
+icon/profile-login-widget.png usr/share/kano-profile/icon
+icon/profile-not-login-widget.png usr/share/kano-profile/icon
+icon/widget-backup.png usr/share/kano-profile/icon
+icon/widget-restore.png usr/share/kano-profile/icon
+icon/widget-sync.png usr/share/kano-profile/icon
+icon/kano-world.png usr/share/icons/Kano/66x66/apps
 
 lxpanel-plugin/kano_profile.so usr/lib/arm-linux-gnueabihf/lxpanel/plugins/

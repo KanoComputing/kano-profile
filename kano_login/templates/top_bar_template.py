@@ -9,6 +9,8 @@
 
 from gi.repository import Gtk
 from kano.gtk3.top_bar import TopBar
+from kano.gtk3.kano_dialog import KanoDialog
+from kano_login.data import get_data
 
 
 class TopBarTemplate(Gtk.Grid):
@@ -20,18 +22,12 @@ class TopBarTemplate(Gtk.Grid):
         self.attach(self.top_bar, 0, 0, 3, 1)
         self.attach(self.box, 1, 1, 1, 1)
 
-        #self.top_bar.set_prev_callback(prev_cb, args)
-        #self.top_bar.set_next_callback(next_callback)
-        self.top_bar.set_close_callback(Gtk.main_quit)
+        self.top_bar.set_close_callback(self.close_window)
 
-    def enable_prev(self):
-        self.top_bar.enable_prev()
-
-    def enable_next(self):
-        self.top_bar.enable_next()
-
-    def disable_prev(self):
-        self.top_bar.disable_prev()
-
-    def disable_next(self):
-        self.top_bar.disable_next()
+    def close_window(self, widget, event):
+        # check for first boot
+        data = get_data("CLOSE_WINDOW")
+        kd = KanoDialog(data["LABEL_1"], data["LABEL_2"], {"OK": {"return_value": 0}, "CANCEL": {"return_value": 1}})
+        response = kd.run()
+        if response == 0:
+            Gtk.main_quit()

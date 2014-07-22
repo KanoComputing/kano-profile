@@ -50,5 +50,9 @@
   "REGISTER_OVER_13": {
     "LABEL_1": "Login details",
     "LABEL_2": "Pick a cool name, add your email, and set your password"
+  },
+  "CLOSE_WINDOW": {
+    "LABEL_1": "Are you sure?",
+    "LABEL_2": "You won't get the best features of your Kano"
   }
 }

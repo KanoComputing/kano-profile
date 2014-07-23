@@ -28,12 +28,13 @@ class AboutYou(TopBarTemplate):
     data = get_data("ABOUT_YOU")
 
     # add argument to say which screen we came from - Login or FirstScreen
-    def __init__(self, win):
+    def __init__(self, win, prev_screen):
 
-        TopBarTemplate.__init__(self, "About You")
+        TopBarTemplate.__init__(self, "About You", prev_screen)
 
         self.win = win
         self.win.add(self)
+        self.enable_prev()
 
         title = Heading("About you", "")
 
@@ -53,6 +54,10 @@ class AboutYou(TopBarTemplate):
         self.box.pack_start(self.next_button.align, False, False, 20)
 
         self.win.show_all()
+
+    def repack(self):
+        self.win.clear_win()
+        self.win.add(self)
 
     def create_gender_widget(self):
         self.boy_widget = Gtk.RadioButton.new_with_label(None, "Boy")
@@ -123,10 +128,10 @@ class AboutYou(TopBarTemplate):
         self.win.clear_win()
 
         if age < 13:
-            Register(self.win, False)
+            Register(self.win, self, False)
 
         else:
-            Register(self.win, True)
+            Register(self.win, self, True)
 
     def get_gender(self, widget):
         if widget.get_active():

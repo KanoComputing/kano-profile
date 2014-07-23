@@ -46,8 +46,9 @@ class Register(TopBarTemplate):
     data_under_13 = get_data("REGISTER_UNDER_13")
     data = get_data("REGISTER")
 
-    def __init__(self, win, over_13=False):
-        TopBarTemplate.__init__(self)
+    def __init__(self, win, _prev_screen, over_13=False):
+        TopBarTemplate.__init__(self, prev_screen=_prev_screen)
+        self.enable_prev()
 
         self.win = win
         self.win.add(self)

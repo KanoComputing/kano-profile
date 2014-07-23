@@ -55,9 +55,13 @@ class Login(TopBarTemplate):
 
         self.win.show_all()
 
+    def repack(self):
+        self.win.clear_win()
+        self.win.add(self)
+
     def create_new(self, widget, event, args=[]):
         self.win.clear_win()
-        AboutYou(self.win)
+        AboutYou(self.win, self)
 
     def log_user_in_key(self, widget, event):
         # 65293 is the ENTER keycode.

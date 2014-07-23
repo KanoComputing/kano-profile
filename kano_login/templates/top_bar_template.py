@@ -14,15 +14,31 @@ from kano_login.data import get_data
 
 
 class TopBarTemplate(Gtk.Grid):
-    def __init__(self, title_name=""):
+    def __init__(self, title_name="", prev_screen=None):
         Gtk.Grid.__init__(self)
-        self.top_bar = TopBar(title=title_name, window_width=590, has_buttons=False)
+        self.top_bar = TopBar(title=title_name, window_width=590, has_buttons=True)
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.prev_screen = prev_screen
 
         self.attach(self.top_bar, 0, 0, 3, 1)
         self.attach(self.box, 1, 1, 1, 1)
 
+        if prev_screen:
+            self.top_bar.set_prev_callback(self.show_prev_screen)
+
         self.top_bar.set_close_callback(self.close_window)
+
+    def enable_prev(self):
+        self.top_bar.enable_prev()
+
+    def enable_next(self):
+        self.top_bar.enable_next()
+
+    def disable_prev(self):
+        self.top_bar.disable_prev()
+
+    def disable_next(self):
+        self.top_bar.disable_next()
 
     def close_window(self, widget, event):
         # check for first boot
@@ -31,3 +47,6 @@ class TopBarTemplate(Gtk.Grid):
         response = kd.run()
         if response == 0:
             Gtk.main_quit()
+
+    def show_prev_screen(self, widget, event):
+        self.prev_screen.repack()

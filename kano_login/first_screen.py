@@ -59,9 +59,13 @@ class FirstScreen():
         self.win.clear_win()
 
         if is_internet:
-            AboutYou(self.win)
+            AboutYou(self.win, self)
         else:
             NoInternet(self.win)
+
+    def repack(self):
+        self.win.clear_win()
+        self.win.add(self)
 
 
 class NoInternet():

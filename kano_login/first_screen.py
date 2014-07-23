@@ -12,6 +12,7 @@
 
 #from gi.repository import Gtk
 
+import os
 import sys
 from kano_login.login import Login
 from kano_login.about_you import AboutYou
@@ -58,7 +59,7 @@ class FirstScreen():
     def next_screen(self, widget, event):
         self.win.clear_win()
 
-        if is_internet:
+        if is_internet():
             AboutYou(self.win, self)
         else:
             NoInternet(self.win)
@@ -75,28 +76,16 @@ class NoInternet():
         self.template = create_template("NO_INTERNET")
 
         self.win.add(self.template)
-        self.template.kano_button.connect("button_release_event", self.next)
-        self.template.orange_button.connect("button_release_event", self.login)
+        self.template.kano_button.connect("button_release_event", self.connect)
+        self.template.orange_button.connect("button_release_event", self.register_later)
         self.win.show_all()
 
     def connect(self, widget, event):
-        # close window and launch wifi config
-        sys.exit(0)
+        # Launch kano-wifi
+        os.system('rxvt -title \'WiFi\' -e sudo /usr/bin/kano-wifi')
+
+        self.win.clear_win()
+        FirstScreen(self.win)
 
     def register_later(self, widget, event):
-        self.win.clear_win()
-        RegisterLater(self.win)
-
-
-class RegisterLater():
-    def __init__(self, win):
-        self.win = win
-        self.template = create_template("REGISTER_LATER")
-
-        self.win.add(self.template)
-        self.template.kano_button.connect("button_release_event", self.exit)
-        self.win.show_all()
-
-    def exit(self, widget, event):
-        # close window and launch wifi config
         sys.exit(0)

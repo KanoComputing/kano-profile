@@ -12,7 +12,7 @@
     "KANO_BUTTON": "CREATE"
   },
   "NO_INTERNET": {
-    "TOP_PIC": "create-profile_noInternet",
+    "TOP_PIC": "no_internet",
     "LABEL_1": "Oops! Internet required for profile",
     "LABEL_2": "But you can skip this if you have no connection right now",
     "ORANGE_BUTTON": "Register later",

@@ -32,4 +32,9 @@ class SetupSuccessful():
     def next_screen(self, widget, event):
         self.win.clear_win()
         self.win.set_size_request(590, 450)
+
+        # Hacky way of moving the window back to the centre
+        # Get current coordinates, then move the window up by 100 pixels
+        x, y = self.win.get_position()
+        self.win.move(x, y - 100)
         FirstScreen(self.win)

@@ -68,9 +68,9 @@ def save_app_state(app_name, data):
         chown_path(app_state_file)
 
     # Ask kdesk to refresh the Login/Register icon with new Kano Level
-    # if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
-        # logger.info('refreshing kdesk from save_app_state')
-        # run_bg('kdesk -a profile')
+    if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
+        logger.info('refreshing kdesk from save_app_state')
+        run_bg('kdesk -a profile')
 
 
 def save_app_state_variable(app_name, variable, value):

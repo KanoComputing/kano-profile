@@ -66,7 +66,7 @@ class FirstScreen():
 
     def repack(self):
         self.win.clear_win()
-        self.win.add(self)
+        self.win.add(self.template)
 
 
 class NoInternet():

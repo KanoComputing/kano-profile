@@ -9,7 +9,7 @@
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
-    run_print_output_error
+    run_print_output_error, is_running, run_bg
 from kano.logging import logger
 from .paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
 from .profile import is_unlocked

@@ -46,6 +46,7 @@ class Register(TopBarTemplate):
     data_over_13 = get_data("REGISTER_OVER_13")
     data_under_13 = get_data("REGISTER_UNDER_13")
     data = get_data("REGISTER")
+    data_success = get_data("REGISTER_SUCCESS")
 
     def __init__(self, win, _prev_screen, over_13=False):
         TopBarTemplate.__init__(self, prev_screen=_prev_screen)
@@ -165,8 +166,8 @@ class Register(TopBarTemplate):
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-            title = "Registration successful!!"
-            description = "You have special powers now"
+            title = self.data_success["LABEL_1"]
+            description = self.data_success["LABEL_2"]
             return_value = 1
 
         def done(title, description, return_value):

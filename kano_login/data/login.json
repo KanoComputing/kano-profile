@@ -39,10 +39,14 @@
     "ORANGE_BUTTON": "Create New",
     "KANO_BUTTON": "Login"
   },
+  "LOGIN_SUCCESS": {
+      "LABEL_1": "Success!",
+      "LABEL_2": "You're in - online features now enabled"
+  },
   "REGISTER": {
       "TERMS_AND_CONDITIONS": "I accept the terms and conditions",
       "KANO_BUTTON": "REGISTER"
-    },
+  },
   "REGISTER_UNDER_13": {
     "LABEL_1": "Permission Slip",
     "LABEL_2": "Pick a cool name, add a parent or teacher's email, and set your password"
@@ -50,6 +54,10 @@
   "REGISTER_OVER_13": {
     "LABEL_1": "Login details",
     "LABEL_2": "Pick a cool name, add your email, and set your password"
+  },
+  "REGISTER_SUCCESS": {
+      "LABEL_1": "Registration successful!",
+      "LABEL_2": "You have special powers now"
   },
   "CLOSE_WINDOW": {
     "LABEL_1": "Are you sure?",

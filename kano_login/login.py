@@ -33,6 +33,7 @@ force_login = is_registered() and 'kanoworld_username' in profile
 
 class Login(TopBarTemplate):
     data = get_data("LOGIN")
+    data_success = get_data("LOGIN_SUCCESS")
 
     def __init__(self, win):
 
@@ -113,8 +114,8 @@ class Login(TopBarTemplate):
                 cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
                 run_bg(cmd)
 
-            title = "Success!"
-            description = "You're in - online features now enabled"
+            title = self.data_success["LABEL_1"]
+            description = self.data_success["LABEL_2"]
             return_value = 1
 
         def done(title, description, return_value):

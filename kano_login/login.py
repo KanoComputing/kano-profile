@@ -7,7 +7,9 @@
 #
 # UI for login screen
 
-from gi.repository import Gtk
+import threading
+import sys
+from gi.repository import Gdk, GObject
 
 from kano.logging import logger
 
@@ -49,8 +51,8 @@ class Login(TopBarTemplate):
         self.button_box = KanoButtonBox("LOGIN", "Create New")
         self.box.pack_start(self.button_box, False, False, 30)
 
-        self.button_box.kano_button.connect("button_release_event", self.log_user_in)
-        self.button_box.kano_button.connect("key-release-event", self.log_user_in_key)
+        self.button_box.kano_button.connect("button_release_event", self.activate)
+        self.button_box.kano_button.connect("key-release-event", self.activate)
         self.button_box.set_orange_button_cb(self.create_new)
 
         self.win.show_all()
@@ -63,20 +65,24 @@ class Login(TopBarTemplate):
         self.win.clear_win()
         AboutYou(self.win, self)
 
-    def log_user_in_key(self, widget, event):
-        # 65293 is the ENTER keycode.
-        if event.keyval == 65293:
-            self.log_user_in(widget, event)
+    def activate(self, widget, event):
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+            self.win.get_window().set_cursor(watch_cursor)
+            self.button_box.kano_button.set_sensitive(False)
 
-    def log_user_in(self, widget, event):
-        self.button_box.kano_button.set_sensitive(False)
+            thread = threading.Thread(target=self.log_user_in())
+            thread.start()
+
+    def log_user_in(self):
         [username_email, password_text] = self.labelled_entries.get_entry_text()
         success, text = login_(username_email, password_text)
 
         if not success:
             logger.info('problem with login: {}'.format(text))
-            kdialog = KanoDialog("Houston, we have a problem", text)
-            kdialog.run()
+            title = "Houston, we have a problem"
+            description = text
+            return_value = 0
 
         else:
             logger.info('login successful')
@@ -107,10 +113,18 @@ class Login(TopBarTemplate):
                 cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
                 run_bg(cmd)
 
-            kdialog = KanoDialog("Success!", "You're in - online features now enabled")
-            response = kdialog.run()
-            # Default response
-            if response == 0:
-                Gtk.main_quit()
+            title = "Success!"
+            description = "You're in - online features now enabled"
+            return_value = 1
 
-        self.button_box.kano_button.set_sensitive(True)
+        def done(title, description, return_value):
+            kdialog = KanoDialog(title, description, {"OK": {"return_value": return_value}})
+            response = kdialog.run()
+
+            if response == 1:
+                sys.exit(0)
+
+            self.win.get_window().set_cursor(None)
+            self.button_box.kano_button.set_sensitive(True)
+
+        GObject.idle_add(done, title, description, return_value)

@@ -40,6 +40,8 @@ class Launcher(WebApp):
         self._width = 1024
         self._centered = True
 
+        self._app_icon = "kano-world"
+
     def _download(self, view, req):
         url = req.get_uri()
         query = urlparse(url).query.split('&')

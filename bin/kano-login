@@ -7,7 +7,8 @@
 #
 # UI for login screen
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GObject
+GObject.threads_init()
 import os
 import sys
 

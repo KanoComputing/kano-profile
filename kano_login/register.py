@@ -10,7 +10,8 @@
 import re
 import os
 import sys
-from gi.repository import Gtk
+import threading
+from gi.repository import Gtk, Gdk, GObject
 
 from kano.logging import logger
 from kano.utils import run_bg
@@ -69,8 +70,8 @@ class Register(TopBarTemplate):
         self.kano_button = KanoButton(self.data["KANO_BUTTON"])
         self.kano_button.set_sensitive(False)
         self.kano_button.pack_and_align()
-        self.kano_button.connect("button-release-event", self.register_user)
-        self.kano_button.connect("key-press-event", self.register_user)
+        self.kano_button.connect("button-release-event", self.activate)
+        self.kano_button.connect("key-press-event", self.activate)
 
         if self.over_13:
             header = self.data_over_13["LABEL_1"]
@@ -126,32 +127,57 @@ class Register(TopBarTemplate):
     def set_sensitive_on_key_up(self, widget, event):
         self.set_register_sensitive()
 
-    def register_user(self, widget, event):
-
+    def activate(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
-            entries = self.entries_container.get_entries()
-            self.win.username = entries[0].get_text()
-            self.win.email = entries[1].get_text()
-            self.win.password = entries[2].get_text()
+             # This is a callback called by the main loop, so it's safe to
+            # manipulate GTK objects:
+            watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+            self.win.get_window().set_cursor(watch_cursor)
+            self.kano_button.set_sensitive(False)
 
-            logger.info('trying to register user')
-            success, text = register_(self.win.email, self.win.username, self.win.password)
+            thread = threading.Thread(target=self.register_user)
+            thread.start()
 
-            if not success:
-                logger.info('problem with registration: {}'.format(text))
-                kdialog = KanoDialog("Houston, we have a problem", str(text))
-                kdialog.run()
+    def register_user(self):
 
-            else:
-                logger.info('registration successful')
+        entries = self.entries_container.get_entries()
+        self.win.username = entries[0].get_text()
+        self.win.email = entries[1].get_text()
+        self.win.password = entries[2].get_text()
 
-                save_profile_variable('gender', self.win.gender)
-                save_profile_variable('birthdate', self.win.bday_date)
+        logger.info('trying to register user')
+        success, text = register_(self.win.email, self.win.username, self.win.password)
 
-                # running kano-sync after registration
-                logger.info('running kano-sync after successful registration')
-                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                run_bg(cmd)
+        if not success:
+            logger.info('problem with registration: {}'.format(text))
+            title = "Houston, we have a problem"
+            description = str(text)
+            return_value = 0
 
+        else:
+            logger.info('registration successful')
+
+            save_profile_variable('gender', self.win.gender)
+            save_profile_variable('birthdate', self.win.bday_date)
+
+            # running kano-sync after registration
+            logger.info('running kano-sync after successful registration')
+            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            run_bg(cmd)
+
+            title = "Registration successful!!"
+            description = "You have special powers now"
+            return_value = 1
+
+        def done(title, description, return_value):
+            kdialog = KanoDialog(title, description, {"OK": {"return_value": return_value}})
+            response = kdialog.run()
+
+            self.win.get_window().set_cursor(None)
+            self.kano_button.set_sensitive(True)
+
+            if response == 1:
                 sys.exit(0)
+
+        GObject.idle_add(done, title, description, return_value)
 

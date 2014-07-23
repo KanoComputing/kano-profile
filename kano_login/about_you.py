@@ -77,7 +77,7 @@ class AboutYou(TopBarTemplate):
         box = Gtk.Box(spacing=20)
 
         self.day_widget = Gtk.ComboBoxText()
-        for i in range(1, 31):
+        for i in range(1, 32):
             self.day_widget.append_text(str(i))
         self.day_widget.set_active(0)
 

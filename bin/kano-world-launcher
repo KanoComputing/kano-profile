@@ -80,6 +80,11 @@ class Launcher(WebApp):
         if rc == 1:
             launch_project(app, attachment_name, folder)
 
+#### TODO: REMOVE THIS - Kano World WebApp is broken ####
+cmd = 'kano-dialog title="This app is under construction" description="Check back very soon" buttons=OK:green:1'
+_, _, rc = run_cmd(cmd)
+sys.exit(0)
+#### ----------------------------------------------- ####
 
 # Check internet status
 if not is_internet():

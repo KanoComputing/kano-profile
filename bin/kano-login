@@ -27,6 +27,7 @@ from kano_login.register import Register
 from kano_login.components.logged_in import LoggedIn
 from kano_world.functions import login_using_token
 from kano.gtk3.apply_styles import apply_styles
+from kano.gtk3.application_window import ApplicationWindow
 
 
 # These are the screens we want to be able to access from the comand line e.g. via ./kano-login 3
@@ -37,14 +38,14 @@ refs = {
 }
 
 
-class MainWindow(Gtk.Window):
+class MainWindow(ApplicationWindow):
 
     def __init__(self, first_boot, state):
 
         # Create main window
-        Gtk.Window.__init__(self, title='Kano')
         self.WINDOW_HEIGHT = 450
         self.WINDOW_WIDTH = 590
+        ApplicationWindow.__init__(self, 'Kano', self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
         self.username = ""
         self.email = ""
@@ -53,13 +54,6 @@ class MainWindow(Gtk.Window):
         self.age = 0
         self.gender = ""
         self.first_boot = first_boot
-
-        self.set_size_request(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
-
-        # Remove decoration
-        self.set_decorated(False)
-        self.set_resizable(False)
-        self.set_position(Gtk.WindowPosition.CENTER)
 
         if first_boot == 1:
             SetupSuccessful(self)
@@ -75,8 +69,7 @@ class MainWindow(Gtk.Window):
         refs[state](self)
 
     def clear_win(self):
-        for i in self.get_children():
-            self.remove(i)
+        self.remove_main_widget()
 
 
 def main(first_boot, page_number=0):

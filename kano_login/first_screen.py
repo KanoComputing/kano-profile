@@ -42,7 +42,7 @@ class FirstScreen():
         self.win = win
 
         self.template = create_template("FIRST_SCREEN")
-        self.win.add(self.template)
+        self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
         self.template.orange_button.connect("button_release_event", self.login_screen)
         self.win.show_all()
@@ -61,7 +61,7 @@ class FirstScreen():
 
     def repack(self):
         self.win.clear_win()
-        self.win.add(self.template)
+        self.win.set_main_widget(self.template)
 
 
 class NoInternet():
@@ -70,7 +70,7 @@ class NoInternet():
         self.win = win
         self.template = create_template("NO_INTERNET")
 
-        self.win.add(self.template)
+        self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.connect)
         self.template.orange_button.connect("button_release_event", self.register_later)
         self.win.show_all()

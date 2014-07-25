@@ -43,7 +43,16 @@ class TopBarTemplate(Gtk.Grid):
     def close_window(self, widget, event):
         # check for first boot
         data = get_data("CLOSE_WINDOW")
-        kd = KanoDialog(data["LABEL_1"], data["LABEL_2"], {"OK": {"return_value": 0}, "CANCEL": {"return_value": 1}})
+        kd = KanoDialog(
+            data["LABEL_1"],
+            data["LABEL_2"],
+            {
+                "OK": {"return_value": 0},
+                "CANCEL": {"return_value": 1}
+            },
+            parent_window=widget.get_window()
+        )
+
         response = kd.run()
         if response == 0:
             Gtk.main_quit()

@@ -69,8 +69,7 @@ class MainWindow(ApplicationWindow):
         refs[state](self)
 
     def clear_win(self):
-        for i in self.get_children():
-            self.remove(i)
+        self.remove_main_widget()
 
 
 def main(first_boot, page_number=0):

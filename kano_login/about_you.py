@@ -33,7 +33,7 @@ class AboutYou(TopBarTemplate):
         TopBarTemplate.__init__(self, "About You", prev_screen)
 
         self.win = win
-        self.win.add(self)
+        self.win.set_main_widget(self)
         self.enable_prev()
 
         title = Heading("About you", "")
@@ -57,7 +57,7 @@ class AboutYou(TopBarTemplate):
 
     def repack(self):
         self.win.clear_win()
-        self.win.add(self)
+        self.win.set_main_widget(self)
 
     def create_gender_widget(self):
         self.boy_widget = Gtk.RadioButton.new_with_label(None, "Boy")
@@ -177,8 +177,11 @@ class AboutYou(TopBarTemplate):
         except Exception as e:
             kdialog = None
             if len(e.args) > 1:
-                kdialog = KanoDialog(e.args[0], e.args[1])
+                kdialog = KanoDialog(e.args[0], e.args[1],
+                                     parent_window=self.win)
             else:
-                kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"], self.data["ALERT_DESCRIPTION_DEFAULT"])
+                kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"],
+                                     self.data["ALERT_DESCRIPTION_DEFAULT"],
+                                     parent_window=self.win)
             kdialog.run()
             return -1, -1

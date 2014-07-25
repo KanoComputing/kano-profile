@@ -24,7 +24,7 @@ class SetupSuccessful():
         self.win = win
         self.template = Template(None, self.data["LABEL_1"], self.data["LABEL_2"], self.data["KANO_BUTTON"], "")
 
-        self.win.add(self.template)
+        self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
         self.win.set_size_request(590, 200)
         self.win.show_all()

@@ -53,7 +53,7 @@ class Register(TopBarTemplate):
         self.enable_prev()
 
         self.win = win
-        self.win.add(self)
+        self.win.set_main_widget(self)
 
         self.over_13 = over_13
 
@@ -107,7 +107,9 @@ class Register(TopBarTemplate):
             with open(legal_dir + file, 'r') as f:
                 legal_text = legal_text + f.read() + '\n\n\n'
 
-        kdialog = KanoDialog("Terms and conditions", "", scrolled_text=legal_text)
+        kdialog = KanoDialog("Terms and conditions", "",
+                             scrolled_text=legal_text,
+                             parent_window=self.win)
         kdialog.run()
 
     def set_register_sensitive(self):

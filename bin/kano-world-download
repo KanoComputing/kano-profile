@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+# kano-world-download
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# The OS interface for downloading things from Kano World. It is normally
+# called by xdg-open.
+#
+# Usage:
+#   kano-world-download <kano-scheme-url>
+#
+#     The kano-scheme URL looks something like this:
+#       kano:call_name:param1:param2
+#
+
+import os
+import sys
+from kano_world import downloaders
+from kano.logging import logger
+
+# TODO: Put kano-dialogs where appropriate
+
+if len(sys.argv) <= 1:
+    logger.error("{} run with no arguments".format(sys.argv[0]))
+    sys.exit(1)
+
+# Parse the URL
+url_data = sys.argv[1].split(":")
+scheme = url_data.pop(0)
+if scheme != "kano":
+    logger.error("Do not recognise the {} scheme".format(scheme))
+    sys.exit(1)
+
+try:
+    downloader_module = getattr(url_data[0], downloaders)
+except:
+    logger.error("The requested '{}' downloader doesn't exist".format(url_data[0]))
+    sys.exit(1)
+
+result = downloader_module.run(url_data[1:])
+if not result:
+    logger.error("The download of {} failed".format(sys.argv[1]))
+    sys.exit(1)
+
+if hasattr(downloader_module, "launch"):
+    downloader_module.launch(result)
+
+sys.exit(0)

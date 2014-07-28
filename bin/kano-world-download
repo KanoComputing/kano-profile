@@ -17,6 +17,7 @@
 
 import os
 import sys
+import importlib
 from kano_world import downloaders
 from kano.logging import logger
 
@@ -34,7 +35,7 @@ if scheme != "kano":
     sys.exit(1)
 
 try:
-    downloader_module = getattr(url_data[0], downloaders)
+    downloader_module = importlib.import_module("kano_world.downloaders.{}".format(url_data[0]))
 except:
     logger.error("The requested '{}' downloader doesn't exist".format(url_data[0]))
     sys.exit(1)

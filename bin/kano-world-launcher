@@ -1,3 +1,11 @@
 #!/bin/bash
 
+# kano-world-launcher
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+#
+# This is here only in case we'd like to track something here
+
 chromium --app=http://world.kano.me

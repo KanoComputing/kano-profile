@@ -40,7 +40,7 @@ except:
     logger.error("The requested '{}' downloader doesn't exist".format(url_data[0]))
     sys.exit(1)
 
-result = downloader_module.run(url_data[1:])
+result = downloader_module.download(url_data[1:])
 if not result:
     logger.error("The download of {} failed".format(sys.argv[1]))
     sys.exit(1)

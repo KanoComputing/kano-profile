@@ -5,101 +5,11 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# Launcher app for kano world
 #
+# This is here only in case we'd like to track something here
 
 
-import sys
-from urlparse import urlparse
 from kano.utils import run_cmd
-from kano.webapp import WebApp
-from kano.network import is_internet
-from kano_profile.apps import launch_project
-from kano_world.functions import is_registered, get_token
-from kano_world.share import get_share_by_id, download_share
-from kano.logging import logger
+from kano_world.functions import get_token
 
-
-try:
-    from kano_profile.badges import increment_app_state_variable_with_dialog
-    increment_app_state_variable_with_dialog('kano-profile', 'world_launcher_clicked', 1)
-except Exception:
-    pass
-
-
-class Launcher(WebApp):
-    def __init__(self):
-        url = "http://world.kano.me"
-        if is_registered:
-            url = url + '/login/%s' % get_token()
-        self._index = url
-        self._title = "Kano World"
-
-        self._decoration = True
-        self._height = 768
-        self._width = 1024
-        self._centered = True
-
-        self._app_icon = "kano-world"
-
-    def _download(self, view, req):
-        url = req.get_uri()
-        query = urlparse(url).query.split('&')
-
-        share_id = None
-        for q in query:
-            if q.startswith('id='):
-                share_id = q[3:]
-                break
-        if not share_id:
-            msg = 'Share id not found in url: {}'.format(url)
-            logger.error(msg)
-            # TODO kano-dialog
-            return
-
-        success, text, share = get_share_by_id(share_id)
-        if not success:
-            msg = 'Error downloading share: {}'.format(text)
-            logger.error(msg)
-            # TODO kano-dialog
-            return
-
-        success, data = download_share(share)
-        if not success:
-            msg = 'Could not download share, error: {}'.format(data)
-            logger.error(msg)
-            # TODO kano-dialog
-            return
-
-        (title, attachment_path, app, attachment_name, folder) = data
-        msg = 'Downloaded share: {}'.format(title)
-        logger.info(msg)
-
-        cmd = 'kano-dialog title="Download completed successfully" buttons=Launch:green:1,Return:grey:2'
-        _, _, rc = run_cmd(cmd)
-        if rc == 1:
-            launch_project(app, attachment_name, folder)
-
-#### TODO: REMOVE THIS - Kano World WebApp is broken ####
-cmd = 'kano-dialog title="This app is under construction" description="Check back very soon" buttons=OK:green:1'
-_, _, rc = run_cmd(cmd)
-sys.exit(0)
-#### ----------------------------------------------- ####
-
-# Check internet status
-if not is_internet():
-    cmd = "kano-dialog title='This requires Internet connection' \
-                       description='Connect and continue, or do it later?' \
-                       buttons=LATER:orange:0,CONNECT:green:1"
-    output, _, _ = run_cmd(cmd)
-    if not int(output):
-        sys.exit(1)
-
-# Check if user is registered
-if not is_registered():
-    run_cmd('/usr/bin/kano-login')
-    if not is_registered():
-        sys.exit(2)
-
-launcher = Launcher()
-launcher.run()
+run_cmd("chromium --app=http://world.kano.me/token/{}".format(get_token()))

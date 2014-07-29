@@ -1,21 +1,15 @@
 #!/usr/bin/env python
 
 import time
-import signal
 import sys
 import os
-from kano_profile.apps import increment_app_state_variable
+import atexit
+from kano_profile.apps import load_app_state_variable, save_app_state_variable
 
 
 def get_program_name():
     program_name = os.path.basename(sys.argv[0])
     return program_name
-
-
-def catch_signal(*args):
-    print 'catch_signal'
-    print_elapsed()
-    sys.exit(0)
 
 
 def print_elapsed():
@@ -26,11 +20,22 @@ def print_elapsed():
 
 
 def add_runtime_to_app(app, runtime):
-    increment_app_state_variable('tracker', program_name, runtime)
+    state = load_app_state_variable('tracker', program_name)
+
+    if not state or not 'counter' in state:
+        state = {
+            'counter': 0,
+            'runtime': 0,
+        }
+
+    # increase variables
+    state['counter'] += 1
+    state['runtime'] += runtime
+
+    save_app_state_variable('tracker', program_name, state)
 
 
 start_time = time.time()
 program_name = get_program_name()
 
-signal.signal(signal.SIGINT, catch_signal)
-signal.signal(signal.SIGTERM, catch_signal)
+atexit.register(print_elapsed)

@@ -8,6 +8,7 @@
 
 import os
 import sys
+import random
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
@@ -144,6 +145,12 @@ elif sys.argv[1] == 'get_email':
     except Exception:
         print 'Email not found'
         sys.exit(1)
+
+elif sys.argv[1] == 'get_notifications':
+    check_arg_len(1)
+
+    total_unread = random.randint(0, 3)
+    print 'notifications: {}'.format(total_unread)
 
 else:
     sys.exit("wrong usage")

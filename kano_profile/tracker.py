@@ -10,10 +10,13 @@ class Tracker:
     def __init__(self):
         self.start_time = time.time()
         self.program_name = get_program_name()
-        atexit.register(add_runtime_to_app, self.program_name, self.calculate_elapsed())
+        atexit.register(self.write_times)
 
     def calculate_elapsed(self):
         return time.time() - self.start_time
+
+    def write_times(self):
+        add_runtime_to_app(self.program_name, self.calculate_elapsed())
 
 
 def add_runtime_to_app(app, runtime):

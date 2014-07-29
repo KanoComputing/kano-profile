@@ -17,16 +17,18 @@ class Tracker:
 
 
 def add_runtime_to_app(app, runtime):
+    if not app:
+        return
+
     state = load_app_state_variable('tracker', app)
 
-    if not state or not 'counter' in state:
+    try:
+        state['starts'] += 1
+        state['runtime'] += runtime
+    except Exception:
         state = {
-            'counter': 0,
-            'runtime': 0,
+            'starts': 1,
+            'runtime': runtime,
         }
-
-    # increase variables
-    state['counter'] += 1
-    state['runtime'] += runtime
 
     save_app_state_variable('tracker', app, state)

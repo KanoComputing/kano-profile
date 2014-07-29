@@ -60,6 +60,6 @@ except Exception as e:
     sys.exit(msg)
 
 if hasattr(hook_module, "launch"):
-    downloader_module.launch(result)
+    hook_module.launch(result)
 
 sys.exit(0)

@@ -23,6 +23,8 @@ def add_runtime_to_app(app, runtime):
     if not app:
         return
 
+    app = app.replace('.', '_')
+
     state = load_app_state_variable('kano-tracker', app)
 
     try:

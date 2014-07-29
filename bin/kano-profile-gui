@@ -42,6 +42,8 @@ class MainWindow(Gtk.Window):
         self.set_resizable(False)
         self.set_position(Gtk.WindowPosition.CENTER)
 
+        self.set_icon_name("kano-world")
+
         # Create common elements
         # Main grid
         self.grid = Gtk.Grid()

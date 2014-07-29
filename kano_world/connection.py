@@ -30,6 +30,10 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
         if r.ok:
             return r.ok, None, r.json()
         else:
-            return r.ok, r.text, None
+            if '<title>Application Error</title>' in r.text:
+                error_msg = 'Sorry, our server are having some problems, we are working on getting them back!'
+            else:
+                error_msg = r.text
+            return r.ok, error_msg, None
     except requests.exceptions.ConnectionError as e:
         return False, 'Connection error: {}'.format(str(e)), None

@@ -39,7 +39,7 @@ class Login(TopBarTemplate):
 
         TopBarTemplate.__init__(self)
         self.win = win
-        self.win.add(self)
+        self.win.set_main_widget(self)
 
         self.heading = Heading(self.data["LABEL_1"], self.data["LABEL_2"])
         self.box.pack_start(self.heading.container, False, False, 10)
@@ -60,7 +60,7 @@ class Login(TopBarTemplate):
 
     def repack(self):
         self.win.clear_win()
-        self.win.add(self)
+        self.win.set_main_widget(self)
 
     def create_new(self, widget, event, args=[]):
         self.win.clear_win()
@@ -119,7 +119,9 @@ class Login(TopBarTemplate):
             return_value = 1
 
         def done(title, description, return_value):
-            kdialog = KanoDialog(title, description, {"OK": {"return_value": return_value}})
+            kdialog = KanoDialog(title, description,
+                                 {"OK": {"return_value": return_value}},
+                                 parent_window=self.win)
             response = kdialog.run()
 
             if response == 1:

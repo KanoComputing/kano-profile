@@ -23,7 +23,7 @@ def add_runtime_to_app(app, runtime):
     if not app:
         return
 
-    state = load_app_state_variable('tracker', app)
+    state = load_app_state_variable('kano-tracker', app)
 
     try:
         state['starts'] += 1
@@ -34,4 +34,4 @@ def add_runtime_to_app(app, runtime):
             'runtime': runtime,
         }
 
-    save_app_state_variable('tracker', app, state)
+    save_app_state_variable('kano-tracker', app, state)

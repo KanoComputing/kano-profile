@@ -11,7 +11,7 @@ import json
 import os
 
 from kano.logging import logger
-from kano.utils import download_url, read_json, write_json
+from kano.utils import download_url, read_json
 from kano_profile.profile import load_profile, set_avatar, set_environment
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
@@ -23,9 +23,10 @@ app_profiles_data = read_json(app_profiles_file)
 
 
 def is_private(app_name):
-    private = False
-    if app_name in app_profiles_data and 'private' in app_profiles_data[app_name]:
+    try:
         private = app_profiles_data[app_name]['private']
+    except Exception:
+        private = False
     return private
 
 

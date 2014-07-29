@@ -29,6 +29,9 @@
   },
   "kano-settings": {
     "dir": ".kano-settings"
+  },
+  "kano-tracker": {
+    "private": True
   }
 }
 

@@ -146,9 +146,6 @@ class KanoWorldSession(object):
             if is_private(app):
                 data[app] = load_app_state(app)
 
-        if not data:
-            return True, None
-
         payload = dict()
         payload['data'] = data
 

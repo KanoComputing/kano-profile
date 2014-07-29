@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+# kano-world-hook
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# The OS interface for triggereing things on the OS from Kano World.
+# It is normally called by xdg-open from chromium.
+#
+# Usage:
+#   kano-world-hook <kano-scheme-url>
+#
+#     The kano-scheme URL looks something like this:
+#       kano:call_name:param1:param2
+#
+
+import os
+import sys
+import importlib
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano.logging import logger
+
+# TODO: Put kano-dialogs where appropriate
+
+if len(sys.argv) < 2:
+    msg = "{} run with no arguments".format(sys.argv[0])
+    logger.error(msg)
+    sys.exit(msg)
+
+# Parse the URL
+url_data = sys.argv[1].split(":")
+if len(url_data) < 3:
+    print 'error'
+
+scheme = url_data.pop(0)
+if scheme != "kano":
+    msg = "Do not recognise the {} scheme".format(scheme)
+    logger.error(msg)
+    sys.exit(msg)
+
+try:
+    module_name = "kano_world.hooks.{}".format(url_data[0])
+    hook_module = importlib.import_module(module_name)
+except:
+    msg = "The requested '{}' hook doesn't exist".format(url_data[0])
+    logger.error(msg)
+    sys.exit(msg)
+
+try:
+    result = hook_module.run(url_data[1:])
+except Exception as e:
+    msg = "The execution of the {} hook failed ({})".format(sys.argv[1], str(e))
+    logger.error(msg)
+    sys.exit(msg)
+
+if hasattr(hook_module, "launch"):
+    hook_module.launch(result)
+
+sys.exit(0)

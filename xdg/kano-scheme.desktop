@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Kano URL Scheme
+Exec=kano-world-hook %u
+Icon=kano-world
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/kano;

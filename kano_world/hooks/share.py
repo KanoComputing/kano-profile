@@ -23,7 +23,7 @@ from kano_world.share import download_share, get_share_by_id
 from kano_profile.apps import launch_project
 
 
-def download(args):
+def run(args):
     try:
         share_id = args[0]
     except Exception:

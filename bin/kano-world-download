@@ -24,7 +24,6 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_world import downloaders
 from kano.logging import logger
 
 # TODO: Put kano-dialogs where appropriate
@@ -46,20 +45,21 @@ if scheme != "kano":
     sys.exit(msg)
 
 try:
-    downloader_module = importlib.import_module("kano_world.downloaders.{}".format(url_data[0]))
+    module_name = "kano_world.hooks.{}".format(url_data[0])
+    hook_module = importlib.import_module(module_name)
 except:
     msg = "The requested '{}' downloader doesn't exist".format(url_data[0])
     logger.error(msg)
     sys.exit(msg)
 
 try:
-    result = downloader_module.download(url_data[1:])
+    result = hook_module.run(url_data[1:])
 except Exception as e:
     msg = "The download of {} failed ({})".format(sys.argv[1], str(e))
     logger.error(msg)
     sys.exit(msg)
 
-if hasattr(downloader_module, "launch"):
+if hasattr(hook_module, "launch"):
     downloader_module.launch(result)
 
 sys.exit(0)

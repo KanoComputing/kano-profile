@@ -18,32 +18,45 @@
 import os
 import sys
 import importlib
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
 from kano_world import downloaders
 from kano.logging import logger
 
 # TODO: Put kano-dialogs where appropriate
 
-if len(sys.argv) <= 1:
-    logger.error("{} run with no arguments".format(sys.argv[0]))
-    sys.exit(1)
+if len(sys.argv) < 2:
+    msg = "{} run with no arguments".format(sys.argv[0])
+    logger.error(msg)
+    sys.exit(msg)
 
 # Parse the URL
 url_data = sys.argv[1].split(":")
+if len(url_data) < 3:
+    print 'error'
+
 scheme = url_data.pop(0)
 if scheme != "kano":
-    logger.error("Do not recognise the {} scheme".format(scheme))
-    sys.exit(1)
+    msg = "Do not recognise the {} scheme".format(scheme)
+    logger.error(msg)
+    sys.exit(msg)
 
 try:
     downloader_module = importlib.import_module("kano_world.downloaders.{}".format(url_data[0]))
 except:
-    logger.error("The requested '{}' downloader doesn't exist".format(url_data[0]))
-    sys.exit(1)
+    msg = "The requested '{}' downloader doesn't exist".format(url_data[0])
+    logger.error(msg)
+    sys.exit(msg)
 
 result = downloader_module.download(url_data[1:])
 if not result:
-    logger.error("The download of {} failed".format(sys.argv[1]))
-    sys.exit(1)
+    msg = "The download of {} failed".format(sys.argv[1])
+    logger.error(msg)
+    sys.exit(msg)
 
 if hasattr(downloader_module, "launch"):
     downloader_module.launch(result)

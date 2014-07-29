@@ -79,14 +79,6 @@ class KanoWorldSession(object):
         except Exception:
             pass
 
-        # # location
-        # if 'location' not in profile:
-        #     profile['location'] = get_location(False)
-        # try:
-        #     data['location'] = profile['location']
-        # except Exception:
-        #     pass
-
         # app states
         stats = dict()
         for app in get_app_list():
@@ -95,8 +87,6 @@ class KanoWorldSession(object):
 
         # append stats
         data['stats'] = stats
-
-        # write_json('up.json', data)
 
         success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(data), headers=content_type_json, session=self.session)
         if not success:
@@ -115,8 +105,6 @@ class KanoWorldSession(object):
             success, text, data = request_wrapper('get', '/users/' + user_id, headers=content_type_json, session=self.session)
             if not success:
                 return False, text
-
-        # write_json('down.json', data)
 
         try:
             avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']

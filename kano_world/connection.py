@@ -31,7 +31,7 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
             return r.ok, None, r.json()
         else:
             if '<title>Application Error</title>' in r.text:
-                error_msg = 'Sorry, our server are having some problems, we are working on getting them back!'
+                error_msg = 'Sorry, our servers are having some problems, we are working on getting them back!'
             else:
                 error_msg = r.text
             return r.ok, error_msg, None

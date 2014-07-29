@@ -30,9 +30,3 @@ def add_runtime_to_app(app, runtime):
     state['runtime'] += runtime
 
     save_app_state_variable('tracker', app, state)
-
-
-
-
-
-

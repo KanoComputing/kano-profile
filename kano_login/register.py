@@ -85,7 +85,7 @@ class Register(TopBarTemplate):
         title = Heading(header, subheading)
         self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
         self.box.pack_start(title.container, False, False, 0)
-        self.box.pack_start(self.entries_container, False, False, 10)
+        self.box.pack_start(self.entries_container, False, False, 0)
         self.box.pack_start(checkbox_align, False, False, 5)
         self.box.pack_start(self.kano_button.align, False, False, 10)
 

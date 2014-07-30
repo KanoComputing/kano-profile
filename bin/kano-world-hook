@@ -6,7 +6,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # The OS interface for triggereing things on the OS from Kano World.
-# It is normally called by xdg-open from chromium.
+# It is normally called by xdg-open from chromium.
 #
 # Usage:
 #   kano-world-hook <kano-scheme-url>

@@ -5,7 +5,7 @@
   "make-minecraft": {
     "dir": "Minecraft-content",
     "ext": "xml",
-    "cmd": "/usr/bin/make-minecraft {fullpath},
+    "cmd": "/usr/bin/make-minecraft {fullpath}",
     "max_level": 13,
     "icon": "minecraft.png"
   },

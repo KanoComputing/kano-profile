@@ -12,7 +12,7 @@ import os
 
 from kano.logging import logger
 from kano.utils import download_url, read_json
-from kano_profile.profile import load_profile, set_avatar, set_environment
+from kano_profile.profile import load_profile, set_avatar, set_environment, save_profile
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file
@@ -243,6 +243,19 @@ class KanoWorldSession(object):
         if not success:
             return False, text
         return True, None
+
+    def refresh_notifications(self):
+        success, text, data = request_wrapper('get', '/notifications', session=self.session)
+        if not success:
+            return False, text
+        try:
+            notifications = int(data['unread_count'])
+            profile = load_profile()
+            profile['notifications'] = notifications
+            save_profile(profile)
+            return True, None
+        except Exception:
+            return False, 'unread count not found'
 
 
 

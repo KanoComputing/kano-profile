@@ -12,4 +12,4 @@
 from kano.utils import run_cmd
 from kano_world.functions import get_token
 
-run_cmd("chromium --app=http://world.kano.me/token/{}".format(get_token()))
+run_cmd("chromium --app=http://world.kano.me/login/{}".format(get_token()))

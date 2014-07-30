@@ -9,7 +9,8 @@
 # This is here only in case we'd like to track something here
 
 
-from kano.utils import run_cmd
+from kano.utils import run_cmd, run_bg
 from kano_world.functions import get_token
 
 run_cmd("chromium --app=http://world.kano.me/login/{}".format(get_token()))
+run_bg('kano-sync --sync -s')

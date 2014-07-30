@@ -2,7 +2,7 @@
 
 import time
 import atexit
-from kano.utils import get_program_name
+from kano.utils import get_program_name, is_number
 from kano_profile.apps import load_app_state_variable, save_app_state_variable
 
 
@@ -22,6 +22,11 @@ class Tracker:
 def add_runtime_to_app(app, runtime):
     if not app:
         return
+
+    if not is_number(runtime):
+        return
+
+    runtime = float(runtime)
 
     app = app.replace('.', '_')
 

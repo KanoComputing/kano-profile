@@ -36,7 +36,7 @@ if len(sys.argv) == 1:
     help = 'Wrong usage, needs an argument\n'
     help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
     help += 'save_app_state_variable_get_xp_diff, increment_app_state_variable\n'
-    help += 'unlock, lock, is_registered, get_stats'
+    help += 'unlock, lock, is_registered, get_stats, get_email, get_notifications, increment_app_runtime'
     sys.exit(help)
 
 if sys.argv[1] == 'get_app_data_dir':
@@ -144,6 +144,27 @@ elif sys.argv[1] == 'get_email':
     except Exception:
         print 'Email not found'
         sys.exit(1)
+
+elif sys.argv[1] == 'get_notifications':
+    check_arg_len(1)
+    try:
+        total_unread = load_profile()['notifications']
+        print 'notifications: {}'.format(total_unread)
+    except Exception:
+        print 'notifications not found'
+        sys.exit(1)
+
+elif sys.argv[1] == 'increment_app_runtime':
+    from kano_profile.tracker import add_runtime_to_app
+
+    check_arg_len(3)
+    app = sys.argv[2]
+    runtime = sys.argv[3]
+
+    if not is_number(runtime):
+        sys.exit('3rd argument is not a number')
+
+    add_runtime_to_app(app, runtime)
 
 else:
     sys.exit("wrong usage")

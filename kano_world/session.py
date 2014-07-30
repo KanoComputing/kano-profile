@@ -11,8 +11,8 @@ import json
 import os
 
 from kano.logging import logger
-from kano.utils import download_url, read_json, write_json
-from kano_profile.profile import load_profile, set_avatar, set_environment
+from kano.utils import download_url, read_json
+from kano_profile.profile import load_profile, set_avatar, set_environment, save_profile
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file
@@ -23,9 +23,10 @@ app_profiles_data = read_json(app_profiles_file)
 
 
 def is_private(app_name):
-    private = False
-    if app_name in app_profiles_data and 'private' in app_profiles_data[app_name]:
+    try:
         private = app_profiles_data[app_name]['private']
+    except Exception:
+        private = False
     return private
 
 
@@ -78,14 +79,6 @@ class KanoWorldSession(object):
         except Exception:
             pass
 
-        # # location
-        # if 'location' not in profile:
-        #     profile['location'] = get_location(False)
-        # try:
-        #     data['location'] = profile['location']
-        # except Exception:
-        #     pass
-
         # app states
         stats = dict()
         for app in get_app_list():
@@ -94,8 +87,6 @@ class KanoWorldSession(object):
 
         # append stats
         data['stats'] = stats
-
-        # write_json('up.json', data)
 
         success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(data), headers=content_type_json, session=self.session)
         if not success:
@@ -114,8 +105,6 @@ class KanoWorldSession(object):
             success, text, data = request_wrapper('get', '/users/' + user_id, headers=content_type_json, session=self.session)
             if not success:
                 return False, text
-
-        # write_json('down.json', data)
 
         try:
             avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
@@ -144,9 +133,6 @@ class KanoWorldSession(object):
         for app in get_app_list():
             if is_private(app):
                 data[app] = load_app_state(app)
-
-        if not data:
-            return True, None
 
         payload = dict()
         payload['data'] = data
@@ -257,6 +243,19 @@ class KanoWorldSession(object):
         if not success:
             return False, text
         return True, None
+
+    def refresh_notifications(self):
+        success, text, data = request_wrapper('get', '/notifications', session=self.session)
+        if not success:
+            return False, text
+        try:
+            notifications = int(data['unread_count'])
+            profile = load_profile()
+            profile['notifications'] = notifications
+            save_profile(profile)
+            return True, None
+        except Exception:
+            return False, 'unread count not found'
 
 
 

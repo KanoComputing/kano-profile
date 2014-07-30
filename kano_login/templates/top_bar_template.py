@@ -50,7 +50,7 @@ class TopBarTemplate(Gtk.Grid):
                 "OK": {"return_value": 0},
                 "CANCEL": {"return_value": 1}
             },
-            parent_window=widget.get_window()
+            parent_window=widget.get_toplevel()
         )
 
         response = kd.run()

@@ -1,20 +1,20 @@
 {
   "SETUP_SUCCESSFUL": {
     "TOP_PIC": "setup-successful",
-    "LABEL_1": "Setup successful!",
-    "LABEL_2": "You can change the sound, screen size, and more at any time by clicking on Settings in the bottom bar",
+    "LABEL_1": "You set it up!",
+    "LABEL_2": "Nice work! You can change your screen, sound, and more any time by clicking on Settings in the taskbar",
     "KANO_BUTTON": "CONTINUE"
   },
   "FIRST_SCREEN": {
     "TOP_PIC": "profile-created",
-    "LABEL_1": "Now let's make a cool profile",
+    "LABEL_1": "Now let's make a cool Profile",
     "LABEL_2": "So you can save badges, games, and projects",
     "ORANGE_BUTTON": "I have a profile",
     "KANO_BUTTON": "CREATE"
   },
   "NO_INTERNET": {
     "TOP_PIC": "no_internet",
-    "LABEL_1": "Oops! Internet required for profile",
+    "LABEL_1": "Oops! You need Internet to make a profile",
     "LABEL_2": "But you can skip this if you have no connection right now",
     "ORANGE_BUTTON": "Register later",
     "KANO_BUTTON": "CONNECT"
@@ -22,21 +22,21 @@
   "REGISTER_LATER": {
     "TOP_PIC": "create-profile",
     "LABEL_1": "No online profile - for now",
-    "LABEL_2": "Your profile stores all your badges, projects, and swag.  But fear not - we'll save everything for when you have internet",
+    "LABEL_2": "Your profile stores your character, projects, and rewards.  But fear not - we'll save everything for when you have Internet",
     "ORANGE_BUTTON": "",
     "KANO_BUTTON": "GET REWARDS"
   },
   "ABOUT_YOU": {
-      "ALERT_TITLE_TOO_YOUNG": "Hmmm, really?",
-      "ALERT_DESCRIPTION_TOO_YOUNG": "Apparently you haven't been born yet...",
-      "ALERT_TITLE_TOO_OLD": "Well done for living this long!",
-      "ALERT_DESCRIPTION_TOO_OLD": "(But I don't believe you)",
-      "ALERT_TITLE_DEFAULT": "Nice try!",
+      "ALERT_TITLE_TOO_YOUNG": "That seems too young",
+      "ALERT_DESCRIPTION_TOO_YOUNG": "Make sure you entered the right birthday",
+      "ALERT_TITLE_TOO_OLD": "That seems too old",
+      "ALERT_DESCRIPTION_TOO_OLD": "Make sure you entered the right birthday",
+      "ALERT_TITLE_DEFAULT": "Oops!",
       "ALERT_DESCRIPTION_DEFAULT": " Your year has to be between 1900 and 2014"
   },
   "LOGIN": {
     "LABEL_1": "Login",
-    "LABEL_2": "Enter your existing login and password",
+    "LABEL_2": "Enter your username and password",
     "ORANGE_BUTTON": "Create New",
     "KANO_BUTTON": "Login"
   },
@@ -57,8 +57,8 @@
     "LABEL_2": "Pick a cool name, add your email, and set your password"
   },
   "REGISTER_SUCCESS": {
-      "LABEL_1": "Registration successful!",
-      "LABEL_2": "You have special powers now"
+      "LABEL_1": "Profile created!",
+      "LABEL_2": "Now you can share stuff, build your character, and connect with friends."
   },
   "CLOSE_WINDOW": {
     "LABEL_1": "Are you sure?",

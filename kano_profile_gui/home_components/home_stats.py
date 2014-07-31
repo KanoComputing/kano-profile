@@ -8,7 +8,9 @@
 # Display stats to user on home screen
 
 from gi.repository import Gtk
-from kano_profile.badges import count_completed_challenges, count_number_of_blocks, count_number_of_shares
+from kano_profile.badges import count_completed_challenges, \
+        count_number_of_blocks, count_number_of_shares, \
+        count_lines_of_code
 
 
 class HomeStats():
@@ -25,29 +27,35 @@ class HomeStats():
         self.completed_challenges = count_completed_challenges()
         self.blocks_used = count_number_of_blocks()
         self.shares = count_number_of_shares()
+        self.lines_of_code = count_lines_of_code()
 
         # Stats
-        stat_dict = {"Blocks used": self.blocks_used, "Completed challenges": self.completed_challenges, "Shares": self.shares}
-        number_of_items = 3
+        stat_list = [
+            ("Blocks used", self.blocks_used),
+            ("Lines of code", self.lines_of_code),
+            ("Completed challenges", self.completed_challenges),
+            ("Shares", self.shares)
+        ]
+
+        item_count = len(stat_list)
 
         index = 0
 
-        for title, stat in stat_dict.iteritems():
-
+        for title, stat in stat_list:
             box = Gtk.EventBox()
             box.get_style_context().add_class("white")
-            box.set_size_request(WINDOW_WIDTH / number_of_items, self.height)
+            box.set_size_request(WINDOW_WIDTH / item_count, self.height)
             box_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
             stat_label = Gtk.Label(stat)
             stat_label.get_style_context().add_class("stat_number")
             stat_label.set_alignment(xalign=0.5, yalign=1)
-            stat_label.set_size_request(WINDOW_WIDTH / number_of_items, self.height / 2)
+            stat_label.set_size_request(WINDOW_WIDTH / item_count, self.height / 2)
 
             stat_title = Gtk.Label(title)
             stat_title.get_style_context().add_class("stat_title")
             stat_title.set_alignment(xalign=0.5, yalign=0)
-            stat_title.set_size_request(WINDOW_WIDTH / number_of_items, self.height / 2)
+            stat_title.set_size_request(WINDOW_WIDTH / item_count, self.height / 2)
 
             box_container.pack_start(stat_label, False, False, 0)
             box_container.pack_start(stat_title, False, False, 0)

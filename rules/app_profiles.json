@@ -29,6 +29,9 @@
   },
   "kano-tracker": {
     "private": true
+  },
+  "kano-hardware": {
+    "private": true
   }
 }
 

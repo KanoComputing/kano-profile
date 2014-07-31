@@ -3,7 +3,7 @@
 import time
 import atexit
 from kano.utils import get_program_name, is_number
-from kano_profile.apps import load_app_state_variable, save_app_state_variable
+from kano_profile.apps import load_app_state_variable, save_app_state_variable, save_app_state
 
 
 class Tracker:
@@ -42,3 +42,16 @@ def add_runtime_to_app(app, runtime):
         }
 
     save_app_state_variable('kano-tracker', app, state)
+
+
+def save_hardware_info():
+    from kano.logging import logger
+    from kano.utils import get_cpu_id, get_mac_address, detect_kano_keyboard
+
+    logger.info('save_hardware_info')
+    state = {
+        'cpu_id': get_cpu_id(),
+        'mac_address': get_mac_address(),
+        'kano_keyboard': detect_kano_keyboard(),
+    }
+    save_app_state('kano-hardware', state)

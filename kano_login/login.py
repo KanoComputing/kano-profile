@@ -19,6 +19,7 @@ from kano.gtk3.heading import Heading
 
 from kano_profile.paths import bin_dir
 from kano_profile.profile import load_profile, save_profile_variable
+from kano_profile.tracker import save_hardware_info
 from kano_world.functions import login as login_, is_registered
 
 from kano_login.templates.labelled_entries import LabelledEntries
@@ -88,12 +89,14 @@ class Login(TopBarTemplate):
         else:
             logger.info('login successful')
 
+            # saving hardware info
+            save_hardware_info()
+
             # restore on first successful login/restore
-            first_sync_done = False
             try:
                 first_sync_done = profile['first_sync_done']
             except Exception:
-                pass
+                first_sync_done = False
 
             if not first_sync_done:
                 logger.info('running kano-sync --sync && --sync && --restore after first time login')

@@ -27,10 +27,10 @@
     "max_level": 9,
     "icon": "snake.png"
   },
-  "kano-settings": {
-    "dir": ".kano-settings"
-  },
   "kano-tracker": {
+    "private": true
+  },
+  "kano-hardware": {
     "private": true
   }
 }

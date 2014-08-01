@@ -13,6 +13,7 @@
 from kano_login.first_screen import FirstScreen
 from kano_login.templates.template import Template
 from kano_login.data import get_data
+from kano_profile_gui.images import get_image
 
 
 class SetupSuccessful():
@@ -22,19 +23,15 @@ class SetupSuccessful():
     def __init__(self, win):
 
         self.win = win
-        self.template = Template(None, self.data["LABEL_1"], self.data["LABEL_2"], self.data["KANO_BUTTON"], "")
+        img_width = 590
+        img_height = 270
+        image_filename = get_image("login", "", self.data["TOP_PIC"], str(img_width) + 'x' + str(img_height))
+        self.template = Template(image_filename, self.data["LABEL_1"], self.data["LABEL_2"], self.data["KANO_BUTTON"], "")
 
         self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
-        self.win.set_size_request(590, 200)
         self.win.show_all()
 
     def next_screen(self, widget, event):
         self.win.clear_win()
-        self.win.set_size_request(590, 450)
-
-        # Hacky way of moving the window back to the centre
-        # Get current coordinates, then move the window up by 100 pixels
-        x, y = self.win.get_position()
-        self.win.move(x, y - 100)
         FirstScreen(self.win)

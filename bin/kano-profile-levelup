@@ -18,7 +18,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile.badges import load_badge_rules
-from kano.gtk3.buttons import KanoButton
+from kano.gtk3.buttons import KanoButtonBox
 from gi.repository import Gtk, Gdk
 from kano_profile_gui.images import get_image
 from kano_profile_gui.paths import css_dir
@@ -45,6 +45,7 @@ class MainWindow(Gtk.Window):
         self.state = 0
         self.new_items = new_items
         self.category = None
+
         # Make sure this window is always above
         self.set_keep_above(True)
 
@@ -63,12 +64,11 @@ class MainWindow(Gtk.Window):
         self.label_container.pack_start(self.title, False, False, 0)
         self.label_container.pack_start(self.description, False, False, 0)
 
-        self.button = KanoButton("GOT IT")
-        self.button.connect("clicked", self.go_to_next)
-        self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.button_box.pack_start(self.button, False, False, 0)
-        self.button_alignment = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-        self.button_alignment.add(self.button_box)
+        self.button_box = KanoButtonBox("GOT IT", "Launch profile")
+        self.orange_button = self.button_box.orange_button
+        self.kano_button = self.button_box.kano_button
+        self.kano_button.connect("button-release-event", self.go_to_next)
+        self.orange_button.connect("button-release-event", self.launch_profile)
 
         self.image = Gtk.Image()
 
@@ -79,7 +79,7 @@ class MainWindow(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.background, False, False, 0)
         self.box.pack_start(self.label_container, False, False, 20)
-        self.box.pack_start(self.button_alignment, False, False, 0)
+        self.box.pack_start(self.button_box, False, False, 0)
 
         self.add(self.box)
 
@@ -94,7 +94,7 @@ class MainWindow(Gtk.Window):
             play_sound('/usr/share/kano-media/sounds/kano_achievement_unlock.wav', background=True)
             self.go_to_next()
 
-    def go_to_next(self, event=None):
+    def go_to_next(self, widget=None, event=None):
 
         self.go_to_next_category()
 
@@ -143,16 +143,21 @@ class MainWindow(Gtk.Window):
                 del self.new_items[self.category][subcat]
 
         if self.last_level():
-            self.button.set_label("FINISH")
+            self.kano_button.set_label("CONTINUE")
 
             if is_running('kdesk') and not is_running('kano-updater'):
-                # Add new button
-                profile = KanoButton("LAUNCH PROFILE")
-                profile.connect("button-press-event", self.launch_profile)
-                profile.connect("key-press-event", self.launch_profile)
-                self.button_box.pack_start(profile, False, False, 0)
+                # Show launch profile button
+                self.show_all()
+                return
 
+        self.show_all_except_orange_button()
+        #self.show_all()
+
+    def show_all_except_orange_button(self):
         self.show_all()
+        self.button_box.orange_button.hide()
+        # even though the label is invisible, hiding it affects the positioning on the kano_button
+        self.button_box.label.hide()
 
     def launch_profile(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
@@ -266,8 +271,7 @@ def main():
 
     win = MainWindow(new_level, new_items)
     win.connect('delete-event', close_window)
-    win.show_all()
-
+    win.show_all_except_orange_button()
     Gtk.main()
 
     if launch_profile:

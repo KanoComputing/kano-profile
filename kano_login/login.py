@@ -72,7 +72,7 @@ class Login(TopBarTemplate):
             self.win.get_window().set_cursor(watch_cursor)
             self.button_box.kano_button.set_sensitive(False)
 
-            thread = threading.Thread(target=self.log_user_in())
+            thread = threading.Thread(target=self.log_user_in)
             thread.start()
 
     def log_user_in(self):

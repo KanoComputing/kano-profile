@@ -5,3 +5,4 @@ Icon=kano-world
 Type=Application
 Terminal=false
 MimeType=x-scheme-handler/kano;
+NoDisplay=true

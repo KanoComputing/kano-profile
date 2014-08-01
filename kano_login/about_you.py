@@ -93,7 +93,7 @@ class AboutYou(TopBarTemplate):
         self.month_widget.set_active(0)
 
         self.year_widget = Gtk.Entry()
-        self.year_widget.set_placeholder_text("1990")
+        self.year_widget.set_placeholder_text("xxxx")
         self.year_widget.set_width_chars(4)
         self.year_widget.set_size_request(45, 47)
 

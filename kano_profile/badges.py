@@ -357,35 +357,30 @@ def count_badges():
     return dict(unlocked), dict(locked)
 
 
-def count_number_of_blocks():
+def count_stat(key):
     allrules = read_json(xp_file)
     if not allrules:
         return -1
 
-    number_of_blocks = 0
+    count = 0
 
-    for app, groups in allrules.iteritems():
+    for app, _ in allrules.iteritems():
         appstate = load_app_state(app)
         try:
-            number_of_blocks += int(appstate['blocks_created'])
+            count += int(appstate[key])
         except Exception:
             pass
 
-    return number_of_blocks
+    return count
+
+
+def count_number_of_blocks():
+    return count_stat('blocks_created')
 
 
 def count_number_of_shares():
-    allrules = read_json(xp_file)
-    if not allrules:
-        return -1
+    return count_stat('shared')
 
-    number_of_shares = 0
 
-    for app, groups in allrules.iteritems():
-        appstate = load_app_state(app)
-        try:
-            number_of_shares += int(appstate['shared'])
-        except Exception:
-            pass
-
-    return number_of_shares
+def count_lines_of_code():
+    return count_stat('lines_of_code')

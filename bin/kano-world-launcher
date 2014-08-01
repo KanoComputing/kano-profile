@@ -8,12 +8,55 @@
 #
 # This is here only in case we'd like to track something here
 
+import os
 
-from kano.utils import run_cmd, run_bg
+from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
 from kano_world.functions import get_token
-
+from kano.logging import logger
 from kano_profile.tracker import Tracker
 kanotracker = Tracker()
+
+chromium_folder = os.path.join(get_home(), '.config/chromium/')
+chromium_local_state = os.path.join(chromium_folder, 'Local State')
+
+
+def modify_local_state():
+    logger.info('modify_local_state')
+    data = read_json(chromium_local_state)
+
+    try:
+        data['protocol_handler']['excluded_schemes']['kano'] = False
+    except Exception:
+        data['protocol_handler'] = {
+            'excluded_schemes': {
+                'kano': False
+            }
+        }
+
+    write_json(chromium_local_state, data)
+
+
+def create_local_state():
+    logger.info('create_local_state')
+    ensure_dir(chromium_folder)
+    data = {
+        'protocol_handler': {
+            'excluded_schemes': {
+                'kano': False
+            }
+        }
+    }
+    write_json(chromium_local_state, data)
+
+
+if os.path.exists(chromium_local_state):
+    try:
+        modify_local_state()
+    except Exception:
+        create_local_state()
+
+else:
+    create_local_state()
 
 run_cmd("chromium --app=http://world.kano.me/login/{}".format(get_token()))
 run_bg('kano-sync --sync -s')

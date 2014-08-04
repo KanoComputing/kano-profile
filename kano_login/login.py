@@ -16,13 +16,13 @@ from kano.logging import logger
 from kano.utils import run_bg
 from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
+from kano.gtk3.labelled_entries import LabelledEntries
 
 from kano_profile.paths import bin_dir
 from kano_profile.profile import load_profile, save_profile_variable
 from kano_profile.tracker import save_hardware_info
 from kano_world.functions import login as login_, is_registered
 
-from kano_login.templates.labelled_entries import LabelledEntries
 from kano_login.templates.top_bar_template import TopBarTemplate
 from kano_login.templates.kano_button_box import KanoButtonBox
 from kano_login.about_you import AboutYou

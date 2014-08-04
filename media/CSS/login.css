@@ -6,13 +6,3 @@
 #
 # This contains the login specific styling
 */
-
-.bold_label {
-    font: Bariol Bold 14px;
-    color: @title_color;
-}
-
-.desc_label {
-    font: Bariol 14px;
-    color: @subheading_color;
-}

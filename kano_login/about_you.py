@@ -177,7 +177,9 @@ class AboutYou(TopBarTemplate):
         except Exception as e:
             kdialog = None
             if len(e.args) == 1:
-                kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"], "There's a problem - {0}".format(e))
+                kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"],
+                                     "There's a problem - {0}".format(e),
+                                     parent_window=self.win)
             else:
                 kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"],
                                      self.data["ALERT_DESCRIPTION_DEFAULT"],

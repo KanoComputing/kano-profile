@@ -14,9 +14,9 @@ from gi.repository import Gtk
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
+from kano.gtk3.labelled_entries import add_heading
 
 from kano_login.templates.top_bar_template import TopBarTemplate
-from kano_login.misc import add_heading
 from kano_login.register import Register
 from kano_login.data import get_data
 

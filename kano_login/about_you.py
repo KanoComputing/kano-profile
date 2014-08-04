@@ -93,8 +93,9 @@ class AboutYou(TopBarTemplate):
         self.month_widget.set_active(0)
 
         self.year_widget = Gtk.Entry()
-        self.year_widget.set_placeholder_text("xxxx")
+        self.year_widget.set_placeholder_text("XXXX")
         self.year_widget.set_width_chars(4)
+        self.year_widget.set_max_length(4)
         self.year_widget.set_size_request(45, 47)
 
         labelled_day = add_heading("DAY", self.day_widget)

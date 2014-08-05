@@ -11,6 +11,7 @@ import time
 import datetime
 from gi.repository import Gtk
 
+from kano.utils import is_number
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
@@ -141,6 +142,10 @@ class AboutYou(TopBarTemplate):
 
     def calculate_age(self):
         try:
+            year_text = self.year_widget.get_text()
+            if not is_number(year_text):
+                raise Exception(self.data["ALERT_TITLE_NO_YEAR"], self.data["ALERT_DESCRIPTION_NO_YEAR"])
+
             bday_day = int(self.day_widget.get_active_text())
             month_str = self.month_widget.get_active_text()
             bday_month = months.index(month_str) + 1
@@ -171,7 +176,7 @@ class AboutYou(TopBarTemplate):
                 if current_day < bday_day:
                     age = age - 1
                 # TODO: if it's their birthday, do something special?
-                #elif current_day == bday_day:
+                # elif current_day == bday_day:
                 #    print "IT'S YOUR BIIIIRTHDAY"
             return age, bday_date
 
@@ -180,6 +185,9 @@ class AboutYou(TopBarTemplate):
             if len(e.args) == 1:
                 kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"],
                                      "There's a problem - {0}".format(e),
+                                     parent_window=self.win)
+            elif len(e.args) == 2:
+                kdialog = KanoDialog(e[0], e[1],
                                      parent_window=self.win)
             else:
                 kdialog = KanoDialog(self.data["ALERT_TITLE_DEFAULT"],

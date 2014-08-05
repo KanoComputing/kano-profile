@@ -27,12 +27,10 @@
     "KANO_BUTTON": "GET REWARDS"
   },
   "ABOUT_YOU": {
-      "ALERT_TITLE_TOO_YOUNG": "That seems too young",
-      "ALERT_DESCRIPTION_TOO_YOUNG": "Make sure you entered the right birthday",
-      "ALERT_TITLE_TOO_OLD": "That seems too old",
-      "ALERT_DESCRIPTION_TOO_OLD": "Make sure you entered the right birthday",
       "ALERT_TITLE_DEFAULT": "Oops!",
-      "ALERT_DESCRIPTION_DEFAULT": " Your year has to be between 1900 and 2014"
+      "ALERT_DESCRIPTION_DEFAULT": " Your year has to be between 1900 and 2014",
+      "ALERT_TITLE_NO_YEAR": "Oops!",
+      "ALERT_DESCRIPTION_NO_YEAR": "You haven't entered a valid year"
   },
   "LOGIN": {
     "LABEL_1": "Login",

@@ -78,6 +78,7 @@ class AboutYou(TopBarTemplate):
         new_box = add_heading("Gender", box, True)
 
         self.gender_widget = new_box
+        self.gender_widget.set_margin_left(15)
 
     def create_birthday_widget(self):
         box = Gtk.Box(spacing=20)
@@ -114,6 +115,7 @@ class AboutYou(TopBarTemplate):
         new_box = add_heading("Birthday", box, True)
 
         self.birthday_widget = new_box
+        self.birthday_widget.set_margin_left(15)
 
     def save_info(self, widget, event, args=[]):
         age, bday_date = self.calculate_age()

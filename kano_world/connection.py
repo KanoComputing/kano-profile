@@ -31,7 +31,7 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
             return r.ok, None, r.json()
         else:
             if '<title>Application Error</title>' in r.text:
-                error_msg = 'We can’t reach the Kano server. Try again in a few minutes.'
+                error_msg = 'We cannot reach the Kano server. Try again in a few minutes.'
             else:
                 error_msg = r.text
             return r.ok, error_msg, None

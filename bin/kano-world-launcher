@@ -9,7 +9,7 @@
 # This is here only in case we'd like to track something here
 
 import os
-
+import sys
 from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
 from kano_world.functions import get_token
 from kano.logging import logger
@@ -19,6 +19,7 @@ kanotracker = Tracker()
 
 chromium_folder = os.path.join(get_home(), '.config/chromium/')
 chromium_local_state = os.path.join(chromium_folder, 'Local State')
+
 
 def modify_local_state():
     logger.info('modify_local_state')
@@ -50,7 +51,7 @@ def create_local_state():
 
 # Check internet status
 if not is_internet():
-    os.system('sudo /usr/bin/kano-settings 5')
+    os.system('sudo /usr/bin/kano-settings 4')
     sys.exit()
 
 if os.path.exists(chromium_local_state):
@@ -62,5 +63,5 @@ if os.path.exists(chromium_local_state):
 else:
     create_local_state()
 
-run_cmd("chromium --app=http://world.kano.me/login/{}".format(get_token()))
+run_cmd("chromium --window-size=1000,940 --app=http://world.kano.me/login/{}".format(get_token()))
 run_bg('kano-sync --sync -s')

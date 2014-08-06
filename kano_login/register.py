@@ -177,7 +177,11 @@ class Register(TopBarTemplate):
             return_value = 1
 
         def done(title, description, return_value):
-            kdialog = KanoDialog(title, description, {"OK": {"return_value": return_value}})
+            kdialog = KanoDialog(
+                title, description,
+                {"OK": {"return_value": return_value}},
+                parent_window=self.win
+            )
             response = kdialog.run()
 
             self.win.get_window().set_cursor(None)

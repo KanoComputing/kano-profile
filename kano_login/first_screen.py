@@ -46,6 +46,7 @@ class FirstScreen():
         self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
         self.template.orange_button.connect("button_release_event", self.login_screen)
+        self.template.kano_button.connect("key_release_event", self.next_screen)
         self.template.button_box.set_margin_bottom(30)
         self.win.show_all()
 
@@ -58,12 +59,14 @@ class FirstScreen():
             NoInternet(self.win)
 
     def next_screen(self, widget, event):
-        self.win.clear_win()
 
-        if is_internet():
-            AboutYou(self.win, self)
-        else:
-            NoInternet(self.win)
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            self.win.clear_win()
+
+            if is_internet():
+                AboutYou(self.win, self)
+            else:
+                NoInternet(self.win)
 
     def repack(self):
         self.win.clear_win()

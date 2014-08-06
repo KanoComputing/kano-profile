@@ -47,7 +47,7 @@ class AboutYou(TopBarTemplate):
         self.next_button = KanoButton("NEXT")
         self.next_button.pack_and_align()
         self.next_button.connect("button_release_event", self.save_info)
-        self.next_button.connect("key_press_event", self.save_info)
+        self.next_button.connect("key_release_event", self.save_info)
 
         self.box.pack_start(title.container, False, False, 3)
         self.box.pack_start(self.gender_widget, False, False, 10)

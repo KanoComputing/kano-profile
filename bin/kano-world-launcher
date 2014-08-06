@@ -63,5 +63,5 @@ if os.path.exists(chromium_local_state):
 else:
     create_local_state()
 
-run_cmd("chromium --app=http://world.kano.me/login/{}".format(get_token()))
+run_cmd("chromium --window-size=1000,940 --app=http://world.kano.me/login/{}".format(get_token()))
 run_bg('kano-sync --sync -s')

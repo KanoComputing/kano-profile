@@ -64,7 +64,7 @@ def login_register_data(data):
         glob_session = KanoWorldSession(profile['token'])
         return True, None
     except Exception as e:
-        return False, 'There may be a problem with our servers. Try again later. Error = {}'.format(str(e))
+        return False, 'We can’t reach the Kano server. Try again in a few minutes. Error = {}'.format(str(e))
 
 
 def is_registered():

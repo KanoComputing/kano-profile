@@ -23,6 +23,8 @@ class SetupSuccessful():
     def __init__(self, win):
 
         self.win = win
+        self.win.set_resizable(True)
+
         img_width = 590
         img_height = 270
         image_filename = get_image("login", "", self.data["TOP_PIC"], str(img_width) + 'x' + str(img_height))
@@ -30,8 +32,12 @@ class SetupSuccessful():
 
         self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
+        self.template.kano_button.connect("key_release_event", self.next_screen)
+        self.template.button_box.set_margin_bottom(30)
         self.win.show_all()
 
     def next_screen(self, widget, event):
-        self.win.clear_win()
-        FirstScreen(self.win)
+        # If enter key is pressed or mouse button is clicked
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            self.win.clear_win()
+            FirstScreen(self.win)

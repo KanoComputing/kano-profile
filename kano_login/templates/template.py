@@ -39,16 +39,16 @@ class Template(Gtk.Box):
 
         self.pack_start(self.heading.container, False, False, 0)
 
-        button_box = Gtk.ButtonBox(spacing=10)
-        button_box.set_layout(Gtk.ButtonBoxStyle.SPREAD)
-        self.pack_start(button_box, False, False, 0)
+        self.button_box = Gtk.ButtonBox(spacing=10)
+        self.button_box.set_layout(Gtk.ButtonBoxStyle.SPREAD)
+        self.pack_start(self.button_box, False, False, 0)
 
         if not orange_button_text == "":
             self.orange_button = OrangeButton(orange_button_text)
-            button_box.pack_start(self.orange_button, False, False, 0)
-            button_box.pack_start(self.kano_button, False, False, 0)
+            self.button_box.pack_start(self.orange_button, False, False, 0)
+            self.button_box.pack_start(self.kano_button, False, False, 0)
             # The empty label is to centre the kano_button
             label = Gtk.Label("    ")
-            button_box.pack_start(label, False, False, 0)
+            self.button_box.pack_start(label, False, False, 0)
         else:
-            button_box.pack_start(self.kano_button, False, False, 0)
+            self.button_box.pack_start(self.kano_button, False, False, 0)

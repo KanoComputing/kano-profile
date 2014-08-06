@@ -40,11 +40,13 @@ class FirstScreen():
     def __init__(self, win):
 
         self.win = win
+        self.win.reset_allocation()
 
         self.template = create_template("FIRST_SCREEN")
         self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
         self.template.orange_button.connect("button_release_event", self.login_screen)
+        self.template.button_box.set_margin_bottom(30)
         self.win.show_all()
 
     def login_screen(self, widget, event):

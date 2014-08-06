@@ -49,7 +49,11 @@ class FirstScreen():
 
     def login_screen(self, widget, event):
         self.win.clear_win()
-        Login(self.win)
+
+        if is_internet():
+            Login(self.win)
+        else:
+            NoInternet(self.win)
 
     def next_screen(self, widget, event):
         self.win.clear_win()

@@ -47,8 +47,8 @@ class TopBarTemplate(Gtk.Grid):
             data["LABEL_1"],
             data["LABEL_2"],
             {
-                "OK": {"return_value": 0},
-                "CANCEL": {"return_value": 1}
+                "DON'T CLOSE": {"return_value": 1, "color": "green"},
+                "CLOSE": {"return_value": 0, "color": "red"}
             },
             parent_window=widget.get_toplevel()
         )

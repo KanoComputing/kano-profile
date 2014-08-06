@@ -43,9 +43,12 @@ class MainWindow(ApplicationWindow):
     def __init__(self, first_boot, state):
 
         # Create main window
-        self.WINDOW_HEIGHT = 450
-        self.WINDOW_WIDTH = 590
+        self.WINDOW_HEIGHT = 0
+        self.WINDOW_WIDTH = 0
         ApplicationWindow.__init__(self, 'Kano', self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        self.connect("delete-event", Gtk.main_quit)
+        self.show_all()
 
         self.username = ""
         self.email = ""
@@ -62,14 +65,19 @@ class MainWindow(ApplicationWindow):
         else:
             self.goto(state)
 
-        self.show_all()
-
     def goto(self, state):
         self.clear_win()
         refs[state](self)
 
     def clear_win(self):
         self.remove_main_widget()
+
+    def reset_allocation(self):
+        # hacky fix - reset height allocation for the window
+        allocation = self.get_allocation()
+        allocation.width = 1
+        allocation.height = 1
+        self.size_allocate(allocation)
 
 
 def main(first_boot, page_number=0):
@@ -93,7 +101,6 @@ def main(first_boot, page_number=0):
 
     else:
         win = MainWindow(first_boot, page_number)
-        win.connect('delete-event', Gtk.main_quit)
         win.show_all()
         Gtk.main()
     return 0

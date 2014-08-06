@@ -46,6 +46,9 @@ class Login(TopBarTemplate):
         self.box.pack_start(self.heading.container, False, False, 10)
 
         self.labelled_entries = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
+        for entry in self.labelled_entries.get_entries():
+            entry.connect("key_release_event", self.enable_kano_button)
+
         self.labelled_entries.get_entry(1).set_visibility(False)
         self.labelled_entries.set_spacing(15)
         self.box.pack_start(self.labelled_entries, False, False, 15)
@@ -57,7 +60,17 @@ class Login(TopBarTemplate):
         self.button_box.kano_button.connect("key-release-event", self.activate)
         self.button_box.set_orange_button_cb(self.create_new)
 
+        self.button_box.kano_button.set_sensitive(False)
+
         self.win.show_all()
+
+    def enable_kano_button(self, widget=None, event=None):
+        text0 = self.labelled_entries.get_entry(0).get_text()
+        text1 = self.labelled_entries.get_entry(1).get_text()
+        if text0 != "" and text1 != "":
+            self.button_box.kano_button.set_sensitive(True)
+        else:
+            self.button_box.kano_button.set_sensitive(False)
 
     def repack(self):
         self.win.clear_win()

@@ -9,7 +9,7 @@
 
 import time
 import datetime
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 from kano.utils import is_number
 from kano.gtk3.buttons import KanoButton
@@ -118,24 +118,26 @@ class AboutYou(TopBarTemplate):
         self.birthday_widget.set_margin_left(15)
 
     def save_info(self, widget, event, args=[]):
-        age, bday_date = self.calculate_age()
+        if not hasattr(event, 'keyval') or Gdk.keyval_name(event.keyval) == "Return":
 
-        if age == -1:
-            return
+            age, bday_date = self.calculate_age()
 
-        # Save age and birthday as part of the window object
-        self.win.age = age
-        self.win.bday_date = bday_date
+            if age == -1:
+                return
 
-        gender = self.selected_gender
-        self.win.gender = gender
-        self.win.clear_win()
+            # Save age and birthday as part of the window object
+            self.win.age = age
+            self.win.bday_date = bday_date
 
-        if age < 13:
-            Register(self.win, self, False)
+            gender = self.selected_gender
+            self.win.gender = gender
+            self.win.clear_win()
 
-        else:
-            Register(self.win, self, True)
+            if age < 13:
+                Register(self.win, self, False)
+
+            else:
+                Register(self.win, self, True)
 
     def get_gender(self, widget):
         if widget.get_active():

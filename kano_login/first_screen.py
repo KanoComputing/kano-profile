@@ -48,6 +48,7 @@ class FirstScreen():
         self.template.orange_button.connect("button_release_event", self.login_screen)
         self.template.kano_button.connect("key_release_event", self.next_screen)
         self.template.button_box.set_margin_bottom(30)
+        self.template.kano_button.grab_focus()
         self.win.show_all()
 
     def login_screen(self, widget, event):
@@ -81,15 +82,18 @@ class NoInternet():
 
         self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.connect)
+        self.template.kano_button.connect("key_release_event", self.connect)
         self.template.orange_button.connect("button_release_event", self.register_later)
+        self.template.kano_button.grab_focus()
         self.win.show_all()
 
     def connect(self, widget, event):
-        # Launch kano-wifi
-        os.system('rxvt -title \'WiFi\' -e sudo /usr/bin/kano-wifi')
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            # Launch kano-wifi
+            os.system('rxvt -title \'WiFi\' -e sudo /usr/bin/kano-wifi')
 
-        self.win.clear_win()
-        FirstScreen(self.win)
+            self.win.clear_win()
+            FirstScreen(self.win)
 
     def register_later(self, widget, event):
         sys.exit(0)

@@ -28,6 +28,8 @@ from kano_login.templates.kano_button_box import KanoButtonBox
 from kano_login.about_you import AboutYou
 from kano_login.data import get_data
 
+from kano.network import is_internet
+
 profile = load_profile()
 force_login = is_registered() and 'kanoworld_username' in profile
 
@@ -61,6 +63,7 @@ class Login(TopBarTemplate):
         self.button_box.set_orange_button_cb(self.create_new)
 
         self.button_box.kano_button.set_sensitive(False)
+        self.labelled_entries.get_entry(0).grab_focus()
 
         self.win.show_all()
 
@@ -77,6 +80,8 @@ class Login(TopBarTemplate):
         self.win.set_main_widget(self)
 
     def create_new(self, widget, event, args=[]):
+
+        # Should we stop the user progressing here if they don't have internet?
         self.win.clear_win()
         AboutYou(self.win, self)
 
@@ -90,49 +95,57 @@ class Login(TopBarTemplate):
             thread.start()
 
     def log_user_in(self):
-        [username_email, password_text] = self.labelled_entries.get_entry_text()
-        success, text = login_(username_email, password_text)
 
-        if not success:
-            logger.info('problem with login: {}'.format(text))
-            title = "Houston, we have a problem"
-            description = text
+        if not is_internet():
+            title = "You don't have internet"
+            description = "Connect to the internet to login"
             return_value = 0
 
         else:
-            logger.info('login successful')
 
-            # saving hardware info
-            save_hardware_info()
+            [username_email, password_text] = self.labelled_entries.get_entry_text()
+            success, text = login_(username_email, password_text)
 
-            # restore on first successful login/restore
-            try:
-                first_sync_done = profile['first_sync_done']
-            except Exception:
-                first_sync_done = False
-
-            if not first_sync_done:
-                logger.info('running kano-sync --sync && --sync && --restore after first time login')
-
-                # doing first sync and restore
-                cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
-                cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
-                run_bg(cmd)
-
-                save_profile_variable('first_sync_done', True)
+            if not success:
+                logger.info('problem with login: {}'.format(text))
+                title = "Houston, we have a problem"
+                description = text
+                return_value = 0
 
             else:
-                logger.info('running kano-sync --sync after non-first login')
+                logger.info('login successful')
 
-                # sync on each successful login
-                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                run_bg(cmd)
+                # saving hardware info
+                save_hardware_info()
 
-            title = self.data_success["LABEL_1"]
-            description = self.data_success["LABEL_2"]
-            return_value = 1
+                # restore on first successful login/restore
+                try:
+                    first_sync_done = profile['first_sync_done']
+                except Exception:
+                    first_sync_done = False
+
+                if not first_sync_done:
+                    logger.info('running kano-sync --sync && --sync && --restore after first time login')
+
+                    # doing first sync and restore
+                    cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                    cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                    cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
+                    cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
+                    run_bg(cmd)
+
+                    save_profile_variable('first_sync_done', True)
+
+                else:
+                    logger.info('running kano-sync --sync after non-first login')
+
+                    # sync on each successful login
+                    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                    run_bg(cmd)
+
+                title = self.data_success["LABEL_1"]
+                description = self.data_success["LABEL_2"]
+                return_value = 1
 
         def done(title, description, return_value):
             kdialog = KanoDialog(title, description,
@@ -145,5 +158,6 @@ class Login(TopBarTemplate):
 
             self.win.get_window().set_cursor(None)
             self.button_box.kano_button.set_sensitive(True)
+            self.labelled_entries.get_entry(0).grab_focus()
 
         GObject.idle_add(done, title, description, return_value)

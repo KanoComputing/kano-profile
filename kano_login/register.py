@@ -97,6 +97,7 @@ class Register(TopBarTemplate):
         # password entry
         entry = entries[len(entries) - 1]
         entry.set_visibility(False)
+        self.entries_container.get_entry(0).grab_focus()
 
         self.win.show_all()
 
@@ -186,6 +187,7 @@ class Register(TopBarTemplate):
 
             self.win.get_window().set_cursor(None)
             self.kano_button.set_sensitive(True)
+            self.entries_container.get_entry(0).grab_focus()
 
             if response == 1:
                 sys.exit(0)

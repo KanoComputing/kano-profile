@@ -113,7 +113,10 @@ if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'first_boot':
         first_boot = 1
     elif len(sys.argv) == 2:
-        page_number = int(sys.argv[1])
+        try:
+            page_number = int(sys.argv[1])
+        except:
+            sys.exit(1)
     # Check for internet if not first boot
     if (first_boot == 0) and not is_internet():
         run_cmd('sudo /usr/bin/kano-settings 4')

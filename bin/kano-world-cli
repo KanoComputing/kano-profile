@@ -68,7 +68,10 @@ def do_register():
     email = raw_input('e-mail: ')
     username = raw_input('username: ')
     password = raw_input('password: ')
-    success, error = register(email, username, password)
+    date_year = raw_input('date_year: ')
+    date_month = raw_input('date_month: ')
+    date_day = raw_input('date_day: ')
+    success, error = register(email, username, password, date_year, date_month, date_day)
     if not success:
         sys.exit('Error with registering: {}'.format(error))
 

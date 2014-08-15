@@ -11,6 +11,7 @@ import threading
 import sys
 from gi.repository import Gdk, GObject
 
+from kano.network import is_internet
 from kano.logging import logger
 
 from kano.utils import run_bg
@@ -35,6 +36,7 @@ force_login = is_registered() and 'kanoworld_username' in profile
 class Login(TopBarTemplate):
     data = get_data("LOGIN")
     data_success = get_data("LOGIN_SUCCESS")
+    data_no_internet = get_data("LOGIN_NO_INTERNET")
 
     def __init__(self, win):
 
@@ -90,49 +92,56 @@ class Login(TopBarTemplate):
             thread.start()
 
     def log_user_in(self):
-        [username_email, password_text] = self.labelled_entries.get_entry_text()
-        success, text = login_(username_email, password_text)
 
-        if not success:
-            logger.info('problem with login: {}'.format(text))
-            title = "Houston, we have a problem"
-            description = text
+        if not is_internet():
+            title = self.data_no_internet["LABEL_1"]
+            description = self.data_no_internet["LABEL_2"]
             return_value = 0
 
         else:
-            logger.info('login successful')
+            [username_email, password_text] = self.labelled_entries.get_entry_text()
+            success, text = login_(username_email, password_text)
 
-            # saving hardware info
-            save_hardware_info()
-
-            # restore on first successful login/restore
-            try:
-                first_sync_done = profile['first_sync_done']
-            except Exception:
-                first_sync_done = False
-
-            if not first_sync_done:
-                logger.info('running kano-sync --sync && --sync && --restore after first time login')
-
-                # doing first sync and restore
-                cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
-                cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
-                run_bg(cmd)
-
-                save_profile_variable('first_sync_done', True)
+            if not success:
+                logger.info('problem with login: {}'.format(text))
+                title = "Houston, we have a problem"
+                description = text
+                return_value = 0
 
             else:
-                logger.info('running kano-sync --sync after non-first login')
+                logger.info('login successful')
 
-                # sync on each successful login
-                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                run_bg(cmd)
+                # saving hardware info
+                save_hardware_info()
 
-            title = self.data_success["LABEL_1"]
-            description = self.data_success["LABEL_2"]
-            return_value = 1
+                # restore on first successful login/restore
+                try:
+                    first_sync_done = profile['first_sync_done']
+                except Exception:
+                    first_sync_done = False
+
+                if not first_sync_done:
+                    logger.info('running kano-sync --sync && --sync && --restore after first time login')
+
+                    # doing first sync and restore
+                    cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                    cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                    cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
+                    cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
+                    run_bg(cmd)
+
+                    save_profile_variable('first_sync_done', True)
+
+                else:
+                    logger.info('running kano-sync --sync after non-first login')
+
+                    # sync on each successful login
+                    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                    run_bg(cmd)
+
+                title = self.data_success["LABEL_1"]
+                description = self.data_success["LABEL_2"]
+                return_value = 1
 
         def done(title, description, return_value):
             kdialog = KanoDialog(title, description,

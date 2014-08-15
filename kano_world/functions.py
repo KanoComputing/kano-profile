@@ -9,7 +9,7 @@
 import json
 
 from kano_profile.profile import load_profile, save_profile
-from kano.utils import get_user_unsudoed
+from kano.utils import get_user_unsudoed, is_number
 
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
@@ -33,15 +33,20 @@ def login(login_name, password):
         return False, 'Cannot log in, problem: {}'.format(text)
 
 
-def register(email, username, password):
+def register(email, username, password, date_year, date_month, date_day):
     email = email.strip()
     username = username.strip()
     password = password.strip()
 
+    if not is_number(date_year) or not is_number(date_month) or not is_number(date_day):
+        return False, 'Date in bad format!'
+
     payload = {
         'email': email,
         'username': username,
-        'password': password
+        'password': password,
+        'birthdate': '{}-{}-{}'.format(date_year, date_month, date_day),
+        # 'gender': '',
     }
 
     success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)

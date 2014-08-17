@@ -13,6 +13,7 @@ import sys
 import threading
 from gi.repository import Gtk, Gdk, GObject
 
+from kano.network import is_internet
 from kano.logging import logger
 from kano.utils import run_bg
 
@@ -48,6 +49,7 @@ class Register(TopBarTemplate):
     data_under_13 = get_data("REGISTER_UNDER_13")
     data = get_data("REGISTER")
     data_success = get_data("REGISTER_SUCCESS")
+    data_no_internet = get_data("REGISTER_NO_INTERNET")
 
     def __init__(self, win, _prev_screen, over_13=False):
         TopBarTemplate.__init__(self, prev_screen=_prev_screen)
@@ -143,40 +145,44 @@ class Register(TopBarTemplate):
             thread.start()
 
     def register_user(self):
-
-        entries = self.entries_container.get_entries()
-        self.win.username = entries[0].get_text()
-        self.win.email = entries[1].get_text()
-        self.win.password = entries[2].get_text()
-
-        logger.info('trying to register user')
-        (date_year, date_month, date_day) = self.win.date_split
-        success, text = register_(self.win.email, self.win.username, self.win.password,
-                                  date_year, date_month, date_day)
-
-        if not success:
-            logger.info('problem with registration: {}'.format(text))
-            title = "Houston, we have a problem"
-            description = str(text)
+        if not is_internet():
+            title = self.data_no_internet["LABEL_1"]
+            description = self.data_no_internet["LABEL_2"]
             return_value = 0
-
         else:
-            logger.info('registration successful')
+            entries = self.entries_container.get_entries()
+            self.win.username = entries[0].get_text()
+            self.win.email = entries[1].get_text()
+            self.win.password = entries[2].get_text()
 
-            save_profile_variable('gender', self.win.gender)
-            save_profile_variable('birthdate', self.win.bday_date)
+            logger.info('trying to register user')
+            (date_year, date_month, date_day) = self.win.date_split
+            success, text = register_(self.win.email, self.win.username, self.win.password,
+                                      date_year, date_month, date_day)
 
-            # saving hardware info
-            save_hardware_info()
+            if not success:
+                logger.info('problem with registration: {}'.format(text))
+                title = "Houston, we have a problem"
+                description = str(text)
+                return_value = 0
 
-            # running kano-sync after registration
-            logger.info('running kano-sync after successful registration')
-            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-            run_bg(cmd)
+            else:
+                logger.info('registration successful')
 
-            title = self.data_success["LABEL_1"]
-            description = self.data_success["LABEL_2"]
-            return_value = 1
+                save_profile_variable('gender', self.win.gender)
+                save_profile_variable('birthdate', self.win.bday_date)
+
+                # saving hardware info
+                save_hardware_info()
+
+                # running kano-sync after registration
+                logger.info('running kano-sync after successful registration')
+                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                run_bg(cmd)
+
+                title = self.data_success["LABEL_1"]
+                description = self.data_success["LABEL_2"]
+                return_value = 1
 
         def done(title, description, return_value):
             kdialog = KanoDialog(

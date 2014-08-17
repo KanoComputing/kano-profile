@@ -156,7 +156,9 @@ class Register(TopBarTemplate):
             self.win.password = entries[2].get_text()
 
             logger.info('trying to register user')
-            success, text = register_(self.win.email, self.win.username, self.win.password)
+            (date_year, date_month, date_day) = self.win.date_split
+            success, text = register_(self.win.email, self.win.username, self.win.password,
+                                      date_year, date_month, date_day)
 
             if not success:
                 logger.info('problem with registration: {}'.format(text))

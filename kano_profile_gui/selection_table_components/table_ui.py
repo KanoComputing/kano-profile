@@ -37,17 +37,30 @@ class TableUi():
         # for avatar_cat, avatar_items in all_avatars.iteritems():
         #   print avatar_cat, avatar_items
 
+        item_list = list()
+
         for folder_name, items in category_dict.iteritems():
             for filename, properties in items.iteritems():
-                cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename, "title": properties["title"],
-                            "locked_description": properties["desc_locked"], "unlocked_description": properties["desc_unlocked"],
-                            "unlocked": properties['achieved'], "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
+                cat_dict = {"category": category_name, "subcategory": folder_name, "badge_name": filename,
+                            "title": properties["title"], "locked_description": properties["desc_locked"],
+                            "unlocked_description": properties["desc_unlocked"], "unlocked": properties['achieved'],
+                            "bg_color": properties["bg_color"]}  # "unlocked": properties['achieved']
+                if 'order' in properties:
+                    cat_dict['order'] = properties['order']
+                else:
+                    cat_dict['order'] = 0
+                item_list.append(cat_dict)
 
-                item = item_info.ItemInfo(cat_dict)
-                pic = item_ui.ItemUi(item)
-                self.pics.append(pic)
-                number_of_badges = number_of_badges + 1.0  # Make a float
-                item_array.append(item)
+        # sorting
+        item_list = sorted(item_list, key=lambda k: k['order'], reverse=False)
+
+        # self.pics
+        for i in item_list:
+            item = item_info.ItemInfo(i)
+            pic = item_ui.ItemUi(item)
+            self.pics.append(pic)
+            number_of_badges = number_of_badges + 1.0  # Make a float
+            item_array.append(item)
 
         self.group = item_group.ItemGroup(item_array)
 

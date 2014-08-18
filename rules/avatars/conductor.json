@@ -5,7 +5,8 @@
     "desc_unlocked": "5 minutes after Carina was born, she started humming. When she was 1, she hummed twinkle twinkle little star. When she turned 2, she started beat-boxing . When she turned 3, she whistled Beethoven’s 5th Symphony.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 6]],
-    "title": "Carina 1"
+    "title": "Carina 1",
+    "order": 6
   },
   "conductor_2": {
     "bg_color": "b4dff1",
@@ -13,6 +14,7 @@
     "desc_unlocked": "Carina sees the world in song, and can conduct two songs at once. She leads rock bands and classical orchestras in her own concert hall, the Carinanthum.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 6]],
-    "title": "Carina 2"
+    "title": "Carina 2",
+    "order": 6
   }
 }

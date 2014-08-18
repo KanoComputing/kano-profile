@@ -5,7 +5,8 @@
     "desc_unlocked": "Bot grew up in a small town, where he was bullied for his flashing face and floating arms. He hid in the corner of an arcade.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 4]],
-    "title": "Pongobot 1"
+    "title": "Pongobot 1",
+    "order": 4
   },
   "pongobot_2": {
     "bg_color": "918e8e",
@@ -13,6 +14,7 @@
     "desc_unlocked": "Mistaking him for a game, the local kids came to play – each time they loaded Pong, Bot made it cooler, faster, more fun, using his imagination. When they realized it was Bot, he was hailed a human hero.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 4]],
-    "title": "Pongobot 2"
+    "title": "Pongobot 2",
+    "order": 4
   }
 }

@@ -5,7 +5,8 @@
     "desc_unlocked": "Kano Kin fell from space – some say he’s a satellite, others say an alien, others say he was invented by the Judoka to help save the world from the Robotniks.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 7]],
-    "title": "Kano Kin 1"
+    "title": "Kano Kin 1",
+    "order": 7
   },
   "kano_kin_2": {
     "bg_color": "c294e9",
@@ -13,6 +14,7 @@
     "desc_unlocked": "He has the power to talk, sing, fly, display – and can shoot electricity out of his ports. His brain can do 160 million calculations in one second. But his best power is his ability to talk to anyone, in any language, from Chinese to Python code. He is the Kano Kin.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 7]],
-    "title": "Kano Kin 2"
+    "title": "Kano Kin 2",
+    "order": 7
   }
 }

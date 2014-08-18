@@ -5,7 +5,8 @@
     "desc_unlocked": "Playback used to work in Hollywood, putting bits of music and video in his pockets and jogging them from house to house, throwing crazy parties.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 2]],
-    "title": "Video Dude 1"
+    "title": "Video Dude 1",
+    "order": 2
   },
   "video_dude_2": {
     "bg_color": "f0e26d",
@@ -13,6 +14,7 @@
     "desc_unlocked": "Then he met the Judoka, who taught him how to use code to grab millions of videos at once. The two friends hang out watching Kanye West videos.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 2]],
-    "title": "Video Dude 2"
+    "title": "Video Dude 2",
+    "order": 2
   }
 }

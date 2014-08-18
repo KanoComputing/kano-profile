@@ -90,7 +90,7 @@ class NoInternet():
     def connect(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             # Launch kano-wifi
-            os.system('rxvt -title \'WiFi\' -e sudo /usr/bin/kano-wifi')
+            os.system('rxvt -title \'WiFi Setup\' -e sudo /usr/bin/kano-wifi')
 
             self.win.clear_win()
             FirstScreen(self.win)

@@ -38,6 +38,10 @@
     "ORANGE_BUTTON": "Create New",
     "KANO_BUTTON": "Login"
   },
+  "LOGIN_NO_INTERNET": {
+      "LABEL_1": "You don't have internet!",
+      "LABEL_2": "Connect with wifi or ethernet and try again"
+  },
   "LOGIN_SUCCESS": {
       "LABEL_1": "Success!",
       "LABEL_2": "You're in - online features now enabled"
@@ -53,6 +57,10 @@
   "REGISTER_OVER_13": {
     "LABEL_1": "Login details",
     "LABEL_2": "Pick a cool name, add your email, and set your password"
+  },
+  "REGISTER_NO_INTERNET": {
+      "LABEL_1": "You don't have internet!",
+      "LABEL_2": "Connect with wifi or ethernet and try again"
   },
   "REGISTER_SUCCESS": {
       "LABEL_1": "Profile created!",

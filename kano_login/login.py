@@ -11,6 +11,7 @@ import threading
 import sys
 from gi.repository import Gdk, GObject
 
+from kano.network import is_internet
 from kano.logging import logger
 
 from kano.utils import run_bg
@@ -28,8 +29,6 @@ from kano_login.templates.kano_button_box import KanoButtonBox
 from kano_login.about_you import AboutYou
 from kano_login.data import get_data
 
-from kano.network import is_internet
-
 profile = load_profile()
 force_login = is_registered() and 'kanoworld_username' in profile
 
@@ -37,6 +36,7 @@ force_login = is_registered() and 'kanoworld_username' in profile
 class Login(TopBarTemplate):
     data = get_data("LOGIN")
     data_success = get_data("LOGIN_SUCCESS")
+    data_no_internet = get_data("LOGIN_NO_INTERNET")
 
     def __init__(self, win):
 
@@ -97,12 +97,12 @@ class Login(TopBarTemplate):
     def log_user_in(self):
 
         if not is_internet():
-            title = "You don't have internet"
-            description = "Connect to the internet to login"
+
+            title = self.data_no_internet["LABEL_1"]
+            description = self.data_no_internet["LABEL_2"]
             return_value = 0
 
         else:
-
             [username_email, password_text] = self.labelled_entries.get_entry_text()
             success, text = login_(username_email, password_text)
 

@@ -154,6 +154,7 @@ class AboutYou(TopBarTemplate):
             month_str = self.month_widget.get_active_text()
             bday_month = months.index(month_str) + 1
             bday_year = int(self.year_widget.get_text())
+            self.win.date_split = (bday_year, bday_month, bday_day)
 
             bday_date = str(datetime.date(bday_year, bday_month, bday_day))
 

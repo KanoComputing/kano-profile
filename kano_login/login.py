@@ -63,6 +63,7 @@ class Login(TopBarTemplate):
         self.button_box.set_orange_button_cb(self.create_new)
 
         self.button_box.kano_button.set_sensitive(False)
+        self.labelled_entries.get_entry(0).grab_focus()
 
         self.win.show_all()
 
@@ -79,6 +80,8 @@ class Login(TopBarTemplate):
         self.win.set_main_widget(self)
 
     def create_new(self, widget, event, args=[]):
+
+        # Should we stop the user progressing here if they don't have internet?
         self.win.clear_win()
         AboutYou(self.win, self)
 
@@ -94,6 +97,7 @@ class Login(TopBarTemplate):
     def log_user_in(self):
 
         if not is_internet():
+
             title = self.data_no_internet["LABEL_1"]
             description = self.data_no_internet["LABEL_2"]
             return_value = 0
@@ -154,5 +158,6 @@ class Login(TopBarTemplate):
 
             self.win.get_window().set_cursor(None)
             self.button_box.kano_button.set_sensitive(True)
+            self.labelled_entries.get_entry(0).grab_focus()
 
         GObject.idle_add(done, title, description, return_value)

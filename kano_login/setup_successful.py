@@ -34,6 +34,7 @@ class SetupSuccessful():
         self.template.kano_button.connect("button_release_event", self.next_screen)
         self.template.kano_button.connect("key_release_event", self.next_screen)
         self.template.button_box.set_margin_bottom(30)
+        self.template.kano_button.grab_focus()
         self.win.show_all()
 
     def next_screen(self, widget, event):

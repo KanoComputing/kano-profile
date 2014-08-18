@@ -68,6 +68,7 @@ class MainWindow(Gtk.Window):
         self.orange_button = self.button_box.orange_button
         self.kano_button = self.button_box.kano_button
         self.kano_button.connect("button-release-event", self.go_to_next)
+        self.kano_button.connect("key-release-event", self.go_to_next)
         self.orange_button.connect("button-release-event", self.launch_profile)
 
         self.image = Gtk.Image()
@@ -95,63 +96,64 @@ class MainWindow(Gtk.Window):
             self.go_to_next()
 
     def go_to_next(self, widget=None, event=None):
+        # If ENTER key is pressed or event is a button event
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
 
-        self.go_to_next_category()
+            self.go_to_next_category()
 
-        items = None
-        item = None
-        subcat = None
+            items = None
+            item = None
+            subcat = None
 
-        size_folder = str(self.image_width) + 'x' + str(self.image_height)
-        filename = ""
-        title = ""
-        background_color = Gdk.RGBA()
+            size_folder = str(self.image_width) + 'x' + str(self.image_height)
+            filename = ""
+            title = ""
+            background_color = Gdk.RGBA()
 
-        if self.category in self.new_items:
-            for subcat, items in self.new_items[self.category].iteritems():
-                for item, rules in items.iteritems():
-                    color_string = '#' + rules["bg_color"]
-                    background_color.parse(color_string)
-                    if self.category == "environments":
-                        title = rules["title"]
-                        filename = get_image(self.category, subcat, item, size_folder)
-                    elif self.category == "avatars":
-                        title = subcat.replace('_', ' ').title()
-                        continue
-                    else:
-                        title = rules["title"]
-                        filename = get_image(self.category, subcat, item + "_levelup", size_folder)
+            if self.category in self.new_items:
+                for subcat, items in self.new_items[self.category].iteritems():
+                    for item, rules in items.iteritems():
+                        color_string = '#' + rules["bg_color"]
+                        background_color.parse(color_string)
+                        if self.category == "environments":
+                            title = rules["title"]
+                            filename = get_image(self.category, subcat, item, size_folder)
+                        elif self.category == "avatars":
+                            title = subcat.replace('_', ' ').title()
+                            continue
+                        else:
+                            title = rules["title"]
+                            filename = get_image(self.category, subcat, item + "_levelup", size_folder)
 
-        else:
-            self.go_to_next()
-            return
-
-        self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
-
-        if self.category == "avatars":
-            filename = get_image(self.category, subcat, subcat + "_levelup", size_folder)
-
-        self.image.set_from_file(filename)
-        self.set_description(self.category, title)
-
-        if self.category == "avatars":
-            del self.new_items["avatars"][subcat]
-        else:
-            # So we don't iterate through an empty dictionary on the next loop
-            del items[item]
-            if self.new_items[self.category][subcat] == {}:
-                del self.new_items[self.category][subcat]
-
-        if self.last_level():
-            self.kano_button.set_label("CONTINUE")
-
-            if is_running('kdesk') and not is_running('kano-updater'):
-                # Show launch profile button
-                self.show_all()
+            else:
+                self.go_to_next()
                 return
 
-        self.show_all_except_orange_button()
-        #self.show_all()
+            self.background.override_background_color(Gtk.StateFlags.NORMAL, background_color)
+
+            if self.category == "avatars":
+                filename = get_image(self.category, subcat, subcat + "_levelup", size_folder)
+
+            self.image.set_from_file(filename)
+            self.set_description(self.category, title)
+
+            if self.category == "avatars":
+                del self.new_items["avatars"][subcat]
+            else:
+                # So we don't iterate through an empty dictionary on the next loop
+                del items[item]
+                if self.new_items[self.category][subcat] == {}:
+                    del self.new_items[self.category][subcat]
+
+            if self.last_level():
+                self.kano_button.set_label("CONTINUE")
+
+                if is_running('kdesk') and not is_running('kano-updater'):
+                    # Show launch profile button
+                    self.show_all()
+                    return
+
+            self.show_all_except_orange_button()
 
     def show_all_except_orange_button(self):
         self.show_all()

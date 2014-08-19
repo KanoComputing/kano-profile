@@ -95,6 +95,8 @@ class MainWindow(Gtk.Window):
             play_sound('/usr/share/kano-media/sounds/kano_achievement_unlock.wav', background=True)
             self.go_to_next()
 
+        self.kano_button.grab_focus()
+
     def go_to_next(self, widget=None, event=None):
         # If ENTER key is pressed or event is a button event
         if not hasattr(event, 'keyval') or event.keyval == 65293:

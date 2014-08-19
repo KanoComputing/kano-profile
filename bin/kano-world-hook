@@ -31,7 +31,7 @@ from kano.logging import logger
 if len(sys.argv) < 2:
     msg = "{} run with no arguments".format(sys.argv[0])
     logger.error(msg)
-    sys.exit(msg)
+    sys.exit(0)
 
 # Parse the URL
 url_data = sys.argv[1].split(":")
@@ -42,7 +42,7 @@ scheme = url_data.pop(0)
 if scheme != "kano":
     msg = "Do not recognise the {} scheme".format(scheme)
     logger.error(msg)
-    sys.exit(msg)
+    sys.exit(0)
 
 try:
     module_name = "kano_world.hooks.{}".format(url_data[0])
@@ -50,14 +50,14 @@ try:
 except:
     msg = "The requested '{}' hook doesn't exist".format(url_data[0])
     logger.error(msg)
-    sys.exit(msg)
+    sys.exit(0)
 
 try:
     result = hook_module.run(url_data[1:])
 except Exception as e:
     msg = "The execution of the {} hook failed ({})".format(sys.argv[1], str(e))
     logger.error(msg)
-    sys.exit(msg)
+    sys.exit(0)
 
 if hasattr(hook_module, "launch"):
     hook_module.launch(result)

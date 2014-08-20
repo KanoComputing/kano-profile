@@ -84,7 +84,7 @@ class NoInternet():
         self.template.kano_button.connect("button_release_event", self.connect)
 
         # Since cannot pass with keyboard, set it so it cannot receive keyboard focus
-        self.tenplate.set_can_focus(False)
+        self.template.kano_button.set_can_focus(False)
 
         # For now, remove keyboard event listener as is interfering with kano-connect
         #self.template.kano_button.connect("key_release_event", self.connect)

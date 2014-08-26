@@ -9,19 +9,11 @@
 import requests
 
 api_url = 'https://api.kano.me'
-
 content_type_json = {'content-type': 'application/json'}
 
 try:
-    from kano_settings.system.proxy import get_all_proxies
-    enabled, data, proxy_url = get_all_proxies()
-    if not enabled:
-        proxies = None
-    else:
-        proxies = {
-            "http": "{}/".format(proxy_url),
-            "https": "{}/".format(proxy_url),
-        }
+    from kano_settings.system.proxy import get_requests_proxies
+    proxies = get_requests_proxies()
 except Exception:
     proxies = None
 
@@ -51,3 +43,6 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
         # write error to log
         # str(e)
         return False, 'Error connecting to servers, please check your internet connection and try again later.', None
+
+
+

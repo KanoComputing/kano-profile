@@ -15,6 +15,7 @@ from kano.utils import is_number
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
+from kano.gtk3.kano_combobox import KanoComboBox
 from kano.gtk3.labelled_entries import add_heading
 
 from kano_login.templates.top_bar_template import TopBarTemplate
@@ -83,16 +84,15 @@ class AboutYou(TopBarTemplate):
     def create_birthday_widget(self):
         box = Gtk.Box(spacing=20)
 
-        self.day_widget = Gtk.ComboBoxText()
+        self.day_widget = KanoComboBox(max_display_items=7)
         for i in range(1, 32):
-            self.day_widget.append_text(str(i))
-        self.day_widget.set_active(0)
+            self.day_widget.append(str(i))
+        self.day_widget.set_selected_item_index(0)
 
-        self.month_widget = Gtk.ComboBoxText()
-
+        self.month_widget = KanoComboBox(max_display_items=7)
         for month in months:
-            self.month_widget.append_text(month)
-        self.month_widget.set_active(0)
+            self.month_widget.append(month)
+        self.month_widget.set_selected_item_index(0)
 
         self.year_widget = Gtk.Entry()
         self.year_widget.set_placeholder_text("XXXX")
@@ -150,8 +150,8 @@ class AboutYou(TopBarTemplate):
             if not is_number(year_text):
                 raise Exception(self.data["ALERT_TITLE_NO_YEAR"], self.data["ALERT_DESCRIPTION_NO_YEAR"])
 
-            bday_day = int(self.day_widget.get_active_text())
-            month_str = self.month_widget.get_active_text()
+            bday_day = int(self.day_widget.get_selected_item_text())
+            month_str = self.month_widget.get_selected_item_text()
             bday_month = months.index(month_str) + 1
             bday_year = int(self.year_widget.get_text())
             self.win.date_split = (bday_year, bday_month, bday_day)

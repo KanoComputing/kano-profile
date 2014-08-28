@@ -8,10 +8,14 @@
 
 import requests
 
-# api_url = 'http://10.0.1.91:1234'
 api_url = 'https://api.kano.me'
-
 content_type_json = {'content-type': 'application/json'}
+
+try:
+    from kano_settings.system.proxy import get_requests_proxies
+    proxies = get_requests_proxies()
+except Exception:
+    proxies = None
 
 
 def request_wrapper(method, endpoint, data=None, headers=None, session=None, files=None, params=None):
@@ -26,7 +30,7 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
     method = getattr(req_object, method)
 
     try:
-        r = method(api_url + endpoint, data=data, headers=headers, files=files, params=params)
+        r = method(api_url + endpoint, data=data, headers=headers, files=files, params=params, proxies=proxies)
         if r.ok:
             return r.ok, None, r.json()
         else:
@@ -36,4 +40,9 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
                 error_msg = r.text
             return r.ok, error_msg, None
     except requests.exceptions.ConnectionError as e:
-        return False, 'Connection error: {}'.format(str(e)), None
+        # write error to log
+        # str(e)
+        return False, 'Error connecting to servers, please check your internet connection and try again later.', None
+
+
+

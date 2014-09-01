@@ -10,6 +10,7 @@
 from gi.repository import Gtk, Gdk
 import os
 import sys
+import subprocess
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -91,6 +92,11 @@ def load_share(_button, entry):
     success, data = download_share(entry)
     if not success:
         logger.error('Could not download share, error: {}'.format(data))
+        confirm = KanoDialog('Oops! Can\'t download.',
+                             'Are you sure you\'re connected to the Internet?',
+                             {'OPEN WIFI': {'return_value': True}})
+        confirm.run()
+        subprocess.call(['sudo', 'kano-settings', '4'])
 
     (title, attachment_path, app, attachment_name, folder) = data
     print 'File Path: {}'.format(attachment_path)

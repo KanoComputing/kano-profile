@@ -196,9 +196,9 @@ class KanoWorldSession(object):
         # paths
         jsonfile_path = file_path[:-3] + 'json'
         screenshot_path = file_path[:-3] + 'png'
+        resource_path = file_path[:-3] + 'tar.gz'
 
         logger.debug('uploading json: {}'.format(jsonfile_path))
-        logger.debug('uploading screenshot: {}'.format(screenshot_path))
 
         # attachment
         files = {
@@ -207,7 +207,13 @@ class KanoWorldSession(object):
 
         # screenshot
         if os.path.exists(screenshot_path):
+            logger.debug('uploading screenshot: {}'.format(screenshot_path))
             files['cover'] = open(screenshot_path, 'rb')
+
+        # resource
+        if os.path.exists(resource_path):
+            logger.debug('uploading resource: {}'.format(resource_path))
+            files['resource'] = open(resource_path, 'rb')
 
         # data
         payload = {
@@ -256,7 +262,3 @@ class KanoWorldSession(object):
             return True, None
         except Exception:
             return False, 'unread count not found'
-
-
-
-

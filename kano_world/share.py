@@ -67,6 +67,7 @@ def download_share(entry):
     description = entry['description']
     attachment_url = entry['attachment_url']
     cover_url = entry['cover_url']
+    resource_url = entry['resource_url']
 
     data = {
         'title': title,
@@ -86,6 +87,7 @@ def download_share(entry):
 
     title_slugified = slugify(title)
 
+    # Download attachment
     attachment_ext = attachment_url.split('.')[-1]
     attachment_name = '{}.{}'.format(title_slugified, attachment_ext)
     attachment_path = os.path.join(folder, attachment_name)
@@ -96,6 +98,7 @@ def download_share(entry):
         logger.error(msg)
         return False, msg
 
+    # Download screenshot
     if cover_url:
         cover_ext = cover_url.split('.')[-1]
         cover_name = '{}.{}'.format(title_slugified, cover_ext)
@@ -107,6 +110,22 @@ def download_share(entry):
             logger.error(msg)
             return False, msg
 
+    # Download resource file
+    if resource_url:
+        resource_ext = resource_url.split('.')[-1]
+        # Make sure we don't remove the tar from gz
+        if "tar.gz" in resource_url:
+            resource_ext = 'tar.' + resource_ext
+        resource_name = '{}.{}'.format(title_slugified, resource_ext)
+        resource_path = os.path.join(folder, resource_name)
+
+        success, text = download_url(resource_url, resource_path)
+        if not success:
+            msg = 'Error with downloading resource file: {}'.format(text)
+            logger.error(msg)
+            return False, msg
+
+    # JSON file
     json_name = '{}.{}'.format(title_slugified, 'json')
     json_path = os.path.join(folder, json_name)
     write_json(json_path, data)

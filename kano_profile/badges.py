@@ -249,6 +249,7 @@ def save_app_state_with_dialog(app_name, data):
         with open('/tmp/kano-notifications.fifo', 'w') as fifo:
             for notification in (new_level_str + ' ' + new_items_str).split(' '):
                 if len(notification) > 0:
+                    logger.debug("Showing the {} notification".format(notification))
                     fifo.write('{}\n'.format(notification))
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)

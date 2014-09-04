@@ -63,9 +63,9 @@ class MainWindow(Gtk.Window):
 
         # The first element attached to the grid is GtkFixed so that we can overlay the progress bar
         self.fixed = Gtk.Fixed()
-        self.fixed.put(self.menu_bar.background, 0, 0)
-        self.fixed.put(self.progress.fixed, 0, self.menu_bar.height - self.progress.height)
         self.fixed.put(self.box, 0, self.menu_bar.height + self.progress.height)
+        self.fixed.put(self.menu_bar.box, 0, 0)
+        self.fixed.put(self.progress.fixed, 0, self.menu_bar.height - self.progress.height)
 
         self.grid.attach(self.fixed, 0, 0, 1, 1)
 
@@ -73,6 +73,7 @@ class MainWindow(Gtk.Window):
         self.goto(self.menu_bar.home_button, 'home')
 
     def goto(self, button, page):
+
         refs = {
             'home': home,
             'badges': badges,

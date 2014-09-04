@@ -7,7 +7,7 @@
 #
 # This controls the styling of the (pretend) top window bar.
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.cursor as cursor
 import kano_profile_gui.menu_bar_components.home_button as home_button
@@ -18,6 +18,11 @@ class MenuBar():
 
         # Makes it easier to centre other widgets even if we change this
         self.height = 96
+
+        # This is here due to a Gtk bug specific to 3.10. Widgets packed in Fixed containers have their z-order
+        # depending on their widget type, not the order they were packed.
+        # Hacky fix - for all parent containers to be Gtk.Box()s
+        self.box = Gtk.Box()
 
         # This is to give the correct colour of the top bar as Event Boxes are the only containers that we can colour
         # This contains everything, but can't pack directly into as is only a simple container
@@ -85,6 +90,8 @@ class MenuBar():
         cursor.attach_cursor_events(self.challenges_button)
         cursor.attach_cursor_events(self.home_button.button)
 
+        self.box.add(self.background)
+
     def activate_label(self, widget, event):
 
         for label in self.label_array:
@@ -99,10 +106,6 @@ class MenuBar():
             self.home_button.set_activate(False)
         else:
             self.home_button.set_activate(True)
-
-        for label in self.label_array:
-            # This is to fix bug in Gtk 3.4, otherwise the colour doesn't update when we change the class
-            label.modify_fg(Gtk.StateFlags.NORMAL, Gdk.color_parse("green"))
 
     def close_window(self, event, button):
         Gtk.main_quit()

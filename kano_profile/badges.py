@@ -225,6 +225,9 @@ def save_app_state_with_dialog(app_name, data):
     new_level, _ = calculate_kano_level()
     new_badges = calculate_badges()
 
+    # TODO: This function needs a bit of refactoring in the future
+    # The notifications no longer need to be concatenated to a string
+
     # new level
     new_level_str = ''
     if old_level != new_level:
@@ -243,16 +246,10 @@ def save_app_state_with_dialog(app_name, data):
         return
 
     if is_gui():
-        cmd = '{bin_dir}/kano-profile-levelup {new_level_str} {new_items_str}' \
-            .format(bin_dir=bin_dir, new_level_str=new_level_str, new_items_str=new_items_str)
-
-        logger.debug('calling kano-profile-levelup with the following command:\n{}'.format(cmd))
-
-        if is_running('kdesk') and not is_running('minecraft-pi'):
-            kdesk_cmd = '/usr/bin/kdesk-blur "{}"'.format(cmd)
-            os.system(kdesk_cmd)
-        else:
-            os.system(cmd)
+        with open('/tmp/kano-notifications.fifo', 'w') as fifo:
+            for notification in (new_level_str + ' ' + new_items_str).split(' '):
+                if len(notification) > 0:
+                    fifo.write('{}\n'.format(notification))
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)

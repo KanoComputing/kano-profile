@@ -94,7 +94,7 @@ GtkWindow GtkBox {
 .header_button:active {
     background: @kano_green;
 }
-.header_button GtkLabel:active {
+.header_button:active GtkLabel {
     color: #ffffff;
 }
 /* The bar at the top that mimics the window bar */
@@ -148,6 +148,16 @@ GtkWindow GtkBox {
 .heading {
     font: Bariol Bold 13px;
     color: @title_color;
+}
+
+/*.heading.active {
+    font: Bariol Bold 13px;
+    color: #ffffff;
+}*/
+
+.heading:active {
+    font: Bariol Bold 13px;
+    color: #ffffff;
 }
 
 /* Writing next to padlocks indicating how many badges/environemnts are locked/unlocked */

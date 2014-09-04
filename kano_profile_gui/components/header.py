@@ -65,12 +65,14 @@ class Header():
         # If there are two titles, then we need to have 2 radio buttons to switch views
         if title2 is not None:
             self.radiobutton1 = self.create_button(title1.upper())
+            self.radiobutton1.get_child().get_style_context().add_class("active")
             self.radiobutton2 = self.create_button(self.radiobutton1, title2.upper())
+            self.radiobutton1.set_active(True)
+            self.radiobutton2.set_active(False)
+
             self.container = Gtk.Box()
             self.container.pack_start(self.radiobutton1, False, False, 0)
             self.container.pack_start(self.radiobutton2, False, False, 0)
-            self.radiobutton1.set_active(True)
-            self.radiobutton2.set_active(False)
             self.halign.add(self.container)
             cursor.attach_cursor_events(self.radiobutton1)
             cursor.attach_cursor_events(self.radiobutton2)
@@ -123,5 +125,9 @@ class Header():
     def update_locked_unlocked_labels(self, widget):
         if self.radiobutton1.get_active():
             self.set_locked_unlocked_number(self.headers[0])
+            self.radiobutton1.get_child().get_style_context().add_class("active")
+            self.radiobutton2.get_child().get_style_context().remove_class("active")
         else:
             self.set_locked_unlocked_number(self.headers[1])
+            self.radiobutton2.get_child().get_style_context().add_class("active")
+            self.radiobutton1.get_child().get_style_context().remove_class("active")

@@ -90,13 +90,10 @@ GtkWindow GtkBox {
 .header_button {
     background: transparent;
 }
-
 .header_button:active {
     background: @kano_green;
 }
-.header_button:active GtkLabel {
-    color: #ffffff;
-}
+
 /* The bar at the top that mimics the window bar */
 .menu_bar_container {
     background: @menu_bar_background;
@@ -150,12 +147,7 @@ GtkWindow GtkBox {
     color: @title_color;
 }
 
-/*.heading.active {
-    font: Bariol Bold 13px;
-    color: #ffffff;
-}*/
-
-.heading:active {
+.heading.active {
     font: Bariol Bold 13px;
     color: #ffffff;
 }

@@ -50,6 +50,7 @@ class Login(TopBarTemplate):
         self.labelled_entries = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Password", "subheading": ""}])
         for entry in self.labelled_entries.get_entries():
             entry.connect("key_release_event", self.enable_kano_button)
+            entry.connect("key-release-event", self.activate)
 
         self.labelled_entries.get_entry(1).set_visibility(False)
         self.labelled_entries.set_spacing(15)

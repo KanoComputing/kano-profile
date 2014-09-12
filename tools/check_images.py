@@ -54,7 +54,7 @@ for category, subcats in all_rules.iteritems():
 
             for n in needed_items:
                 if n not in existing_items:
-                    print 'Needed image: {}'.format(e)
+                    print 'Needed image: {}'.format(n)
 
             print
             ok = False

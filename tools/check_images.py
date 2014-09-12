@@ -16,7 +16,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_profile.badges import load_badge_rules
 from kano_profile_gui.paths import image_dir
-from kano.utils import uniqify_list
+# from kano.utils import uniqify_list
 
 
 all_rules = load_badge_rules()
@@ -34,9 +34,9 @@ for category, subcats in all_rules.iteritems():
         needed_items_levelup = ['{}_levelup.png'.format(f) for f in items.keys()]
 
         if category == 'avatars':
-            needed_items_levelup = uniqify_list(['{}_levelup.png'.format(f[:-2]) for f in items.keys()])
+            # needed_items_levelup = uniqify_list(['{}_levelup.png'.format(f[:-2]) for f in items.keys()])
             needed_items = needed_items_images + needed_items_locked + needed_items_circular + \
-                needed_items_levelup + needed_items_white_circular
+                needed_items_white_circular
 
         if category == 'badges':
             needed_items = needed_items_images + needed_items_locked + needed_items_levelup

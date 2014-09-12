@@ -23,14 +23,6 @@
     "targets": [["make-minecraft", "level", 5]],
     "title": "Block Builder"
   },
-  "end_everything": {
-    "bg_color": "f38484",
-    "desc_locked": "Find the End Everything block in Minecraft to unlock this badge.",
-    "desc_unlocked": "You have become death, destroyer of Minecraft Worlds. By bringing on the apocalypse, you managed to End Everything.",
-    "operation": "each_greater",
-    "targets": [["make-minecraft", "level", 999]],
-    "title": "End Everything"
-  },
   "pong_painter": {
     "bg_color": "afe5fa",
     "desc_locked": "Complete the Paint the Board challenge in Pong to unlock this badge.",

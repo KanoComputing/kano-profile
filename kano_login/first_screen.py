@@ -14,6 +14,10 @@
 
 import os
 import sys
+from gi.repository import Gtk
+
+from kano.gtk3.buttons import KanoButton, OrangeButton
+from kano.gtk3.heading import Heading
 from kano_login.login import Login
 from kano_login.about_you import AboutYou
 from kano_login.templates.template import Template
@@ -36,16 +40,53 @@ def create_template(string):
     return template
 
 
+# TODO: move this class into Template
+class FirstScreenTemplate(Gtk.Box):
+
+    def __init__(self):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+
+        data = get_data("FIRST_SCREEN")
+        kano_button_text = data["KANO_BUTTON"]
+        skip_button_text = data["SKIP_BUTTON"]
+        registered_button_text = data["REGISTERED_BUTTON"]
+        header = data["LABEL_1"]
+        subheader = data["LABEL_2"]
+        img_width = 590
+        img_height = 270
+
+        self.skip_button = OrangeButton(skip_button_text)
+        self.registered_button = OrangeButton(registered_button_text)
+
+        image_filename = get_image("login", "", data["TOP_PIC"], str(img_width) + 'x' + str(img_height))
+        self.image = Gtk.Image.new_from_file(image_filename)
+        self.pack_start(self.image, False, False, 0)
+
+        self.heading = Heading(header, subheader)
+        self.kano_button = KanoButton(kano_button_text)
+
+        self.pack_start(self.heading.container, False, False, 0)
+
+        self.button_box = Gtk.ButtonBox(spacing=10)
+        self.button_box.set_layout(Gtk.ButtonBoxStyle.SPREAD)
+        self.pack_start(self.button_box, False, False, 0)
+
+        self.button_box.pack_start(self.registered_button, False, False, 0)
+        self.button_box.pack_start(self.kano_button, False, False, 0)
+        self.button_box.pack_start(self.skip_button, False, False, 0)
+
+
 class FirstScreen():
     def __init__(self, win):
 
         self.win = win
         self.win.reset_allocation()
 
-        self.template = create_template("FIRST_SCREEN")
+        self.template = FirstScreenTemplate()
         self.win.set_main_widget(self.template)
         self.template.kano_button.connect("button_release_event", self.next_screen)
-        self.template.orange_button.connect("button_release_event", self.login_screen)
+        self.template.registered_button.connect("button_release_event", self.login_screen)
+        self.template.skip_button.connect("button_release_event", self.exit_registration)
         self.template.kano_button.connect("key_release_event", self.next_screen)
         self.template.button_box.set_margin_bottom(30)
         self.template.kano_button.grab_focus()
@@ -68,6 +109,9 @@ class FirstScreen():
                 AboutYou(self.win, self)
             else:
                 NoInternet(self.win)
+
+    def exit_registration(self, widget, event):
+        sys.exit(0)
 
     def repack(self):
         self.win.clear_win()

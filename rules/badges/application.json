@@ -5,7 +5,8 @@
     "desc_unlocked": "You're a hero! You told Team Kano about a bug – now we'll squash it. Thanks Bug Buster!",
     "operation": "each_greater",
     "targets": [["kano-feedback", "bugs_submitted", 1]],
-    "title": "Bug Buster"
+    "title": "Bug Buster",
+    "order": 1
   },
   "feedbacker": {
     "bg_color": "ff99a0",
@@ -13,7 +14,8 @@
     "desc_unlocked": "You're a Kano creator, and a funky Feedbacker. You sent us your ideas, and that helps us make your computer even cooler.",
     "operation": "each_greater",
     "targets": [["kano-feedback", "starts", 1]],
-    "title": "Feedbacker"
+    "title": "Feedbacker",
+    "order": 2
   },
   "remote_roamer": {
     "bg_color": "94b0d8",

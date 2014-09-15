@@ -9,7 +9,8 @@
     "TOP_PIC": "profile-created",
     "LABEL_1": "Now let's make a cool Profile",
     "LABEL_2": "So you can save badges, games, and projects",
-    "ORANGE_BUTTON": "I have a profile",
+    "REGISTERED_BUTTON": "I have a profile",
+    "SKIP_BUTTON": "Skip",
     "KANO_BUTTON": "CREATE"
   },
   "NO_INTERNET": {

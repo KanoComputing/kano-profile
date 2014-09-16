@@ -49,6 +49,7 @@ class AboutYou(TopBarTemplate):
         self.next_button.pack_and_align()
         self.next_button.connect("button_release_event", self.save_info)
         self.next_button.connect("key_release_event", self.save_info)
+        self.next_button.set_margin_bottom(10)
 
         self.box.pack_start(title.container, False, False, 3)
         self.box.pack_start(self.gender_widget, False, False, 10)
@@ -104,13 +105,9 @@ class AboutYou(TopBarTemplate):
         labelled_month = add_heading("MONTH", self.month_widget)
         labelled_year = add_heading("YEAR", self.year_widget)
 
-        year_align = Gtk.Alignment()
-        year_align.set_padding(2, 0, 0, 0)
-        year_align.add(labelled_year)
-
         box.pack_start(labelled_day, False, False, 0)
         box.pack_start(labelled_month, False, False, 0)
-        box.pack_start(year_align, False, False, 0)
+        box.pack_start(labelled_year, False, False, 0)
 
         new_box = add_heading("Birthday", box, True)
 

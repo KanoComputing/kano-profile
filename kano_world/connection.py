@@ -7,6 +7,8 @@
 #
 
 import requests
+from kano.logging import logger
+from pprint import pformat
 
 api_url = 'https://api.kano.me'
 content_type_json = {'content-type': 'application/json'}
@@ -29,19 +31,34 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
 
     method = getattr(req_object, method)
 
+    request_debug = {
+        'url': api_url + endpoint,
+        'data': data,
+        'headers': headers,
+        'files': files,
+        'params': params,
+        'proxies': proxies,
+    }
+
     try:
         r = method(api_url + endpoint, data=data, headers=headers, files=files, params=params, proxies=proxies)
         if r.ok:
             return r.ok, None, r.json()
         else:
+            logger.error('error in request:')
+            logger.error(pformat(request_debug))
+            logger.error('response:')
+            logger.error(r.text)
+
             if '<title>Application Error</title>' in r.text:
                 error_msg = 'We cannot reach the Kano server. Try again in a few minutes.'
             else:
                 error_msg = r.text
             return r.ok, error_msg, None
     except requests.exceptions.ConnectionError as e:
-        # write error to log
-        # str(e)
+        logger.error('connection error: {}'.format(e))
+        logger.error(pformat(request_debug))
+
         return False, 'Error connecting to servers, please check your internet connection and try again later.', None
 
 

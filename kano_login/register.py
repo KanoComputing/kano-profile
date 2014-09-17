@@ -141,6 +141,7 @@ class Register(TopBarTemplate):
             watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
             self.win.get_window().set_cursor(watch_cursor)
             self.kano_button.set_sensitive(False)
+            self.kano_button.start_spinner()
 
             thread = threading.Thread(target=self.register_user)
             thread.start()
@@ -195,6 +196,7 @@ class Register(TopBarTemplate):
 
             self.win.get_window().set_cursor(None)
             self.kano_button.set_sensitive(True)
+            self.kano_button.stop_spinenr()
             self.entries_container.get_entry(0).grab_focus()
 
             if response == 1:

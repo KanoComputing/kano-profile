@@ -91,6 +91,7 @@ class Login(TopBarTemplate):
             watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
             self.win.get_window().set_cursor(watch_cursor)
             self.button_box.kano_button.set_sensitive(False)
+            self.button_box.kano_button.start_spinner()
 
             thread = threading.Thread(target=self.log_user_in)
             thread.start()
@@ -159,6 +160,7 @@ class Login(TopBarTemplate):
 
             self.win.get_window().set_cursor(None)
             self.button_box.kano_button.set_sensitive(True)
+            self.button_box.kano_button.stop_spinner()
             self.labelled_entries.get_entry(0).grab_focus()
 
         GObject.idle_add(done, title, description, return_value)

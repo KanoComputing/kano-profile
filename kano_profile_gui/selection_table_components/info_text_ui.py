@@ -24,18 +24,18 @@ class InfoTextUi():
         right_padding = 20
         left_padding = 20
 
-        # Computer Commander (a badge title) was too long to fit in a label on the screen - using GtkTextView allows us
-        # to wrap around text automatically
-        self.heading = Gtk.TextView()
-        self.heading.set_wrap_mode(Gtk.WrapMode.WORD)
-        self.heading.set_editable(False)
-        self.heading.get_buffer().set_text(visible_item.title)
+        self.heading = Gtk.Label(visible_item.title)
+        self.heading.set_alignment(0, 0.5)
+        self.heading.set_line_wrap(True)
         self.heading.get_style_context().add_class("info_heading")
+
         self.paragraph = Gtk.TextView()
         self.paragraph.set_wrap_mode(Gtk.WrapMode.WORD)
         self.paragraph.set_editable(False)
         self.paragraph.get_buffer().set_text(visible_item.get_description())
         self.paragraph.get_style_context().add_class("info_paragraph")
+        self.paragraph.set_margin_top(20)
+        self.paragraph.set_margin_bottom(30)
 
         color_str = visible_item.get_color().to_string()
         transparent = self.change_opacity_of_color(color_str, 0.0)
@@ -50,7 +50,7 @@ class InfoTextUi():
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.box.pack_start(self.heading, False, False, 5)
-        self.box.pack_start(self.paragraph, False, False, 30)
+        self.box.pack_start(self.paragraph, False, False, 0)
         self.box.set_size_request(self.width - left_padding - right_padding, self.height - top_padding - bottom_padding)
 
         self.back_button = KanoButton("BACK")
@@ -83,7 +83,7 @@ class InfoTextUi():
         return color_str
 
     def refresh(self, heading, info, color):
-        self.heading.get_buffer().set_text(heading)
+        self.heading.set_text(heading)
         self.paragraph.get_buffer().set_text(info)
         self.refresh_background(color)
 

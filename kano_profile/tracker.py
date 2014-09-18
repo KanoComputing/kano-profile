@@ -1,9 +1,17 @@
 #!/usr/bin/env python
 
+# tracker.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
 import time
 import atexit
-from kano.utils import get_program_name, is_number
-from kano_profile.apps import load_app_state_variable, save_app_state_variable, save_app_state
+import datetime
+from kano.utils import get_program_name, is_number, read_file_contents
+from kano_profile.apps import load_app_state_variable, save_app_state_variable, \
+    save_app_state
 
 
 class Tracker:
@@ -55,3 +63,21 @@ def save_hardware_info():
         'kano_keyboard': detect_kano_keyboard(),
     }
     save_app_state('kano-hardware', state)
+
+
+def save_kano_version():
+    updates = load_app_state_variable('kano-tracker', 'updates')
+    if not updates:
+        updates = dict()
+
+    version_now = read_file_contents('/etc/kanux_version')
+    if not version_now:
+        return
+
+    time_now = datetime.datetime.utcnow().isoformat()
+    updates[version_now] = time_now
+
+    save_app_state_variable('kano-tracker', 'updates', updates)
+
+
+

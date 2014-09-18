@@ -24,7 +24,7 @@ from kano.gtk3.labelled_entries import LabelledEntries
 
 from kano_profile.paths import bin_dir, legal_dir
 from kano_profile.profile import save_profile_variable
-from kano_profile.tracker import save_hardware_info
+from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_world.functions import register as register_
 
 from kano_login.templates.top_bar_template import TopBarTemplate
@@ -174,8 +174,9 @@ class Register(TopBarTemplate):
                 save_profile_variable('gender', self.win.gender)
                 save_profile_variable('birthdate', self.win.bday_date)
 
-                # saving hardware info
+                # saving hardware info and initial Kano version
                 save_hardware_info()
+                save_kano_version()
 
                 # running kano-sync after registration
                 logger.info('running kano-sync after successful registration')

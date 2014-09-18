@@ -21,7 +21,7 @@ from kano.gtk3.labelled_entries import LabelledEntries
 
 from kano_profile.paths import bin_dir
 from kano_profile.profile import load_profile, save_profile_variable
-from kano_profile.tracker import save_hardware_info
+from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_world.functions import login as login_, is_registered
 
 from kano_login.templates.top_bar_template import TopBarTemplate
@@ -117,8 +117,9 @@ class Login(TopBarTemplate):
             else:
                 logger.info('login successful')
 
-                # saving hardware info
+                # saving hardware info and initial Kano version
                 save_hardware_info()
+                save_kano_version()
 
                 # restore on first successful login/restore
                 try:

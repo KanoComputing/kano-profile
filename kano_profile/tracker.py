@@ -71,8 +71,11 @@ def save_kano_version():
         updates = dict()
 
     version_now = read_file_contents('/etc/kanux_version')
+    if not version_now:
+        return
+
     time_now = datetime.datetime.utcnow().isoformat()
-    updates[time_now] = version_now
+    updates[version_now] = time_now
 
     save_app_state_variable('kano-tracker', 'updates', updates)
 

@@ -6,6 +6,15 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+"""
+Apps module
+
+This module provides functions to store and retrieve app related
+information for the user.the
+
+These informations are stored in '~/.kanoprofile/apps/{appname}/state.json'
+"""
+
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
@@ -16,23 +25,31 @@ from .profile import is_unlocked
 
 
 def get_app_dir(app_name):
+    """Gets the full path of an app's directory in the kanoprofile/apps folder"""
+
     app_dir = os.path.join(apps_dir, app_name)
     return app_dir
 
 
 def get_app_data_dir(app_name):
+    """Gets the full path of an app's data directory in the kanoprofile/apps folder"""
+
     data_str = 'data'
     app_data_dir = os.path.join(get_app_dir(app_name), data_str)
     return app_data_dir
 
 
 def get_app_state_file(app_name):
+    """Gets the full path of an app's state.json file in the kanoprofile/apps folder"""
+
     app_state_str = 'state.json'
     app_state_file = os.path.join(get_app_dir(app_name), app_state_str)
     return app_state_file
 
 
 def load_app_state(app_name):
+    """Returns a dict object of the current app's state"""
+
     app_state_file = get_app_state_file(app_name)
     app_state = read_json(app_state_file)
     if not app_state:
@@ -41,6 +58,8 @@ def load_app_state(app_name):
 
 
 def load_app_state_variable(app_name, variable):
+    """Returns value of the 'variable' key from the current profile state"""
+
     data = load_app_state(app_name)
     if is_unlocked():
         data['level'] = 999
@@ -49,6 +68,8 @@ def load_app_state_variable(app_name, variable):
 
 
 def save_app_state(app_name, data):
+    """Updates and overwrites the app's state with the given data dict"""
+
     logger.debug('save_app_state {}'.format(app_name))
 
     if is_unlocked():
@@ -74,6 +95,8 @@ def save_app_state(app_name, data):
 
 
 def save_app_state_variable(app_name, variable, value):
+    """Updates and overwrites app_state[variable] with value"""
+
     logger.debug('save_app_state_variable {} {} {}'.format(app_name, variable, value))
 
     if is_unlocked() and variable == 'level':
@@ -85,6 +108,8 @@ def save_app_state_variable(app_name, variable, value):
 
 
 def increment_app_state_variable(app_name, variable, value):
+    """Increments the numeric value app_state[variable] with value"""
+
     logger.debug('increment_app_state_variable {} {} {}'.format(app_name, variable, value))
 
     if is_unlocked() and variable == 'level':
@@ -98,6 +123,8 @@ def increment_app_state_variable(app_name, variable, value):
 
 
 def get_app_list():
+    """Returns a list of all apps which have a directory in .kanoprofile/apps"""
+
     if not os.path.exists(apps_dir):
         return []
     else:
@@ -105,6 +132,8 @@ def get_app_list():
 
 
 def get_gamestate_variables(app_name):
+    """Returns all keys specified in the xp.json file"""
+
     allrules = read_json(xp_file)
     if not allrules:
         return list()
@@ -117,6 +146,9 @@ def get_gamestate_variables(app_name):
 
 
 def launch_project(app, filename, data_dir):
+    """Launches an application to load a file (for example a save game)
+    The command line is specified in the app_profiles.json file"""
+
     logger.info('launch_project: {} {} {}'.format(app, filename, data_dir))
 
     app_profiles = read_json(app_profiles_file)

@@ -6,12 +6,21 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+"""Badges module
+
+Provides functions related to the user's progress, including:
+xp
+kano-level
+badges
+avatarsenvironments
+"""
+
 from __future__ import division
 
 import os
 
 from kano.logging import logger
-from kano.utils import read_json, is_gui, run_bg, run_cmd, is_running
+from kano.utils import read_json, is_gui, run_bg
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
 from .profile import is_unlocked

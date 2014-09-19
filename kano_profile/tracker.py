@@ -6,6 +6,12 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+"""
+Kano-tracker module
+
+A small module for tracking various metrics the users do in Kano OS
+"""
+
 import time
 import atexit
 import datetime
@@ -15,6 +21,9 @@ from kano_profile.apps import load_app_state_variable, save_app_state_variable, 
 
 
 class Tracker:
+    """Tracker class, used for measuring program run-times,
+    implemented via atexit hooks"""
+
     def __init__(self):
         self.start_time = time.time()
         self.program_name = get_program_name()
@@ -28,6 +37,9 @@ class Tracker:
 
 
 def add_runtime_to_app(app, runtime):
+    """Appends a time period to a given app's runtime stats,
+    + raises starts by one"""
+
     if not app:
         return
 
@@ -53,6 +65,8 @@ def add_runtime_to_app(app, runtime):
 
 
 def save_hardware_info():
+    """Saves hardware information related to the Raspberry Pi / Kano Kit"""
+
     from kano.logging import logger
     from kano.utils import get_cpu_id, get_mac_address, detect_kano_keyboard
 
@@ -66,6 +80,9 @@ def save_hardware_info():
 
 
 def save_kano_version():
+    """Saves a dict of os-version: time values,
+    to keep track of the users update process"""
+
     updates = load_app_state_variable('kano-tracker', 'updates')
     if not updates:
         updates = dict()

@@ -21,6 +21,7 @@ from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, ru
     is_gui
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
+from kano_profile.profile import load_profile
 
 home_dir = get_home()
 
@@ -160,6 +161,11 @@ def refresh_kdesk():
     logger.info('refreshing kdesk from kano-sync')
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile ; kdesk -a world')
+
+        # pushing notification update as well
+        notifications_number = load_profile()['notifications']
+        with open('/tmp/kano-notifications.fifo', 'w') as fifo:
+            fifo.write('world_notification:{}\n'.format(notifications_number))
 
 
 if __name__ == '__main__':

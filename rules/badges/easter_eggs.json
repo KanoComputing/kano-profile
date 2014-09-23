@@ -4,7 +4,7 @@
     "desc_locked": "There's a secret hiding in your computer's files... Can you find it?",
     "desc_unlocked": "You found the secret file! You're a modern day Sherlock Holmes – except with a mouse and keyboard, and a less silly hat. Nice work File Finder.",
     "operation": "each_greater",
-    "targets": [["pcmanfm", "starts", 10000]],
+    "targets": [["easter_egg", "starts", 1]],
     "title": "File Finder"
   }
 }

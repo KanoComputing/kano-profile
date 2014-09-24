@@ -163,10 +163,13 @@ def refresh_kdesk():
         run_bg('kdesk -a profile ; kdesk -a world')
 
         # pushing notification update as well
-        notifications_number = load_profile()['notifications']
-        if notifications_number != 0:
-            with open('/tmp/kano-notifications.fifo', 'w') as fifo:
-                fifo.write('world_notification:{}\n'.format(notifications_number))
+        try:
+            notifications_number = load_profile()['notifications']
+            if notifications_number != 0:
+                with open('/tmp/kano-notifications.fifo', 'w') as fifo:
+                    fifo.write('world_notification:{}\n'.format(notifications_number))
+        except Exception:
+            pass
 
 
 if __name__ == '__main__':

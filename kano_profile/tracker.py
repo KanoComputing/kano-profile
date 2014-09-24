@@ -92,6 +92,8 @@ def save_kano_version():
     if not version_now:
         return
 
+    version_now = version_now.replace('.', '_')
+
     time_now = datetime.datetime.utcnow().isoformat()
     updates[version_now] = time_now
 

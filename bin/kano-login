@@ -7,7 +7,7 @@
 #
 # UI for login screen
 
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, GObject
 GObject.threads_init()
 import os
 import sys
@@ -26,7 +26,7 @@ from kano_login.about_you import AboutYou
 from kano_login.register import Register
 from kano_login.components.logged_in import LoggedIn
 from kano_world.functions import login_using_token
-from kano.gtk3.apply_styles import apply_common_to_screen
+from kano.gtk3.apply_styles import apply_common_to_screen, apply_styling_to_screen
 from kano.gtk3.application_window import ApplicationWindow
 
 
@@ -39,8 +39,12 @@ refs = {
 
 
 class MainWindow(ApplicationWindow):
+    CSS_PATH = os.path.join(css_dir, 'login.css')
 
     def __init__(self, first_boot, state):
+
+        apply_common_to_screen()
+        apply_styling_to_screen(self.CSS_PATH)
 
         # Create main window
         self.WINDOW_HEIGHT = 0
@@ -81,17 +85,6 @@ class MainWindow(ApplicationWindow):
 
 
 def main(first_boot, page_number=0):
-
-    login_css = Gtk.CssProvider()
-    login_css_file = os.path.join(css_dir, 'login.css')
-    if not os.path.exists(login_css_file):
-        sys.exit('CSS file missing!')
-    login_css.load_from_path(login_css_file)
-
-    apply_common_to_screen()
-    screen = Gdk.Screen.get_default()
-    styleContext = Gtk.StyleContext()
-    styleContext.add_provider_for_screen(screen, login_css, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     success, _ = login_using_token()
 
     if success:

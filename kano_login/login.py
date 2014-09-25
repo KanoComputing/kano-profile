@@ -50,28 +50,7 @@ class Login(TopBarTemplate):
         self.box.pack_start(self.heading.container, False, False, 10)
 
         if force_login:
-            username = get_mixed_username()
-            title_label = Gtk.Label(" Username:  ")
-            self.username_label = Gtk.Label(username)
-            title_label.get_style_context().add_class("bold_label")
-            self.username_label.get_style_context().add_class("desc_label")
-
-            hbox = Gtk.Box()
-            hbox.pack_start(title_label, False, False, 0)
-            hbox.pack_start(self.username_label, False, False, 0)
-
-            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            vbox.pack_start(hbox, False, False, 0)
-            align = Gtk.Alignment(xscale=0, xalign=0.5)
-            align.add(vbox)
-
-            # Needs adjustment
-            align.set_padding(0, 0, 50, 0)
-
-            self.box.pack_start(align, False, False, 15)
-            self.labelled_entries = LabelledEntries([{"heading": "Password", "subheading": ""}])
-            self.password_entry = self.labelled_entries.get_entry(0)
-            vbox.pack_start(self.labelled_entries, False, False, 15)
+            self.add_username_as_label()
 
         else:
             self.labelled_entries = LabelledEntries([{"heading": "Username", "subheading": ""},
@@ -104,6 +83,32 @@ class Login(TopBarTemplate):
             self.password_entry.grab_focus()
 
         self.win.show_all()
+
+    # This is quite an ugly function
+    # Replaces username entry with label containing username
+    def add_username_as_label(self):
+        username = get_mixed_username()
+        title_label = Gtk.Label(" Username:  ")
+        self.username_label = Gtk.Label(username)
+        title_label.get_style_context().add_class("bold_label")
+        self.username_label.get_style_context().add_class("desc_label")
+
+        hbox = Gtk.Box()
+        hbox.pack_start(title_label, False, False, 0)
+        hbox.pack_start(self.username_label, False, False, 0)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        vbox.pack_start(hbox, False, False, 0)
+        align = Gtk.Alignment(xscale=0, xalign=0.5)
+        align.add(vbox)
+
+        # Needs adjustment
+        align.set_padding(0, 0, 50, 0)
+
+        self.box.pack_start(align, False, False, 15)
+        self.labelled_entries = LabelledEntries([{"heading": "Password", "subheading": ""}])
+        self.password_entry = self.labelled_entries.get_entry(0)
+        vbox.pack_start(self.labelled_entries, False, False, 15)
 
     def enable_kano_button(self, widget=None, event=None):
         if force_login:

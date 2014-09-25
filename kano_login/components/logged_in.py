@@ -23,6 +23,7 @@ class LoggedIn(Gtk.Window):
         self.set_resizable(False)
         self.ok_button = KanoButton("OK")
         self.ok_button.pack_and_align()
+        self.ok_button.set_padding(20, 20, 0, 0)
         self.ok_button.connect("clicked", Gtk.main_quit)
         self.title = Heading("Logged in!", "You're already logged in")
         self.main_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)

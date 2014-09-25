@@ -25,6 +25,14 @@
 #define BACKUP_ICON "/usr/share/kano-profile/icon/widget-backup.png"
 #define RESTORE_ICON "/usr/share/kano-profile/icon/widget-restore.png"
 
+#define INTERNET_CMD "/usr/bin/is_internet"
+#define SETTINGS_CMD "sudo /usr/bin/kano-settings 4"
+#define REGISTER_CMD "/usr/bin/kano-profile-cli is_registered"
+#define LOGIN_CMD "/usr/bin/kano-login"
+#define PROFILE_CMD "/usr/bin/kano-profile-gui"
+#define SYNC_CMD "/usr/bin/kano-sync -d "
+#define SOUND_CMD "/usr/bin/aplay /usr/share/kano-media/sounds/kano_open_app.wav"
+
 #define PLUGIN_TOOLTIP "Profile"
 
 #define MINUTE 60
@@ -101,7 +109,7 @@ static void plugin_destructor(Plugin *p)
 static gboolean profile_status(kano_profile_plugin_t *plugin)
 {
     // Check if user is log in or not
-    plugin->log_in = system("/usr/bin/kano-profile-cli is_registered");
+    plugin->log_in = system(REGISTER_CMD);
     // Update widget icon depending on profile status
     if (plugin->log_in == 0) {
         gtk_image_set_from_file(GTK_IMAGE(plugin->icon), NO_LOGIN_ICON);
@@ -132,33 +140,39 @@ static void launch_cmd(const char *cmd)
 
 void profile_clicked(GtkWidget* widget, const char* func)
 {
+    /* Launch /usr/bin/kano-sync -d + func (sync/back-up/restore) */
     char cmd[100];
-    strcpy(cmd, "/usr/bin/kano-sync -d ");
+    strcpy(cmd, SYNC_CMD);
     strcat(cmd, func);
     launch_cmd(cmd);
 }
 
 void login_clicked(GtkWidget* widget)
 {
-    const char* cmd_kanologin = "/usr/bin/kano-login";
-    const char* cmd_isinternet = "/usr/bin/is_internet";
-    const char* cmd_wifisettings = "sudo kano-settings 4";
-    int rc=-1;
-
     // Find out if we are online first
-    rc = system (cmd_isinternet);
-    if (rc != -1 && WEXITSTATUS(rc) != 0) {
-      launch_cmd (cmd_wifisettings);
+    int rc = system (INTERNET_CMD);
+    if (rc != -1 && WEXITSTATUS(rc) != 0)
+    {
+        /* Launch WiFi UI */
+        launch_cmd (SETTINGS_CMD);
+        /* Play sound */
+        launch_cmd(SOUND_CMD);
     }
-    else {
-      launch_cmd(cmd_kanologin);
+    else
+    {
+        /* Launch Login UI */
+        launch_cmd(LOGIN_CMD);
+        /* Play sound */
+        launch_cmd(SOUND_CMD);
     }
 }
 
 void launch_profile_clicked(GtkWidget* widget)
 {
-    const char* cmd = "/usr/bin/kano-profile-gui";
-    launch_cmd(cmd);
+    /* Launch Porfile UI */
+    launch_cmd(PROFILE_CMD);
+    /* Play sound */
+    launch_cmd(SOUND_CMD);
 }
 
 static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile_plugin_t *plugin)

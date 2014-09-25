@@ -242,10 +242,12 @@ class ResetPassword(TopBarTemplate):
 
         self.email_entry = self.labelled_entries.get_entry(0)
         self.email_entry.set_text(user_email)
+        self.email_entry.connect("key-release-event", self.activate)
 
         self.button = KanoButton("RESET PASSWORD")
         self.button.pack_and_align()
         self.button.connect("button-release-event", self.activate)
+        self.button.connect("key-release-event", self.activate)
         self.button.set_padding(30, 30, 0, 0)
 
         self.box.pack_start(self.button.align, False, False, 0)

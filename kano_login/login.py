@@ -111,15 +111,19 @@ class Login(TopBarTemplate):
         vbox.pack_start(self.labelled_entries, False, False, 15)
 
     def enable_kano_button(self, widget=None, event=None):
-        if force_login:
-            text0 = self.username_label.get_text()
-        else:
-            text0 = self.username_entry.get_text()
+        text0 = self.get_username_input()
         text1 = self.password_entry.get_text()
         if text0 != "" and text1 != "":
             self.button_box.kano_button.set_sensitive(True)
         else:
             self.button_box.kano_button.set_sensitive(False)
+
+    def get_username_input(self):
+        if force_login:
+            text = self.username_label.get_text()
+        else:
+            text = self.username_entry.get_text()
+        return text
 
     def repack(self):
         self.win.clear_win()
@@ -141,14 +145,14 @@ class Login(TopBarTemplate):
             thread.start()
 
     def log_user_in(self):
-
         if not is_internet():
             title = self.data_no_internet["LABEL_1"]
             description = self.data_no_internet["LABEL_2"]
             return_value = 0
 
         else:
-            [username_email, password_text] = self.labelled_entries.get_entry_text()
+            username_email = self.get_username_input()
+            password_text = self.password_entry.get_text()
             success, text = login_(username_email, password_text)
 
             if not success:
@@ -203,9 +207,11 @@ class Login(TopBarTemplate):
                 sys.exit(0)
 
             self.win.get_window().set_cursor(None)
-            self.button_box.kano_button.set_sensitive(True)
             self.button_box.kano_button.stop_spinner()
-            self.username_entry.grab_focus()
+            self.button_box.kano_button.set_sensitive(True)
+
+            if not force_login:
+                self.username_entry.grab_focus()
 
         GObject.idle_add(done, title, description, return_value)
 

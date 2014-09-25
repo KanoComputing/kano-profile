@@ -28,6 +28,7 @@ from kano_login.components.logged_in import LoggedIn
 from kano_world.functions import login_using_token
 from kano.gtk3.apply_styles import apply_common_to_screen, apply_styling_to_screen
 from kano.gtk3.application_window import ApplicationWindow
+from kano.gtk3.kano_combobox import KanoComboBox
 
 
 # These are the screens we want to be able to access from the comand line e.g. via ./kano-login 3
@@ -45,6 +46,7 @@ class MainWindow(ApplicationWindow):
 
         apply_common_to_screen()
         apply_styling_to_screen(self.CSS_PATH)
+        KanoComboBox.apply_styling_to_screen()
 
         # Create main window
         self.WINDOW_HEIGHT = 0

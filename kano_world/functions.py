@@ -170,3 +170,19 @@ def get_email():
     except Exception:
         email = ''
     return email
+
+
+def reset_password(email):
+    payload = {
+        'email': email,
+    }
+
+    success, text, _ = request_wrapper('post', '/accounts/reset-password',
+                                       data=json.dumps(payload),
+                                       headers=content_type_json)
+
+    if success:
+        return success, None
+    else:
+        return success, text
+

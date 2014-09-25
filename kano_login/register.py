@@ -74,6 +74,7 @@ class Register(TopBarTemplate):
         self.kano_button = KanoButton(self.data["KANO_BUTTON"])
         self.kano_button.set_sensitive(False)
         self.kano_button.pack_and_align()
+        self.kano_button.set_padding(0, 10, 0, 0)
         self.kano_button.connect("button-release-event", self.activate)
         self.kano_button.connect("key-press-event", self.activate)
 
@@ -86,7 +87,9 @@ class Register(TopBarTemplate):
             subheading = self.data_under_13["LABEL_2"]
 
         title = Heading(header, subheading)
-        self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""}, {"heading": "Email", "subheading": ""}, {"heading": "Password", "subheading": "Min 6 chars"}])
+        self.entries_container = LabelledEntries([{"heading": "Username", "subheading": ""},
+                                                 {"heading": "Email", "subheading": ""},
+                                                 {"heading": "Password", "subheading": "Min 6 chars"}])
         self.box.pack_start(title.container, False, False, 0)
         self.box.pack_start(self.entries_container, False, False, 0)
         self.box.pack_start(checkbox_align, False, False, 5)

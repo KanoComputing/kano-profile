@@ -143,8 +143,12 @@ static void launch_cmd(const char *cmd, const char *appname)
     }
 
     ret = g_app_info_launch(appinfo, NULL, NULL, NULL);
-    if (!ret)
+    if (!ret) {
         perror("Command launch failed.");
+        if (appname) {
+            kdesk_hourglass_end();
+        }
+    }
 }
 
 void profile_clicked(GtkWidget* widget, const char* func)

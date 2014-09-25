@@ -6,15 +6,23 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+"""
+Kano-tracker module
+
+A small module for tracking various metrics the users do in Kano OS
+"""
+
 import time
 import atexit
 import datetime
 from kano.utils import get_program_name, is_number, read_file_contents
-from kano_profile.apps import load_app_state_variable, save_app_state_variable, \
-    save_app_state
+from kano_profile.apps import load_app_state_variable, save_app_state_variable
 
 
 class Tracker:
+    """Tracker class, used for measuring program run-times,
+    implemented via atexit hooks"""
+
     def __init__(self):
         self.start_time = time.time()
         self.program_name = get_program_name()
@@ -28,7 +36,10 @@ class Tracker:
 
 
 def add_runtime_to_app(app, runtime):
-    if not app:
+    """Appends a time period to a given app's runtime stats,
+    + raises starts by one"""
+
+    if not app or app == 'kano-tracker':
         return
 
     if not is_number(runtime):
@@ -38,21 +49,25 @@ def add_runtime_to_app(app, runtime):
 
     app = app.replace('.', '_')
 
-    state = load_app_state_variable('kano-tracker', app)
+    app_stats = load_app_state_variable('kano-tracker', 'app_stats')
+    if not app_stats:
+        app_stats = dict()
 
     try:
-        state['starts'] += 1
-        state['runtime'] += runtime
+        app_stats[app]['starts'] += 1
+        app_stats[app]['runtime'] += runtime
     except Exception:
-        state = {
+        app_stats[app] = {
             'starts': 1,
             'runtime': runtime,
         }
 
-    save_app_state_variable('kano-tracker', app, state)
+    save_app_state_variable('kano-tracker', 'app_stats', app_stats)
 
 
 def save_hardware_info():
+    """Saves hardware information related to the Raspberry Pi / Kano Kit"""
+
     from kano.logging import logger
     from kano.utils import get_cpu_id, get_mac_address, detect_kano_keyboard
 
@@ -62,11 +77,14 @@ def save_hardware_info():
         'mac_address': get_mac_address(),
         'kano_keyboard': detect_kano_keyboard(),
     }
-    save_app_state('kano-hardware', state)
+    save_app_state_variable('kano-tracker', 'hardware_info', state)
 
 
 def save_kano_version():
-    updates = load_app_state_variable('kano-tracker', 'updates')
+    """Saves a dict of os-version: time values,
+    to keep track of the users update process"""
+
+    updates = load_app_state_variable('kano-tracker', 'versions')
     if not updates:
         updates = dict()
 
@@ -74,10 +92,12 @@ def save_kano_version():
     if not version_now:
         return
 
+    version_now = version_now.replace('.', '_')
+
     time_now = datetime.datetime.utcnow().isoformat()
     updates[version_now] = time_now
 
-    save_app_state_variable('kano-tracker', 'updates', updates)
+    save_app_state_variable('kano-tracker', 'versions', updates)
 
 
 

@@ -19,10 +19,6 @@ def load_profile():
     if not data:
         data = dict()
     data['username_linux'] = get_user_unsudoed()
-    # if get_cpu_id():
-        # data['cpu_id'] = get_cpu_id()
-    # if get_mac_address():
-        # data['mac_addr'] = get_mac_address()
     return data
 
 

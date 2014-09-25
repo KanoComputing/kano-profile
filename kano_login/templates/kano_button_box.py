@@ -13,13 +13,11 @@ from gi.repository import Gtk
 from kano.gtk3.buttons import KanoButton, OrangeButton
 
 
-class KanoButtonBox(Gtk.ButtonBox):
+class KanoButtonBox(Gtk.Box):
 
     def __init__(self, kano_button_text, orange_text="", orange_text_2=""):
 
-        Gtk.ButtonBox.__init__(self)
-        self.set_layout(Gtk.ButtonBoxStyle.EDGE)
-
+        Gtk.Box.__init__(self)
         self.kano_button = KanoButton(kano_button_text)
 
         if not orange_text == "":

@@ -68,14 +68,17 @@ class Login(TopBarTemplate):
             entry.connect("key-release-event", self.activate)
 
         self.button_box = KanoButtonBox("LOGIN", "Create New", "Forgotten password?")
-        self.box.pack_start(self.button_box, False, False, 30)
-
-        self.button_box.kano_button.connect("button_release_event", self.activate)
-        self.button_box.kano_button.connect("key-release-event", self.activate)
+        self.button_box.set_spacing(40)
+        self.button_box.set_margin_left(80)
+        self.button_box.set_margin_bottom(30)
+        self.kano_button = self.button_box.kano_button
         self.button_box.set_orange_button_cb(self.create_new)
         self.button_box.set_orange_button2_cb(self.reset_password_screen)
+        self.kano_button.connect("button_release_event", self.activate)
+        self.kano_button.connect("key-release-event", self.activate)
+        self.box.pack_start(self.button_box, False, False, 20)
 
-        self.button_box.kano_button.set_sensitive(False)
+        self.kano_button.set_sensitive(False)
 
         if not force_login:
             self.username_entry.grab_focus()
@@ -114,9 +117,9 @@ class Login(TopBarTemplate):
         text0 = self.get_username_input()
         text1 = self.password_entry.get_text()
         if text0 != "" and text1 != "":
-            self.button_box.kano_button.set_sensitive(True)
+            self.kano_button.set_sensitive(True)
         else:
-            self.button_box.kano_button.set_sensitive(False)
+            self.kano_button.set_sensitive(False)
 
     def get_username_input(self):
         if force_login:
@@ -138,8 +141,8 @@ class Login(TopBarTemplate):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
             self.win.get_window().set_cursor(watch_cursor)
-            self.button_box.kano_button.set_sensitive(False)
-            self.button_box.kano_button.start_spinner()
+            self.kano_button.start_spinner()
+            self.kano_button.set_sensitive(False)
 
             thread = threading.Thread(target=self.log_user_in)
             thread.start()
@@ -207,8 +210,8 @@ class Login(TopBarTemplate):
                 sys.exit(0)
 
             self.win.get_window().set_cursor(None)
-            self.button_box.kano_button.stop_spinner()
-            self.button_box.kano_button.set_sensitive(True)
+            self.kano_button.stop_spinner()
+            self.kano_button.set_sensitive(True)
 
             if not force_login:
                 self.username_entry.grab_focus()

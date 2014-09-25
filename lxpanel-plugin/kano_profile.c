@@ -19,6 +19,8 @@
 #include <ctype.h>
 #include <time.h>
 
+#include <kdesk-hourglass.h>
+
 #define NO_LOGIN_ICON "/usr/share/kano-profile/icon/profile-not-login-widget.png"
 #define LOGIN_ICON "/usr/share/kano-profile/icon/profile-login-widget.png"
 #define SYNC_ICON "/usr/share/kano-profile/icon/widget-sync.png"
@@ -121,15 +123,22 @@ static gboolean profile_status(kano_profile_plugin_t *plugin)
     return (plugin->log_in != 0);
 }
 
-static void launch_cmd(const char *cmd)
+static void launch_cmd(const char *cmd, const char *appname)
 {
     GAppInfo *appinfo = NULL;
     gboolean ret = FALSE;
+
+    if (appname) {
+        kdesk_hourglass_start((char *) appname);
+    }
 
     appinfo = g_app_info_create_from_commandline(cmd, NULL, G_APP_INFO_CREATE_NONE, NULL);
 
     if (appinfo == NULL) {
         perror("Command lanuch failed.");
+        if (appname) {
+            kdesk_hourglass_end();
+        }
         return;
     }
 
@@ -144,7 +153,7 @@ void profile_clicked(GtkWidget* widget, const char* func)
     char cmd[100];
     strcpy(cmd, SYNC_CMD);
     strcat(cmd, func);
-    launch_cmd(cmd);
+    launch_cmd(cmd, NULL);
 }
 
 void login_clicked(GtkWidget* widget)
@@ -154,25 +163,25 @@ void login_clicked(GtkWidget* widget)
     if (rc != -1 && WEXITSTATUS(rc) != 0)
     {
         /* Launch WiFi UI */
-        launch_cmd (SETTINGS_CMD);
+        launch_cmd (SETTINGS_CMD, "kano-settings");
         /* Play sound */
-        launch_cmd(SOUND_CMD);
+        launch_cmd(SOUND_CMD, NULL);
     }
     else
     {
         /* Launch Login UI */
-        launch_cmd(LOGIN_CMD);
+        launch_cmd(LOGIN_CMD, "kano-login");
         /* Play sound */
-        launch_cmd(SOUND_CMD);
+        launch_cmd(SOUND_CMD, NULL);
     }
 }
 
 void launch_profile_clicked(GtkWidget* widget)
 {
     /* Launch Porfile UI */
-    launch_cmd(PROFILE_CMD);
+    launch_cmd(PROFILE_CMD, "kano-profile-gui");
     /* Play sound */
-    launch_cmd(SOUND_CMD);
+    launch_cmd(SOUND_CMD, NULL);
 }
 
 static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile_plugin_t *plugin)

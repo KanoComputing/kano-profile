@@ -4,11 +4,11 @@ Section: admin
 Priority: optional
 Standards-Version: 3.9.4
 Build-Depends: debhelper (>= 9), build-essential, pkg-config, libgtk2.0-dev,
-               libmenu-cache1-dev, lxpanel, libfm-gtk1, libfm-dev
+               libmenu-cache1-dev, lxpanel, libfm-gtk1, libfm-dev, libkdesk-dev
 
 Package: kano-profile
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python, kano-toolset (>= 1.1-5), gir1.2-gtk-3.0
+Depends: ${shlibs:Depends}, ${misc:Depends}, python, kano-toolset (>= 1.1-5), gir1.2-gtk-3.0, libkdesk-dev
 Recommends: kano-fonts
 Description: Profile app for KANO
 Provides: kano-share

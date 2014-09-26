@@ -78,7 +78,8 @@ def do_sync():
         display_msg('Sync not possible, error: {}'.format(value), 'error')
         return
 
-    refresh_kdesk()
+    # TODO: Momentarily disabled because we receive too many chained notifications
+    #refresh_kdesk()
 
     display_msg('Sync OK', 'info')
 
@@ -148,7 +149,9 @@ def do_restore():
         msg = 'Error with uncompressing restore data: {}'.format(e)
         display_msg(msg, 'error')
 
-    refresh_kdesk()
+    # TODO: Momentarily disabled because we receive too many chained notifications
+    #refresh_kdesk()
+
     delete_file(tmp_file)
 
     display_msg('Restore OK', 'info')
@@ -166,7 +169,7 @@ def refresh_kdesk():
         try:
             notifications_number = load_profile()['notifications']
             if notifications_number != 0:
-                with open('/tmp/kano-notifications.fifo', 'w') as fifo:
+                with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
                     fifo.write('world_notification:{}\n'.format(notifications_number))
         except Exception:
             pass

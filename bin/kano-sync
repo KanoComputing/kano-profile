@@ -149,6 +149,7 @@ def do_restore():
         display_msg(msg, 'error')
 
     refresh_kdesk()
+
     delete_file(tmp_file)
 
     display_msg('Restore OK', 'info')
@@ -163,13 +164,13 @@ def refresh_kdesk():
         run_bg('kdesk -a profile ; kdesk -a world')
 
         # pushing notification update as well
-        try:
-            notifications_number = load_profile()['notifications']
-            if notifications_number != 0:
-                with open('/tmp/kano-notifications.fifo', 'w') as fifo:
-                    fifo.write('world_notification:{}\n'.format(notifications_number))
-        except Exception:
-            pass
+        #try:
+        #    notifications_number = load_profile()['notifications']
+        #    if notifications_number != 0:
+        #        with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
+        #            fifo.write('world_notification:{}\n'.format(notifications_number))
+        #except Exception:
+        #    pass
 
 
 if __name__ == '__main__':

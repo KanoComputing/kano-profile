@@ -246,7 +246,7 @@ def save_app_state_with_dialog(app_name, data):
         return
 
     if is_gui():
-        with open('/tmp/kano-notifications.fifo', 'w') as fifo:
+        with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
             for notification in (new_level_str + ' ' + new_items_str).split(' '):
                 if len(notification) > 0:
                     logger.debug("Showing the {} notification".format(notification))

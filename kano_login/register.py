@@ -200,7 +200,7 @@ class Register(TopBarTemplate):
 
             self.win.get_window().set_cursor(None)
             self.kano_button.set_sensitive(True)
-            self.kano_button.stop_spinenr()
+            self.kano_button.stop_spinner()
             self.entries_container.get_entry(0).grab_focus()
 
             if response == 1:

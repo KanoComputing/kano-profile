@@ -251,14 +251,34 @@ class KanoWorldSession(object):
         return True, None
 
     def refresh_notifications(self):
-        success, text, data = request_wrapper('get', '/notifications', session=self.session)
-        if not success:
-            return False, text
-        try:
-            notifications = int(data['unread_count'])
-            profile = load_profile()
-            profile['notifications'] = notifications
-            save_profile(profile)
-            return True, None
-        except Exception:
-            return False, 'unread count not found'
+        next_page = 1
+        notifications = []
+        while next_page is not None:
+            success, text, data = request_wrapper(
+                'get',
+                '/notifications?read=false&page={}'.format(next_page),
+                session=self.session
+            )
+
+            if not success:
+                return False, text
+
+            for entry in data['entries']:
+                if entry['read'] is False:
+                    n = {
+                        'title': 'Kano World',
+                        'byline': entry['title'],
+                        'image': None,
+                        'command': None
+                    }
+                    notifications.append(n)
+
+            try:
+                next_page = data['next']
+            except:
+                break
+
+        profile = load_profile()
+        profile['notifications'] = notifications
+        save_profile(profile)
+        return True, None

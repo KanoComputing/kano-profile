@@ -9,6 +9,8 @@
 import os
 import sys
 import argparse
+import json
+import time
 from sys import platform as _platform
 
 if __name__ == '__main__' and __package__ is None:
@@ -21,7 +23,7 @@ from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, ru
     is_gui
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
-from kano_profile.profile import load_profile
+from kano_profile.profile import load_profile, save_profile
 
 home_dir = get_home()
 
@@ -79,6 +81,31 @@ def do_sync():
         return
 
     refresh_kdesk()
+
+    # Push notifications
+    try:
+        profile = load_profile()
+        if 'last_notifications_prompt' not in profile or \
+           (time.time() - int(profile['last_notifications_prompt'])) > 60*60*24:
+            if 'notifications' in profile and \
+               type(profile['notifications']) is list and \
+               len(profile['notifications']) > 0:
+                with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
+                    fifo.write('world_notification:{}\n'.format(len(profile['notifications'])))
+                    for n in profile['notifications']:
+                        payload = json.dumps(n)
+                        logger.debug('Pushing {} to the notifications widget'.format(payload))
+                        fifo.write(payload + '\n')
+
+                profile['last_notifications_prompt'] = int(time.time())
+                save_profile(profile)
+            else:
+                logger.debug('No notifications to show')
+        else:
+            logger.debug('Too early to show notifications')
+    except:
+        raise
+        pass
 
     display_msg('Sync OK', 'info')
 
@@ -162,15 +189,6 @@ def refresh_kdesk():
     logger.info('refreshing kdesk from kano-sync')
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile ; kdesk -a world')
-
-        # pushing notification update as well
-        #try:
-        #    notifications_number = load_profile()['notifications']
-        #    if notifications_number != 0:
-        #        with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
-        #            fifo.write('world_notification:{}\n'.format(notifications_number))
-        #except Exception:
-        #    pass
 
 
 if __name__ == '__main__':

@@ -72,6 +72,25 @@ def do_login():
                 sys.exit(1)
 
 
+def _should_display_notifications(profile):
+    NOTIFY_INTERVAL = 60*60*12 # 12 hours in seconds
+    return 'last_notifications_prompt' not in profile or \
+           (time.time() - int(profile['last_notifications_prompt'])) > NOTIFY_INTERVAL
+
+def _any_notifications_available(profile):
+    return ('notifications' in profile and
+            type(profile['notifications']) is list and
+            len(profile['notifications']) > 0)
+
+# TODO: This should be moved to kano-toolset in the future
+def kano_display_notification(notification):
+    notification_pipe = os.path.join(os.path.expanduser('~'),
+                                     '.kano-notifications.fifo')
+
+    with open(notification_pipe, 'w') as fifo:
+            logger.debug('Pushing {} to the notifications widget'.format(notification))
+            fifo.write(notification + '\n')
+
 def do_sync():
     logger.debug('do_sync')
 
@@ -85,17 +104,10 @@ def do_sync():
     # Push notifications
     try:
         profile = load_profile()
-        if 'last_notifications_prompt' not in profile or \
-           (time.time() - int(profile['last_notifications_prompt'])) > 60*60*24:
-            if 'notifications' in profile and \
-               type(profile['notifications']) is list and \
-               len(profile['notifications']) > 0:
-                with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
-                    fifo.write('world_notification:{}\n'.format(len(profile['notifications'])))
-                    for n in profile['notifications']:
-                        payload = json.dumps(n)
-                        logger.debug('Pushing {} to the notifications widget'.format(payload))
-                        fifo.write(payload + '\n')
+        if _should_display_notifications(profile):
+            if _any_notifications_available(profile):
+                for n in profile['notifications']:
+                    kano_display_notification(json.dumps(n))
 
                 profile['last_notifications_prompt'] = int(time.time())
                 save_profile(profile)

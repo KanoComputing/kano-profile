@@ -265,12 +265,7 @@ class KanoWorldSession(object):
 
             for entry in data['entries']:
                 if entry['read'] is False:
-                    n = {
-                        'title': 'Kano World',
-                        'byline': entry['title'],
-                        'image': None,
-                        'command': None
-                    }
+                    n = self._process_notification(entry)
                     notifications.append(n)
 
             try:
@@ -282,3 +277,34 @@ class KanoWorldSession(object):
         profile['notifications'] = notifications
         save_profile(profile)
         return True, None
+
+    def _process_notification(self, entry):
+        """ Cherry picks information from a Kano World notification
+            based on its type and returns it in a dict.
+
+            :param entry: A notification entry from the World API
+            :returns: A dict that can be passed to the notification widget
+        """
+
+        MINECRAFT_SHARE_IMG = '/usr/share/kano-profile/media/images/environments/280x170/all/minecraft_levelup.png'
+        PONG_SHARE_IMG = '/usr/share/kano-profile/media/images/environments/280x170/all/arcade_hall_levelup.png'
+
+        n = {
+            'title': 'Kano World',
+            'byline': entry['title'],
+            'image': None,
+            'command': 'kano-world-launcher'
+        }
+
+        # Customise settings for known types
+        if entry['category'] == 'follows':
+            n['title'] = 'New follower!'
+        elif entry['category'] == 'share-items':
+            n['title'] = 'New share!'
+
+            if entry['type'] == 'make-minecraft':
+                n['image'] = MINECRAFT_SHARE_IMG
+            elif entry['type'] == 'make-pong':
+                n['image'] = PONG_SHARE_IMG
+
+        return n

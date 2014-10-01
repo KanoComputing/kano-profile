@@ -7,7 +7,7 @@
 #
 # UI for share screen
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk
 import os
 import sys
 import subprocess
@@ -26,7 +26,7 @@ from kano.gtk3.top_bar import TopBar
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.scrolled_window import ScrolledWindow
-from kano.paths import common_css_dir
+from kano.gtk3.apply_styles import apply_common_to_screen
 from kano.logging import logger
 
 
@@ -139,21 +139,7 @@ def main():
         sys.exit('No internet')
 
     # Create style sheet
-    colourProvider = Gtk.CssProvider()
-    colour_file = os.path.join(common_css_dir, 'colours.css')
-    if not os.path.exists(colour_file):
-        sys.exit('CSS file missing!')
-    colourProvider.load_from_path(colour_file)
-    cssProvider = Gtk.CssProvider()
-    css_file = os.path.join(common_css_dir, 'common.css')
-    if not os.path.exists(css_file):
-        sys.exit('CSS file missing!')
-    cssProvider.load_from_path(css_file)
-
-    screen = Gdk.Screen.get_default()
-    styleContext = Gtk.StyleContext()
-    styleContext.add_provider_for_screen(screen, colourProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-    styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    apply_common_to_screen()
 
     win = MainWindow()
     win.connect('delete-event', Gtk.main_quit)

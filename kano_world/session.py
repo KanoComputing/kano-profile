@@ -265,7 +265,7 @@ class KanoWorldSession(object):
                 return False, text
 
             for entry in data['entries']:
-                if entry['read'] is False or True:
+                if entry['read'] is False:
                     n = self._process_notification(entry)
                     notifications.append(n)
 

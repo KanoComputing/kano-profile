@@ -63,5 +63,9 @@ if os.path.exists(chromium_local_state):
 else:
     create_local_state()
 
-run_cmd("chromium --window-size=1000,940 --app=http://world.kano.me/login/{}".format(get_token()))
+redirect=""
+if len(sys.argv) >= 2:
+    redirect = "?redirect={}".format(sys.argv[1])
+
+run_cmd("chromium --window-size=1000,700 --app=http://world.kano.me/login/{}{}".format(get_token(), redirect))
 run_bg('kano-sync --sync -s')

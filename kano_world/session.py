@@ -16,6 +16,7 @@ from kano_profile.profile import load_profile, set_avatar, set_environment, save
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file
+from kano_profile_gui.paths import media_dir
 
 from .connection import request_wrapper, content_type_json
 
@@ -264,7 +265,7 @@ class KanoWorldSession(object):
                 return False, text
 
             for entry in data['entries']:
-                if entry['read'] is False:
+                if entry['read'] is False or True:
                     n = self._process_notification(entry)
                     notifications.append(n)
 
@@ -286,25 +287,35 @@ class KanoWorldSession(object):
             :returns: A dict that can be passed to the notification widget
         """
 
-        MINECRAFT_SHARE_IMG = '/usr/share/kano-profile/media/images/environments/280x170/all/minecraft_levelup.png'
-        PONG_SHARE_IMG = '/usr/share/kano-profile/media/images/environments/280x170/all/arcade_hall_levelup.png'
+        MINECRAFT_SHARE_IMG = media_dir + '/images/notification/280x170/share-pong.png'
+        PONG_SHARE_IMG = media_dir + '/images/notification/280x170/share-minecraft.png'
+        SP_IMG = media_dir + '/images/notification/280x170/saturday-project.png'
+        FOLLOWER_IMG = media_dir + '/images/notification/280x170/follower.png'
+        GENERIC_ALERT_IMG = media_dir + '/images/notification/280x170/notification.png'
 
         n = {
             'title': 'Kano World',
             'byline': entry['title'],
-            'image': None,
-            'command': 'kano-world-launcher'
+            'image': GENERIC_ALERT_IMG,
+            'command': 'kano-world-launcher /notifications/open/{}'.format(entry['id'])
         }
 
         # Customise settings for known types
         if entry['category'] == 'follows':
             n['title'] = 'New follower!'
-        elif entry['category'] == 'share-items':
+            n['image'] = FOLLOWER_IMG
+        elif entry['category'] in ['share-items', 'shares']:
             n['title'] = 'New share!'
 
             if entry['type'] == 'make-minecraft':
                 n['image'] = MINECRAFT_SHARE_IMG
             elif entry['type'] == 'make-pong':
                 n['image'] = PONG_SHARE_IMG
+        elif entry['updates']:
+            n['title'] = 'New Update!'
+
+            if entry['type'] == 'saturday-project':
+                n['title'] = 'New Project!'
+                n['image'] = SP_IMG
 
         return n

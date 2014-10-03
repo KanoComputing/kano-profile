@@ -10,6 +10,7 @@
     "icon": "minecraft.png"
   },
   "make-music": {
+    "dir": "Music-content",
     "max_level": 3,
     "icon": "sonicpi.png"
   },

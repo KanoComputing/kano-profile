@@ -11,7 +11,7 @@
   },
   "make-music": {
     "dir": "Music-content",
-    "cmd": "/usr/bin/make-music {fullpath}"
+    "cmd": "/usr/bin/make-music {fullpath}",
     "max_level": 3,
     "icon": "sonicpi.png"
   },

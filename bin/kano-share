@@ -21,7 +21,10 @@ from kano.network import is_internet
 from kano.utils import read_json
 
 from kano_profile.paths import app_profiles_file
-from kano_world.share import list_shares, download_share
+from kano_profile.badges import increment_app_state_variable_with_dialog
+from kano_world.share import list_shares, download_share, \
+    upload_share
+from kano_world.functions import login_using_token
 from kano.gtk3.top_bar import TopBar
 from kano.gtk3.buttons import KanoButton
 from kano.gtk3.kano_dialog import KanoDialog
@@ -134,10 +137,39 @@ class MainWindow(Gtk.Window):
 
 def main():
     if not is_internet():
-        kdialog = KanoDialog("You don't have internet!", "You need an internet connection to share")
+        kdialog = KanoDialog("You don't have internet!", "You need an internet connection use Kano Share")
         kdialog.run()
         sys.exit('No internet')
 
+    if len(sys.argv) > 1 \
+        and sys.argv[1] == 'upload':
+
+        upload()
+    else:
+        show_shares()
+
+def upload():
+    if len(sys.argv) != 5:
+        print 'Incorrect arguments'
+        print 'Correct usage: kano-share upload <app_name> <title> <dir_path>'
+        exit(2)
+    # Check for login
+    success, _ = login_using_token()
+    if not success:
+        print 'Failed to login.'
+        exit(2)
+
+    app_name = sys.argv[2]
+    title = sys.argv[3]
+    filepath = sys.argv[4]
+    success, msg = upload_share(filepath, title, app_name)
+
+    if not success:
+        print 'Error: {}'.format(filepath, msg)
+        exit(2)
+    increment_app_state_variable_with_dialog(app_name, 'shared', 1)
+
+def show_shares():
     # Create style sheet
     apply_common_to_screen()
 

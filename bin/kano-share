@@ -156,8 +156,11 @@ def upload():
     # Check for login
     success, _ = login_using_token()
     if not success:
-        print 'Failed to login.'
-        exit(2)
+        os.system('kano-login')
+        success, _ = login_using_token()
+        if not success:
+            print 'Failed to login.'
+            exit(2)
 
     app_name = sys.argv[2]
     title = sys.argv[3]

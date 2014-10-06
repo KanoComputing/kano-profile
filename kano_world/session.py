@@ -311,7 +311,7 @@ class KanoWorldSession(object):
                 n['image'] = MINECRAFT_SHARE_IMG
             elif entry['type'] == 'make-pong':
                 n['image'] = PONG_SHARE_IMG
-        elif entry['updates']:
+        elif entry.has_key('updates'):
             n['title'] = 'New Update!'
 
             if entry['type'] == 'saturday-project':

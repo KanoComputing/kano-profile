@@ -159,8 +159,12 @@ def upload():
         os.system('kano-login')
         success, _ = login_using_token()
         if not success:
-            print 'Failed to login.'
-            exit(2)
+            kdialog = KanoDialog('Failed to log in!')
+            kdialog.run()
+
+            error = 'Failed to login.'
+            logger.error(error)
+            exit(error)
 
     app_name = sys.argv[2]
     title = sys.argv[3]
@@ -168,8 +172,12 @@ def upload():
     success, msg = upload_share(filepath, title, app_name)
 
     if not success:
-        print 'Error: {}'.format(filepath, msg)
-        exit(2)
+        kdialog = KanoDialog("Failed to share!")
+        kdialog.run()
+
+        error = 'Error: {}'.format(filepath, msg)
+        logger.error(error)
+        exit(error)
     increment_app_state_variable_with_dialog(app_name, 'shared', 1)
 
 def show_shares():

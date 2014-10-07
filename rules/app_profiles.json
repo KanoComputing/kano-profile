@@ -12,7 +12,7 @@
   "make-music": {
     "dir": "Music-content",
     "ext": "spi",
-    "cmd": "kano-launcher /usr/bin/make-music {fullpath}",
+    "cmd": "kano-launcher \"/usr/bin/make-music {fullpath}\"",
     "max_level": 3,
     "icon": "sonicpi.png"
   },

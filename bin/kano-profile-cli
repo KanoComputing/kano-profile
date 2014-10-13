@@ -155,7 +155,7 @@ elif sys.argv[1] == 'get_notifications':
         print 'notifications not found'
         sys.exit(1)
 
-elif sys.argv[1] == 'get_notifications_cout':
+elif sys.argv[1] == 'get_notifications_count':
     check_arg_len(1)
     try:
         total_unread = len(load_profile()['notifications'])

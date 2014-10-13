@@ -56,6 +56,8 @@ class MainWindow(ApplicationWindow):
         self.connect("delete-event", Gtk.main_quit)
         self.show_all()
 
+        self.set_icon_name("kano-world")
+
         self.username = ""
         self.email = ""
         self.password = ""

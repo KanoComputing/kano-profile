@@ -1,3 +1,9 @@
+kano-profile (1.2-3) unstable; urgency=low
+
+  * kano-profile-cli now supports queerying for get_notifications_count
+
+ -- Team Kano <dev@kano.me>  Mon, 13 Oct 2014 15:05:00 +0100
+
 kano-profile (1.2-2) unstable; urgency=low
 
   * 280x170 notification artwork added

@@ -11,6 +11,7 @@ import sys
 import argparse
 import json
 import time
+import tempfile
 from sys import platform as _platform
 
 if __name__ == '__main__' and __package__ is None:
@@ -137,8 +138,7 @@ def do_backup():
     if not folders:
         return
 
-    tmp_dir = '/tmp/kanoprofile'
-    ensure_dir(tmp_dir)
+    tmp_dir = tempfile.mkdtemp()
     tmp_file = os.path.join(tmp_dir, 'backup.tar.gz')
     delete_file(tmp_file)
 
@@ -149,16 +149,18 @@ def do_backup():
     if e:
         msg = 'Error with compressing backup data: {}'.format(e)
         display_msg(msg, 'error')
+        delete_dir(tmp_dir)
         return
 
     success, error = backup_content(tmp_file)
     if not success:
         msg = 'Error with uploading backup data: {}'.format(e)
         display_msg(msg, 'error')
-        return
+    else:
+        display_msg('Backup OK', 'info')
 
     delete_file(tmp_file)
-    display_msg('Backup OK', 'info')
+    delete_dir(tmp_dir)
 
 
 def do_restore():
@@ -166,8 +168,7 @@ def do_restore():
 
     os.chdir(home_dir)
 
-    tmp_dir = '/tmp/kanoprofile'
-    ensure_dir(tmp_dir)
+    tmp_dir = tempfile.mkdtemp()
     tmp_file = os.path.join(tmp_dir, 'restore.tar.gz')
     delete_file(tmp_file)
 
@@ -175,6 +176,7 @@ def do_restore():
     if not success:
         msg = 'Error with downloading restore data: ' + error
         display_msg(msg, 'error')
+        delete_dir(tmp_dir)
         return
 
     if _platform == 'darwin':
@@ -190,6 +192,7 @@ def do_restore():
     refresh_kdesk()
 
     delete_file(tmp_file)
+    delete_dir(tmp_dir)
 
     display_msg('Restore OK', 'info')
 

@@ -21,7 +21,7 @@ from kano.utils import run_cmd
 from kano.logging import logger
 from kano_world.share import download_share, get_share_by_id
 from kano_profile.apps import launch_project
-
+from kdesk.hourglass import hourglass_start, hourglass_end
 
 def run(args):
     try:
@@ -29,18 +29,25 @@ def run(args):
     except Exception:
         return
 
+    # Start an hourglass with an unspecified app,
+    # remove it as soon as we have a download resolution
+    hourglass_start("")
+
     success, text, share = get_share_by_id(share_id)
     if not success:
         msg = 'Error downloading share: {}'.format(text)
         logger.error(msg)
+        hourglass_end()
         return
 
     success, data = download_share(share)
     if not success:
         msg = 'Could not download share, error: {}'.format(data)
         logger.error(msg)
+        hourglass_end()
         return
 
+    hourglass_end()
     return data
 
 

@@ -12,7 +12,6 @@ from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_pa
     run_print_output_error, is_running, run_bg
 from kano.logging import logger
 from .paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
-from .profile import is_unlocked
 
 
 def get_app_dir(app_name):
@@ -42,20 +41,12 @@ def load_app_state(app_name):
 
 def load_app_state_variable(app_name, variable):
     data = load_app_state(app_name)
-    if is_unlocked():
-        data['level'] = 999
     if variable in data:
         return data[variable]
 
 
 def save_app_state(app_name, data):
     logger.debug('save_app_state {}'.format(app_name))
-
-    if is_unlocked():
-        try:
-            data['level'] = load_app_state(app_name)['level']
-        except Exception:
-            pass
 
     app_state_file = get_app_state_file(app_name)
     data['save_date'] = get_date_now()
@@ -76,8 +67,6 @@ def save_app_state(app_name, data):
 def save_app_state_variable(app_name, variable, value):
     logger.debug('save_app_state_variable {} {} {}'.format(app_name, variable, value))
 
-    if is_unlocked() and variable == 'level':
-        return
     data = load_app_state(app_name)
     data[variable] = value
 
@@ -87,8 +76,6 @@ def save_app_state_variable(app_name, variable, value):
 def increment_app_state_variable(app_name, variable, value):
     logger.debug('increment_app_state_variable {} {} {}'.format(app_name, variable, value))
 
-    if is_unlocked() and variable == 'level':
-        return
     data = load_app_state(app_name)
     if variable not in data:
         data[variable] = 0

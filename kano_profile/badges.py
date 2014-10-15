@@ -14,7 +14,6 @@ from kano.logging import logger
 from kano.utils import read_json, is_gui, run_bg, run_cmd, is_running
 from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
 from .apps import load_app_state, get_app_list, save_app_state
-from .profile import is_unlocked
 
 
 def calculate_xp():
@@ -259,8 +258,6 @@ def save_app_state_with_dialog(app_name, data):
 def save_app_state_variable_with_dialog(app_name, variable, value):
     logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
 
-    if is_unlocked() and variable == 'level':
-        return
     data = load_app_state(app_name)
     data[variable] = value
 
@@ -270,8 +267,6 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
 def increment_app_state_variable_with_dialog(app_name, variable, value):
     logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
 
-    if is_unlocked() and variable == 'level':
-        return
     data = load_app_state(app_name)
     if variable not in data:
         data[variable] = 0

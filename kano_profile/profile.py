@@ -47,22 +47,6 @@ def save_profile_variable(variable, value):
     save_profile(profile)
 
 
-def set_unlocked(boolean):
-    logger.debug('set_unlocked {}'.format(boolean))
-
-    profile = load_profile()
-    profile['unlocked'] = boolean
-    save_profile(profile)
-
-
-def is_unlocked():
-    profile = load_profile()
-    if 'unlocked' in profile:
-        return load_profile()['unlocked']
-    else:
-        return False
-
-
 def get_avatar():
     profile = load_profile()
     if 'avatar' in profile:

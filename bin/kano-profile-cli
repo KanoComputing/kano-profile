@@ -14,7 +14,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile.apps import get_app_data_dir, load_app_state_variable
-from kano_profile.profile import set_unlocked, load_profile, get_avatar, get_environment
+from kano_profile.profile import load_profile, get_avatar, get_environment
 from kano_profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
     calculate_kano_level, increment_app_state_variable_with_dialog
 from kano_world.functions import is_registered, get_mixed_username, has_token
@@ -36,7 +36,7 @@ if len(sys.argv) == 1:
     help = 'Wrong usage, needs an argument\n'
     help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
     help += 'save_app_state_variable_get_xp_diff, increment_app_state_variable\n'
-    help += 'unlock, lock, is_registered, get_stats, get_email, get_notifications,\n'
+    help += 'is_registered, get_stats, get_email, get_notifications,\n'
     help += 'get_notifications_count, increment_app_runtime'
     sys.exit(help)
 
@@ -90,14 +90,6 @@ elif sys.argv[1] == 'increment_app_state_variable':
     elif is_number(value):
         value = float(value)
     increment_app_state_variable_with_dialog(app_name, variable, value)
-
-elif sys.argv[1] == 'unlock':
-    check_arg_len(1)
-    set_unlocked(True)
-
-elif sys.argv[1] == 'lock':
-    check_arg_len(1)
-    set_unlocked(False)
 
 elif sys.argv[1] == 'is_registered':
     check_arg_len(1)

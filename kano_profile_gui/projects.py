@@ -89,7 +89,12 @@ class ProjectItem():
         self.button_padding.set_padding(25, 25, 10, 10)
         self.button_padding.add(self.button)
 
-        self.title = Gtk.Label(project["display_name"])
+        # shorten project name to 20 characters long
+        display_name = project["display_name"]
+        if len(display_name) > 20:
+            display_name = display_name[:20] + '...'
+
+        self.title = Gtk.Label(display_name)
         self.title.get_style_context().add_class("project_item_title")
         self.title.set_alignment(xalign=0, yalign=1)
 

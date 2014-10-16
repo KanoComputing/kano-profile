@@ -110,4 +110,5 @@ def launch_project(app, filename, data_dir):
 
     fullpath = os.path.join(data_dir, filename)
     cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
-    run_print_output_error(cmd)
+    _,_,rc=run_print_output_error(cmd)
+    return rc

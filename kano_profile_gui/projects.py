@@ -15,6 +15,7 @@ from kano.logging import logger
 import kano_profile_gui.components.cursor as cursor
 import kano_profile_gui.components.icons as icons
 from .paths import image_dir
+from kdesk.hourglass import hourglass_start, hourglass_end
 
 app_profiles = read_json(app_profiles_file)
 
@@ -116,7 +117,10 @@ class ProjectItem():
         self.background.add(self.container)
 
     def load(self, _button, app, filename, data_dir):
-        launch_project(app, filename, data_dir)
+        hourglass_start(app)
+        rc=launch_project(app, filename, data_dir)
+        if not rc==0:
+            hourglass_end()
 
     def share(self, _button, app, filename):
         logger.info('share: {} {}'.format(app, filename))

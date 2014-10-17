@@ -9,7 +9,6 @@
 import os
 import sys
 import argparse
-import json
 import time
 import tempfile
 from sys import platform as _platform
@@ -25,6 +24,7 @@ from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, ru
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 from kano_profile.profile import load_profile, save_profile
+from kano.notifications import display_generic_notification
 
 home_dir = get_home()
 
@@ -83,15 +83,6 @@ def _any_notifications_available(profile):
             type(profile['notifications']) is list and
             len(profile['notifications']) > 0)
 
-# TODO: This should be moved to kano-toolset in the future
-def kano_display_notification(notification):
-    notification_pipe = os.path.join(os.path.expanduser('~'),
-                                     '.kano-notifications.fifo')
-
-    with open(notification_pipe, 'w') as fifo:
-            logger.debug('Pushing {} to the notifications widget'.format(notification))
-            fifo.write(notification + '\n')
-
 def do_sync():
     logger.debug('do_sync')
 
@@ -108,7 +99,11 @@ def do_sync():
         if _should_display_notifications(profile):
             if _any_notifications_available(profile):
                 for n in profile['notifications']:
-                    kano_display_notification(json.dumps(n))
+                    image = n["image"] if "image" in n else None
+                    command = n["command"] if "command" in n else None
+                    sound = n["sound"] if "sound" in n else None
+                    display_generic_notification(n["title"], n["byline"], image,
+                                                 command, sound, "world")
 
                 profile['last_notifications_prompt'] = int(time.time())
                 save_profile(profile)

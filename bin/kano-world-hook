@@ -34,13 +34,21 @@ if len(sys.argv) < 2:
     sys.exit(0)
 
 # Parse the URL
-url_data = sys.argv[1].split(":")
-if len(url_data) < 3:
-    print 'error'
+try:
+    url_data = sys.argv[1].split(":")
+    if len(url_data) < 3:
+        print '{} url data is too short: {}'.format(sys.argv[0], sys.argv[1])
+        logger.error(msg)
+        sys.exit(0)
+except:
+    print '{} passed an invalid url: {}'.format(sys.argv[0], sys.argv[1])
+    sys.exit(0)
 
-scheme = url_data.pop(0)
-if scheme != "kano":
-    msg = "Do not recognise the {} scheme".format(scheme)
+try:
+    scheme = url_data.pop(0)
+    assert(scheme=='kano')
+except:
+    msg = "Could not recognise the {} scheme".format(scheme)
     logger.error(msg)
     sys.exit(0)
 

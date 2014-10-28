@@ -12,6 +12,7 @@ import os
 import sys
 from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
 from kano_world.functions import get_token
+from kano_world.config import WORLD_URL
 from kano.logging import logger
 from kano.network import is_internet
 from kano_profile.tracker import Tracker
@@ -67,5 +68,6 @@ redirect=""
 if len(sys.argv) >= 2:
     redirect = "?redirect={}".format(sys.argv[1])
 
-run_cmd("chromium --window-size=1000,700 --app=http://world.kano.me/login/{}{}".format(get_token(), redirect))
+run_cmd("chromium --window-size=1000,700 --app={}/login/{}{}"
+        .format(WORLD_URL, get_token(), redirect))
 run_bg('kano-sync --sync -s')

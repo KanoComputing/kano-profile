@@ -8,9 +8,10 @@
 
 import requests
 from kano.logging import logger
+from kano_world.config import API_URL
 from pprint import pformat
 
-api_url = 'https://api.kano.me'
+
 content_type_json = {'content-type': 'application/json'}
 
 try:
@@ -20,7 +21,8 @@ except Exception:
     proxies = None
 
 
-def request_wrapper(method, endpoint, data=None, headers=None, session=None, files=None, params=None):
+def request_wrapper(method, endpoint, data=None, headers=None,
+                    session=None, files=None, params=None):
     if method not in ['put', 'get', 'post', 'delete']:
         return False, 'Wrong method name!'
 
@@ -41,7 +43,8 @@ def request_wrapper(method, endpoint, data=None, headers=None, session=None, fil
     }
 
     try:
-        r = method(api_url + endpoint, data=data, headers=headers, files=files, params=params, proxies=proxies)
+        r = method(API_URL + endpoint, data=data, headers=headers,
+                   files=files, params=params, proxies=proxies)
         if r.ok:
             return r.ok, None, r.json()
         else:

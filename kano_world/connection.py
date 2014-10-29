@@ -34,7 +34,7 @@ def request_wrapper(method, endpoint, data=None, headers=None,
     method = getattr(req_object, method)
 
     request_debug = {
-        'url': api_url + endpoint,
+        'url': API_URL + endpoint,
         'data': data,
         'headers': headers,
         'files': files,

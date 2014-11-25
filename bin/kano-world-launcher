@@ -11,13 +11,13 @@
 import os
 import sys
 from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
-from kano_world.functions import get_token
+from kano_world.functions import get_token, is_registered
 from kano_world.config import WORLD_URL
 from kano.logging import logger
 from kano.network import is_internet
 from kano_profile.tracker import Tracker
-kanotracker = Tracker()
 
+kanotracker = Tracker()
 chromium_folder = os.path.join(get_home(), '.config/chromium/')
 chromium_local_state = os.path.join(chromium_folder, 'Local State')
 
@@ -55,19 +55,27 @@ if not is_internet():
     os.system('sudo /usr/bin/kano-settings 4')
     sys.exit()
 
+# Check for Kano World login
+if not is_registered():
+    os.system('/usr/bin/kano-login 3')
+
+# Check local state
 if os.path.exists(chromium_local_state):
     try:
         modify_local_state()
     except Exception:
         create_local_state()
-
 else:
     create_local_state()
 
-redirect=""
+# Check for redirection
+redirect = ""
 if len(sys.argv) >= 2:
     redirect = "?redirect={}".format(sys.argv[1])
 
+# Launch Chromium
 run_cmd("chromium --window-size=1000,700 --app={}/login/{}{}"
         .format(WORLD_URL, get_token(), redirect))
+
+# sync
 run_bg('kano-sync --sync -s')

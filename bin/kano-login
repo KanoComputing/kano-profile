@@ -24,6 +24,7 @@ from kano_login.login import Login
 from kano_login.setup_successful import SetupSuccessful
 from kano_login.about_you import AboutYou
 from kano_login.register import Register
+from kano_login.first_screen import FirstScreen
 from kano_login.components.logged_in import LoggedIn
 from kano_world.functions import login_using_token
 from kano.gtk3.apply_styles import apply_common_to_screen, apply_styling_to_screen
@@ -33,9 +34,10 @@ from kano.gtk3.kano_combobox import KanoComboBox
 
 # These are the screens we want to be able to access from the comand line e.g. via ./kano-login 3
 refs = {
-    0: [Login, SetupSuccessful],
+    0: Login,
     1: AboutYou,
     2: Register,
+    3: FirstScreen,
 }
 
 
@@ -68,14 +70,13 @@ class MainWindow(ApplicationWindow):
 
         if first_boot == 1:
             SetupSuccessful(self)
-        elif state == 0:
-            Login(self)
         else:
             self.goto(state)
 
     def goto(self, state):
         self.clear_win()
-        refs[state](self)
+        prev_screen = None
+        refs[state](self, prev_screen)
 
     def clear_win(self):
         self.remove_main_widget()

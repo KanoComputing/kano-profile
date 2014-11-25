@@ -77,7 +77,7 @@ class FirstScreenTemplate(Gtk.Box):
 
 
 class FirstScreen():
-    def __init__(self, win):
+    def __init__(self, win, dummy=None):
 
         self.win = win
         self.win.reset_allocation()

@@ -40,7 +40,7 @@ class Login(TopBarTemplate):
     data_success = get_data("LOGIN_SUCCESS")
     data_no_internet = get_data("LOGIN_NO_INTERNET")
 
-    def __init__(self, win):
+    def __init__(self, win, dummy=None):
 
         TopBarTemplate.__init__(self)
         self.win = win

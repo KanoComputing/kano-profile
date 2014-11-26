@@ -52,7 +52,7 @@ def create_local_state():
 
 # Check internet status
 if not is_internet():
-    os.system('sudo /usr/bin/kano-settings 4')
+    os.system('sudo /usr/bin/kano-settings 12')
     sys.exit()
 
 # Check for Kano World login

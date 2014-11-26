@@ -28,7 +28,7 @@
 #define RESTORE_ICON "/usr/share/kano-profile/icon/widget-restore.png"
 
 #define INTERNET_CMD "/usr/bin/is_internet"
-#define SETTINGS_CMD "sudo /usr/bin/kano-settings 4"
+#define SETTINGS_CMD "sudo /usr/bin/kano-settings 12"
 #define REGISTER_CMD "/usr/bin/kano-profile-cli is_registered"
 #define LOGIN_CMD "/usr/bin/kano-login"
 #define PROFILE_CMD "/usr/bin/kano-profile-gui"

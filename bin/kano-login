@@ -117,7 +117,7 @@ if __name__ == '__main__':
             sys.exit(1)
     # Check for internet if not first boot
     if (first_boot == 0) and not is_internet():
-        run_cmd('sudo /usr/bin/kano-settings 4')
+        run_cmd('sudo /usr/bin/kano-settings 12')
         if not is_internet():
             sys.exit(1)
 

@@ -27,6 +27,8 @@ from kano_profile.profile import save_profile_variable
 from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_world.functions import register as register_
 
+from kano_login.swag_screen import SwagScreen
+
 from kano_login.templates.top_bar_template import TopBarTemplate
 from kano_login.data import get_data
 
@@ -162,6 +164,7 @@ class Register(TopBarTemplate):
 
             logger.info('trying to register user')
             (date_year, date_month, date_day) = self.win.date_split
+
             success, text = register_(self.win.email, self.win.username, self.win.password,
                                       date_year, date_month, date_day)
 
@@ -204,7 +207,8 @@ class Register(TopBarTemplate):
             self.entries_container.get_entry(0).grab_focus()
 
             if response == 1:
-                sys.exit(0)
+                self.win.clear_win()
+                SwagScreen(self.win)
 
         GObject.idle_add(done, title, description, return_value)
 

@@ -29,6 +29,7 @@ from kano_world.functions import (login as login_, is_registered, reset_password
 from kano_login.templates.top_bar_template import TopBarTemplate
 from kano_login.templates.kano_button_box import KanoButtonBox
 from kano_login.about_you import AboutYou
+from kano_login.swag_screen import SwagScreen
 from kano_login.data import get_data
 
 profile = load_profile()
@@ -40,11 +41,13 @@ class Login(TopBarTemplate):
     data_success = get_data("LOGIN_SUCCESS")
     data_no_internet = get_data("LOGIN_NO_INTERNET")
 
-    def __init__(self, win, dummy=None):
+    def __init__(self, win, prev_screen=None, first_boot=False):
 
         TopBarTemplate.__init__(self)
         self.win = win
         self.win.set_main_widget(self)
+
+        self.first_boot = first_boot
 
         self.heading = Heading(self.data["LABEL_1"], self.data["LABEL_2"])
         self.box.pack_start(self.heading.container, False, False, 10)
@@ -207,7 +210,11 @@ class Login(TopBarTemplate):
             response = kdialog.run()
 
             if response == 1:
-                sys.exit(0)
+                if self.first_boot:
+                    self.win.clear_win()
+                    SwagScreen(self.win)
+                else:
+                    sys.exit(0)
 
             self.win.get_window().set_cursor(None)
             self.kano_button.stop_spinner()

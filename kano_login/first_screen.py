@@ -10,16 +10,14 @@
 # Launched on straight after kano-settings
 # Dependent on internet connection
 
-#from gi.repository import Gtk
-
 import os
-import sys
 from gi.repository import Gtk
 
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.gtk3.heading import Heading
 from kano_login.login import Login
 from kano_login.about_you import AboutYou
+from kano_login.swag_screen import SwagScreen
 from kano_login.templates.template import Template
 from kano_login.data import get_data
 from kano.network import is_internet
@@ -96,7 +94,7 @@ class FirstScreen():
         self.win.clear_win()
 
         if is_internet():
-            Login(self.win)
+            Login(win=self.win, prev_screen=None, first_boot=True)
         else:
             NoInternet(self.win)
 
@@ -111,7 +109,8 @@ class FirstScreen():
                 NoInternet(self.win)
 
     def exit_registration(self, widget, event):
-        sys.exit(0)
+        self.win.clear_win()
+        SwagScreen(self.win)
 
     def repack(self):
         self.win.clear_win()
@@ -146,4 +145,5 @@ class NoInternet():
             FirstScreen(self.win)
 
     def register_later(self, widget, event):
-        sys.exit(0)
+        self.win.clear_win()
+        SwagScreen(self.win)

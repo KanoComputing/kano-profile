@@ -6,7 +6,7 @@
     "KANO_BUTTON": "CONTINUE"
   },
   "FIRST_SCREEN": {
-    "TOP_PIC": "profile-created",
+    "TOP_PIC": "first-screen",
     "LABEL_1": "Now let's make a cool Profile",
     "LABEL_2": "So you can save badges, games, and projects",
     "REGISTERED_BUTTON": "I have a profile",
@@ -14,7 +14,7 @@
     "KANO_BUTTON": "CREATE"
   },
   "NO_INTERNET": {
-    "TOP_PIC": "no_internet",
+    "TOP_PIC": "no-internet",
     "LABEL_1": "Oops! You need Internet to make a profile",
     "LABEL_2": "But you can skip this if you have no connection right now",
     "ORANGE_BUTTON": "Register later",
@@ -70,5 +70,17 @@
   "CLOSE_WINDOW": {
     "LABEL_1": "Are you sure?",
     "LABEL_2": "You won't get the best features of your Kano"
+  },
+  "PROFILE_CREATED": {
+    "TOP_PIC" : "profile-created",
+    "LABEL_1": "Profile created!",
+    "LABEL_2": "Now you can share stuff, build your character, and connect with friends! You've earned some rewards...",
+    "KANO_BUTTON": "LET'S GO"
+  },
+  "NO_PROFILE": {
+    "TOP_PIC" : "no-profile",
+    "LABEL_1": "No online profile – for now",
+    "LABEL_2": "Your profile stores all your rewards, projects, and challenges. But fear not - we'll save everything for when you have internet.",
+    "KANO_BUTTON": "LET'S GO"
   }
 }

@@ -1,3 +1,9 @@
+kano-profile (1.2-4) unstable; urgency=low
+
+  * Changes done to support the new init flow. Swag screen added
+
+ -- Team Kano <dev@kano.me>  Thu, 27 Nov 2014 15:05:00 +0100
+
 kano-profile (1.2-3) unstable; urgency=low
 
   * kano-profile-cli now supports queerying for get_notifications_count

@@ -1,3 +1,9 @@
+kano-profile (1.3-1) unstable; urgency=low
+
+  * Some new artwork for notifications and rewards.
+
+ -- Team Kano <dev@kano.me>  Fri, 28 Nov 2014 14:44:00 +0000
+
 kano-profile (1.2-4) unstable; urgency=low
 
   * Changes done to support the new init flow. Swag screen added

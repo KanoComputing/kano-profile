@@ -23,6 +23,13 @@
     "max_level": 15,
     "icon": "pong.png"
   },
+  "kano-draw": {
+    "dir": "Draw-content",
+    "ext": "draw",
+    "cmd": "/usr/bin/kano-draw {fullpath}",
+    "max_level": 8,
+    "icon": "draw.png"
+  },
   "make-snake": {
     "dir": "Snake-content",
     "ext": "xml",

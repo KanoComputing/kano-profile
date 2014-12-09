@@ -27,7 +27,7 @@
     "dir": "Draw-content",
     "ext": "draw",
     "cmd": "/usr/bin/kano-draw {fullpath}",
-    "max_level": 8,
+    "max_level": 9,
     "icon": "draw.png"
   },
   "make-snake": {

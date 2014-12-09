@@ -194,7 +194,7 @@ class KanoWorldSession(object):
         if not os.path.exists(file_path):
             return False, 'File path not found: {}'.format(file_path)
 
-        extensionless_path, _, _ = os.path.splitext(file_path)[0]
+        extensionless_path = os.path.splitext(file_path)[0]
 
         # paths
         jsonfile_path = '{}.json'.format(extensionless_path)

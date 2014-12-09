@@ -194,10 +194,12 @@ class KanoWorldSession(object):
         if not os.path.exists(file_path):
             return False, 'File path not found: {}'.format(file_path)
 
+        extensionless_path, _, _ = os.path.splitext(file_path)[0]
+
         # paths
-        jsonfile_path = file_path[:-3] + 'json'
-        screenshot_path = file_path[:-3] + 'png'
-        resource_path = file_path[:-3] + 'tar.gz'
+        jsonfile_path = '{}.json'.format(extensionless_path)
+        screenshot_path = '{}.png'.format(extensionless_path)
+        resource_path = '{}.tar.gz'.format(extensionless_path)
 
         logger.debug('uploading json: {}'.format(jsonfile_path))
 

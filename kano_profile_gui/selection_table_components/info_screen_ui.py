@@ -7,7 +7,7 @@
 #
 # If an environment/avatar/badge is selected, we go to this screen to show more info
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.selection_table_components.info_text_ui as info_text
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.cursor as cursor
@@ -176,7 +176,10 @@ class InfoScreenUi():
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size()
-        self.image.set_from_file(filename)
+
+        pb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, self.width,
+                                                    self.height)
+        self.image.set_from_pixbuf(pb)
 
     def get_filename_at_size(self):
         return self.get_visible_item().get_filename_at_size(self.width, self.height)

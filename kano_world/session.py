@@ -11,11 +11,13 @@ import json
 import os
 
 from kano.logging import logger
-from kano.utils import download_url, read_json
-from kano_profile.profile import load_profile, set_avatar, set_environment, save_profile
+from kano.utils import download_url, read_json, ensure_dir
+from kano_profile.profile import load_profile, set_avatar, set_environment, \
+    save_profile
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
-from kano_profile.paths import app_profiles_file
+from kano_profile.paths import app_profiles_file, online_badges_dir, \
+    online_badges_file
 from kano_profile_gui.paths import media_dir
 
 from .connection import request_wrapper, content_type_json
@@ -279,6 +281,60 @@ class KanoWorldSession(object):
         profile = load_profile()
         profile['notifications'] = notifications
         save_profile(profile)
+        return True, None
+
+    def download_online_badges(self):
+        profile = load_profile()
+        if 'kanoworld_id' in profile:
+            user_id = profile['kanoworld_id']
+        else:
+            return False, 'Profile not registered!'
+
+        success, text, data = request_wrapper(
+            'get', '/users/{}'.format(user_id),
+            session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        if "user" not in data:
+            return False, "Corrupt response (the 'user' key not found)"
+
+        if "profile" not in data["user"]:
+            return False, "Corrupt response (the 'user.profile' key not found)"
+
+        if "badges" not in data["user"]["profile"]:
+            msg = "Corrupt response (the 'user.profile.badges' key not found)"
+            return False, msg
+
+        online_badges_data = {}
+
+        ensure_dir(online_badges_dir)
+
+        badges = data["user"]["profile"]["badges"]
+        for badge in badges:
+            if "assigned" not in badge or not badge["assigned"]:
+                continue
+
+            if "image_url" not in badge:
+                return False, "Couldn't find an image for the badge"
+
+            image_loc = os.path.join(online_badges_dir,
+                                     "{}.png".format(badge["id"]))
+            download_url(badge["image_url"], image_loc)
+
+            online_badges_data[badge["id"]] = {
+                "achieved": True,
+                "bg_color": badge["bg_color"].replace("#", ""),
+                "desc_locked": badge["desc_locked"],
+                "desc_unlocked": badge["desc_unlocked"],
+                "title": badge["title"]
+            }
+
+        with open(online_badges_file, "w") as f:
+            f.write(json.dumps(online_badges_data))
+
         return True, None
 
     def _process_notification(self, entry):

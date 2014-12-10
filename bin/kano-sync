@@ -102,8 +102,9 @@ def do_sync():
                     image = n["image"] if "image" in n else None
                     command = n["command"] if "command" in n else None
                     sound = n["sound"] if "sound" in n else None
-                    display_generic_notification(n["title"], n["byline"], image,
-                                                 command, sound, "world")
+                    display_generic_notification(n["title"], n["byline"],
+                                                 image, command, sound,
+                                                 "world")
 
                 profile['last_notifications_prompt'] = int(time.time())
                 save_profile(profile)

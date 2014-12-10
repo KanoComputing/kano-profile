@@ -9,10 +9,12 @@
 from __future__ import division
 
 import os
+import json
 
 from kano.logging import logger
-from kano.utils import read_json, is_gui, run_bg, run_cmd, is_running
-from .paths import xp_file, levels_file, rules_dir, bin_dir, app_profiles_file
+from kano.utils import read_json, is_gui, run_bg
+from .paths import xp_file, levels_file, rules_dir, bin_dir, \
+    app_profiles_file, online_badges_dir, online_badges_file
 from .apps import load_app_state, get_app_list, save_app_state
 
 
@@ -212,6 +214,16 @@ def compare_badges_dict(old, new):
                     pass
     return changes
 
+
+def load_online_badges():
+    if not os.path.isdir(online_badges_dir):
+        return {}
+
+    online_badges = {}
+    with open(online_badges_file, "r") as f:
+        online_badges = json.load(f)
+
+    return online_badges
 
 def save_app_state_with_dialog(app_name, data):
     logger.debug('save_app_state_with_dialog {}'.format(app_name))

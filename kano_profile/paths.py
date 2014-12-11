@@ -58,6 +58,9 @@ profile_dir = os.path.join(kanoprofile_dir, profile_dir_str)
 apps_dir_str = 'apps'
 apps_dir = os.path.join(kanoprofile_dir, apps_dir_str)
 
+online_badges_dir = os.path.join(profile_dir, "badges")
+online_badges_file = os.path.join(online_badges_dir, "badges.json")
+
 profile_file_str = 'profile.json'
 profile_file = os.path.join(profile_dir, profile_file_str)
 

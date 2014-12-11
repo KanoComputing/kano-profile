@@ -10,10 +10,16 @@ import os
 
 from kano.logging import logger
 from .paths import image_dir
+from kano_profile.paths import online_badges_dir
 
 
 # "Badge", folder_name, file_name, width of image
 def get_image(category, subcategory, name, subfolder_str):
+    # The online badge image files are stored in the home directory.
+    # The function bellow gets the corrects path.
+    if category == "badges" and subcategory == "online":
+        return get_online_badge_path(name)
+
     folder = os.path.join(image_dir, category, subfolder_str, subcategory)
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
@@ -35,3 +41,5 @@ def get_image(category, subcategory, name, subfolder_str):
     return fullpath
 
 
+def get_online_badge_path(name):
+    return os.path.join(online_badges_dir, "{}.png".format(name))

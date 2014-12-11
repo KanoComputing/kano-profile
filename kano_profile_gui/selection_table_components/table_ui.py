@@ -12,7 +12,7 @@ from gi.repository import Gtk
 import kano_profile_gui.selection_table_components.item_ui as item_ui
 import kano_profile_gui.selection_table_components.item_group as item_group
 from kano_profile_gui.selection_table_components import item_info
-from kano_profile.badges import calculate_badges
+from kano_profile.badges import calculate_badges, load_online_badges
 import math
 #from .images import get_image
 
@@ -27,6 +27,10 @@ class TableUi():
         item_array = []
         number_of_badges = 0
         category_dict = calculate_badges()[category_name]
+
+        # Load the badges from the home directory
+        if category_name == "badges":
+            category_dict["online"] = load_online_badges()
 
         # To access video dude jason:
         # calculate_badges()['avatars']['video_dude']

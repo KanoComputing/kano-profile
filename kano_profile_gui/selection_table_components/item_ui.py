@@ -9,7 +9,7 @@
 # Used for badges, environments and avatar screen
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.components.icons as icons
 import kano_profile_gui.components.cursor as cursor
 
@@ -47,7 +47,15 @@ class ItemUi():
         self.fixed = Gtk.Fixed()
         self.fixed.set_size_request(self.width, self.height)
         self.fixed.put(self.hover_box, 0, self.height - self.label_height)
-        self.fixed.put(self.image, 0, 0)
+
+        # The image can be smaller than the square in which case we
+        # center it in the view.
+        pb = self.image.get_pixbuf()
+        img_width = pb.get_width()
+        img_height = pb.get_height()
+        self.fixed.put(self.image, (self.width - img_width) / 2,
+                        (self.height - img_height) / 2)
+
         self.fixed.put(self.locked_fixed, 0, 0)
 
         self.button.add(self.fixed)
@@ -104,7 +112,10 @@ class ItemUi():
 
     def get_image_at_size(self):
         filename = self.get_filename_at_size(self.width, self.height)
-        self.image.set_from_file(filename)
+
+        pb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, self.width,
+                                                    self.height)
+        self.image.set_from_pixbuf(pb)
 
     def get_title(self):
         return self.item.title.upper()

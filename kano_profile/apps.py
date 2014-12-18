@@ -112,3 +112,11 @@ def launch_project(app, filename, data_dir):
     cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
     _,_,rc=run_print_output_error(cmd)
     return rc
+
+def get_app_xp_for_challenge(app, challenge_no):
+    xp_file_json = read_json(xp_file)
+
+    try:
+        return xp_file_json[app]['level'][challenge_no]
+    except KeyError:
+        return 0

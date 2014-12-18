@@ -1,3 +1,9 @@
+kano-profile (1.3-4) unstable; urgency=low
+
+  * Adding ability to load XP gain for challenges from file
+
+ -- Team Kano <dev@kano.me>  Wed, 17 Dec 2014 18:09:00 +0000
+
 kano-profile (1.3-3) unstable; urgency=low
 
   * Adding XP configuration for the linux-story

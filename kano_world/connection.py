@@ -21,6 +21,14 @@ except Exception:
     proxies = None
 
 
+def _remove_sensitive_data(request_debug):
+    if request_debug and 'data' in request_debug and \
+       request_debug['data'] and 'password' in request_debug['data']:
+        request_debug['data']['password'] = 'removed'
+
+    return request_debug
+
+
 def request_wrapper(method, endpoint, data=None, headers=None,
                     session=None, files=None, params=None):
     if method not in ['put', 'get', 'post', 'delete']:
@@ -43,13 +51,13 @@ def request_wrapper(method, endpoint, data=None, headers=None,
     }
 
     try:
-        r = method(API_URL + endpoint, data=data, headers=headers,
+        r = method(API_URL + 'x' + endpoint, data=data, headers=headers,
                    files=files, params=params, proxies=proxies)
         if r.ok:
             return r.ok, None, r.json()
         else:
-            logger.error('error in request:')
-            logger.error(pformat(request_debug))
+            logger.error('error in request to: {}'.format(AIP_URL + endpoint))
+            logger.debug(pformat(_remove_sensitive_data(request_debug)))
             logger.error('response:')
             logger.error(r.text)
 
@@ -60,7 +68,7 @@ def request_wrapper(method, endpoint, data=None, headers=None,
             return r.ok, error_msg, None
     except requests.exceptions.ConnectionError as e:
         logger.error('connection error: {}'.format(e))
-        logger.error(pformat(request_debug))
+        logger.debug(pformat(_remove_sensitive_data(request_debug)))
 
         return False, 'Error connecting to servers, please check your internet connection and try again later.', None
 

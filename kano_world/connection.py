@@ -51,7 +51,7 @@ def request_wrapper(method, endpoint, data=None, headers=None,
     }
 
     try:
-        r = method(API_URL + 'x' + endpoint, data=data, headers=headers,
+        r = method(API_URL + endpoint, data=data, headers=headers,
                    files=files, params=params, proxies=proxies)
         if r.ok:
             return r.ok, None, r.json()

@@ -30,6 +30,7 @@ from kano.gtk3.buttons import KanoButton
 from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.scrolled_window import ScrolledWindow
 from kano.gtk3.apply_styles import apply_common_to_screen
+from kano.gtk3.application_window import ApplicationWindow
 from kano.logging import logger
 
 
@@ -91,48 +92,50 @@ def make_share_list():
     return align
 
 
-def load_share(_button, entry):
+def load_share(button, entry):
     success, data = download_share(entry)
     if not success:
         logger.error('Could not download share, error: {}'.format(data))
+        window = button.get_toplevel() 
+        print "window = {}".format(window)
         confirm = KanoDialog('Oops! Can\'t download.',
                              'Are you sure you\'re connected to the Internet?',
-                             {'OPEN WIFI': {'return_value': True}})
+                             {'OPEN WIFI': {'return_value': True}},
+                             parent_window=window)
         confirm.run()
-        subprocess.call(['sudo', 'kano-settings', '12'])
+        subprocess.Popen(['sudo', 'kano-settings', '12'])
+    
+    else:
+        (title, attachment_path, app, attachment_name, folder) = data
+        print 'File Path: {}'.format(attachment_path)
 
-    (title, attachment_path, app, attachment_name, folder) = data
-    print 'File Path: {}'.format(attachment_path)
-
-    sys.exit()
+        sys.exit()
 
 
-class MainWindow(Gtk.Window):
+class MainWindow(ApplicationWindow):
 
     def __init__(self):
         self.width = 580
         self.height = 550
 
-        Gtk.Window.__init__(self, title='Share')
-
-        self.set_decorated(False)
+        ApplicationWindow.__init__(self, title='Share', width=self.width, height=self.height)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_resizable(False)
-
-        grid = Gtk.Grid()
-        self.add(grid)
+        self.set_decorated(True)
 
         top_bar = TopBar('Kano Share', self.width)
         top_bar.set_close_callback(Gtk.main_quit)
-        grid.attach(top_bar, 0, 0, 1, 1)
-
+        self.set_titlebar(top_bar)
+        
         share_list = make_share_list()
+        ScrolledWindow.apply_styling_to_screen(wide=True)
         scrolledwindow = ScrolledWindow()
-        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_hexpand(False)
         scrolledwindow.set_vexpand(True)
+        scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolledwindow.add_with_viewport(share_list)
         scrolledwindow.set_size_request(self.width, self.height - top_bar.height)
-        grid.attach(scrolledwindow, 0, 1, 1, 1)
+        self.set_main_widget(scrolledwindow)
 
 
 def main():

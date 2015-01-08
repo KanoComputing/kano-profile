@@ -35,6 +35,22 @@ class Tracker:
         add_runtime_to_app(self.program_name, self.calculate_elapsed())
 
 
+# TODO: While it isn't at the moment, this could be useful to have
+#       in the toolset.
+def _get_nearest_previous_monday():
+    """ Returns the timestamp of the nearest past Monday """
+
+    t = time.time()
+    day = 24 * 60 * 60
+    week = 7 * day
+
+    r = (t - (t % week)) - (3 * day)
+    if (t - r) >= week:
+        r += week
+
+    return int(r)
+
+
 def add_runtime_to_app(app, runtime):
     """Appends a time period to a given app's runtime stats,
     + raises starts by one"""
@@ -62,6 +78,23 @@ def add_runtime_to_app(app, runtime):
             'runtime': runtime,
         }
 
+    # Record usage data on per-week basis
+    if 'weekly' not in app_stats[app]:
+        app_stats[app]['weekly'] = {}
+
+    week = _get_nearest_previous_monday()
+    if week not in app_stats[app]['weekly']:
+        app_stats[app]['weekly'] = {
+            'starts': 0,
+            'runtime': 0
+        }
+
+    app_stats[app]['weekly'][week]['starts'] += 1
+    app_stats[app]['weekly'][week]['runtime'] += runtime
+
+    # TODO There could be a race condition. If you close two different
+    # apps at roughly the same time -- via kill or when the system shuts
+    # down -- that could mess up the stats.
     save_app_state_variable('kano-tracker', 'app_stats', app_stats)
 
 

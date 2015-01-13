@@ -82,7 +82,7 @@ def add_runtime_to_app(app, runtime):
     if 'weekly' not in app_stats[app]:
         app_stats[app]['weekly'] = {}
 
-    week = _get_nearest_previous_monday()
+    week = str(_get_nearest_previous_monday())
     if week not in app_stats[app]['weekly']:
         app_stats[app]['weekly'][week] = {
             'starts': 0,

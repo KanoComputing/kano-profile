@@ -56,7 +56,7 @@ def request_wrapper(method, endpoint, data=None, headers=None,
         if r.ok:
             return r.ok, None, r.json()
         else:
-            logger.error('error in request to: {}'.format(AIP_URL + endpoint))
+            logger.error('error in request to: {}'.format(API_URL + endpoint))
             logger.debug(pformat(_remove_sensitive_data(request_debug)))
             logger.error('response:')
             logger.error(r.text)

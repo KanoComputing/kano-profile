@@ -8,8 +8,8 @@
 
 import os
 
-from kano.utils import read_json, write_json, get_date_now, ensure_dir, chown_path, \
-    run_print_output_error, is_running, run_bg
+from kano.utils import read_json, write_json, get_date_now, ensure_dir, \
+    chown_path, run_print_output_error, is_running, run_bg
 from kano.logging import logger
 from .paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
 
@@ -46,6 +46,15 @@ def load_app_state_variable(app_name, variable):
 
 
 def save_app_state(app_name, data):
+    """ Save a state of an application to the user's Kano profile.
+
+        :param app_name: The application that this data are associated with.
+        :type app_name: str
+
+        :param data: The data to be stored.
+        :type data: dict
+    """
+
     logger.debug('save_app_state {}'.format(app_name))
 
     app_state_file = get_app_state_file(app_name)
@@ -59,13 +68,27 @@ def save_app_state(app_name, data):
         chown_path(app_state_file)
 
     # Ask kdesk to refresh the Login/Register icon with new Kano Level
+    #
+    # TODO: Not every app_state change causes a levelup.
+    # There could be a better place for this.
     if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
         logger.info('refreshing kdesk from save_app_state')
         run_bg('kdesk -a profile')
 
 
 def save_app_state_variable(app_name, variable, value):
-    logger.debug('save_app_state_variable {} {} {}'.format(app_name, variable, value))
+    """ Save a state variable to the user's Kano profile.
+
+        :param app_name: The application that this variable is associated with.
+        :type app_name: str
+        :param variable: The name of the variable.
+        :type data: str
+        :param data: The variable data to be stored.
+        :type data: any
+    """
+
+    msg = 'save_app_state_variable {} {} {}'.format(app_name, variable, value)
+    logger.debug(msg)
 
     data = load_app_state(app_name)
     data[variable] = value

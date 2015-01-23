@@ -15,8 +15,11 @@ A small module for tracking various metrics the users do in Kano OS
 import time
 import atexit
 import datetime
+import fcntl
+
 from kano.utils import get_program_name, is_number, read_file_contents
-from kano_profile.apps import load_app_state_variable, save_app_state_variable
+from kano_profile.apps import get_app_state_file, load_app_state_variable, \
+    save_app_state_variable
 
 
 class Tracker:
@@ -52,8 +55,21 @@ def _get_nearest_previous_monday():
 
 
 def add_runtime_to_app(app, runtime):
-    """Appends a time period to a given app's runtime stats,
-    + raises starts by one"""
+    """ Saves the tracking data for a given application.
+
+        Appends a time period to a given app's runtime stats and raises
+        starts by one. Apart from the total values, it also updates the
+        weekly stats.
+
+        This function uses advisory file locks (see flock(2)) to avoid
+        races between different applications saving their tracking data
+        at the same time.
+
+        :param app: The name of the application.
+        :type app: str
+        :param runtime: For how long was the app running.
+        :type runtime: number
+    """
 
     if not app or app == 'kano-tracker':
         return
@@ -64,6 +80,11 @@ def add_runtime_to_app(app, runtime):
     runtime = float(runtime)
 
     app = app.replace('.', '_')
+
+    # Make sure no one else is accessing this file
+    app_state_file = get_app_state_file('kano-tracker')
+    tracker_store = open(app_state_file, "r")
+    fcntl.flock(tracker_store, fcntl.LOCK_EX)
 
     app_stats = load_app_state_variable('kano-tracker', 'app_stats')
     if not app_stats:
@@ -92,10 +113,10 @@ def add_runtime_to_app(app, runtime):
     app_stats[app]['weekly'][week]['starts'] += 1
     app_stats[app]['weekly'][week]['runtime'] += runtime
 
-    # TODO There could be a race condition. If you close two different
-    # apps at roughly the same time -- via kill or when the system shuts
-    # down -- that could mess up the stats.
     save_app_state_variable('kano-tracker', 'app_stats', app_stats)
+
+    # Close the lock
+    tracker_store.close()
 
 
 def save_hardware_info():
@@ -131,6 +152,3 @@ def save_kano_version():
     updates[version_now] = time_now
 
     save_app_state_variable('kano-tracker', 'versions', updates)
-
-
-

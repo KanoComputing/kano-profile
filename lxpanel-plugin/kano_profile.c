@@ -39,52 +39,55 @@
 
 #define MINUTE 60
 
-Panel *panel;
-
 typedef struct {
     int log_in;
     GtkWidget *icon;
     guint timer;
+    LXPanel *panel;
 } kano_profile_plugin_t;
 
 static gboolean show_menu(GtkWidget*, GdkEventButton*, kano_profile_plugin_t*);
 static GtkWidget* get_resized_icon(const char* filename);
 static void selection_done(GtkWidget *);
-static void popup_set_position(GtkWidget *, gint *, gint *, gboolean *, GtkWidget *);
+static void menu_pos(GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
+                     GtkWidget *widget);
 static gboolean profile_status(kano_profile_plugin_t*);
+static void plugin_destructor(gpointer user_data);
 
-static int plugin_constructor(Plugin *p, char **fp)
+static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
 {
-    (void)fp;
-
-    panel = p->panel;
-
     /* allocate our private structure instance */
     kano_profile_plugin_t* plugin = g_new0(kano_profile_plugin_t, 1);
+
+    plugin->panel = panel;
+
     plugin->log_in = 0;
     /* create an icon */
     GtkWidget *icon = gtk_image_new_from_file(LOGIN_ICON);
     plugin->icon = icon;
-    plugin->timer = g_timeout_add(5 * MINUTE * 1000, (GSourceFunc) profile_status, (gpointer) plugin);
+    plugin->timer = g_timeout_add(5 * MINUTE * 1000,
+                                  (GSourceFunc) profile_status,
+                                  (gpointer) plugin);
 
-    /* put it where it belongs */
-    p->priv = plugin;
     /* need to create a widget to show */
-    p->pwid = gtk_event_box_new();
+    GtkWidget *pwid = gtk_event_box_new();
+
+    lxpanel_plugin_set_data(pwid, plugin, plugin_destructor);
 
     // Check status
     profile_status(plugin);
 
     /* set border width */
-    gtk_container_set_border_width(GTK_CONTAINER(p->pwid), 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwid), 0);
 
     /* add the label to the container */
-    gtk_container_add(GTK_CONTAINER(p->pwid), GTK_WIDGET(icon));
+    gtk_container_add(GTK_CONTAINER(pwid), GTK_WIDGET(icon));
 
     /* our widget doesn't have a window... */
-    gtk_widget_set_has_window(p->pwid, FALSE);
+    gtk_widget_set_has_window(pwid, FALSE);
 
-    gtk_signal_connect(GTK_OBJECT(p->pwid), "button-press-event", GTK_SIGNAL_FUNC(show_menu), p->priv);
+    gtk_signal_connect(GTK_OBJECT(pwid), "button-press-event",
+                       GTK_SIGNAL_FUNC(show_menu), plugin);
 
     /* Set a tooltip to the icon to show when the mouse sits over the it */
     GtkTooltips *tooltips;
@@ -94,14 +97,14 @@ static int plugin_constructor(Plugin *p, char **fp)
     gtk_widget_set_sensitive(icon, TRUE);
 
     /* show our widget */
-    gtk_widget_show_all(p->pwid);
+    gtk_widget_show_all(pwid);
 
-    return 1;
+    return pwid;
 }
 
-static void plugin_destructor(Plugin *p)
+static void plugin_destructor(gpointer user_data)
 {
-    kano_profile_plugin_t* plugin = (kano_profile_plugin_t*)p->priv;
+    kano_profile_plugin_t *plugin = (kano_profile_plugin_t *)user_data;
     /* Disconnect the timer. */
     g_source_remove(plugin->timer);
 
@@ -132,7 +135,8 @@ static void launch_cmd(const char *cmd, const char *appname)
         kdesk_hourglass_start((char *) appname);
     }
 
-    appinfo = g_app_info_create_from_commandline(cmd, NULL, G_APP_INFO_CREATE_NONE, NULL);
+    appinfo = g_app_info_create_from_commandline(cmd, NULL,
+                                                 G_APP_INFO_CREATE_NONE, NULL);
 
     if (appinfo == NULL) {
         perror("Command lanuch failed.");
@@ -167,7 +171,7 @@ void login_clicked(GtkWidget* widget)
     if (rc != -1 && WEXITSTATUS(rc) != 0)
     {
         /* Launch WiFi UI */
-        launch_cmd (SETTINGS_CMD, "kano-settings");
+        launch_cmd(SETTINGS_CMD, "kano-settings");
         /* Play sound */
         launch_cmd(SOUND_CMD, NULL);
     }
@@ -188,7 +192,8 @@ void launch_profile_clicked(GtkWidget* widget)
     launch_cmd(SOUND_CMD, NULL);
 }
 
-static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile_plugin_t *plugin)
+static gboolean show_menu(GtkWidget *widget, GdkEventButton *event,
+                          kano_profile_plugin_t *plugin)
 {
     GtkWidget *menu = gtk_menu_new();
     GtkWidget *header_item;
@@ -243,7 +248,7 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile
 
     /* Show the menu. */
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL,
-               (GtkMenuPositionFunc) popup_set_position, widget,
+               (GtkMenuPositionFunc) menu_pos, widget,
                event->button, event->time);
 
     return TRUE;
@@ -252,7 +257,7 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event, kano_profile
 static GtkWidget* get_resized_icon(const char* filename)
 {
     GError *error = NULL;
-    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 40, 40, &error);
+    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file_at_size(filename, 40, 40, &error);
     return gtk_image_new_from_pixbuf(pixbuf);
 }
 
@@ -261,83 +266,63 @@ static void selection_done(GtkWidget *menu)
     gtk_widget_destroy(menu);
 }
 
-/* Helper for position-calculation callback for popup menus. */
-void lxpanel_plugin_popup_set_position_helper(Panel * p, GtkWidget * near,
-    GtkWidget * popup, GtkRequisition * popup_req, gint * px, gint * py)
+static void
+menu_pos(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, GtkWidget *widget)
 {
-    /* Get the origin of the requested-near widget in
-screen coordinates. */
-    gint x, y;
-    gdk_window_get_origin(GDK_WINDOW(near->window), &x, &y);
+    int ox, oy, w, h;
+    kano_profile_plugin_t *plugin = lxpanel_plugin_get_data(widget);
+    GtkAllocation allocation;
 
-    /* Doesn't seem to be working according to spec; the allocation.x
-sometimes has the window origin in it */
-    if (x != near->allocation.x) x += near->allocation.x;
-    if (y != near->allocation.y) y += near->allocation.y;
+    gtk_widget_get_allocation(GTK_WIDGET(widget), &allocation);
 
-    /* Dispatch on edge to lay out the popup menu with respect to
-the button. Also set "push-in" to avoid any case where it
-might flow off screen. */
-    switch (p->edge)
-    {
-        case EDGE_TOP: y += near->allocation.height; break;
-        case EDGE_BOTTOM: y -= popup_req->height; break;
-        case EDGE_LEFT: x += near->allocation.width; break;
-        case EDGE_RIGHT: x -= popup_req->width; break;
+    gdk_window_get_origin(gtk_widget_get_window(widget), &ox, &oy);
+
+    /* FIXME The X origin is being truncated for some reason, reset
+       it from the allocaation. */
+    ox = allocation.x;
+
+#if GTK_CHECK_VERSION(2,20,0)
+    GtkRequisition requisition;
+    gtk_widget_get_requisition(GTK_WIDGET(menu), &requisition);
+    w = requisition.width;
+    h = requisition.height;
+
+#else
+    w = GTK_WIDGET(menu)->requisition.width;
+    h = GTK_WIDGET(menu)->requisition.height;
+#endif
+    if (panel_get_orientation(plugin->panel) == GTK_ORIENTATION_HORIZONTAL) {
+        *x = ox;
+        if (*x + w > gdk_screen_width())
+            *x = ox + allocation.width - w;
+        *y = oy - h;
+        if (*y < 0)
+            *y = oy + allocation.height;
+    } else {
+        *x = ox + allocation.width;
+        if (*x > gdk_screen_width())
+            *x = ox - w;
+        *y = oy;
+        if (*y + h >  gdk_screen_height())
+            *y = oy + allocation.height - h;
     }
-    *px = x;
-    *py = y;
-}
 
-/* Position-calculation callback for popup menu. */
-static void popup_set_position(GtkWidget *menu, gint *px, gint *py,
-                gboolean *push_in, GtkWidget *p)
-{
-    /* Get the allocation of the popup menu. */
-    GtkRequisition popup_req;
-    gtk_widget_size_request(menu, &popup_req);
+    /* Debugging prints */
+    /*printf("widget: x,y=%d,%d  w,h=%d,%d\n", ox, oy, allocation.width, allocation.height );
+    printf("w-h %d %d\n", w, h);*/
 
-    /* Determine the coordinates. */
-    lxpanel_plugin_popup_set_position_helper(panel, p, menu, &popup_req, px, py);
     *push_in = TRUE;
+
+    return;
 }
 
-static void plugin_configure(Plugin *p, GtkWindow *parent)
-{
-  // doing nothing here, so make sure neither of the parameters
-  // emits a warning at compilation
-  (void)p;
-  (void)parent;
-}
-
-static void plugin_save_configuration(Plugin *p, FILE *fp)
-{
-  // doing nothing here, so make sure neither of the parameters
-  // emits a warning at compilation
-  (void)p;
-  (void)fp;
-}
+FM_DEFINE_MODULE(lxpanel_gtk, kano_profile)
 
 /* Plugin descriptor. */
-PluginClass kano_profile_plugin_class = {
-    // this is a #define taking care of the size/version variables
-    PLUGINCLASS_VERSIONING,
-
-    // type of this plugin
-    type : "kano_profile",
-    name : N_("Kano Profile"),
-    version: "1.0",
-    description : N_("Kano Profile."),
-
-    // we can have many running at the same time
-    one_per_system : FALSE,
-
-    // can't expand this plugin
-    expand_available : FALSE,
-
-    // assigning our functions to provided pointers.
-    constructor : plugin_constructor,
-    destructor : plugin_destructor,
-    config : plugin_configure,
-    save : plugin_save_configuration
+LXPanelPluginInit fm_module_init_lxpanel_gtk = {
+    .name = N_("Kano Profile"),
+    .description = N_("Status of your Kano World Connection."),
+    .new_instance = plugin_constructor,
+    .one_per_system = FALSE,
+    .expand_available = FALSE
 };

@@ -307,8 +307,9 @@ menu_pos(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, GtkWidget *widget)
             *y = oy + allocation.height - h;
     }
 
-    printf("widget: x,y=%d,%d  w,h=%d,%d\n", ox, oy, allocation.width, allocation.height );
-    printf("w-h %d %d\n", w, h);
+    /* Debugging prints */
+    /*printf("widget: x,y=%d,%d  w,h=%d,%d\n", ox, oy, allocation.width, allocation.height );
+    printf("w-h %d %d\n", w, h);*/
 
     *push_in = TRUE;
 

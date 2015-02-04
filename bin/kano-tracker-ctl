@@ -1,0 +1,177 @@
+#!/usr/bin/env python
+
+# kano-tracker-ctl
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+"""
+kano-tracker-ctl is a controller for kano-tracker.
+
+Usage:
+  kano-tracker-ctl status|update
+  kano-tracker-ctl -h|--help
+  kano-tracker-ctl --version
+
+ Options:
+   -h, --help       Show this message.
+   --version        Print the version.
+"""
+
+import sys
+import os
+import docopt
+import json
+import fcntl
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano_profile.paths import tracker_dir, tracker_data_file
+from kano.logging import logger
+from kano.utils import is_running, delete_file, ensure_dir
+from kano.colours import decorate_string_only_terminal
+
+
+def show_status():
+    _process_tracker_data(_show_app_cb)
+
+
+def update_status():
+    done = _process_tracker_data(_update_app_cb)
+
+    with _open_locked(tracker_data_file, "r") as rf:
+        tracker_data = json.load(rf)
+
+        for path, app in done.iteritems():
+            update_tracking_data(app['name'], app['elapsed'])
+            delete_file(path)
+
+
+def _show_app_cb(path, app):
+    if not app:
+        return
+
+    heading = "{}[{}]".format(
+        decorate_string_only_terminal(app['name'], 'extended(208)'),
+        decorate_string_only_terminal(app['pid'], 'extended(239)')
+    )
+
+    status = ""
+    if is_running(app['pid']):
+        status = decorate_string_only_terminal('STARTED', 'extended(119)',
+                                               bold=True)
+    else:
+        if 'finished' in app:
+            status = decorate_string_only_terminal('FINISHED', 'extended(239)',
+                                                   bold=True)
+        else:
+            status = decorate_string_only_terminal('FINISHED', 'extended(239)',
+                                                   bold=True)
+
+    print "{}    {} elapsed: ".format(heading, status, app['elapsed'])
+
+
+def _update_app_cb(path, app):
+    if not app:
+        # The file could not be read and is probably corrupted: remove it.
+        delete_file(path)
+        return
+
+    if 'finished' in app and app['finished'] == True:
+        # Return the app to the parent function to be added to the
+        # tracking store.
+        return app
+
+    if is_running(app['pid']):
+        app['elapsed'] = int(time.time() - app['started'])
+
+        # WARNING: Don't use _open_locked, the file has been locked already.
+        with open(path, "w") as f:
+            json.dump(app, f)
+
+    else:
+        # Application is not running, but not marked finished.
+        # Return it as finished to be handled and removed.
+        return app
+
+    return
+
+
+def _update_elapsed_time(path):
+    with _open_locked(path, "r") as f:
+        app = json.load(f)
+
+        if 'finished' in app and app['finished'] == True:
+            return
+        else:
+
+
+def _process_tracker_data(callback):
+    """ Calls the function passed for each tracker file.
+
+        They can be either running, crashed or finished, the user is
+        expected to test that based on the pid.
+
+        :param callback: The function to call on each tracker file. The
+            callback should be as quick as possible as the file remains
+            locked throughout the execution time.
+        :type callback: function(path, app)
+
+        :returns: Return values indexed by the path to its tracker file.
+        :rtype: dict
+    """
+
+    ensure_dir(tracker_dir)
+
+    rvs = {}
+    for name in os.listdir(tracker_dir):
+        path = os.path.join(tracker_dir, name)
+
+        if not os.path.isfile(path):
+            continue
+
+        with _open_locked(path, 'r') as f:
+            try:
+                app = json.load(f)
+            except:
+                # Cannot read the file
+                app = None
+
+            rvs[path] = callback(path, app)
+
+    return rvs
+
+
+class _open_locked:
+    """ A version of open with an exclusive lock to be used within
+        controlled execution statements.
+    """
+
+    def __init__(self, path, mode):
+        self._fd = open(path, mode)
+        fcntl.flock(self._fd, fcntl.LOCK_EX)
+
+    def __enter__(self):
+        return self._fd
+
+    def __exit__(self, exit_type, value, traceback):
+        self._fd.close()
+
+
+def main():
+    args = docopt.docopt(__doc__, version='1.3')
+
+    if 'status' in args and args['status']:
+        show_status()
+    elif 'update' in args and args['update']:
+        update_status()
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

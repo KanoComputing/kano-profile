@@ -47,8 +47,9 @@ def update_status():
         tracker_data = json.load(rf)
 
         for path, app in done.iteritems():
-            update_tracking_data(app['name'], app['elapsed'])
             delete_file(path)
+
+
 
 
 def _show_app_cb(path, app):

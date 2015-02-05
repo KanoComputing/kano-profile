@@ -109,8 +109,8 @@ def _add_daily_stats(daily_data, day, elapsed):
             'runtime': 0
         }
 
-    daily_data[strday] += 1
-    daily_data[strday] += elapsed/60
+    daily_data[strday]['starts'] += 1
+    daily_data[strday]['runtime'] += elapsed/60
 
 
 def _show_app_cb(path, app):
@@ -134,7 +134,7 @@ def _show_app_cb(path, app):
             status = decorate_string_only_terminal('FINISHED', 'extended(239)',
                                                    bold=True)
 
-    print "{}    {} elapsed: ".format(heading, status, app['elapsed'])
+    print "{} {} {} seconds".format(heading, status, app['elapsed'])
 
 
 def _update_app_cb(path, app):

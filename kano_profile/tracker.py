@@ -31,7 +31,7 @@ class Tracker:
     implemented via atexit hooks"""
 
     def __init__(self):
-        self.start_time = time.time()
+        self.start_time = int(time.time())
         self.program_name = get_program_name()
 
         self._create_tracker_file()
@@ -39,7 +39,7 @@ class Tracker:
         atexit.register(self._write_times)
 
     def _calculate_elapsed(self):
-        return time.time() - self.start_time
+        return int(time.time() - self.start_time)
 
     def _write_times(self):
         if not os.path.exists(self.path):

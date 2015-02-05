@@ -23,7 +23,7 @@ import sys
 import os
 import docopt
 import json
-import fcntl
+import datetime
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -31,25 +31,86 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile.paths import tracker_dir, tracker_data_file
+from kano_profile.tracker import open_locked
 from kano.logging import logger
 from kano.utils import is_running, delete_file, ensure_dir
 from kano.colours import decorate_string_only_terminal
 
 
 def show_status():
+    """ Show running application that are being tracked at the moment. """
+
     _process_tracker_data(_show_app_cb)
 
 
 def update_status():
     done = _process_tracker_data(_update_app_cb)
 
-    with _open_locked(tracker_data_file, "r") as rf:
+    DAY_IN_SEC = 60*60*24
+
+    # Make sure the tracker file exists
+    if not os.path.exists(tracker_data_file):
+        with open_locked(tracker_data_file, 'w') as f:
+            json.dump({'usage': {}}, f)
+
+    with open_locked(tracker_data_file, 'r') as rf:
         tracker_data = json.load(rf)
 
+        if 'usage' not in tracker_data:
+            tracker_data['usage'] = {}
+        usage = tracker_data['usage']
+
         for path, app in done.iteritems():
-            delete_file(path)
+            if app['name'] not in usage:
+                usage[app['name']] = {}
+            app_usage = usage[app['name']]
+
+            if 'daily' not in app_usage:
+                app_usage['daily'] = {}
+            daily_data = app_usage['daily']
+
+            day = app['started']
+            elapsed = app['elapsed']
+            while elapsed > DAY_IN_SEC:
+                _add_daily_stats(daily_data, day, DAY_IN_SEC)
+                day += DAY_IN_SEC
+                elapsed -= DAY_IN_SEC
+
+            if elapsed > 0:
+                _add_daily_stats(daily_data, day, elapsed)
+
+            for path, app in done.iteritems():
+                delete_file(path)
+
+        with open(tracker_data_file, 'w') as wf:
+            json.dump(tracker_data, wf)
 
 
+def _add_daily_stats(daily_data, day, elapsed):
+    """ This adds the elapsed time to the stats of the respective day.
+
+        It expects elapsed to be less than a day's worth of seconds.
+
+        :param daily_data: The dictionary with daily data for this app.
+        :type daily_data: dict
+
+        :param day: A timestamp of the day for this statistic.
+        :type day: number
+
+        :param elapsed: The number of seconds passed. Must be less
+                        than a full day.
+        :type elapsed: number
+    """
+
+    strday = datetime.datetime.fromtimestamp(day).strftime('%Y-%m-%d')
+    if strday not in daily_data:
+        daily_data[strday] = {
+            'starts': 0,
+            'runtime': 0
+        }
+
+    daily_data[strday] += 1
+    daily_data[strday] += elapsed/60
 
 
 def _show_app_cb(path, app):
@@ -90,25 +151,16 @@ def _update_app_cb(path, app):
     if is_running(app['pid']):
         app['elapsed'] = int(time.time() - app['started'])
 
-        # WARNING: Don't use _open_locked, the file has been locked already.
+        # WARNING: Don't use open_locked, the file has been locked already.
         with open(path, "w") as f:
             json.dump(app, f)
 
     else:
         # Application is not running, but not marked finished.
-        # Return it as finished to be handled and removed.
+        # Return it as finished to be handled and removed.
         return app
 
     return
-
-
-def _update_elapsed_time(path):
-    with _open_locked(path, "r") as f:
-        app = json.load(f)
-
-        if 'finished' in app and app['finished'] == True:
-            return
-        else:
 
 
 def _process_tracker_data(callback):
@@ -135,7 +187,7 @@ def _process_tracker_data(callback):
         if not os.path.isfile(path):
             continue
 
-        with _open_locked(path, 'r') as f:
+        with open_locked(path, 'r') as f:
             try:
                 app = json.load(f)
             except:
@@ -145,22 +197,6 @@ def _process_tracker_data(callback):
             rvs[path] = callback(path, app)
 
     return rvs
-
-
-class _open_locked:
-    """ A version of open with an exclusive lock to be used within
-        controlled execution statements.
-    """
-
-    def __init__(self, path, mode):
-        self._fd = open(path, mode)
-        fcntl.flock(self._fd, fcntl.LOCK_EX)
-
-    def __enter__(self):
-        return self._fd
-
-    def __exit__(self, exit_type, value, traceback):
-        self._fd.close()
 
 
 def main():

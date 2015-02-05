@@ -16,10 +16,14 @@ import time
 import atexit
 import datetime
 import fcntl
+import json
+import os
 
 from kano.utils import get_program_name, is_number, read_file_contents
+from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
+from kano_profile.paths import tracker_dir
 
 
 class Tracker:
@@ -29,13 +33,43 @@ class Tracker:
     def __init__(self):
         self.start_time = time.time()
         self.program_name = get_program_name()
-        atexit.register(self.write_times)
 
-    def calculate_elapsed(self):
+        self._create_tracker_file()
+
+        atexit.register(self._write_times)
+
+    def _calculate_elapsed(self):
         return time.time() - self.start_time
 
-    def write_times(self):
-        add_runtime_to_app(self.program_name, self.calculate_elapsed())
+    def _write_times(self):
+        if not os.path.exists(self.path):
+            msg = "Someone removed the tracker file, the runtime of this " + \
+                "app will not be logged"
+            logger.warn(msg)
+            return
+
+        with open_locked(self.path, "r") as rf:
+            data = json.load(rf)
+
+            data["elapsed"] = self._calculate_elapsed()
+            data["finished"] = True
+
+            with open(self.path, "w") as wf:
+                json.dump(data, wf)
+
+    def _create_tracker_file(self):
+        data = {
+            "pid": os.getpid(),
+            "name": self.program_name,
+            "started": self.start_time,
+            "elapsed": 0,
+            "finished": False
+        }
+
+        self.path = "{}/{}-{}.json".format(tracker_dir, data["pid"],
+                                           data["started"])
+        with open_locked(self.path, "w") as f:
+            json.dump(data, f)
 
 
 # TODO: While it isn't at the moment, this could be useful to have
@@ -152,3 +186,19 @@ def save_kano_version():
     updates[version_now] = time_now
 
     save_app_state_variable('kano-tracker', 'versions', updates)
+
+
+class open_locked:
+    """ A version of open with an exclusive lock to be used within
+        controlled execution statements.
+    """
+
+    def __init__(self, path, mode):
+        self._fd = open(path, mode)
+        fcntl.flock(self._fd, fcntl.LOCK_EX)
+
+    def __enter__(self):
+        return self._fd
+
+    def __exit__(self, exit_type, value, traceback):
+        self._fd.close()

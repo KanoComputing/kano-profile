@@ -26,50 +26,57 @@ from kano_profile.apps import get_app_state_file, load_app_state_variable, \
 from kano_profile.paths import tracker_dir
 
 
+def get_session_file_path(name, pid):
+    return "{}/{}-{}.json".format(tracker_dir, pid, name)
+
+def session_start(name, pid=None):
+    if not pid:
+        pid = os.getpid()
+    pid = int(pid)
+
+    data = {
+        "pid": pid,
+        "name": name,
+        "started": int(time.time()),
+        "elapsed": 0,
+        "finished": False
+    }
+
+    path = get_session_file_path(data['name'], data['pid'])
+
+    with open_locked(path, "w") as f:
+        json.dump(data, f)
+
+    return path
+
+
+def session_end(session_file):
+    if not os.path.exists(session_file):
+        msg = "Someone removed the tracker file, the runtime of this " + \
+            "app will not be logged"
+        logger.warn(msg)
+        return
+
+    with open_locked(session_file, "r") as rf:
+        data = json.load(rf)
+
+        data["elapsed"] = int(time.time()) - data["started"]
+        data["finished"] = True
+
+        with open(session_file, "w") as wf:
+            json.dump(data, wf)
+
+
 class Tracker:
     """Tracker class, used for measuring program run-times,
     implemented via atexit hooks"""
 
     def __init__(self):
-        self.start_time = int(time.time())
-        self.program_name = get_program_name()
-
-        self._create_tracker_file()
-
+        self.path = session_start(get_program_name())
         atexit.register(self._write_times)
 
-    def _calculate_elapsed(self):
-        return int(time.time() - self.start_time)
-
     def _write_times(self):
-        if not os.path.exists(self.path):
-            msg = "Someone removed the tracker file, the runtime of this " + \
-                "app will not be logged"
-            logger.warn(msg)
-            return
-
-        with open_locked(self.path, "r") as rf:
-            data = json.load(rf)
-
-            data["elapsed"] = self._calculate_elapsed()
-            data["finished"] = True
-
-            with open(self.path, "w") as wf:
-                json.dump(data, wf)
-
-    def _create_tracker_file(self):
-        data = {
-            "pid": os.getpid(),
-            "name": self.program_name,
-            "started": self.start_time,
-            "elapsed": 0,
-            "finished": False
-        }
-
-        self.path = "{}/{}-{}.json".format(tracker_dir, data["pid"],
-                                           data["started"])
-        with open_locked(self.path, "w") as f:
-            json.dump(data, f)
+        session_end(self.path)
 
 
 # TODO: While it isn't at the moment, this could be useful to have

@@ -11,6 +11,7 @@ kano-tracker-ctl is a controller for kano-tracker.
 
 Usage:
   kano-tracker-ctl status|update
+  kano-tracker-ctl session (start|end) <name> <pid>
   kano-tracker-ctl -h|--help
   kano-tracker-ctl --version
 
@@ -24,6 +25,7 @@ import os
 import docopt
 import json
 import datetime
+import time
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -31,9 +33,10 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_profile.paths import tracker_dir, tracker_data_file
-from kano_profile.tracker import open_locked
+from kano_profile.tracker import open_locked, session_start, session_end, \
+    get_session_file_path
 from kano.logging import logger
-from kano.utils import is_running, delete_file, ensure_dir
+from kano.utils import delete_file, ensure_dir
 from kano.colours import decorate_string_only_terminal
 
 
@@ -61,6 +64,9 @@ def update_status():
         usage = tracker_data['usage']
 
         for path, app in done.iteritems():
+            if not app:
+                continue
+
             if app['name'] not in usage:
                 usage[app['name']] = {}
             app_usage = usage[app['name']]
@@ -79,8 +85,7 @@ def update_status():
             if elapsed > 0:
                 _add_daily_stats(daily_data, day, elapsed)
 
-            for path, app in done.iteritems():
-                delete_file(path)
+            delete_file(path)
 
         with open(tracker_data_file, 'w') as wf:
             json.dump(tracker_data, wf)
@@ -119,19 +124,19 @@ def _show_app_cb(path, app):
 
     heading = "{}[{}]".format(
         decorate_string_only_terminal(app['name'], 'extended(208)'),
-        decorate_string_only_terminal(app['pid'], 'extended(239)')
+        decorate_string_only_terminal(app['pid'], 'extended(244)')
     )
 
     status = ""
-    if is_running(app['pid']):
-        status = decorate_string_only_terminal('STARTED', 'extended(119)',
+    if _check_pid(int(app['pid'])):
+        status = decorate_string_only_terminal('RUNNING', 'extended(119)',
                                                bold=True)
     else:
-        if 'finished' in app:
-            status = decorate_string_only_terminal('FINISHED', 'extended(239)',
+        if 'finished' in app and app['finished']:
+            status = decorate_string_only_terminal('FINISHED', 'extended(75)',
                                                    bold=True)
         else:
-            status = decorate_string_only_terminal('FINISHED', 'extended(239)',
+            status = decorate_string_only_terminal('CRASHED', 'extended(160)',
                                                    bold=True)
 
     print "{} {} {} seconds".format(heading, status, app['elapsed'])
@@ -148,7 +153,7 @@ def _update_app_cb(path, app):
         # tracking store.
         return app
 
-    if is_running(app['pid']):
+    if _check_pid(int(app['pid'])):
         app['elapsed'] = int(time.time() - app['started'])
 
         # WARNING: Don't use open_locked, the file has been locked already.
@@ -199,13 +204,28 @@ def _process_tracker_data(callback):
     return rvs
 
 
+def _check_pid(pid):
+    """ Check For the existence of a unix pid. """
+
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    else:
+        return True
+
+
 def main():
     args = docopt.docopt(__doc__, version='1.3')
 
-    if 'status' in args and args['status']:
+    if args['status']:
         show_status()
-    elif 'update' in args and args['update']:
+    elif args['update']:
         update_status()
+    elif args['session'] and args['start']:
+        session_start(args['<name>'], args['<pid>'])
+    elif args['session'] and args['end']:
+        session_end(get_session_file_path(args['<name>'], args['<pid>']))
 
     return 0
 

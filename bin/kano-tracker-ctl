@@ -249,7 +249,12 @@ def main():
     elif args['+1'] or args['action']:
         track_action(args['<name>'])
     elif args['data']:
-        track_data(args['<name>'], args['value'])
+        try:
+            value = json.loads(args['<value>'])
+        except ValueError:
+            value = args['<value>']
+
+        track_data(args['<name>'], value)
 
     return 0
 

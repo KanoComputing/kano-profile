@@ -70,4 +70,4 @@ levels_file = os.path.join(rules_dir, 'levels.json')
 app_profiles_file = os.path.join(rules_dir, 'app_profiles.json')
 
 tracker_dir = os.path.join(kanoprofile_dir, 'tracker/sessions/')
-tracker_data_file = os.path.join(kanoprofile_dir, 'tracker/data.json')
+tracker_events_file = os.path.join(kanoprofile_dir, 'tracker/events')

@@ -23,7 +23,7 @@ from kano.utils import get_program_name, is_number, read_file_contents
 from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
-from kano_profile.paths import tracker_dir
+from kano_profile.paths import tracker_dir, tracker_events_file
 
 
 def get_session_file_path(name, pid):
@@ -66,6 +66,100 @@ def session_end(session_file):
         with open(session_file, "w") as wf:
             json.dump(data, wf)
 
+
+def session_log(name, started, length):
+    """ Log a session that was tracked outside of the tracker.
+
+        :param name: The identifier of the session.
+        :type name: str
+
+        :param started: When was the session started (UTC unix timestamp).
+        :type started: int
+
+        :param length: Length of the session in seconds.
+        :param started: int
+    """
+
+    with open_locked(tracker_events_file, 'a') as af:
+        session = {
+            "name": name,
+            "started": int(started),
+            "elapsed": int(length)
+        }
+
+        event = _get_session_event(session)
+        af.write(json.dumps(event) + "\n")
+
+
+def track_data(name, data):
+    """ Track arbitrary data.
+
+        Calling this function will generate a data tracking event.
+
+        :param name: The identifier of the data.
+        :type name: str
+
+        :param data: Arbitrary data, must be compatible with JSON.
+        :type data: dict, list, str, int, float, None
+    """
+
+    event = {
+        "type": data,
+        "time": time.time(),
+        "timezone_offset": get_utc_offset(),
+
+        "name": str(name),
+        "data": data
+    }
+
+    with open_locked(tracker_events_file, "a") as af:
+        af.write(json.dumps(event) + "\n")
+
+
+def track_action(name):
+    """ Trigger an action tracking event.
+
+        :param name: The identifier of the action.
+        :type name: str
+    """
+
+    with open_locked(tracker_events_file, 'a') as af:
+        event = get_action_event(name)
+        af.write(json.dumps(event) + "\n")
+
+
+def get_action_event(name):
+    return {
+        "type": "action",
+        "time": int(time.time()),
+        "time_offset": get_utc_offset(),
+
+        "name": name
+    }
+
+
+def get_session_event(session):
+    """ Construct the event data structure for a session. """
+
+    return {
+        "type": "session",
+        "time": session['started'],
+        "time_offset": get_utc_offset(),
+
+        "name": session['name'],
+        "length": session['elapsed'],
+    }
+
+
+def get_utc_offset():
+    """ Returns the local UTC offset in seconds.
+
+        :returns: UTC offsed in secconds.
+        :rtype: int
+    """
+
+    is_dst = time.daylight and time.localtime().tm_isdst > 0
+    return -int(time.altzone if is_dst else time.timezone)
 
 class Tracker:
     """Tracker class, used for measuring program run-times,

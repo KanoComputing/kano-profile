@@ -15,7 +15,8 @@ Usage:
   kano-tracker-ctl refresh [-w]
   kano-tracker-ctl session (start|end) <name> <pid>
   kano-tracker-ctl session log <name> <started> <length>
-  kano-tracker-ctl +1 <name>
+  kano-tracker-ctl (+1|action) <name>
+  kano-tracker-ctl data <name> <value>
   kano-tracker-ctl -h|--help
   kano-tracker-ctl --version
 
@@ -39,7 +40,8 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_profile.paths import tracker_dir, tracker_events_file
 from kano_profile.tracker import open_locked, session_start, session_end, \
-    get_session_file_path
+    get_session_file_path, track_action, track_data, get_session_event, \
+    session_log
 from kano.logging import logger
 from kano.utils import delete_file, ensure_dir, is_running
 from kano.colours import decorate_string_only_terminal
@@ -78,58 +80,10 @@ def clear_sessions():
             if not session:
                 continue
 
-            event = _get_session_event(session)
+            event = get_session_event(session)
             af.write(json.dumps(event) + "\n")
 
             delete_file(path)
-
-def session_log(name, started, length):
-    """ Log a session that was tracked outside of the tracker.
-
-        :param name: The identifier of the session.
-        :type name: str
-
-        :param started: When was the session started (UTC unix timestamp).
-        :type started: int
-
-        :param length: Length of the session in seconds.
-        :param started: int
-    """
-
-    with open_locked(tracker_events_file, 'a') as af:
-        session = {
-            "name": name,
-            "started": int(started),
-            "elapsed": int(length)
-        }
-
-        event = _get_session_event(session)
-        af.write(json.dumps(event) + "\n")
-
-
-def increment_counter(name):
-    """ Generates an action event for the tracker.
-
-        All the action events are added up in the end so it rougly
-        equals to incrementing a counter.
-
-        :param name: The name of the action.
-        :type name: str
-    """
-
-    with open_locked(tracker_events_file, 'a') as af:
-        event = _get_action_event(name)
-        af.write(json.dumps(event) + "\n")
-
-
-def _get_action_event(name):
-    return {
-        "type": "action",
-        "time": int(time.time()),
-        "time_offset": _get_utc_offset(),
-
-        "name": name
-    }
 
 
 def _do_update_status():
@@ -145,34 +99,10 @@ def _do_update_status():
             if not session:
                 continue
 
-            event = _get_session_event(session)
+            event = get_session_event(session)
             af.write(json.dumps(event) + "\n")
 
             delete_file(path)
-
-
-def _get_session_event(session):
-    """ Construct the event data structure for a session. """
-
-    return {
-        "type": "session",
-        "time": session['started'],
-        "time_offset": _get_utc_offset(),
-
-        "name": session['name'],
-        "length": session['elapsed'],
-    }
-
-
-def _get_utc_offset():
-    """ Returns the local UTC offset in seconds.
-
-        :returns: UTC offsed in secconds.
-        :rtype: int
-    """
-
-    is_dst = time.daylight and time.localtime().tm_isdst > 0
-    return -int(time.altzone if is_dst else time.timezone)
 
 
 def _show_session_cb(path, session):
@@ -316,8 +246,10 @@ def main():
         session_end(get_session_file_path(args['<name>'], args['<pid>']))
     elif args['session'] and args['log']:
         session_log(args['<name>'], args['<started>'], args['<length>'])
-    elif args['+1']:
-        increment_counter(args['<name>'])
+    elif args['+1'] or args['action']:
+        track_action(args['<name>'])
+    elif args['data']:
+        track_data(args['<name>'], args['value'])
 
     return 0
 

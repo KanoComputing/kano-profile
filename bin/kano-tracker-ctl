@@ -3,7 +3,7 @@
 # kano-tracker-ctl
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: GNU GPL v2 http://www.gnu.org/licenses/gpl-2.0.txt
 #
 
 """
@@ -11,7 +11,8 @@ kano-tracker-ctl is a controller for kano-tracker.
 
 Usage:
   kano-tracker-ctl status
-  kano-tracker-ctl update [-w]
+  kano-tracker-ctl clear [-f]
+  kano-tracker-ctl refresh [-w]
   kano-tracker-ctl session (start|end) <name> <pid>
   kano-tracker-ctl session log <name> <started> <length>
   kano-tracker-ctl +1 <name>
@@ -21,14 +22,14 @@ Usage:
  Options:
    -h, --help       Show this message.
    --version        Print the version.
-   -w, --watch      Keep updating the tracking data periodically.
+   -w, --watch      Keep refreshing the tracking data periodically.
+   -f, --force      Force cleanup
 """
 
 import sys
 import os
 import docopt
 import json
-import datetime
 import time
 
 if __name__ == '__main__' and __package__ is None:
@@ -40,7 +41,7 @@ from kano_profile.paths import tracker_dir, tracker_events_file
 from kano_profile.tracker import open_locked, session_start, session_end, \
     get_session_file_path
 from kano.logging import logger
-from kano.utils import delete_file, ensure_dir
+from kano.utils import delete_file, ensure_dir, is_running
 from kano.colours import decorate_string_only_terminal
 
 
@@ -68,6 +69,19 @@ def update_status(watch=False):
         else:
             time.sleep(15 * MINUTES)
 
+
+def clear_sessions():
+    done = _process_session_data(lambda path, session: session)
+
+    with open_locked(tracker_events_file, 'a') as af:
+        for path, session in done.iteritems():
+            if not session:
+                continue
+
+            event = _get_session_event(session)
+            af.write(json.dumps(event) + "\n")
+
+            delete_file(path)
 
 def session_log(name, started, length):
     """ Log a session that was tracked outside of the tracker.
@@ -117,8 +131,13 @@ def _get_action_event(name):
         "name": name
     }
 
+
 def _do_update_status():
-    """ Reads all the session data
+    """ Reads all the session data and updates them.
+
+        If a session has ended, it will collect the file and trigger
+        an event.
+    """
     done = _process_session_data(_update_session_cb)
 
     with open_locked(tracker_events_file, 'a') as af:
@@ -149,40 +168,25 @@ def _get_utc_offset():
     """ Returns the local UTC offset in seconds.
 
         :returns: UTC offsed in secconds.
-        "rtype: int
+        :rtype: int
     """
 
     is_dst = time.daylight and time.localtime().tm_isdst > 0
     return -int(time.altzone if is_dst else time.timezone)
 
-def _add_daily_stats(daily_data, day, elapsed):
-    """ This adds the elapsed time to the stats of the respective day.
-
-        It expects elapsed to be less than a day's worth of seconds.
-
-        :param daily_data: The dictionary with daily data for this session.
-        :type daily_data: dict
-
-        :param day: A timestamp of the day for this statistic.
-        :type day: number
-
-        :param elapsed: The number of seconds passed. Must be less
-                        than a full day.
-        :type elapsed: number
-    """
-
-    strday = datetime.datetime.fromtimestamp(day).strftime('%Y-%m-%d')
-    if strday not in daily_data:
-        daily_data[strday] = {
-            'sessions': 0,
-            'runtime': 0
-        }
-
-    daily_data[strday]['sessions'] += 1
-    daily_data[strday]['runtime'] += elapsed/60
-
 
 def _show_session_cb(path, session):
+    """ Processing callback for show_status().
+
+        It is used with _process_session_data().
+
+        :param path: The location of the session file.
+        :type path: str
+
+        :param session: The corresponding session data.
+        :type session: dict
+    """
+
     if not session:
         return
 
@@ -192,7 +196,7 @@ def _show_session_cb(path, session):
     )
 
     status = ""
-    if _check_pid(int(session['pid'])):
+    if _is_pid_running(int(session['pid'])):
         status = decorate_string_only_terminal('RUNNING', 'extended(119)',
                                                bold=True)
     else:
@@ -207,17 +211,28 @@ def _show_session_cb(path, session):
 
 
 def _update_session_cb(path, session):
+    """ Processing callback for update_status().
+
+        It is used with _process_session_data().
+
+        :param path: The location of the session file.
+        :type path: str
+
+        :param session: The corresponding session data.
+        :type session: dict
+    """
+
     if not session:
         # The file could not be read and is probably corrupted: remove it.
         delete_file(path)
         return
 
-    if 'finished' in session and session['finished'] == True:
+    if 'finished' in session and session['finished'] is True:
         # Return the session to the parent function to be added to the
         # tracking store.
         return session
 
-    if _check_pid(int(session['pid'])):
+    if int(session['pid']) == 0 or _is_pid_running(int(session['pid'])):
         session['elapsed'] = int(time.time() - session['started'])
 
         # WARNING: Don't use open_locked, the file has been locked already.
@@ -268,7 +283,7 @@ def _process_session_data(callback):
     return rvs
 
 
-def _check_pid(pid):
+def _is_pid_running(pid):
     """ Check For the existence of a unix pid. """
 
     try:
@@ -284,7 +299,16 @@ def main():
 
     if args['status']:
         show_status()
-    elif args['update']:
+    elif args['clear']:
+        if not args['--force'] and \
+           is_running("kano-tracker-ctl refresh --watch"):
+            msg = "The kano-tracker daemon is running in the background, " + \
+                  "not cleaning up. You can force the cleanup with -f."
+            logger.error(msg)
+            sys.exit(msg)
+
+        clear_sessions()
+    elif args['refresh']:
         update_status(args['--watch'])
     elif args['session'] and args['start']:
         session_start(args['<name>'], args['<pid>'])

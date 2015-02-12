@@ -1,8 +1,14 @@
+kano-profile (1.3-6) unstable; urgency=low
+
+  * kano-world-launcher supports redirect properly.
+
+ -- Team Kano <dev@kano.me>  Thu, 12 Feb 2015 16:30:00 +0000
+
 kano-profile (1.3-5) unstable; urgency=low
 
   * Refactoring the tracker.
 
- -- Team Kano <dev@kano.me>  Fri, 06 Feb 2014 17:17:00 +0000
+ -- Team Kano <dev@kano.me>  Fri, 06 Feb 2015 17:17:00 +0000
 
 kano-profile (1.3-4) unstable; urgency=low
 

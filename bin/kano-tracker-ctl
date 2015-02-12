@@ -1,0 +1,263 @@
+#!/usr/bin/env python
+
+# kano-tracker-ctl
+#
+# Copyright (C) 2015 Kano Computing Ltd.
+# License: GNU GPL v2 http://www.gnu.org/licenses/gpl-2.0.txt
+#
+
+"""
+kano-tracker-ctl is a controller for kano-tracker.
+
+Usage:
+  kano-tracker-ctl status
+  kano-tracker-ctl clear [-f]
+  kano-tracker-ctl refresh [-w]
+  kano-tracker-ctl session (start|end) <name> <pid>
+  kano-tracker-ctl session log <name> <started> <length>
+  kano-tracker-ctl (+1|action) <name>
+  kano-tracker-ctl data <name> <value>
+  kano-tracker-ctl -h|--help
+  kano-tracker-ctl --version
+
+ Options:
+   -h, --help       Show this message.
+   --version        Print the version.
+   -w, --watch      Keep refreshing the tracking data periodically.
+   -f, --force      Force cleanup
+"""
+
+import sys
+import os
+import docopt
+import json
+import time
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano_profile.paths import tracker_dir, tracker_events_file
+from kano_profile.tracker import open_locked, session_start, session_end, \
+    get_session_file_path, track_action, track_data, get_session_event, \
+    session_log
+from kano.logging import logger
+from kano.utils import delete_file, ensure_dir, is_running
+from kano.colours import decorate_string_only_terminal
+
+
+def show_status():
+    """ Show running session that are being tracked at the moment. """
+
+    _process_session_data(_show_session_cb)
+
+
+def update_status(watch=False):
+    if not watch:
+        return _do_update_status()
+
+    MINUTES = 60
+    started = time.time()
+    while True:
+        logger.info("Updating session tracking data")
+        _do_update_status()
+
+        elapsed = time.time() - started
+        if elapsed <= 20 * MINUTES:
+            time.sleep(2 * MINUTES)
+        elif elapsed <= 60 * MINUTES:
+            time.sleep(5 * MINUTES)
+        else:
+            time.sleep(15 * MINUTES)
+
+
+def clear_sessions():
+    done = _process_session_data(lambda path, session: session)
+
+    with open_locked(tracker_events_file, 'a') as af:
+        for path, session in done.iteritems():
+            if not session:
+                continue
+
+            event = get_session_event(session)
+            af.write(json.dumps(event) + "\n")
+
+            delete_file(path)
+
+
+def _do_update_status():
+    """ Reads all the session data and updates them.
+
+        If a session has ended, it will collect the file and trigger
+        an event.
+    """
+    done = _process_session_data(_update_session_cb)
+
+    with open_locked(tracker_events_file, 'a') as af:
+        for path, session in done.iteritems():
+            if not session:
+                continue
+
+            event = get_session_event(session)
+            af.write(json.dumps(event) + "\n")
+
+            delete_file(path)
+
+
+def _show_session_cb(path, session):
+    """ Processing callback for show_status().
+
+        It is used with _process_session_data().
+
+        :param path: The location of the session file.
+        :type path: str
+
+        :param session: The corresponding session data.
+        :type session: dict
+    """
+
+    if not session:
+        return
+
+    heading = "{}[{}]".format(
+        decorate_string_only_terminal(session['name'], 'extended(208)'),
+        decorate_string_only_terminal(session['pid'], 'extended(244)')
+    )
+
+    status = ""
+    if _is_pid_running(int(session['pid'])):
+        status = decorate_string_only_terminal('RUNNING', 'extended(119)',
+                                               bold=True)
+    else:
+        if 'finished' in session and session['finished']:
+            status = decorate_string_only_terminal('FINISHED', 'extended(75)',
+                                                   bold=True)
+        else:
+            status = decorate_string_only_terminal('CRASHED', 'extended(160)',
+                                                   bold=True)
+
+    print "{} {} {} seconds".format(heading, status, session['elapsed'])
+
+
+def _update_session_cb(path, session):
+    """ Processing callback for update_status().
+
+        It is used with _process_session_data().
+
+        :param path: The location of the session file.
+        :type path: str
+
+        :param session: The corresponding session data.
+        :type session: dict
+    """
+
+    if not session:
+        # The file could not be read and is probably corrupted: remove it.
+        delete_file(path)
+        return
+
+    if 'finished' in session and session['finished'] is True:
+        # Return the session to the parent function to be added to the
+        # tracking store.
+        return session
+
+    if int(session['pid']) == 0 or _is_pid_running(int(session['pid'])):
+        session['elapsed'] = int(time.time() - session['started'])
+
+        # WARNING: Don't use open_locked, the file has been locked already.
+        with open(path, "w") as f:
+            json.dump(session, f)
+
+    else:
+        # Application is not running, but not marked finished.
+        # Return it as finished to be handled and removed.
+        return session
+
+    return
+
+
+def _process_session_data(callback):
+    """ Calls the function passed for each session file.
+
+        They can be either running, crashed or finished, the user is
+        expected to test that based on the pid.
+
+        :param callback: The function to call on each session file. The
+            callback should be as quick as possible as the file remains
+            locked throughout the execution time.
+        :type callback: function(path, session)
+
+        :returns: Values indexed by the path to its session file.
+        :rtype: dict
+    """
+
+    ensure_dir(tracker_dir)
+
+    rvs = {}
+    for name in os.listdir(tracker_dir):
+        path = os.path.join(tracker_dir, name)
+
+        if not os.path.isfile(path):
+            continue
+
+        with open_locked(path, 'r') as f:
+            try:
+                session = json.load(f)
+            except:
+                # Cannot read the file
+                session = None
+
+            rvs[path] = callback(path, session)
+
+    return rvs
+
+
+def _is_pid_running(pid):
+    """ Check For the existence of a unix pid. """
+
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    else:
+        return True
+
+
+def main():
+    args = docopt.docopt(__doc__, version='1.3')
+
+    if args['status']:
+        show_status()
+    elif args['clear']:
+        if not args['--force'] and \
+           is_running("kano-tracker-ctl refresh --watch"):
+            msg = "The kano-tracker daemon is running in the background, " + \
+                  "not cleaning up. You can force the cleanup with -f."
+            logger.error(msg)
+            sys.exit(msg)
+
+        clear_sessions()
+    elif args['refresh']:
+        update_status(args['--watch'])
+    elif args['session'] and args['start']:
+        session_start(args['<name>'], args['<pid>'])
+    elif args['session'] and args['end']:
+        session_end(get_session_file_path(args['<name>'], args['<pid>']))
+    elif args['session'] and args['log']:
+        session_log(args['<name>'], args['<started>'], args['<length>'])
+    elif args['+1'] or args['action']:
+        track_action(args['<name>'])
+    elif args['data']:
+        try:
+            value = json.loads(args['<value>'])
+        except ValueError:
+            value = args['<value>']
+
+        track_data(args['<name>'], value)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -22,6 +22,8 @@ from kano.logging import logger
 from kano_world.share import download_share, get_share_by_id
 from kano_profile.apps import launch_project
 from kdesk.hourglass import hourglass_start, hourglass_end
+from kano_world.connection import request_wrapper
+from kano_world.functions import get_glob_session, login_using_token
 
 def run(args):
     try:
@@ -47,12 +49,13 @@ def run(args):
         hourglass_end()
         return
 
+    data.append(share_id)
     hourglass_end()
     return data
 
 
 def launch(data):
-    (title, attachment_path, app, attachment_name, folder) = data
+    (title, attachment_path, app, attachment_name, folder, item_id) = data
     msg = 'Downloaded share: {}'.format(title)
     logger.info(msg)
 
@@ -60,3 +63,13 @@ def launch(data):
     _, _, rc = run_cmd(cmd)
     if rc == 1:
         launch_project(app, attachment_name, folder)
+        _report_share_opened(item_id)
+
+def _report_share_opened(item_id):
+    success, value = login_using_token()
+            if success:
+                endpoint = '/share/{}/installed'.format(item_id)
+                gs = get_glob_session()
+                if gs:
+                    success, text, data = request_wrapper('post', endpoint,
+                                                          session=gs.session)

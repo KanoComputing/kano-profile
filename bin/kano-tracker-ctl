@@ -75,6 +75,16 @@ def update_status(watch=False):
 def clear_sessions():
     done = _process_session_data(lambda path, session: session)
 
+    MB = 1024*1024
+
+    # Halve the events file if it grows too big
+    if os.path.getsize(tracker_events_file) > 2*MB:
+        with open_locked(tracker_events_file, 'r') as rf:
+            entries = rf.readlines()
+        with open(tracker_events_file, 'w') as wf:
+            for entry in entries[len(entries)/2:]:
+                wf.write(entry)
+
     with open_locked(tracker_events_file, 'a') as af:
         for path, session in done.iteritems():
             if not session:

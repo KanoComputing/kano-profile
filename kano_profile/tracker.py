@@ -87,7 +87,7 @@ def session_log(name, started, length):
             "elapsed": int(length)
         }
 
-        event = _get_session_event(session)
+        event = get_session_event(session)
         af.write(json.dumps(event) + "\n")
 
 

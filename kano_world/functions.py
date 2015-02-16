@@ -127,6 +127,10 @@ def sync():
     if not success:
         return False, value
 
+    success, value = glob_session.upload_tracking_data()
+    if not success:
+        return False, value
+
     success, value = glob_session.download_online_badges()
     if not success:
         return False, value

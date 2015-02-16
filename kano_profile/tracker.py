@@ -132,7 +132,7 @@ def get_action_event(name):
     return {
         "type": "action",
         "time": int(time.time()),
-        "time_offset": get_utc_offset(),
+        "timezone_offset": get_utc_offset(),
 
         "name": name
     }
@@ -144,7 +144,7 @@ def get_session_event(session):
     return {
         "type": "session",
         "time": session['started'],
-        "time_offset": get_utc_offset(),
+        "timezone_offset": get_utc_offset(),
 
         "name": session['name'],
         "length": session['elapsed'],
@@ -287,6 +287,62 @@ def save_kano_version():
     updates[version_now] = time_now
 
     save_app_state_variable('kano-tracker', 'versions', updates)
+
+
+def get_tracker_events():
+    """ Read the events log and return a dictionary with all of them.
+
+        :returns: A dictionary suitable to be sent to the tracker endpoint.
+        :rtype: dict
+    """
+
+    data = {'events': []}
+
+    with open_locked(tracker_events_file, "r") as rf:
+        for event_line in rf.readlines():
+            try:
+                event = json.loads(event_line)
+            except:
+                logger.warning("Found a corrupted event, skipping.")
+
+            if _validate_event(event):
+                data['events'].append(event)
+
+    return data
+
+
+def _validate_event(event):
+    """ Check whether the event is correct so the API won't reject it.
+
+        :param event: The event data.
+        :type event: dict
+
+        :returns: True/False
+        :rtype: Boolean
+    """
+
+    if 'type' not in event:
+        return False
+
+    if 'time' not in event or type(event['time']) != int:
+        return False
+
+    if 'timezone_offset' not in event or type(event['timezone_offset']) != int:
+        return False
+
+    if event['timezone_offset'] < -24*60*60 or \
+       event['timezone_offset'] > 24*60*60:
+        print "range"
+        return False
+
+    return True
+
+
+def clear_tracker_events():
+    """ Truncate the events file, removing all the cached data. """
+
+    with open_locked(tracker_events_file, "w") as wf:
+        pass
 
 
 class open_locked:

@@ -23,11 +23,11 @@ except Exception:
 
 def _remove_sensitive_data(request_debug):
     if request_debug \
-        and 'data' in request_debug \
-        and request_debug['data']:
+       and 'data' in request_debug \
+       and request_debug['data']:
 
         import ast
-        data = ast.literal_eval(request_debug['data'])
+        data = ast.literal_eval(str(request_debug['data']))
 
         if 'password' in data:
             data['password'] = 'removed'

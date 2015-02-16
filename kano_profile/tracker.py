@@ -309,7 +309,7 @@ def get_tracker_events():
             try:
                 event = json.loads(event_line)
             except:
-                logger.warning("Found a corrupted event, skipping.")
+                logger.warn("Found a corrupted event, skipping.")
 
             if _validate_event(event):
                 data['events'].append(event)
@@ -336,7 +336,7 @@ def _validate_event(event):
     if 'timezone_offset' not in event or type(event['timezone_offset']) != int:
         return False
 
-    if not 'os_version' in event:
+    if 'os_version' not in event:
         return False
 
     if event['timezone_offset'] < -24*60*60 or \

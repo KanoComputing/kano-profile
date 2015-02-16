@@ -341,7 +341,6 @@ def _validate_event(event):
 
     if event['timezone_offset'] < -24*60*60 or \
        event['timezone_offset'] > 24*60*60:
-        print "range"
         return False
 
     return True

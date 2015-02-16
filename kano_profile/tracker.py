@@ -26,6 +26,9 @@ from kano_profile.apps import get_app_state_file, load_app_state_variable, \
 from kano_profile.paths import tracker_dir, tracker_events_file
 
 
+OS_VERSION = str(read_file_contents('/etc/kanux_version'))
+
+
 def get_session_file_path(name, pid):
     return "{}/{}-{}.json".format(tracker_dir, pid, name)
 
@@ -107,6 +110,7 @@ def track_data(name, data):
         "type": data,
         "time": time.time(),
         "timezone_offset": get_utc_offset(),
+        "os_version": OS_VERSION,
 
         "name": str(name),
         "data": data
@@ -133,6 +137,7 @@ def get_action_event(name):
         "type": "action",
         "time": int(time.time()),
         "timezone_offset": get_utc_offset(),
+        "os_version": OS_VERSION,
 
         "name": name
     }
@@ -145,6 +150,7 @@ def get_session_event(session):
         "type": "session",
         "time": session['started'],
         "timezone_offset": get_utc_offset(),
+        "os_version": OS_VERSION,
 
         "name": session['name'],
         "length": session['elapsed'],
@@ -328,6 +334,9 @@ def _validate_event(event):
         return False
 
     if 'timezone_offset' not in event or type(event['timezone_offset']) != int:
+        return False
+
+    if not 'os_version' in event:
         return False
 
     if event['timezone_offset'] < -24*60*60 or \

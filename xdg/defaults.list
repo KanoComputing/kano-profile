@@ -1,2 +1,7 @@
 [Default Applications]
 x-scheme-handler/kano=kano-scheme.desktop
+application/x-kano-draw=auto_kano-draw.desktop
+application/x-kano-make-pong=auto_make-pong.desktop
+application/x-kano-make-minecraft=auto_make-minecraft.desktop
+application/x-kano-make-snake=auto_make-snake.desktop
+application/x-kano-make-music=auto_make-music.desktop

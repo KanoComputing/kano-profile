@@ -17,6 +17,7 @@ Usage:
   kano-tracker-ctl session log <name> <started> <length>
   kano-tracker-ctl (+1|action) <name>
   kano-tracker-ctl data <name> <value>
+  kano-tracker-ctl generate <event>
   kano-tracker-ctl -h|--help
   kano-tracker-ctl --version
 
@@ -43,8 +44,22 @@ from kano_profile.tracker import open_locked, session_start, session_end, \
     get_session_file_path, track_action, track_data, get_session_event, \
     session_log
 from kano.logging import logger
-from kano.utils import delete_file, ensure_dir, is_running
+from kano.utils import delete_file, ensure_dir, is_running, \
+    get_rpi_model, detect_kano_keyboard
 from kano.colours import decorate_string_only_terminal
+
+
+# TODO: Move it somewhere nicer in the future
+def _hw_info():
+    track_data("hw-info", {
+        "keyboard": "kano" if detect_kano_keyboard() else "generic",
+        "model": get_rpi_model()
+    })
+
+
+event_templates = {
+    "hw-info": _hw_info,
+}
 
 
 def show_status():
@@ -95,6 +110,19 @@ def clear_sessions():
             af.write(json.dumps(event) + "\n")
 
             delete_file(path)
+
+
+def generate_event(event_name):
+    """ Generates one of the predefined events.
+
+        :param event_name: The identifier of the event.
+        :type event_name: str
+    """
+
+    if event_name in event_templates:
+        event_templates[event_name]()
+    else:
+        sys.exit("ERROR: Unknown event template.")
 
 
 def _do_update_status():
@@ -227,12 +255,7 @@ def _process_session_data(callback):
 def _is_pid_running(pid):
     """ Check For the existence of a unix pid. """
 
-    try:
-        os.kill(pid, 0)
-    except OSError:
-        return False
-    else:
-        return True
+    return os.path.exists("/proc/{}".format(pid))
 
 
 def main():
@@ -259,6 +282,8 @@ def main():
         session_log(args['<name>'], args['<started>'], args['<length>'])
     elif args['+1'] or args['action']:
         track_action(args['<name>'])
+    elif args['generate']:
+        generate_event(args['<event>'])
     elif args['data']:
         try:
             value = json.loads(args['<value>'])

@@ -18,6 +18,7 @@ from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file, online_badges_dir, \
     online_badges_file
+from kano_profile.tracker import get_tracker_events, clear_tracker_events
 from kano_profile_gui.paths import media_dir
 
 from .connection import request_wrapper, content_type_json
@@ -105,7 +106,9 @@ class KanoWorldSession(object):
             else:
                 return False, 'Profile not registered!'
 
-            success, text, data = request_wrapper('get', '/users/' + user_id, headers=content_type_json, session=self.session)
+            success, text, data = request_wrapper('get', '/users/' + user_id,
+                                                  headers=content_type_json,
+                                                  session=self.session)
             if not success:
                 return False, text
 
@@ -140,7 +143,10 @@ class KanoWorldSession(object):
         payload = dict()
         payload['data'] = data
 
-        success, text, data = request_wrapper('put', '/sync/data', data=json.dumps(payload), headers=content_type_json, session=self.session)
+        success, text, data = request_wrapper('put', '/sync/data',
+                                              data=json.dumps(payload),
+                                              headers=content_type_json,
+                                              session=self.session)
         if not success:
             return False, text
 
@@ -148,7 +154,9 @@ class KanoWorldSession(object):
 
     def download_private_data(self, data=None):
         if not data:
-            success, text, data = request_wrapper('get', '/sync/data', headers=content_type_json, session=self.session)
+            success, text, data = request_wrapper('get', '/sync/data',
+                                                  headers=content_type_json,
+                                                  session=self.session)
             if not success:
                 return False, text
 
@@ -168,7 +176,9 @@ class KanoWorldSession(object):
 
         files = {'file': open(file_path, 'rb')}
 
-        success, text, data = request_wrapper('put', '/sync/backup', session=self.session, files=files)
+        success, text, data = request_wrapper('put', '/sync/backup',
+                                              session=self.session,
+                                              files=files)
         if not success:
             return False, text
 
@@ -178,7 +188,8 @@ class KanoWorldSession(object):
         return True, None
 
     def restore_content(self, file_path):
-        success, text, data = request_wrapper('get', '/sync/backup', session=self.session)
+        success, text, data = request_wrapper('get', '/sync/backup',
+                                              session=self.session)
         if not success:
             return False, text
 
@@ -238,7 +249,9 @@ class KanoWorldSession(object):
 
         endpoint = '/share/{}'.format(app_name)
 
-        success, text, data = request_wrapper('post', endpoint, session=self.session, files=files, data=payload)
+        success, text, data = request_wrapper('post', endpoint,
+                                              session=self.session,
+                                              files=files, data=payload)
         if not success:
             return False, text
 
@@ -250,7 +263,8 @@ class KanoWorldSession(object):
     def delete_share(self, share_id):
         endpoint = '/share/{}'.format(share_id)
 
-        success, text, data = request_wrapper('delete', endpoint, session=self.session)
+        success, text, data = request_wrapper('delete', endpoint,
+                                              session=self.session)
         if not success:
             return False, text
         return True, None
@@ -282,6 +296,25 @@ class KanoWorldSession(object):
         profile['notifications'] = notifications
         save_profile(profile)
         return True, None
+
+    def upload_tracking_data(self):
+        data = get_tracker_events()
+        if len(data['events']) == 0:
+            return True, "No data available"
+
+        success, text, response_data = request_wrapper(
+            'post',
+            '/tracking',
+            headers=content_type_json,
+            session=self.session,
+            data=json.dumps(data)
+        )
+
+        if success and 'success' in response_data and response_data['success']:
+            clear_tracker_events()
+            return True, None
+
+        return False, "Upload failed, tracking data not sent."
 
     def download_online_badges(self):
         profile = load_profile()

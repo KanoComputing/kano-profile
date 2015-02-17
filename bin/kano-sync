@@ -113,7 +113,6 @@ def do_sync():
         else:
             logger.debug('Too early to show notifications')
     except:
-        raise
         pass
 
     display_msg('Sync OK', 'info')

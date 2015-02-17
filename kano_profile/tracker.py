@@ -20,7 +20,7 @@ import json
 import os
 
 from kano.utils import get_program_name, is_number, read_file_contents, \
-    get_cpu_id
+    get_cpu_id, chown_path
 from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
@@ -51,6 +51,7 @@ def session_start(name, pid=None):
 
     with open_locked(path, "w") as f:
         json.dump(data, f)
+    chown_path(path)
 
     return path
 

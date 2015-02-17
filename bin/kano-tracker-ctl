@@ -227,12 +227,7 @@ def _process_session_data(callback):
 def _is_pid_running(pid):
     """ Check For the existence of a unix pid. """
 
-    try:
-        os.kill(pid, 0)
-    except OSError:
-        return False
-    else:
-        return True
+    return os.path.exists("/proc/{}".format(pid))
 
 
 def main():

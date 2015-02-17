@@ -19,7 +19,8 @@ import fcntl
 import json
 import os
 
-from kano.utils import get_program_name, is_number, read_file_contents
+from kano.utils import get_program_name, is_number, read_file_contents, \
+    get_cpu_id
 from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
@@ -27,6 +28,7 @@ from kano_profile.paths import tracker_dir, tracker_events_file
 
 
 OS_VERSION = str(read_file_contents('/etc/kanux_version'))
+CPU_ID = str(get_cpu_id())
 
 
 def get_session_file_path(name, pid):
@@ -111,6 +113,7 @@ def track_data(name, data):
         "time": time.time(),
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,
+        "cpu_id": CPU_ID,
 
         "name": str(name),
         "data": data
@@ -138,6 +141,7 @@ def get_action_event(name):
         "time": int(time.time()),
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,
+        "cpu_id": CPU_ID,
 
         "name": name
     }
@@ -151,6 +155,7 @@ def get_session_event(session):
         "time": session['started'],
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,
+        "cpu_id": CPU_ID,
 
         "name": session['name'],
         "length": session['elapsed'],
@@ -337,6 +342,9 @@ def _validate_event(event):
         return False
 
     if 'os_version' not in event:
+        return False
+
+    if 'cpu_id' not in event:
         return False
 
     if event['timezone_offset'] < -24*60*60 or \

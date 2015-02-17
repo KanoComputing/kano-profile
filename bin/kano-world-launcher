@@ -71,7 +71,7 @@ else:
 # Check for redirection
 redirect = ""
 if len(sys.argv) >= 2:
-    redirect = "?redirect={}{}".format(WORLD_URL, sys.argv[1])
+    redirect = "?redirect={}".format(sys.argv[1])
 
 # Launch Chromium
 run_cmd("chromium --window-size=1000,700 --app={}/login/{}{}"

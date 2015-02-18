@@ -38,5 +38,13 @@
     "operation": "each_greater",
     "targets": [["make-pong", "level", 7]],
     "title": "Rule Breaker"
+  },
+  "folderton_hero": {
+    "bg_color": "FCE683",
+    "desc_locked": "Complete the thirteenth challenge in Terminal Quest to unlock this badge.",
+    "desc_unlocked": "You saved a young girl from being kidnapped, and then selflessly gave away your food to help a family in need.  You are the Folderton Hero.",
+    "operation": "each_greater",
+    "targets": [["linux-story", "level", 13]],
+    "title": "Folderton Hero"
   }
 }

@@ -72,19 +72,26 @@ def update_status(watch=False):
     if not watch:
         return _do_update_status()
 
-    MINUTES = 60
-    started = time.time()
+    runs = 0
+    time_prev = time.time()
     while True:
+        time_now = time.time()
+        time_diff = time_now - time_prev - sleep_for
+        if time_diff > 10:
+            logger.info("The system time changed ({} seconds difference).".format(time_diff))
+
         logger.info("Updating session tracking data")
         _do_update_status()
 
-        elapsed = time.time() - started
-        if elapsed <= 20 * MINUTES:
-            time.sleep(2 * MINUTES)
-        elif elapsed <= 60 * MINUTES:
-            time.sleep(5 * MINUTES)
+        if runs < 10:
+            sleep_for = 2 * MINUTES
+        elif runs < 18:
+            sleep_for = 5 * MINUTES
         else:
-            time.sleep(15 * MINUTES)
+            sleep_for = 15 * MINUTES
+
+        time_prev = time_now
+        time.sleep(sleep_for)
 
 
 def clear_sessions():

@@ -18,17 +18,74 @@ import datetime
 import fcntl
 import json
 import os
+import hashlib
 
 from kano.utils import get_program_name, is_number, read_file_contents, \
     get_cpu_id, chown_path
 from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
-from kano_profile.paths import tracker_dir, tracker_events_file
+from kano_profile.paths import tracker_dir, tracker_events_file, \
+    tracker_token_file
+
+
+class open_locked:
+    """ A version of open with an exclusive lock to be used within
+        controlled execution statements.
+    """
+
+    def __init__(self, path, mode):
+        self._fd = open(path, mode)
+        fcntl.flock(self._fd, fcntl.LOCK_EX)
+
+    def __enter__(self):
+        return self._fd
+
+    def __exit__(self, exit_type, value, traceback):
+        self._fd.close()
+
+
+def load_token():
+    """
+        Reads the tracker token from the token file. If the file doesn't
+        exists, it regenerates it.
+
+        The token is regenerated on each boot and is inserted into every
+        event to link together events that happened during the same start
+        of the OS.
+
+        :returns: The token.
+        :rtype: str
+    """
+
+    if os.path.exists(tracker_token_file):
+        with open_locked(tracker_token_file, "r") as f:
+            return f.read().strip()
+    else:
+        return generate_tracker_token()
+
+
+def generate_tracker_token():
+    """
+        Generating the token is a simple md5hash of the current time.
+
+        The token is saved to the `tracker_token_file`.
+
+        :returns: The token.
+        :rtype: str
+    """
+
+    token = hashlib.md5(str(time.time())).hexdigest()
+
+    with open_locked(tracker_token_file, "w") as f:
+        f.write(token)
+
+    return token
 
 
 OS_VERSION = str(read_file_contents('/etc/kanux_version'))
 CPU_ID = str(get_cpu_id())
+TOKEN = load_token()
 
 
 def get_session_file_path(name, pid):
@@ -115,6 +172,7 @@ def track_data(name, data):
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,
         "cpu_id": CPU_ID,
+        "token": TOKEN,
 
         "name": str(name),
         "data": data
@@ -143,6 +201,7 @@ def get_action_event(name):
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,
         "cpu_id": CPU_ID,
+        "token": TOKEN,
 
         "name": name
     }
@@ -157,6 +216,7 @@ def get_session_event(session):
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,
         "cpu_id": CPU_ID,
+        "token": TOKEN,
 
         "name": session['name'],
         "length": session['elapsed'],
@@ -360,19 +420,3 @@ def clear_tracker_events():
 
     with open_locked(tracker_events_file, "w") as wf:
         pass
-
-
-class open_locked:
-    """ A version of open with an exclusive lock to be used within
-        controlled execution statements.
-    """
-
-    def __init__(self, path, mode):
-        self._fd = open(path, mode)
-        fcntl.flock(self._fd, fcntl.LOCK_EX)
-
-    def __enter__(self):
-        return self._fd
-
-    def __exit__(self, exit_type, value, traceback):
-        self._fd.close()

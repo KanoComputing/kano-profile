@@ -18,6 +18,7 @@ Usage:
   kano-tracker-ctl (+1|action) <name>
   kano-tracker-ctl data <name> <value>
   kano-tracker-ctl generate <event>
+  kano-tracker-ctl new-token
   kano-tracker-ctl -h|--help
   kano-tracker-ctl --version
 
@@ -33,6 +34,7 @@ import os
 import docopt
 import json
 import time
+import math
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -42,7 +44,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile.paths import tracker_dir, tracker_events_file
 from kano_profile.tracker import open_locked, session_start, session_end, \
     get_session_file_path, track_action, track_data, get_session_event, \
-    session_log
+    session_log, generate_tracker_token, load_token, get_utc_offset
 from kano.logging import logger
 from kano.utils import delete_file, ensure_dir, is_running, \
     get_rpi_model, detect_kano_keyboard
@@ -72,26 +74,69 @@ def update_status(watch=False):
     if not watch:
         return _do_update_status()
 
+    MINUTES = 60
+
     runs = 0
     time_prev = time.time()
+    sleep_for = 2 * MINUTES
     while True:
         time_now = time.time()
         time_diff = time_now - time_prev - sleep_for
-        if time_diff > 10:
-            logger.info("The system time changed ({} seconds difference).".format(time_diff))
+        if math.fabs(time_diff) > 10:
+            msg = "The system time changed " + \
+                  "({} secs difference).".format(time_diff)
+            logger.warn(msg)
+
+            correct_sessions(time_diff, time_prev, sleep_for)
+            correct_events(time_diff)
 
         logger.info("Updating session tracking data")
         _do_update_status()
 
-        if runs < 10:
+        if runs < 10:                 # every 2 minutes for 20 minutes
             sleep_for = 2 * MINUTES
-        elif runs < 18:
+        elif runs < 18:               # every 5 minutes for the first hour
             sleep_for = 5 * MINUTES
-        else:
+        else:                         # every 15 minutes thereafter
             sleep_for = 15 * MINUTES
 
         time_prev = time_now
         time.sleep(sleep_for)
+
+        runs += 1
+
+
+def correct_sessions(time_diff, last_refresh, refresh_interval):
+    _process_session_data(_correct_session_cb, time_diff, time.time(),
+                          refresh_interval)
+
+
+def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
+    if math.fabs(session['started'] - time_now) <= refresh_interval:
+        # The session was started after the time change,
+        # it doesn't need adjusting.
+        return
+
+    session['started'] -= int(time_diff)
+
+    # WARNING: Don't use open_locked, the file has been locked already.
+    with open(path, "w") as f:
+        json.dump(session, f)
+
+
+def correct_events(time_diff):
+    with open_locked(tracker_events_file, 'r') as rf:
+        entries = rf.readlines()
+
+        token = load_token()
+        with open(tracker_events_file, 'w') as wf:
+            for entry in entries:
+                entry_data = json.loads(entry)
+                if 'token' in entry_data and entry_data['token'] == token:
+                    entry_data['time'] += int(time_diff)
+                    entry_data['timezone_offset'] = get_utc_offset()
+                    entry = json.dumps(entry_data) + "\n"
+                wf.write(entry)
 
 
 def clear_sessions():
@@ -223,7 +268,7 @@ def _update_session_cb(path, session):
     return
 
 
-def _process_session_data(callback):
+def _process_session_data(callback, *args):
     """ Calls the function passed for each session file.
 
         They can be either running, crashed or finished, the user is
@@ -254,7 +299,7 @@ def _process_session_data(callback):
                 # Cannot read the file
                 session = None
 
-            rvs[path] = callback(path, session)
+            rvs[path] = callback(path, session, *args)
 
     return rvs
 
@@ -291,6 +336,9 @@ def main():
         track_action(args['<name>'])
     elif args['generate']:
         generate_event(args['<event>'])
+    elif args['new-token']:
+        token = generate_tracker_token()
+        logger.info("New tracker token generated {}".format(token))
     elif args['data']:
         try:
             value = json.loads(args['<value>'])

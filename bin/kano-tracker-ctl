@@ -128,7 +128,7 @@ def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
         session['elapsed'] = time_now - session['started']
     else:
         if session['elapsed'] <= 0 or session['elapsed'] >= refresh_interval:
-            session['elapsed'] += time_diff
+            session['elapsed'] -= time_diff
 
     msg = "Adjusting the running " + \
           "'{}' session by {} secs.".format(session['name'], time_diff)

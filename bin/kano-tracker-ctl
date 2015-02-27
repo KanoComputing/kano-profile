@@ -72,6 +72,8 @@ def show_status():
 
 def update_status(watch=False):
     if not watch:
+        logger.warn("Running refresh outside of the daemon loop " +
+                    "can result in imprecise data.")
         return _do_update_status()
 
     MINUTES = 60
@@ -80,6 +82,8 @@ def update_status(watch=False):
     time_prev = time.time()
     sleep_for = 0
     while True:
+        logger.info("Updating session tracking data")
+
         time_now = time.time()
         time_diff = time_now - time_prev - sleep_for
         if math.fabs(time_diff) > 10:
@@ -90,7 +94,6 @@ def update_status(watch=False):
             correct_sessions(time_diff, time_prev, sleep_for)
             correct_events(time_diff)
 
-        logger.info("Updating session tracking data")
         _do_update_status()
 
         if runs < 10:                 # every 2 minutes for 20 minutes
@@ -101,50 +104,40 @@ def update_status(watch=False):
             sleep_for = 15 * MINUTES
 
         time_prev = time_now
+        logger.debug("Sleeping for {} minutes.".format(sleep_for/MINUTES))
         time.sleep(sleep_for)
 
         runs += 1
 
 
 def correct_sessions(time_diff, last_refresh, refresh_interval):
+    logger.debug("Correcting sessions")
     _process_session_data(_correct_session_cb, time_diff, time.time(),
                           refresh_interval)
 
 
 def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
-    write = False
-    if math.fabs(session['started'] - time_now) > refresh_interval:
-        session['started'] += int(time_diff)
-        write = True
-    else:
+    if math.fabs(session['started'] - time_now) <= refresh_interval:
         # The session was started after the time change,
         # it doesn't need adjusting.
         logger.debug(("The '{}' session was started after the time change, " +
-                     "leaving start time unchanged.").format(session['name']))
+                     "leaving the time unchanged.").format(session['name']))
         return
 
-    if 'finished' in session and \
-       math.fabs(session['finished'] - time_now) > refresh_interval:
-        session['finished'] += int(time_diff)
-        write = True
-    else:
-        # The session was started after the time change,
-        # it doesn't need adjusting.
-        logger.debug(("The '{}' session was started after the time change, " +
-                     "leaving end time unchanged.").format(session['name']))
-        return
+    session['started'] += int(time_diff)
+    session['elapsed'] = time_now - session['started']
 
-    if write:
-        msg = "Adjusting the running " + \
-              "'{}' session by {} secs.".format(session['name'], time_diff)
-        logger.debug(msg)
+    msg = "Adjusting the running " + \
+          "'{}' session by {} secs.".format(session['name'], time_diff)
+    logger.debug(msg)
 
-        # WARNING: Don't use open_locked, the file has been locked already.
-        with open(path, "w") as f:
-            json.dump(session, f)
+    # WARNING: Don't use open_locked, the file has been locked already.
+    with open(path, "w") as f:
+        json.dump(session, f)
 
 
 def correct_events(time_diff):
+    logger.debug("Correcting events")
     with open_locked(tracker_events_file, 'r') as rf:
         entries = rf.readlines()
 
@@ -274,9 +267,14 @@ def _update_session_cb(path, session):
     if 'finished' in session and session['finished'] is True:
         # Return the session to the parent function to be added to the
         # tracking store.
+        msg = "Collecting a finished '{}' session".format(session['name'])
+        logger.debug(msg)
         return session
 
     if int(session['pid']) == 0 or _is_pid_running(int(session['pid'])):
+        msg = "Updating an active '{}' session".format(session['name'])
+        logger.debug(msg)
+
         session['elapsed'] = int(time.time() - session['started'])
 
         # WARNING: Don't use open_locked, the file has been locked already.
@@ -286,6 +284,8 @@ def _update_session_cb(path, session):
     else:
         # Application is not running, but not marked finished.
         # Return it as finished to be handled and removed.
+        msg = "Collecting a crashed '{}' session".format(session['name'])
+        logger.debug(msg)
         return session
 
     return

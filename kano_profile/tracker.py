@@ -167,7 +167,7 @@ def track_data(name, data):
     """
 
     event = {
-        "type": data,
+        "type": "data",
         "time": time.time(),
         "timezone_offset": get_utc_offset(),
         "os_version": OS_VERSION,

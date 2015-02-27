@@ -298,7 +298,7 @@ class KanoWorldSession(object):
         return True, None
 
     def upload_tracking_data(self):
-        data = get_tracker_events()
+        data = get_tracker_events(old_only=True)
         if len(data['events']) == 0:
             return True, "No data available"
 
@@ -311,7 +311,7 @@ class KanoWorldSession(object):
         )
 
         if success and 'success' in response_data and response_data['success']:
-            clear_tracker_events()
+            clear_tracker_events(old_only=True)
             return True, None
 
         return False, "Upload failed, tracking data not sent."

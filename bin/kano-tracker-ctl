@@ -96,12 +96,10 @@ def update_status(watch=False):
 
         _do_update_status()
 
-        if runs < 10:                 # every 2 minutes for 20 minutes
+        if runs < 15:                 # every 2 minutes for 20 minutes
             sleep_for = 2 * MINUTES
-        elif runs < 18:               # every 5 minutes for the first hour
+        else:
             sleep_for = 5 * MINUTES
-        else:                         # every 15 minutes thereafter
-            sleep_for = 15 * MINUTES
 
         time_prev = time_now
         logger.debug("Sleeping for {} minutes.".format(sleep_for/MINUTES))
@@ -125,7 +123,12 @@ def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
         return
 
     session['started'] += int(time_diff)
-    session['elapsed'] = time_now - session['started']
+
+    if 'finished' not in session or not session['finished']:
+        session['elapsed'] = time_now - session['started']
+    else:
+        if session['elapsed'] <= 0 or session['elapsed'] >= refresh_interval:
+            session['elapsed'] += time_diff
 
     msg = "Adjusting the running " + \
           "'{}' session by {} secs.".format(session['name'], time_diff)

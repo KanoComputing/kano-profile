@@ -361,8 +361,11 @@ def save_kano_version():
     save_app_state_variable('kano-tracker', 'versions', updates)
 
 
-def get_tracker_events():
+def get_tracker_events(old_only=False):
     """ Read the events log and return a dictionary with all of them.
+
+        :param old_only: Don't return events from the current boot.
+        :type old_only: boolean
 
         :returns: A dictionary suitable to be sent to the tracker endpoint.
         :rtype: dict
@@ -377,7 +380,7 @@ def get_tracker_events():
             except:
                 logger.warn("Found a corrupted event, skipping.")
 
-            if _validate_event(event):
+            if _validate_event(event) and event['token'] != TOKEN:
                 data['events'].append(event)
 
     return data
@@ -408,6 +411,9 @@ def _validate_event(event):
     if 'cpu_id' not in event:
         return False
 
+    if 'token' not in event:
+        return False
+
     if event['timezone_offset'] < -24*60*60 or \
        event['timezone_offset'] > 24*60*60:
         return False
@@ -415,8 +421,24 @@ def _validate_event(event):
     return True
 
 
-def clear_tracker_events():
-    """ Truncate the events file, removing all the cached data. """
+def clear_tracker_events(old_only=True):
+    """ Truncate the events file, removing all the cached data.
 
-    with open_locked(tracker_events_file, "w") as wf:
-        pass
+        :param old_only: Don't remove data from the current boot.
+        :type old_only: boolean
+    """
+
+    with open_locked(tracker_events_file, "r") as rf:
+        events = []
+        for event_line in rf.readlines():
+            try:
+                event = json.loads(event_line)
+                if 'token' in event and event['token'] == TOKEN:
+                    events.append(event_line)
+            except:
+                logger.warn("Found a corrupted event, skipping.")
+
+        with open(tracker_events_file, "w") as wf:
+            for event_line in events:
+                wf.write(event_line)
+

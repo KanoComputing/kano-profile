@@ -78,7 +78,7 @@ def update_status(watch=False):
 
     runs = 0
     time_prev = time.time()
-    sleep_for = 2 * MINUTES
+    sleep_for = 0
     while True:
         time_now = time.time()
         time_diff = time_now - time_prev - sleep_for
@@ -112,22 +112,36 @@ def correct_sessions(time_diff, last_refresh, refresh_interval):
 
 
 def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
-    if math.fabs(session['started'] - time_now) <= refresh_interval:
+    write = False
+    if math.fabs(session['started'] - time_now) > refresh_interval:
+        session['started'] += int(time_diff)
+        write = True
+    else:
         # The session was started after the time change,
         # it doesn't need adjusting.
         logger.debug(("The '{}' session was started after the time change, " +
-                     "leaving unchanged.").format(session['name']))
+                     "leaving start time unchanged.").format(session['name']))
         return
 
-    session['started'] -= int(time_diff)
+    if 'finished' in session and \
+       math.fabs(session['finished'] - time_now) > refresh_interval:
+        session['finished'] += int(time_diff)
+        write = True
+    else:
+        # The session was started after the time change,
+        # it doesn't need adjusting.
+        logger.debug(("The '{}' session was started after the time change, " +
+                     "leaving end time unchanged.").format(session['name']))
+        return
 
-    msg = "Adjusting the running " + \
-          "'{}' session by {} secs.".format(session['name'], time_diff)
-    logger.debug(msg)
+    if write:
+        msg = "Adjusting the running " + \
+              "'{}' session by {} secs.".format(session['name'], time_diff)
+        logger.debug(msg)
 
-    # WARNING: Don't use open_locked, the file has been locked already.
-    with open(path, "w") as f:
-        json.dump(session, f)
+        # WARNING: Don't use open_locked, the file has been locked already.
+        with open(path, "w") as f:
+            json.dump(session, f)
 
 
 def correct_events(time_diff):
@@ -226,8 +240,8 @@ def _show_session_cb(path, session):
     )
 
     status = ""
-    if _is_pid_running(int(session['pid'])):
-        status = decorate_string_only_terminal('RUNNING', 'extended(119)',
+    if _is_pid_running(int(session['pid'])) or int(session['pid']) == 0:
+        status = decorate_string_only_terminal('ACTIVE', 'extended(119)',
                                                bold=True)
     else:
         if 'finished' in session and session['finished']:

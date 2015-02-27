@@ -115,9 +115,15 @@ def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
     if math.fabs(session['started'] - time_now) <= refresh_interval:
         # The session was started after the time change,
         # it doesn't need adjusting.
+        logger.debug(("The '{}' session was started after the time change, " +
+                     "leaving unchanged.").format(session['name']))
         return
 
     session['started'] -= int(time_diff)
+
+    msg = "Adjusting the running " + \
+          "'{}' session by {} secs.".format(session['name'], time_diff)
+    logger.debug(msg)
 
     # WARNING: Don't use open_locked, the file has been locked already.
     with open(path, "w") as f:
@@ -136,6 +142,9 @@ def correct_events(time_diff):
                     entry_data['time'] += int(time_diff)
                     entry_data['timezone_offset'] = get_utc_offset()
                     entry = json.dumps(entry_data) + "\n"
+                    logger.debug("Adjusting event after a timechange: " +
+                                 "type={} name={}".format(entry_data['type'],
+                                                          entry_data['name']))
                 wf.write(entry)
 
 

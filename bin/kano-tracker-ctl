@@ -18,6 +18,7 @@ Usage:
   kano-tracker-ctl (+1|action) <name>
   kano-tracker-ctl data <name> <value>
   kano-tracker-ctl generate <event>
+  kano-tracker-ctl new-token
   kano-tracker-ctl -h|--help
   kano-tracker-ctl --version
 
@@ -33,6 +34,7 @@ import os
 import docopt
 import json
 import time
+import math
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -42,7 +44,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile.paths import tracker_dir, tracker_events_file
 from kano_profile.tracker import open_locked, session_start, session_end, \
     get_session_file_path, track_action, track_data, get_session_event, \
-    session_log
+    session_log, generate_tracker_token, load_token, get_utc_offset
 from kano.logging import logger
 from kano.utils import delete_file, ensure_dir, is_running, \
     get_rpi_model, detect_kano_keyboard
@@ -70,21 +72,90 @@ def show_status():
 
 def update_status(watch=False):
     if not watch:
+        logger.warn("Running refresh outside of the daemon loop " +
+                    "can result in imprecise data.")
         return _do_update_status()
 
     MINUTES = 60
-    started = time.time()
+
+    runs = 0
+    time_prev = time.time()
+    sleep_for = 0
     while True:
         logger.info("Updating session tracking data")
+
+        time_now = time.time()
+        time_diff = time_now - time_prev - sleep_for
+        if math.fabs(time_diff) > 10:
+            msg = "The system time changed " + \
+                  "({} secs difference).".format(time_diff)
+            logger.warn(msg)
+
+            correct_sessions(time_diff, time_prev, sleep_for)
+            correct_events(time_diff)
+
         _do_update_status()
 
-        elapsed = time.time() - started
-        if elapsed <= 20 * MINUTES:
-            time.sleep(2 * MINUTES)
-        elif elapsed <= 60 * MINUTES:
-            time.sleep(5 * MINUTES)
+        if runs < 15:                 # every 2 minutes for 20 minutes
+            sleep_for = 2 * MINUTES
         else:
-            time.sleep(15 * MINUTES)
+            sleep_for = 5 * MINUTES
+
+        time_prev = time_now
+        logger.debug("Sleeping for {} minutes.".format(sleep_for/MINUTES))
+        time.sleep(sleep_for)
+
+        runs += 1
+
+
+def correct_sessions(time_diff, last_refresh, refresh_interval):
+    logger.debug("Correcting sessions")
+    _process_session_data(_correct_session_cb, time_diff, time.time(),
+                          refresh_interval)
+
+
+def _correct_session_cb(path, session, time_diff, time_now, refresh_interval):
+    if math.fabs(session['started'] - time_now) <= refresh_interval:
+        # The session was started after the time change,
+        # it doesn't need adjusting.
+        logger.debug(("The '{}' session was started after the time change, " +
+                     "leaving the time unchanged.").format(session['name']))
+        return
+
+    session['started'] += int(time_diff)
+
+    if 'finished' not in session or not session['finished']:
+        session['elapsed'] = time_now - session['started']
+    else:
+        if session['elapsed'] <= 0 or session['elapsed'] >= refresh_interval:
+            session['elapsed'] -= time_diff
+
+    msg = "Adjusting the running " + \
+          "'{}' session by {} secs.".format(session['name'], time_diff)
+    logger.debug(msg)
+
+    # WARNING: Don't use open_locked, the file has been locked already.
+    with open(path, "w") as f:
+        json.dump(session, f)
+
+
+def correct_events(time_diff):
+    logger.debug("Correcting events")
+    with open_locked(tracker_events_file, 'r') as rf:
+        entries = rf.readlines()
+
+        token = load_token()
+        with open(tracker_events_file, 'w') as wf:
+            for entry in entries:
+                entry_data = json.loads(entry)
+                if 'token' in entry_data and entry_data['token'] == token:
+                    entry_data['time'] += int(time_diff)
+                    entry_data['timezone_offset'] = get_utc_offset()
+                    entry = json.dumps(entry_data) + "\n"
+                    logger.debug("Adjusting event after a timechange: " +
+                                 "type={} name={}".format(entry_data['type'],
+                                                          entry_data['name']))
+                wf.write(entry)
 
 
 def clear_sessions():
@@ -165,8 +236,8 @@ def _show_session_cb(path, session):
     )
 
     status = ""
-    if _is_pid_running(int(session['pid'])):
-        status = decorate_string_only_terminal('RUNNING', 'extended(119)',
+    if _is_pid_running(int(session['pid'])) or int(session['pid']) == 0:
+        status = decorate_string_only_terminal('ACTIVE', 'extended(119)',
                                                bold=True)
     else:
         if 'finished' in session and session['finished']:
@@ -199,9 +270,14 @@ def _update_session_cb(path, session):
     if 'finished' in session and session['finished'] is True:
         # Return the session to the parent function to be added to the
         # tracking store.
+        msg = "Collecting a finished '{}' session".format(session['name'])
+        logger.debug(msg)
         return session
 
     if int(session['pid']) == 0 or _is_pid_running(int(session['pid'])):
+        msg = "Updating an active '{}' session".format(session['name'])
+        logger.debug(msg)
+
         session['elapsed'] = int(time.time() - session['started'])
 
         # WARNING: Don't use open_locked, the file has been locked already.
@@ -211,12 +287,14 @@ def _update_session_cb(path, session):
     else:
         # Application is not running, but not marked finished.
         # Return it as finished to be handled and removed.
+        msg = "Collecting a crashed '{}' session".format(session['name'])
+        logger.debug(msg)
         return session
 
     return
 
 
-def _process_session_data(callback):
+def _process_session_data(callback, *args):
     """ Calls the function passed for each session file.
 
         They can be either running, crashed or finished, the user is
@@ -247,7 +325,7 @@ def _process_session_data(callback):
                 # Cannot read the file
                 session = None
 
-            rvs[path] = callback(path, session)
+            rvs[path] = callback(path, session, *args)
 
     return rvs
 
@@ -284,6 +362,9 @@ def main():
         track_action(args['<name>'])
     elif args['generate']:
         generate_event(args['<event>'])
+    elif args['new-token']:
+        token = generate_tracker_token()
+        logger.info("New tracker token generated {}".format(token))
     elif args['data']:
         try:
             value = json.loads(args['<value>'])

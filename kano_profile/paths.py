@@ -71,3 +71,4 @@ app_profiles_file = os.path.join(rules_dir, 'app_profiles.json')
 
 tracker_dir = os.path.join(kanoprofile_dir, 'tracker/sessions/')
 tracker_events_file = os.path.join(kanoprofile_dir, 'tracker/events')
+tracker_token_file = os.path.join(kanoprofile_dir, 'tracker/token')

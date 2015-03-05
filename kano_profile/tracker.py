@@ -21,7 +21,7 @@ import os
 import hashlib
 
 from kano.utils import get_program_name, is_number, read_file_contents, \
-    get_cpu_id, chown_path
+    get_cpu_id, chown_path, ensure_dir
 from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
@@ -77,6 +77,7 @@ def generate_tracker_token():
 
     token = hashlib.md5(str(time.time())).hexdigest()
 
+    ensure_dir(tracker_dir)
     with open_locked(tracker_token_file, "w") as f:
         f.write(token)
 

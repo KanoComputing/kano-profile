@@ -108,6 +108,7 @@ if __name__ == '__main__':
 
     first_boot = 0
     page_number = 0
+    os.system('kano-stop-splash') # in case we are run from kano-world-launcher
     if len(sys.argv) == 2 and sys.argv[1] == 'first_boot':
         first_boot = 1
     elif len(sys.argv) == 2:

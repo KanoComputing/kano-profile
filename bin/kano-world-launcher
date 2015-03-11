@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/kano-splash /usr/share/kano-profile/media/images/splash.png /usr/bin/env python
 
 # kano-world-launcher
 #
@@ -73,8 +73,8 @@ redirect = ""
 if len(sys.argv) >= 2:
     redirect = "?redirect={}".format(sys.argv[1])
 
-# Launch Chromium
-run_cmd("chromium --window-size=1000,700 --app={}/login/{}{}"
+# Launch Chromium, and then kano-stop-splash once the window is mapped
+run_cmd("xtoolwait -timeout 5000000 chromium --window-size=1000,700 --app={}/login/{}{}; kano-stop-splash"
         .format(WORLD_URL, get_token(), redirect))
 
 # sync

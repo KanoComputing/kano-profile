@@ -159,6 +159,8 @@ def upload_tracking_data():
     success, value = glob_session.upload_tracking_data()
     if not success:
         return False, value
+    
+    return True, None
 
 
 def get_glob_session():

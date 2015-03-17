@@ -220,7 +220,7 @@ def refresh_kdesk():
 
 
 if __name__ == '__main__':
-    if not (args.sync or args.backup or args.restore):
+    if not (args.sync or args.backup or args.restore or args.upload_tracking_data):
         parser.print_help()
         sys.exit()
 

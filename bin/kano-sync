@@ -18,9 +18,10 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_world.functions import sync, login_using_token, backup_content, restore_content
-from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, run_bg, \
-    is_gui, delete_dir
+from kano_world.functions import sync, login_using_token, backup_content, \
+    restore_content, upload_tracking_data
+from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, \
+    run_bg, is_gui, delete_dir
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 from kano_profile.profile import load_profile, save_profile
@@ -30,11 +31,16 @@ home_dir = get_home()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--silent', action='store_true', help='silent mode')
-parser.add_argument('-d', '--dialog', action='store_true', help='display dialog')
+parser.add_argument('-d', '--dialog', action='store_true',
+                    help='display dialog')
 parser.add_argument('--sync', action='store_true', help='sync profile data')
+parser.add_argument('--upload-tracking-data', action='store_true',
+                    help='upload tracking data')
 parser.add_argument('--backup', action='store_true', help='backup app content')
-parser.add_argument('--restore', action='store_true', help='restore app content')
-parser.add_argument('--skip-kdesk', action='store_true', help='skip kdesk refresh')
+parser.add_argument('--restore', action='store_true',
+                    help='restore app content')
+parser.add_argument('--skip-kdesk', action='store_true',
+                    help='skip kdesk refresh')
 args = parser.parse_args()
 
 enable_dialog = args.dialog and is_gui()
@@ -74,9 +80,11 @@ def do_login():
 
 
 def _should_display_notifications(profile):
-    NOTIFY_INTERVAL = 60*60*12 # 12 hours in seconds
+    NOTIFY_INTERVAL = 60*60*12  # 12 hours in seconds
+    time_since_last_notification = (time.time() -
+                                    int(profile['last_notifications_prompt']))
     return 'last_notifications_prompt' not in profile or \
-           (time.time() - int(profile['last_notifications_prompt'])) > NOTIFY_INTERVAL
+           time_since_last_notification > NOTIFY_INTERVAL
 
 def _any_notifications_available(profile):
     return ('notifications' in profile and
@@ -137,7 +145,8 @@ def do_backup():
     tmp_file = os.path.join(tmp_dir, 'backup.tar.gz')
     delete_file(tmp_file)
 
-    tar_cmd = 'tar -czf {tmp_file} {folders} --exclude=webload'.format(tmp_file=tmp_file, folders=' '.join(folders))
+    tar_cmd = 'tar -czf {tmp_file} {folders} --exclude=webload'.format(
+        tmp_file=tmp_file, folders=' '.join(folders))
     if _platform == 'darwin':
         tar_cmd = 'g' + tar_cmd
     _, e, _ = run_cmd(tar_cmd)
@@ -175,9 +184,9 @@ def do_restore():
         return
 
     if _platform == 'darwin':
-        tar_cmd = 'gtar -xzf {tmp_file} --skip-old-files'.format(tmp_file=tmp_file)
+        tar_cmd = 'gtar -xzf {} --skip-old-files'.format(tmp_file)
     else:
-        tar_cmd = 'tar -kxzf {tmp_file}'.format(tmp_file=tmp_file)
+        tar_cmd = 'tar -kxzf {}'.format(tmp_file)
 
     _, e, _ = run_cmd(tar_cmd)
     if e:
@@ -190,6 +199,15 @@ def do_restore():
     delete_dir(tmp_dir)
 
     display_msg('Restore OK', 'info')
+
+
+def do_upload_tracking_data():
+    logger.debug('do_upload_tracking_data')
+
+    success, value = upload_tracking_data()
+    if not success:
+        display_msg('Upload not possible, error: {}'.format(value), 'error')
+        return
 
 
 def refresh_kdesk():
@@ -216,3 +234,6 @@ if __name__ == '__main__':
 
     if args.restore:
         do_restore()
+
+    if args.upload_tracking_data:
+        do_upload_tracking_data()

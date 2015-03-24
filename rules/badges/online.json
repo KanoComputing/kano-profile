@@ -1,4 +1,34 @@
 {
+  "first_share": {
+    "bg_color": "ffea8c",
+    "desc_locked": "Share your creations on Kano World to unlock this badge!",
+    "desc_unlocked": "You clicked that big blue button, and shared your creations with a world of thousands. You're gaining a following! Connect with other Community Champions on Kano World.",
+    "operation": "sum_greater",
+    "targets": [
+      [
+        "make-pong",
+        "shared"
+      ],
+      [
+        "make-minecraft",
+        "shared"
+      ],
+      [
+        "make-music",
+        "shared"
+      ],
+      [
+        "kano-draw",
+        "shared"
+      ],
+      [
+        "make-snake",
+        "shared"
+      ]
+    ],
+    "title": "Community Champion",
+    "value": 1
+  },
   "community_champion": {
     "bg_color": "ffea8c",
     "desc_locked": "Share five challenges to unlock this badge!",

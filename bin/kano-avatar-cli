@@ -1,0 +1,172 @@
+#!/usr/bin/env python
+
+import argparse
+from PIL import Image
+
+
+class AvatarAccessory():
+    _category = None
+    _name = ''
+    _asset_fname = ''
+    _img_position = ''
+    _img = None
+
+    def __init__(self, name, category):
+        self._category = self._acceptable_category_name(category)
+        self._name = name
+
+    def _acceptable_category_name(self, cat_name):
+        if cat_name not in categories:
+            raise ValueError('category {} doesn\'t match available categories')
+        else:
+            return cat_name
+
+    def name(self):
+        return self._name
+
+    def category(self):
+        return self._category
+
+
+program_desc = "This program handles the creation of an avatar for a user of Kano World"
+
+characters = dict(
+        Judoka='/tmp/Judoka',
+        )
+
+categories = {'Hats': 2, 'Shirts': 1, 'Face': 1}
+
+hats = ['blue_hat', 'black_hat', 'white_hat']
+shirts = ['T-Shirt', 'Sleeveless Shirt', 'Cool Shirt']
+face = ['Goatee beard', 'Red lips', 'Thick Stache']
+
+objs = {k: globals()[k.lower()] for k in categories.keys()}
+
+cat_per_lvl = {}
+
+
+fnames = {
+        'Judoka': 'Judoka.png',
+        'blue_hat': 'blue_hat.png',
+        'black_hat': 'black_hat.png',
+        'white_hat': 'white_hat.png',
+        'T-Shirt': 't_shirt.png',
+        'Sleeveless Shirt': 'sleeveless_shirt.png',
+        'Cool Shirt': 'cool_shirt.png',
+        'Goatee beard': 'goatee.png',
+        'Red lips': 'red_lips.png',
+        'Thick Stache': 'thick_stache.png'
+        }
+
+
+def gen_categ_per_level(force_gen=False):
+    global cat_per_lvl
+
+    if force_gen or len(cat_per_lvl) == 0:
+        cat_per_lvl = {i: [] for i in categories.values()}
+        for cat_name, lvl in categories.items():
+            cat_per_lvl[lvl].append(cat_name)
+
+
+def get_list_of_available_chars():
+    return characters.keys()[0]
+
+
+def get_list_of_available_categories():
+    return categories
+
+
+def get_list_of_available_objects(category_name):
+    return objs[category_name]
+
+
+def get_set_of_available_objects():
+    ret = set()
+    for cat in get_list_of_available_categories():
+        ret.update(get_list_of_available_objects(cat))
+
+    return ret
+
+
+def get_categories_per_level(level_no):
+    gen_categ_per_level()
+    return cat_per_lvl[level_no]
+
+
+def get_category_from_object(obj_name):
+    for cat in get_list_of_available_categories():
+        if obj_name in get_list_of_available_objects(cat):
+            return cat
+
+
+def main():
+    parser = argparse.ArgumentParser(description=program_desc)
+    group_view = parser.add_argument_group('View', 'View available choices')
+    group_view.add_argument('-l', '--list',
+                            choices=['char', 'obj', 'all'],
+                            help='List available choices for characters (char),objects (obj), or all (all).')
+    group_create = parser.add_argument_group('Create', 'Create a new avatar')
+    group_create.add_argument('-c', '--create',
+                              type=str,
+                              nargs='+',
+                              help='Create a new character, specify the character name followed by the objects')
+    args = parser.parse_args()
+
+    if args.list:
+        if args.list == 'char':
+            print get_list_of_available_chars()
+        if args.list == 'obj':
+            cats = get_list_of_available_categories()
+            for cat in cats:
+                print '{0}:{1}'.format(cat, get_list_of_available_objects(cat))
+
+        if args.list == 'all':
+            print get_list_of_available_chars()
+            cats = get_list_of_available_categories()
+            for cat in cats:
+                print get_list_of_available_objects(cat)
+
+    if args.create:
+        print args.create
+
+        char_selected = args.create.pop(0)
+        if char_selected not in get_list_of_available_chars():
+            print 'error character not available'
+            return 1
+        else:
+            print 'Selected {}'.format(char_selected)
+            base = Image.open(fnames[char_selected])
+
+        objs_selected = args.create[:]
+        cats_objects = {}
+
+        for obj in objs_selected:
+            if obj not in get_set_of_available_objects():
+                print get_set_of_available_objects()
+                print 'error object: {} not available'.format(obj)
+                return 1
+            else:
+                print 'Will contain object {}'.format(obj)
+                obj_cat = get_category_from_object(obj)
+
+                if obj_cat in cats_objects:
+                    print 'error you have selected 2 items of the same category, {} and {}, cat:{}'.format(obj, cats_objects[obj_cat], obj_cat)
+                    return 1
+                else:
+                    cats_objects[obj_cat] = obj
+
+        gen_categ_per_level()
+
+        for lvl, cat_list in sorted(cat_per_lvl.items()):
+            for cat in cat_list:
+                if cat not in cats_objects:
+                    continue
+                tmp_img = Image.open(fnames[cats_objects[cat]])
+                base.paste(tmp_img, (20, 20), tmp_img)
+
+        base.show()
+        base.save('out.png')
+
+
+if __name__ == '__main__':
+    main()

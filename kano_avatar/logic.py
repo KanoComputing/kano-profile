@@ -8,6 +8,8 @@ import yaml
 from PIL import Image
 from kano_avatar.paths import AVATAR_CONF_FILE
 
+# TODO Add logging from kano_logging
+# TODO Check which types of names are case sensitive
 
 class AvatarAccessory():
     _category = ''

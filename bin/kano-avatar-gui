@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+
+# kano-profile-gui
+#
+# Copyright (C) 2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+import os
+import sys
+from gi.repository import Gtk, Gdk
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+from kano.gtk3.application_window import ApplicationWindow
+from kano.gtk3.apply_styles import apply_colours_to_screen
+from kano.gtk3.top_bar import TopBar
+
+from kano_avatar.logic import AvatarCreator, get_avatar_conf
+
+try:
+    from kano_profile.tracker import Tracker
+    kanotracker = Tracker()
+except:
+    pass
+
+configuration = get_avatar_conf()
+
+avatar_cr = AvatarCreator(configuration)
+
+
+class MainWindow(ApplicationWindow):
+    _list_of_categories = []
+    _list_of_obj_per_cat = []
+    _list_of_comboxes = []
+    _vbox = None
+
+    def __init__(self):
+        ApplicationWindow.__init__(self, 'Avatar', 755, 588)
+
+        # self.connect("show", self._app_loaded)
+        self.connect("delete-event", Gtk.main_quit)
+
+        # self.set_icon_from_file("/usr/share/kano-profile/icons/avatar.png")
+
+        # Styling
+        self._manage_styling()
+
+        # Setup widgets
+        self.set_decorated(True)
+        self._top_bar = TopBar("Avatar", self._win_width, False)
+        self._top_bar.set_close_callback(Gtk.main_quit)
+        self.set_titlebar(self._top_bar)
+
+        self._get_obj_data()
+        # TODO Un hardcode the following
+        avatar_cr.char_select('Judoka')
+
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self._create_list_boxes()
+        self._create_img_box('avatar.png')
+
+	self._overlay.add(self._vbox)
+	self._overlay.show_all()
+
+
+    def _get_obj_data(self):
+        self._list_of_categories = avatar_cr.list_available_categories()
+        self._list_of_obj_per_cat = avatar_cr._object_per_cat
+
+    def _manage_styling(self):
+        screen = Gdk.Screen.get_default()
+        specific_css_provider = Gtk.CssProvider()
+        # TODO remove hard-coded link
+        specific_css_provider.load_from_path('/usr/share/kano-profile/media/CSS/style.css')
+        specific_style_context = Gtk.StyleContext()
+        specific_style_context.add_provider_for_screen(screen,
+                                                       specific_css_provider,
+                                                       Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        style = self.get_style_context()
+        style.add_class('main_window')
+
+    def _create_img_box(self, img_name):
+        self._imgbox = ImageView(self)
+        self._vbox.pack_start(self._imgbox, False, False, True)
+
+        self._imgbox.set_image(img_name)
+
+    def _create_list_boxes(self):
+        for cat in self._list_of_categories:
+            cat_box = Gtk.ComboBoxText()
+            cat_box.set_entry_text_column(0)
+
+            for obj in self._list_of_obj_per_cat[cat]:
+                cat_box.append_text(obj.name())
+
+            self._list_of_comboxes.append(cat_box)
+
+            self._vbox.pack_start(cat_box, False, False, True)
+            cat_box.connect('changed', self._update_img)
+
+    def _update_img(self, combo):
+        list_of_objs = []
+        for box in self._list_of_comboxes:
+            if box.get_active_text():
+            	list_of_objs.append(box.get_active_text())
+	rc = avatar_cr.obj_select(list_of_objs)
+        if not rc:
+            print 'Error processing the list {}'.format(list_of_objs)
+        else:
+            self._imgbox.destroy()
+            avatar_cr.create_avatar(save_to='avatar.png')
+            self._create_img_box('avatar.png')
+
+
+class ImageView(Gtk.EventBox):
+    _img = None
+
+    def __init__(self, win):
+        Gtk.EventBox.__init__(self, hexpand=True, vexpand=True)
+
+        style = self.get_style_context()
+        style.add_class('imageview')
+
+        self._current = None
+        self._win = win
+
+        self.show()
+
+    def get_window(self):
+        return self._win
+
+    def set_image(self, img_loc):
+        self._img = Gtk.Image.new_from_file(img_loc)
+        self.add(self._img)
+        self._img.show()
+
+
+def main():
+    win = MainWindow()
+    win.show_all()
+    Gtk.main()
+
+
+if __name__ == '__main__':
+    main()

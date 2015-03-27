@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import argparse
 import yaml
 from PIL import Image
@@ -8,7 +9,7 @@ CONF_FILE = 'sample_conf.yaml'
 
 
 class AvatarAccessory():
-    _category = None
+    _category = ''
     _name = ''
     _asset_fname = ''
     _img_position_x = 0
@@ -22,12 +23,6 @@ class AvatarAccessory():
         self._img_position_x = x
         self._img_position_y = y
         self._asset_fname = file_name
-
-    def _acceptable_category_name(self, cat_name):
-        if cat_name not in categories:
-            raise ValueError('category {} doesn\'t match available categories')
-        else:
-            return cat_name
 
     def name(self):
         return self._name
@@ -63,6 +58,9 @@ class AvatarCharacter():
 
     def get_img(self):
         return self._img
+
+    def save_image(self, file_name):
+        self._img.save(file_name)
 
 
 class AvatarConfParser():
@@ -122,6 +120,96 @@ class AvatarConfParser():
             new_obj = AvatarCharacter(new_name, new_fname)
             self._characters[new_name] = new_obj
 
+    def get_lvl(self, category):
+        cat = category.lower()
+
+        if cat not in self._cat_to_lvl:
+            print 'Error category {} not in available ones'.format(category)
+        else:
+            return self._cat_to_lvl[cat]
+
+    def list_available_chars(self):
+        return [k for k in self._characters.keys()]
+
+    def list_all_available_objs(self):
+        return [k for k in self._objects.keys()]
+
+
+class AvatarCreator(AvatarConfParser):
+    _sel_char = None
+    _sel_obj = {}
+    _sel_obj_per_cat = {}
+    _sel_objs_per_lvl = {}
+
+    def char_select(self, char_name):
+        # Get the instance of the character
+        if char_name in self._characters:
+            self._sel_char = self._characters[char_name]
+            return True
+        else:
+            print 'Error, character {} is not in the available char list'.format(char_name)
+            return False
+
+    def clear_sel_objs(self):
+        self._sel_obj.clear()
+        self._sel_obj_per_cat.clear()
+        self._sel_objs_per_lvl.clear()
+
+    def obj_select(self, obj_names):
+        self.clear_sel_objs()
+
+        for obj_name in obj_names:
+            if obj_name in self._objects:
+                obj_instance = self._objects[obj_name]
+                if obj_instance.category() in self._sel_obj_per_cat:
+                    print 'Error: Multiple objects in category {}'.format(obj_instance.category())
+                    return False
+
+                obj_cat = obj_instance.category()
+                self._sel_obj_per_cat[obj_cat] = obj_instance
+                self._sel_obj[obj_name] = self._objects[obj_name]
+
+                # Create a dictionary with which objects belong to each lvl
+                obj_lvl = self.get_lvl(obj_cat)
+                if obj_lvl not in self._sel_objs_per_lvl:
+                    self._sel_objs_per_lvl[obj_lvl] = []
+
+                self._sel_objs_per_lvl[obj_lvl].append(obj_instance)
+            else:
+                print 'Error: Object {} not in available obj list'.format(obj_name)
+                return False
+        return True
+
+    def create_avatar(self, save_to=''):
+        self._create_base_img()
+
+        for lvl in sorted(self._sel_objs_per_lvl.keys()):
+            items = self._sel_objs_per_lvl[lvl]
+            for item in items:
+                item.paste_over_image(self._sel_char.get_img())
+
+        # write to specified location
+        if save_to:
+            self.save_image(save_to)
+        return True
+
+    def _create_base_img(self):
+        if self._sel_char is None:
+            print 'Error: You haven\'t specified a character'
+            return False
+
+        self._sel_char.load_image()
+        return True
+
+    def save_image(self, file_name):
+        if self._sel_char is None:
+            print 'Error: You haven\'t specified a character'
+            return False
+
+        self._sel_char.save_image(file_name)
+        return True
+
+
 program_desc = "This program handles the creation of an avatar for a user of Kano World"
 
 configuration = None
@@ -147,17 +235,26 @@ def main():
                               help='Create a new character, specify the character name followed by the objects')
     args = parser.parse_args()
 
-    avail_conf = AvatarConfParser(configuration)
-
     if args.list:
+        avail_conf = AvatarConfParser(configuration)
         if args.list == 'char':
-            print avail_conf._characters
+            print avail_conf.list_available_chars()
         elif args.list == 'obj':
-            print avail_conf._objects
+            print avail_conf.list_all_available_objs()
         elif args.list == 'all':
-            print avail_conf._characters
-            print avail_conf._objects
+            print avail_conf.list_available_chars()
+            print avail_conf.list_all_available_objs()
+        return 0
+
+    if args.create:
+        avatar_creator = AvatarCreator(configuration)
+        avatar_creator.char_select(args.create.pop(0))
+        rc = avatar_creator.obj_select(args.create)
+        if not rc:
+            print 'Error processing the list, please double check it'
+            return 1
+        avatar_creator.create_avatar(save_to='output.png')
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

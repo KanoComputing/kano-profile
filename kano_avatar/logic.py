@@ -73,6 +73,7 @@ class AvatarConfParser():
     _level_to_categories = {}
     _objects = {}
     _characters = {}
+    _object_per_cat = {}
     cat_lvl_label = 'category_levels'
     objects_label = 'objects'
     char_label = 'characters'
@@ -109,12 +110,16 @@ class AvatarConfParser():
     def _populate_object_structures(self, conf_data):
         for obj in conf_data[self.objects_label]:
             new_name = obj['display_name']
-            new_cat = obj['category']
+            new_cat = obj['category'].lower()
             new_fname = obj['img_name']
             new_x = obj['position_x']
             new_y = obj['position_y']
             new_obj = AvatarAccessory(new_name, new_cat, new_fname, new_x, new_y)
             self._objects[new_name] = new_obj
+            if new_cat not in self._object_per_cat:
+                self._object_per_cat[new_cat] = []
+            self._object_per_cat[new_cat].append(new_obj)
+
 
     def _populate_character_structures(self, conf_data):
         for obj in conf_data[self.char_label]:
@@ -136,6 +141,9 @@ class AvatarConfParser():
 
     def list_all_available_objs(self):
         return [k for k in self._objects.keys()]
+
+    def list_available_categories(self):
+        return [k for k in self._categories]
 
 
 class AvatarCreator(AvatarConfParser):

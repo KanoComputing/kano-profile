@@ -1,5 +1,9 @@
-#!/usr/bin/env python
-
+#
+# Logic for parsing and creating avatars for a Kano World profile
+#
+# Copyright (C) 2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
 import yaml
 from PIL import Image
 from kano_avatar.paths import AVATAR_CONF_FILE

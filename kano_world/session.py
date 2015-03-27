@@ -209,27 +209,25 @@ class KanoWorldSession(object):
 
         extensionless_path = os.path.splitext(file_path)[0]
 
-        # paths
-        jsonfile_path = '{}.json'.format(extensionless_path)
-        screenshot_path = '{}.png'.format(extensionless_path)
-        resource_path = '{}.tar.gz'.format(extensionless_path)
-
-        logger.debug('uploading json: {}'.format(jsonfile_path))
-
         # attachment
         files = {
             'attachment': open(file_path, 'rb'),
         }
 
-        # screenshot
-        if os.path.exists(screenshot_path):
-            logger.debug('uploading screenshot: {}'.format(screenshot_path))
-            files['cover'] = open(screenshot_path, 'rb')
+        # List of attachments to search for in (name, extension) format
+        attachment_files = [
+            ('cover', 'png'),
+            ('resource', 'tar.gz'),
+            ('sample', 'mp3')
+        ]
 
-        # resource
-        if os.path.exists(resource_path):
-            logger.debug('uploading resource: {}'.format(resource_path))
-            files['resource'] = open(resource_path, 'rb')
+        for attachment in attachment_files:
+            ext, key = attachment
+            attachment_path = "{}.{}".format(extensionless_path, ext)
+
+            if os.path.exists(attachment_path):
+                logger.debug('uploading {}: {}'.format(key, attachment_path))
+                files[key] = open(attachment_path, 'rb')
 
         # data
         payload = {
@@ -238,8 +236,10 @@ class KanoWorldSession(object):
         }
 
         # description
+        jsonfile_path = '{}.json'.format(extensionless_path)
         try:
             description = read_json(jsonfile_path)['description']
+            logger.debug('uploading json: {}'.format(jsonfile_path))
             payload['description'] = description
         except Exception:
             description = None

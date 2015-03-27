@@ -3,27 +3,21 @@
 import sys
 import os
 import argparse
-import yaml
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_avatar.logic import AvatarConfParser, AvatarCreator
-
-CONF_FILE = 'sample_conf.yaml'
+from kano_avatar.logic import AvatarConfParser, AvatarCreator, get_avatar_conf
 
 program_desc = "This program handles the creation of an avatar for a user of Kano World"
 
-configuration = None
-
-with open(CONF_FILE) as f:
-    configuration = yaml.load(f)
+configuration = get_avatar_conf()
 
 if configuration is None:
-    print 'Error configuration was not loaded, check configuration file {}'.format(CONF_FILE)
-    exit()
+    print 'Error configuration was not loaded, check configuration file'
+    sys.exit(1)
 
 
 def main():

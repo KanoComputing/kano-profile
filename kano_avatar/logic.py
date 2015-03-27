@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+import yaml
 from PIL import Image
+from kano_avatar.paths import AVATAR_CONF_FILE
+
 
 class AvatarAccessory():
     _category = ''
@@ -203,3 +206,13 @@ class AvatarCreator(AvatarConfParser):
         self._sel_char.save_image(file_name)
         return True
 
+
+def get_avatar_conf():
+    conf = None
+    with open(AVATAR_CONF_FILE) as f:
+        conf = yaml.load(f)
+
+    if conf is None:
+        print 'Error: conf file {}  not found'.format(AVATAR_CONF_FILE)
+
+    return conf

@@ -1,19 +1,27 @@
 #!/usr/bin/env python
 
 import argparse
+import yaml
 from PIL import Image
+
+CONF_FILE = 'sample_conf.yaml'
 
 
 class AvatarAccessory():
     _category = None
     _name = ''
     _asset_fname = ''
-    _img_position = ''
+    _img_position_x = 0
+    _img_position_y = 0
+
     _img = None
 
-    def __init__(self, name, category):
-        self._category = self._acceptable_category_name(category)
+    def __init__(self, name, category, file_name, x, y):
+        self._category = category
         self._name = name
+        self._img_position_x = x
+        self._img_position_y = y
+        self._asset_fname = file_name
 
     def _acceptable_category_name(self, cat_name):
         if cat_name not in categories:
@@ -27,76 +35,103 @@ class AvatarAccessory():
     def category(self):
         return self._category
 
+    def get_fname(self):
+        return self._asset_fname
+
+    def load_image(self):
+        self._img = Image.open(self.get_fname())
+
+    def paste_over_image(self, img):
+        if self._img is None:
+            self.load_image()
+        # position of upper left corner
+        position = (self._img_position_x, self._img_position_y)
+        img.paste(self._img, position, self._img)
+
+
+class AvatarCharacter():
+    _name = ''
+    _asset_fname = ''
+    _img = None
+
+    def __init__(self, name, file_name):
+        self._name = name
+        self._asset_fname = file_name
+
+    def load_image(self):
+        self._img = Image.open(self._asset_fname)
+
+    def get_img(self):
+        return self._img
+
+
+class AvatarConfParser():
+    _categories = set()
+    _levels = set()
+    _cat_to_lvl = {}
+    _level_to_categories = {}
+    _objects = {}
+    _characters = {}
+    cat_lvl_label = 'category_levels'
+    objects_label = 'objects'
+    char_label = 'characters'
+
+    def __init__(self, conf_data):
+        if self.cat_lvl_label not in conf_data:
+            print 'Error, {} dictionary not found'.format(self.cat_lvl_label)
+        else:
+            self._populate_category_structures(conf_data)
+
+        if self.char_label not in conf_data:
+            print 'Error, {} dictionary not found'.format(self.char_label)
+        else:
+            self._populate_character_structures(conf_data)
+
+        if self.objects_label not in conf_data:
+            print 'Error, {} dictionary not found'.format(self.objects_label)
+        else:
+            self._populate_object_structures(conf_data)
+
+    def _populate_category_structures(self, conf_data):
+        # First convert the category name into lowercase
+        for cat, lvl in conf_data[self.cat_lvl_label].items():
+            self._cat_to_lvl[cat.lower()] = lvl
+
+        # Save both the unique set of levels and categories
+        self._categories = set(self._cat_to_lvl.keys())
+        self._levels = set(self._cat_to_lvl.values())
+
+        self._level_to_categories = {i: [] for i in self._levels}
+        for cat_name, lvl in self._cat_to_lvl.items():
+            self._level_to_categories[lvl].append(cat_name)
+
+    def _populate_object_structures(self, conf_data):
+        for obj in conf_data[self.objects_label]:
+            new_name = obj['display_name']
+            new_cat = obj['category']
+            new_fname = obj['img_name']
+            new_x = obj['position_x']
+            new_y = obj['position_y']
+            new_obj = AvatarAccessory(new_name, new_cat, new_fname, new_x, new_y)
+            self._objects[new_name] = new_obj
+
+    def _populate_character_structures(self, conf_data):
+        for obj in conf_data[self.char_label]:
+            new_name = obj['display_name']
+            new_fname = obj['img_name']
+            new_obj = AvatarCharacter(new_name, new_fname)
+            self._characters[new_name] = new_obj
 
 program_desc = "This program handles the creation of an avatar for a user of Kano World"
 
-characters = dict(
-        Judoka='/tmp/Judoka',
-        )
+configuration = None
 
-categories = {'Hats': 2, 'Shirts': 1, 'Face': 1}
+with open(CONF_FILE) as f:
+    configuration = yaml.load(f)
 
-hats = ['blue_hat', 'black_hat', 'white_hat']
-shirts = ['T-Shirt', 'Sleeveless Shirt', 'Cool Shirt']
-face = ['Goatee beard', 'Red lips', 'Thick Stache']
-
-objs = {k: globals()[k.lower()] for k in categories.keys()}
-
-cat_per_lvl = {}
-
-
-fnames = {
-        'Judoka': 'Judoka.png',
-        'blue_hat': 'blue_hat.png',
-        'black_hat': 'black_hat.png',
-        'white_hat': 'white_hat.png',
-        'T-Shirt': 't_shirt.png',
-        'Sleeveless Shirt': 'sleeveless_shirt.png',
-        'Cool Shirt': 'cool_shirt.png',
-        'Goatee beard': 'goatee.png',
-        'Red lips': 'red_lips.png',
-        'Thick Stache': 'thick_stache.png'
-        }
-
-
-def gen_categ_per_level(force_gen=False):
-    global cat_per_lvl
-
-    if force_gen or len(cat_per_lvl) == 0:
-        cat_per_lvl = {i: [] for i in categories.values()}
-        for cat_name, lvl in categories.items():
-            cat_per_lvl[lvl].append(cat_name)
-
-
-def get_list_of_available_chars():
-    return characters.keys()[0]
-
-
-def get_list_of_available_categories():
-    return categories
-
-
-def get_list_of_available_objects(category_name):
-    return objs[category_name]
-
-
-def get_set_of_available_objects():
-    ret = set()
-    for cat in get_list_of_available_categories():
-        ret.update(get_list_of_available_objects(cat))
-
-    return ret
-
-
-def get_categories_per_level(level_no):
-    gen_categ_per_level()
-    return cat_per_lvl[level_no]
-
-
-def get_category_from_object(obj_name):
-    for cat in get_list_of_available_categories():
-        if obj_name in get_list_of_available_objects(cat):
-            return cat
+if configuration is None:
+    print 'Error configuration was not loaded, check configuration file {}'.format(CONF_FILE)
+    exit()
 
 
 def main():
@@ -112,60 +147,16 @@ def main():
                               help='Create a new character, specify the character name followed by the objects')
     args = parser.parse_args()
 
+    avail_conf = AvatarConfParser(configuration)
+
     if args.list:
         if args.list == 'char':
-            print get_list_of_available_chars()
-        if args.list == 'obj':
-            cats = get_list_of_available_categories()
-            for cat in cats:
-                print '{0}:{1}'.format(cat, get_list_of_available_objects(cat))
-
-        if args.list == 'all':
-            print get_list_of_available_chars()
-            cats = get_list_of_available_categories()
-            for cat in cats:
-                print get_list_of_available_objects(cat)
-
-    if args.create:
-        print args.create
-
-        char_selected = args.create.pop(0)
-        if char_selected not in get_list_of_available_chars():
-            print 'error character not available'
-            return 1
-        else:
-            print 'Selected {}'.format(char_selected)
-            base = Image.open(fnames[char_selected])
-
-        objs_selected = args.create[:]
-        cats_objects = {}
-
-        for obj in objs_selected:
-            if obj not in get_set_of_available_objects():
-                print get_set_of_available_objects()
-                print 'error object: {} not available'.format(obj)
-                return 1
-            else:
-                print 'Will contain object {}'.format(obj)
-                obj_cat = get_category_from_object(obj)
-
-                if obj_cat in cats_objects:
-                    print 'error you have selected 2 items of the same category, {} and {}, cat:{}'.format(obj, cats_objects[obj_cat], obj_cat)
-                    return 1
-                else:
-                    cats_objects[obj_cat] = obj
-
-        gen_categ_per_level()
-
-        for lvl, cat_list in sorted(cat_per_lvl.items()):
-            for cat in cat_list:
-                if cat not in cats_objects:
-                    continue
-                tmp_img = Image.open(fnames[cats_objects[cat]])
-                base.paste(tmp_img, (20, 20), tmp_img)
-
-        base.show()
-        base.save('out.png')
+            print avail_conf._characters
+        elif args.list == 'obj':
+            print avail_conf._objects
+        elif args.list == 'all':
+            print avail_conf._characters
+            print avail_conf._objects
 
 
 if __name__ == '__main__':

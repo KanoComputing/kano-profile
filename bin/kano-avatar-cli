@@ -37,6 +37,10 @@ def main():
                               type=str,
                               nargs='+',
                               help='Create a new character, specify the character name followed by the objects')
+    group_create.add_argument('-o', '--output',
+                        type=str,
+                        default='new_avatar.png',
+                        help='Name of output file')
     args = parser.parse_args()
 
     if args.list:
@@ -57,7 +61,7 @@ def main():
         if not rc:
             print 'Error processing the list, please double check it'
             return 1
-        avatar_creator.create_avatar(save_to='output.png')
+        avatar_creator.create_avatar(save_to=args.output)
 
 
 if __name__ == '__main__':

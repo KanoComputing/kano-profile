@@ -6,3 +6,4 @@
 #
 
 AVATAR_CONF_FILE = 'sample_conf.yaml'
+AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'

@@ -6,8 +6,9 @@
 #
 import yaml
 from PIL import Image
-from kano_avatar.paths import AVATAR_CONF_FILE
+from kano_avatar.paths import AVATAR_CONF_FILE, AVATAR_ASSET_FOLDER
 import random
+import os
 
 # TODO Add logging from kano_logging
 # TODO Check which types of names are case sensitive
@@ -30,7 +31,12 @@ class AvatarAccessory():
         self._name = name
         self._img_position_x = x
         self._img_position_y = y
-        self._asset_fname = file_name
+        # if an absolute path is given use it instead, so that we can
+        # override elements
+        if os.path.isabs(file_name):
+            self._asset_fname = file_name
+        else:
+            self._asset_fname = os.path.join(AVATAR_ASSET_FOLDER, file_name)
 
     def name(self):
         """ Provides the display name of the Item
@@ -81,7 +87,10 @@ class AvatarCharacter():
 
     def __init__(self, name, file_name):
         self._name = name
-        self._asset_fname = file_name
+        if os.path.isabs(file_name):
+            self._asset_fname = file_name
+        else:
+            self._asset_fname = os.path.join(AVATAR_ASSET_FOLDER, file_name)
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before

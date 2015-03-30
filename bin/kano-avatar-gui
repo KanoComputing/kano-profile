@@ -18,6 +18,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.apply_styles import apply_colours_to_screen
 from kano.gtk3.top_bar import TopBar
+from kano.gtk3.heading import Heading
 
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano.logging import logger
@@ -37,7 +38,7 @@ class MainWindow(ApplicationWindow):
     _list_of_categories = []
     _list_of_obj_per_cat = []
     _list_of_comboxes = []
-    _vbox = None
+    _grid = None
 
     def __init__(self):
         ApplicationWindow.__init__(self, 'Avatar', 755, 588)
@@ -60,13 +61,14 @@ class MainWindow(ApplicationWindow):
         # TODO Un hardcode the following
         avatar_cr.char_select('Judoka')
 
-        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self._grid = Gtk.Grid()
         self._create_list_boxes()
-        self._create_img_box('avatar.png')
+        self._create_img_box(avatar_cr._sel_char._asset_fname)
+        self.title = Heading('Make your Avatar', 'Choose clothes and other swag')
+        self._grid.attach(self.title.container, 0, 0, 9, 1)
 
-	self._overlay.add(self._vbox)
-	self._overlay.show_all()
-
+        self._overlay.add(self._grid)
+        self._overlay.show_all()
 
     def _get_obj_data(self):
         self._list_of_categories = avatar_cr.list_available_categories()
@@ -86,35 +88,37 @@ class MainWindow(ApplicationWindow):
 
     def _create_img_box(self, img_name):
         self._imgbox = ImageView(self)
-        self._vbox.pack_start(self._imgbox, False, False, True)
+        self._grid.attach(self._imgbox, 2, 1, 7, 7)
 
         self._imgbox.set_image(img_name)
 
     def _create_list_boxes(self):
+        i = 1
         for cat in self._list_of_categories:
             cat_box = Gtk.ComboBoxText()
             cat_box.set_entry_text_column(0)
 
             for obj in self._list_of_obj_per_cat[cat]:
                 cat_box.append_text(obj.name())
+            cat_box.append_text('')
 
             self._list_of_comboxes.append(cat_box)
 
-            self._vbox.pack_start(cat_box, False, False, True)
+            self._grid.attach(cat_box, 0, i, 1, 1)
+            i += 1
             cat_box.connect('changed', self._update_img)
 
     def _update_img(self, combo):
         list_of_objs = []
         for box in self._list_of_comboxes:
             if box.get_active_text():
-            	list_of_objs.append(box.get_active_text())
-	rc = avatar_cr.obj_select(list_of_objs)
+                list_of_objs.append(box.get_active_text())
+        rc = avatar_cr.obj_select(list_of_objs)
         if not rc:
             logger.error('Error processing the list {}'.format(list_of_objs))
         else:
-            self._imgbox.destroy()
             avatar_cr.create_avatar(save_to='avatar.png')
-            self._create_img_box('avatar.png')
+            self._imgbox.set_image('avatar.png')
 
 
 class ImageView(Gtk.EventBox):
@@ -135,9 +139,13 @@ class ImageView(Gtk.EventBox):
         return self._win
 
     def set_image(self, img_loc):
-        self._img = Gtk.Image.new_from_file(img_loc)
-        self.add(self._img)
-        self._img.show()
+        if not self._img:
+            self._img = Gtk.Image.new_from_file(img_loc)
+            self.add(self._img)
+            self._img.show()
+        else:
+            self._img.clear()
+            self._img.set_from_file(img_loc)
 
 
 def main():

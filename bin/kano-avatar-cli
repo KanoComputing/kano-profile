@@ -38,9 +38,12 @@ def main():
                               nargs='+',
                               help='Create a new character, specify the character name followed by the objects')
     group_create.add_argument('-o', '--output',
-                        type=str,
-                        default='new_avatar.png',
-                        help='Name of output file')
+                              type=str,
+                              default='new_avatar.png',
+                              help='Name of output file')
+    group_create.add_argument('-r', '--randomise',
+                              action='store_true',
+                              help='Randomise rest of the items')
     args = parser.parse_args()
 
     if args.list:
@@ -57,7 +60,10 @@ def main():
     if args.create:
         avatar_creator = AvatarCreator(configuration)
         avatar_creator.char_select(args.create.pop(0))
-        rc = avatar_creator.obj_select(args.create)
+        if not args.randomise:
+            rc = avatar_creator.obj_select(args.create)
+        else:
+            rc = avatar_creator.randomise_rest(args.create)
         if not rc:
             print 'Error processing the list, please double check it'
             return 1

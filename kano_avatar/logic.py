@@ -7,6 +7,7 @@
 import yaml
 from PIL import Image
 from kano_avatar.paths import AVATAR_CONF_FILE
+import random
 
 # TODO Add logging from kano_logging
 # TODO Check which types of names are case sensitive
@@ -230,13 +231,14 @@ class AvatarCreator(AvatarConfParser):
         self._sel_obj_per_cat.clear()
         self._sel_objs_per_lvl.clear()
 
-    def obj_select(self, obj_names):
+    def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character.
         :param obj_names: list of item names
         :returns: False if any of the objects doesn't exist or if there multiplei
                   items from the same category are selected.
         """
-        self.clear_sel_objs()
+        if clear_existing:
+            self.clear_sel_objs()
 
         for obj_name in obj_names:
             if obj_name in self._objects:
@@ -261,6 +263,42 @@ class AvatarCreator(AvatarConfParser):
                 print error_msg
                 return False
         return True
+
+    def randomise_rest(self, obj_names):
+        """ Add specified objects and randomise the remaining ones
+        :param obj_names: list of item names
+        :returns: False if any of the objects doesn't exist or if there are
+                  multiple items from the same category are selected.
+        """
+        random_item_names = []
+        # Select ones we definitely want
+        rc = self.obj_select(obj_names)
+        if not rc:
+            return False
+        # For categories where we haven't specified, select randomly
+        for cat in self._categories.difference(set(self._sel_obj_per_cat.keys())):
+            available_objs = self._object_per_cat[cat][:]
+            available_objs.append(None)
+            choice = random.choice(available_objs)
+            if choice:
+                random_item_names.append(choice.name())
+
+        rc = self.obj_select(random_item_names, clear_existing=False)
+
+        if not rc:
+            return False
+        return True
+
+    def randomise_all_items(self):
+        """ Randomise all items for a character
+        :returns: A list of the selected items
+        """
+        self.randomise_rest('')
+
+        return self.selected_items()
+
+    def selected_items(self):
+        return self._sel_obj.keys()
 
     def create_avatar(self, save_to=''):
         """ Create the finished image and (optionally) save it to file.

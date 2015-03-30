@@ -1,8 +1,8 @@
 {
-  "first_share": {
+  "super_sharer": {
     "bg_color": "ffea8c",
-    "desc_locked": "Share your creations on Kano World to unlock this badge!",
-    "desc_unlocked": "You clicked that big blue button, and shared your creations with a world of thousands. You're gaining a following! Connect with other Community Champions on Kano World.",
+    "desc_locked": "Share your creations - get the badge!",
+    "desc_unlocked": "You put your work online for the world to see. Keep it up, super sharer...",
     "operation": "sum_greater",
     "targets": [
       [
@@ -26,7 +26,7 @@
         "shared"
       ]
     ],
-    "title": "Community Champion",
+    "title": "Super Sharer",
     "value": 1
   },
   "community_champion": {

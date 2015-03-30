@@ -11,7 +11,11 @@ from kano_avatar.paths import AVATAR_CONF_FILE
 # TODO Add logging from kano_logging
 # TODO Check which types of names are case sensitive
 
+
 class AvatarAccessory():
+    """ Class for handling items and applying them onto an Avatar Character
+    class.
+    """
     _category = ''
     _name = ''
     _asset_fname = ''
@@ -28,18 +32,37 @@ class AvatarAccessory():
         self._asset_fname = file_name
 
     def name(self):
+        """ Provides the display name of the Item
+        :returns: display name of character as a string
+        """
         return self._name
 
     def category(self):
+        """ Provides the category name to which the Item belongs to
+        :returns: category name as a string
+        """
         return self._category
 
     def get_fname(self):
+        """ Provides the item's asset filename
+        :returns: filename as a string
+        """
         return self._asset_fname
 
     def load_image(self):
+        """ Loads the asset's image internally. This is necessary before
+        pasting the item over a character, however there is no need to call it
+        externally.
+        """
         self._img = Image.open(self.get_fname())
 
     def paste_over_image(self, img):
+        """ Pastes the item's image over a character's base image. The
+        position of where the image will be pasted is specified by the x,y
+        coordinates given during the class' instantiation. (x,y are distances
+        in pixels of the top left corner)
+        :param img: Image class on which the pasting will occur
+        """
         if self._img is None:
             self.load_image()
         # position of upper left corner
@@ -48,6 +71,9 @@ class AvatarAccessory():
 
 
 class AvatarCharacter():
+    """ Class for handling an Avatar character. It holds the image data for
+    the character so as to serve as a base on which the items are pasted on.
+    """
     _name = ''
     _asset_fname = ''
     _img = None
@@ -57,12 +83,22 @@ class AvatarCharacter():
         self._asset_fname = file_name
 
     def load_image(self):
+        """ Loads the character's image internally. This is necessary before
+        pasting the item over a character.
+        """
         self._img = Image.open(self._asset_fname)
 
     def get_img(self):
+        """ Get the image class for the character.
+        :returns: Image class (from PIL module)
+        """
         return self._img
 
     def save_image(self, file_name):
+        """ Save character image (together with items that have been pasted on
+        it), to a file.
+        :param file_name: filename to be saved to as a string
+        """
         self._img.save(file_name)
 
 
@@ -95,6 +131,9 @@ class AvatarConfParser():
             self._populate_object_structures(conf_data)
 
     def _populate_category_structures(self, conf_data):
+        """ Populates internal structures related to categories
+        :param conf_data: YAML format configuration structure read from file
+        """
         # First convert the category name into lowercase
         for cat, lvl in conf_data[self.cat_lvl_label].items():
             self._cat_to_lvl[cat.lower()] = lvl
@@ -108,20 +147,29 @@ class AvatarConfParser():
             self._level_to_categories[lvl].append(cat_name)
 
     def _populate_object_structures(self, conf_data):
+        """ Populates internal structures related to items
+        :param conf_data: YAML format configuration structure read from file
+        """
         for obj in conf_data[self.objects_label]:
             new_name = obj['display_name']
             new_cat = obj['category'].lower()
             new_fname = obj['img_name']
             new_x = obj['position_x']
             new_y = obj['position_y']
-            new_obj = AvatarAccessory(new_name, new_cat, new_fname, new_x, new_y)
+            new_obj = AvatarAccessory(new_name,
+                                      new_cat,
+                                      new_fname,
+                                      new_x,
+                                      new_y)
             self._objects[new_name] = new_obj
             if new_cat not in self._object_per_cat:
                 self._object_per_cat[new_cat] = []
             self._object_per_cat[new_cat].append(new_obj)
 
-
     def _populate_character_structures(self, conf_data):
+        """ Populates internal structures related to characters
+        :param conf_data: YAML format configuration structure read from file
+        """
         for obj in conf_data[self.char_label]:
             new_name = obj['display_name']
             new_fname = obj['img_name']
@@ -137,12 +185,21 @@ class AvatarConfParser():
             return self._cat_to_lvl[cat]
 
     def list_available_chars(self):
+        """ Provides a list of available characters
+        :returns: list of characters (list of strings)
+        """
         return [k for k in self._characters.keys()]
 
     def list_all_available_objs(self):
+        """ Provides a list of available objects
+        :returns: list of objects (list of strings)
+        """
         return [k for k in self._objects.keys()]
 
     def list_available_categories(self):
+        """ Provides a list of available categories (not case sensitive)
+        :returns: list of categories (list of strings)
+        """
         return [k for k in self._categories]
 
 
@@ -153,27 +210,40 @@ class AvatarCreator(AvatarConfParser):
     _sel_objs_per_lvl = {}
 
     def char_select(self, char_name):
+        """ Set a character as a base
+        :param char_name: Character name
+        :returns: True iff the character exists (is available)
+        """
         # Get the instance of the character
         if char_name in self._characters:
             self._sel_char = self._characters[char_name]
             return True
         else:
-            print 'Error, character {} is not in the available char list'.format(char_name)
+            error_msg = 'Error, character {} is not in the available char list'.format(char_name)
+            print error_msg
             return False
 
     def clear_sel_objs(self):
+        """ Clear structures that contain items that have been selected
+        """
         self._sel_obj.clear()
         self._sel_obj_per_cat.clear()
         self._sel_objs_per_lvl.clear()
 
     def obj_select(self, obj_names):
+        """ Specify the items to be used for the character.
+        :param obj_names: list of item names
+        :returns: False if any of the objects doesn't exist or if there multiplei
+                  items from the same category are selected.
+        """
         self.clear_sel_objs()
 
         for obj_name in obj_names:
             if obj_name in self._objects:
                 obj_instance = self._objects[obj_name]
                 if obj_instance.category() in self._sel_obj_per_cat:
-                    print 'Error: Multiple objects in category {}'.format(obj_instance.category())
+                    error_msg = 'Error: Multiple objects in category {}'.format(obj_instance.category())
+                    print error_msg
                     return False
 
                 obj_cat = obj_instance.category()
@@ -187,12 +257,22 @@ class AvatarCreator(AvatarConfParser):
 
                 self._sel_objs_per_lvl[obj_lvl].append(obj_instance)
             else:
-                print 'Error: Object {} not in available obj list'.format(obj_name)
+                error_msg = 'Error: Object {} not in available obj list'.format(obj_name)
+                print error_msg
                 return False
         return True
 
     def create_avatar(self, save_to=''):
-        self._create_base_img()
+        """ Create the finished image and (optionally) save it to file.
+        :param save_to: (Optional) filename to save the image to
+        :returns: False if the base character hasn't been specified
+        """
+        rc = self._create_base_img()
+
+        if not rc:
+            error_msg = "Can't create image"
+            print error_msg
+            return False
 
         for lvl in sorted(self._sel_objs_per_lvl.keys()):
             items = self._sel_objs_per_lvl[lvl]
@@ -213,6 +293,11 @@ class AvatarCreator(AvatarConfParser):
         return True
 
     def save_image(self, file_name):
+        """ Save image as a file
+        :param file_name: Filename of the new file
+        :returns: False if the a character hasn't been selected
+                  True otherwise
+        """
         if self._sel_char is None:
             print 'Error: You haven\'t specified a character'
             return False

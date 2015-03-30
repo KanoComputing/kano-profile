@@ -4,13 +4,14 @@
 # Copyright (C) 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
+import os
+import random
 import yaml
 from PIL import Image
-from kano_avatar.paths import AVATAR_CONF_FILE, AVATAR_ASSET_FOLDER
-import random
-import os
 
-# TODO Add logging from kano_logging
+from kano_avatar.paths import AVATAR_CONF_FILE, AVATAR_ASSET_FOLDER
+from kano.logging import logger
+
 # TODO Check which types of names are case sensitive
 
 
@@ -126,17 +127,17 @@ class AvatarConfParser():
 
     def __init__(self, conf_data):
         if self.cat_lvl_label not in conf_data:
-            print 'Error, {} dictionary not found'.format(self.cat_lvl_label)
+            logger.error('{} dictionary not found'.format(self.cat_lvl_label))
         else:
             self._populate_category_structures(conf_data)
 
         if self.char_label not in conf_data:
-            print 'Error, {} dictionary not found'.format(self.char_label)
+            logger.error('{} dictionary not found'.format(self.char_label))
         else:
             self._populate_character_structures(conf_data)
 
         if self.objects_label not in conf_data:
-            print 'Error, {} dictionary not found'.format(self.objects_label)
+            logger.error('{} dictionary not found'.format(self.objects_label))
         else:
             self._populate_object_structures(conf_data)
 
@@ -190,7 +191,7 @@ class AvatarConfParser():
         cat = category.lower()
 
         if cat not in self._cat_to_lvl:
-            print 'Error category {} not in available ones'.format(category)
+            logger.error('Category {} not in available ones'.format(category))
         else:
             return self._cat_to_lvl[cat]
 
@@ -229,8 +230,8 @@ class AvatarCreator(AvatarConfParser):
             self._sel_char = self._characters[char_name]
             return True
         else:
-            error_msg = 'Error, character {} is not in the available char list'.format(char_name)
-            print error_msg
+            error_msg = 'Character {} is not in the available char list'.format(char_name)
+            logger.error(error_msg)
             return False
 
     def clear_sel_objs(self):
@@ -253,8 +254,8 @@ class AvatarCreator(AvatarConfParser):
             if obj_name in self._objects:
                 obj_instance = self._objects[obj_name]
                 if obj_instance.category() in self._sel_obj_per_cat:
-                    error_msg = 'Error: Multiple objects in category {}'.format(obj_instance.category())
-                    print error_msg
+                    error_msg = 'Multiple objects in category {}'.format(obj_instance.category())
+                    logger.error(error_msg)
                     return False
 
                 obj_cat = obj_instance.category()
@@ -268,8 +269,8 @@ class AvatarCreator(AvatarConfParser):
 
                 self._sel_objs_per_lvl[obj_lvl].append(obj_instance)
             else:
-                error_msg = 'Error: Object {} not in available obj list'.format(obj_name)
-                print error_msg
+                error_msg = 'Object {} not in available obj list'.format(obj_name)
+                logger.error(error_msg)
                 return False
         return True
 
@@ -317,8 +318,7 @@ class AvatarCreator(AvatarConfParser):
         rc = self._create_base_img()
 
         if not rc:
-            error_msg = "Can't create image"
-            print error_msg
+            logger.error("Can't create image")
             return False
 
         for lvl in sorted(self._sel_objs_per_lvl.keys()):
@@ -333,7 +333,7 @@ class AvatarCreator(AvatarConfParser):
 
     def _create_base_img(self):
         if self._sel_char is None:
-            print 'Error: You haven\'t specified a character'
+            logger.error('You haven\'t specified a character')
             return False
 
         self._sel_char.load_image()
@@ -346,7 +346,7 @@ class AvatarCreator(AvatarConfParser):
                   True otherwise
         """
         if self._sel_char is None:
-            print 'Error: You haven\'t specified a character'
+            logger.error('You haven\'t specified a character')
             return False
 
         self._sel_char.save_image(file_name)
@@ -359,6 +359,6 @@ def get_avatar_conf():
         conf = yaml.load(f)
 
     if conf is None:
-        print 'Error: conf file {}  not found'.format(AVATAR_CONF_FILE)
+        logger.error('Conf file {} not found'.format(AVATAR_CONF_FILE))
 
     return conf

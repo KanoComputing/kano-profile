@@ -16,13 +16,14 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_avatar.logic import AvatarConfParser, AvatarCreator, get_avatar_conf
+from kano.logging import logger
 
 program_desc = "This program handles the creation of an avatar for a user of Kano World"
 
 configuration = get_avatar_conf()
 
 if configuration is None:
-    print 'Error configuration was not loaded, check configuration file'
+    logger.error('Error configuration was not loaded, check configuration file')
     sys.exit(1)
 
 
@@ -49,12 +50,12 @@ def main():
     if args.list:
         avail_conf = AvatarConfParser(configuration)
         if args.list == 'char':
-            print avail_conf.list_available_chars()
+            logger.error(avail_conf.list_available_chars())
         elif args.list == 'obj':
-            print avail_conf.list_all_available_objs()
+            logger.error(avail_conf.list_all_available_objs())
         elif args.list == 'all':
-            print avail_conf.list_available_chars()
-            print avail_conf.list_all_available_objs()
+            logger.error(avail_conf.list_available_chars())
+            logger.error(avail_conf.list_all_available_objs())
         return 0
 
     if args.create:
@@ -65,7 +66,7 @@ def main():
         else:
             rc = avatar_creator.randomise_rest(args.create)
         if not rc:
-            print 'Error processing the list, please double check it'
+            logger.error('Error processing the list, please double check it')
             return 1
         avatar_creator.create_avatar(save_to=args.output)
 

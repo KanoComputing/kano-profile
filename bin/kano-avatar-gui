@@ -20,6 +20,7 @@ from kano.gtk3.apply_styles import apply_colours_to_screen
 from kano.gtk3.top_bar import TopBar
 
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
+from kano.logging import logger
 
 try:
     from kano_profile.tracker import Tracker
@@ -109,7 +110,7 @@ class MainWindow(ApplicationWindow):
             	list_of_objs.append(box.get_active_text())
 	rc = avatar_cr.obj_select(list_of_objs)
         if not rc:
-            print 'Error processing the list {}'.format(list_of_objs)
+            logger.error('Error processing the list {}'.format(list_of_objs))
         else:
             self._imgbox.destroy()
             avatar_cr.create_avatar(save_to='avatar.png')

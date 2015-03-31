@@ -9,7 +9,8 @@ import random
 import yaml
 from PIL import Image
 
-from kano_avatar.paths import AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR, CATEGORY_ICONS
+from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
+                               CATEGORY_ICONS, CIRC_ASSET_MASK, RING_ASSET)
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -85,13 +86,17 @@ class AvatarCharacter():
     _name = ''
     _asset_fname = ''
     _img = None
+    _crop_x = 0
+    _crop_y = 0
 
-    def __init__(self, name, file_name):
+    def __init__(self, name, file_name, x, y):
         self._name = name
         if os.path.isabs(file_name):
             self._asset_fname = file_name
         else:
             self._asset_fname = os.path.join(CHARACTER_DIR, file_name)
+        self._crop_x = x
+        self._crop_y = y
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -119,9 +124,27 @@ class AvatarCharacter():
         self._img.save(file_name)
 
     def generate_circular_assets(self, file_name):
+        """ This function creates the circular assets that are required for the
+        kano profile
+        :param file_name: Path to where the completed file should be saved as a
+                          string
         """
-        """
-        pass
+        ring = Image.open(RING_ASSET)
+        ring_mask = Image.open(CIRC_ASSET_MASK)
+
+        if ring.size != ring_mask.size:
+            logger.warn('Mask and ring asset do not have the same size')
+
+        box = (self._crop_x,
+               self._crop_y,
+               self._crop_x + ring.size[0],
+               self._crop_y + ring.size[1])
+
+        cropped_img = self._img.crop(box)
+
+        img_out = Image.composite(ring, cropped_img, ring_mask)
+
+        img_out.save(file_name)
 
 
 class AvatarConfParser():
@@ -200,7 +223,9 @@ class AvatarConfParser():
         for obj in conf_data[self.char_label]:
             new_name = obj['display_name']
             new_fname = obj['img_name']
-            new_obj = AvatarCharacter(new_name, new_fname)
+            x = obj['crop_x']
+            y = obj['crop_y']
+            new_obj = AvatarCharacter(new_name, new_fname, x, y)
             self._characters[new_name] = new_obj
 
     def get_lvl(self, category):
@@ -358,7 +383,7 @@ class AvatarCreator(AvatarConfParser):
     def selected_items(self):
         return self._sel_obj.keys()
 
-    def create_avatar(self, save_to=''):
+    def create_avatar(self, save_to='', circ_assets=True):
         """ Create the finished image and (optionally) save it to file.
         :param save_to: (Optional) filename to save the image to
         :returns: False if the base character hasn't been specified
@@ -377,6 +402,10 @@ class AvatarCreator(AvatarConfParser):
         # write to specified location
         if save_to:
             self.save_image(save_to)
+
+            if circ_assets:
+                self._sel_char.generate_circular_assets('out_circ.png')
+
         return True
 
     def _create_base_img(self):

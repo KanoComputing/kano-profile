@@ -38,6 +38,9 @@ def main():
                               type=str,
                               nargs='+',
                               help='Create a new character, specify the character name followed by the objects')
+    group_create.add_argument('-a', '--circular',
+                              action='store_true',
+                              help='Generate circular assets as well')
     group_create.add_argument('-o', '--output',
                               type=str,
                               default='new_avatar.png',
@@ -68,7 +71,7 @@ def main():
         if not rc:
             logger.error('Error processing the list, please double check it')
             return 1
-        avatar_creator.create_avatar(save_to=args.output)
+        avatar_creator.create_avatar(save_to=args.output, circ_assets=args.circular)
 
 
 if __name__ == '__main__':

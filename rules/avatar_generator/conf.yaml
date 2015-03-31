@@ -1,0 +1,78 @@
+categories:
+    - cat_name: Hats
+      level: 2
+      disp_icon: hats.png
+    - cat_name: Shirts
+      level: 1
+      disp_icon: shirts.png
+    - cat_name: Face
+      level: 1
+      disp_icon: face.png
+
+characters:
+    - display_name: Judoka
+      img_name: Judoka.png
+      crop_x: 193
+      crop_y: 108
+
+objects:
+#   - display_name:
+#     img_name:
+#     position_x:
+#     position_y:
+#     category:
+#
+    - display_name: Blue Hat
+      img_name: blue_hat.png
+      position_x: 185
+      position_y: 55
+      category: Hats
+
+    - display_name: Black Hat
+      img_name: black_hat.png
+      position_x: 160
+      position_y: 50
+      category: Hats
+
+    - display_name: White Hat
+      img_name: white_hat.png
+      position_x: 230
+      position_y: 20
+      category: Hats
+
+    - display_name: T-Shirt
+      img_name: t_shirt.png
+      position_x: 90
+      position_y: 250
+      category: Shirts
+
+    - display_name: Sleeveless Shirt
+      img_name: sleeveless_shirt.png
+      position_x: 150
+      position_y: 250
+      category: Shirts
+
+    - display_name: Cool Shirt
+      img_name: cool_shirt.png
+      position_x: 75
+      position_y: 245
+      category: Shirts
+
+    - display_name: Gentlemans Goatee
+      img_name: goatee.png
+      position_x: 260
+      position_y: 210
+      category: Face
+
+    - display_name: Red lips
+      img_name: red_lips.png
+      position_x: 260
+      position_y: 200
+      category: Face
+
+    - display_name: Thick Stache
+      img_name: thick_stache.png
+      position_x: 230
+      position_y: 210
+      category: Face
+

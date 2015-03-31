@@ -6,7 +6,7 @@
 #
 import os
 
-AVATAR_CONF_FILE = 'sample_conf.yaml'
+AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
 AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'
 CHARACTER_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'characters')
 ITEM_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'items')

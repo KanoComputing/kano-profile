@@ -36,7 +36,6 @@ avatar_cr = AvatarCreator(configuration)
 
 class MainWindow(ApplicationWindow):
     _list_of_categories = []
-    _list_of_obj_per_cat = []
     _list_of_comboxes = []
     _grid = None
 
@@ -63,7 +62,7 @@ class MainWindow(ApplicationWindow):
 
         self._grid = Gtk.Grid()
         self._create_list_boxes()
-        self._create_img_box(avatar_cr._sel_char._asset_fname)
+        self._create_img_box(avatar_cr.selected_char_asset())
         self.title = Heading('Make your Avatar', 'Choose clothes and other swag')
         self._grid.attach(self.title.container, 0, 0, 9, 1)
 
@@ -72,7 +71,6 @@ class MainWindow(ApplicationWindow):
 
     def _get_obj_data(self):
         self._list_of_categories = avatar_cr.list_available_categories()
-        self._list_of_obj_per_cat = avatar_cr._object_per_cat
 
     def _manage_styling(self):
         screen = Gdk.Screen.get_default()
@@ -98,8 +96,8 @@ class MainWindow(ApplicationWindow):
             cat_box = Gtk.ComboBoxText()
             cat_box.set_entry_text_column(0)
 
-            for obj in self._list_of_obj_per_cat[cat]:
-                cat_box.append_text(obj.name())
+            for obj in avatar_cr.get_avail_objs(cat):
+                cat_box.append_text(obj)
             cat_box.append_text('')
 
             self._list_of_comboxes.append(cat_box)

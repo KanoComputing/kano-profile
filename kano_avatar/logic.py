@@ -105,6 +105,12 @@ class AvatarCharacter():
         """
         return self._img
 
+    def get_fname(self):
+        """ Provides the item's asset filename
+        :returns: filename as a string
+        """
+        return self._asset_fname
+
     def save_image(self, file_name):
         """ Save character image (together with items that have been pasted on
         it), to a file.
@@ -215,6 +221,17 @@ class AvatarConfParser():
         """
         return [k for k in self._objects.keys()]
 
+    def get_avail_objs(self, category):
+        """ Provides a list of available objects for the specific category
+        :returns: [] of object names
+                  None if category is not found
+        """
+        if category not in self._object_per_cat:
+            logger.warn('cat {} not found, can\'t return objects'.format(category))
+            return None
+        else:
+            return [it.name() for it in self._object_per_cat[category]]
+
     def list_available_categories(self):
         """ Provides a list of available categories (not case sensitive)
         :returns: list of categories (list of strings)
@@ -230,7 +247,7 @@ class AvatarConfParser():
             logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
             return None
         else:
-            return self._category_icons['category_name']
+            return self._category_icons[category_name]
 
 
 class AvatarCreator(AvatarConfParser):
@@ -252,6 +269,18 @@ class AvatarCreator(AvatarConfParser):
             error_msg = 'Character {} is not in the available char list'.format(char_name)
             logger.error(error_msg)
             return False
+
+    def selected_char_asset(self):
+        """ Get the asset path for the image corresponding to the
+        characted that has been selected
+        :returns: the image path as a string, None if no character has been
+                  selected
+        """
+        if self._sel_char is None:
+            logger.warn('Character not selected, can\'t return path to asset')
+            return None
+        else:
+            return self._sel_char.get_fname()
 
     def clear_sel_objs(self):
         """ Clear structures that contain items that have been selected

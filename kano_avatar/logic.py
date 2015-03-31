@@ -23,12 +23,13 @@ class AvatarAccessory():
     _category = ''
     _name = ''
     _asset_fname = ''
+    _img_preview = ''
     _img_position_x = 0
     _img_position_y = 0
 
     _img = None
 
-    def __init__(self, name, category, file_name, x, y):
+    def __init__(self, name, category, file_name, preview_img, x, y):
         self._category = category
         self._name = name
         self._img_position_x = x
@@ -39,6 +40,11 @@ class AvatarAccessory():
             self._asset_fname = file_name
         else:
             self._asset_fname = os.path.join(ITEM_DIR, file_name)
+
+        if os.path.isabs(preview_img):
+            self._img_preview = preview_img
+        else:
+            self._img_preview = os.path.join(ITEM_DIR, preview_img)
 
     def name(self):
         """ Provides the display name of the Item
@@ -78,6 +84,12 @@ class AvatarAccessory():
         position = (self._img_position_x, self._img_position_y)
         img.paste(self._img, position, self._img)
 
+    def get_preview_img(self):
+        """ Provides the item's preview image path
+        :returns: absolute path to preview image as a string
+        """
+        return self._img_preview
+
 
 class AvatarCharacter():
     """ Class for handling an Avatar character. It holds the image data for
@@ -85,16 +97,22 @@ class AvatarCharacter():
     """
     _name = ''
     _asset_fname = ''
+    _img_preview = ''
     _img = None
     _crop_x = 0
     _crop_y = 0
 
-    def __init__(self, name, file_name, x, y):
+    def __init__(self, name, file_name, preview_img, x, y):
         self._name = name
         if os.path.isabs(file_name):
             self._asset_fname = file_name
         else:
             self._asset_fname = os.path.join(CHARACTER_DIR, file_name)
+
+        if os.path.isabs(preview_img):
+            self._img_preview = preview_img
+        else:
+            self._img_preview = os.path.join(CHARACTER_DIR, preview_img)
         self._crop_x = x
         self._crop_y = y
 
@@ -146,8 +164,19 @@ class AvatarCharacter():
 
         img_out.save(file_name)
 
+    def get_preview_img(self):
+        """ Provides the Character's preview image path
+        :returns: absolute path to preview image as a string
+        """
+        return self._img_preview
+
 
 class AvatarConfParser():
+    """ A class to take on the important task of parsing the configuration
+    file used for generating new Avatars.
+    Please use this class only if you require only parsing of the
+    conf file, otherwise please use the AvatarCreator() class
+    """
     _categories = set()
     _zindex = set()
     _cat_to_z_index = {}
@@ -204,11 +233,13 @@ class AvatarConfParser():
             new_name = obj['display_name']
             new_cat = obj['category']
             new_fname = obj['img_name']
+            new_prev_img = obj['preview_img']
             new_x = obj['position_x']
             new_y = obj['position_y']
             new_obj = AvatarAccessory(new_name,
                                       new_cat,
                                       new_fname,
+                                      new_prev_img,
                                       new_x,
                                       new_y)
             self._objects[new_name] = new_obj
@@ -223,9 +254,10 @@ class AvatarConfParser():
         for obj in conf_data[self.char_label]:
             new_name = obj['display_name']
             new_fname = obj['img_name']
+            new_prev_img = obj['preview_img']
             x = obj['crop_x']
             y = obj['crop_y']
-            new_obj = AvatarCharacter(new_name, new_fname, x, y)
+            new_obj = AvatarCharacter(new_name, new_fname, new_prev_img, x, y)
             self._characters[new_name] = new_obj
 
     def get_zindex(self, category):
@@ -274,12 +306,46 @@ class AvatarConfParser():
         else:
             return self._category_icons[category_name]
 
+    def get_char_preview(self, char_name):
+        """ Provides the preview image for a given character
+        :param char_name: Character whose preview image will be returned
+        :returns: The absolute path to the preview image as a str or
+                  None if the character is not available
+        """
+        if char_name not in self._characters:
+            logger.warn('Char {} not in avail char list, can\'t return preview img'.format(char_name))
+            return None
+        else:
+            return self._characters[char_name].get_preview_img()
+
+    def get_item_preview(self, item_name):
+        """ Provides the preview image for a given item
+        :param item_name: item whose preview image will be returned
+        :returns: The absolute path to the preview image as a str or
+                  None if the character is not available
+        """
+        if item_name not in self._objects:
+            logger.warn('Item {} not in avail obj list, can\'t return preview img'.format(item_name))
+            return None
+        else:
+            return self._objects[item_name].get_preview_img()
+
 
 class AvatarCreator(AvatarConfParser):
+    """ The aim of this class is to help generate avatars for the kano world
+    profile. It includes many accessor methods to get the attributes so that
+    you don't have to use the internal structures.
+    It has been designed and may be used from a GUI or a CLI
+    Please note that when referring to items or characters, you may use their
+    display name. However matching names to class objects is case sensitive.
+    """
     _sel_char = None
     _sel_obj = {}
     _sel_obj_per_cat = {}
     _sel_objs_per_zindex = {}
+
+    def __init__(self, conf_data):
+        super(AvatarCreator, self).__init__(conf_data)
 
     def char_select(self, char_name):
         """ Set a character as a base

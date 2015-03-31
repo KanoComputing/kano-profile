@@ -345,7 +345,7 @@ class AvatarCreator(AvatarConfParser):
     _sel_objs_per_zindex = {}
 
     def __init__(self, conf_data):
-        super(AvatarCreator, self).__init__(conf_data)
+        AvatarConfParser.__init__(self, conf_data)
 
     def char_select(self, char_name):
         """ Set a character as a base

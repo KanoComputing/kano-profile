@@ -14,6 +14,7 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
+# TODO Add support to save multiple circular assets, currently only 1 is supported
 
 
 class AvatarAccessory():
@@ -452,6 +453,9 @@ class AvatarCreator(AvatarConfParser):
     def create_avatar(self, save_to='', circ_assets=True):
         """ Create the finished image and (optionally) save it to file.
         :param save_to: (Optional) filename to save the image to
+        :param circ_assets: (Optional) If set the circular assets are
+                            with a file_name same at the one set in
+                            the save_to parameter with '_circ' appended
         :returns: False if the base character hasn't been specified
         """
         rc = self._create_base_img()
@@ -474,6 +478,21 @@ class AvatarCreator(AvatarConfParser):
                 file_name += '_circ' + file_ext
                 self._sel_char.generate_circular_assets(file_name)
 
+        return True
+
+    def create_circular_assets(self, file_name):
+        """ Save circular assets with the filename given
+        :param file_name: filename to save the image to
+        :returns: False if there was a problem, True otherwise
+        """
+        if not file_name:
+            logger.warn('No filename given, will not save circular assets')
+            return None
+
+        if not self._sel_char:
+            logger.error('Haven\'t selected a character, will not save circulat assets')
+            return None
+        self._sel_char.generate_circular_assets(file_name)
         return True
 
     def _create_base_img(self):

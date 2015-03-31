@@ -9,7 +9,7 @@ import random
 import yaml
 from PIL import Image
 
-from kano_avatar.paths import AVATAR_CONF_FILE, AVATAR_ASSET_FOLDER
+from kano_avatar.paths import AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR, CATEGORY_ICONS
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -37,7 +37,7 @@ class AvatarAccessory():
         if os.path.isabs(file_name):
             self._asset_fname = file_name
         else:
-            self._asset_fname = os.path.join(AVATAR_ASSET_FOLDER, file_name)
+            self._asset_fname = os.path.join(ITEM_DIR, file_name)
 
     def name(self):
         """ Provides the display name of the Item
@@ -91,7 +91,7 @@ class AvatarCharacter():
         if os.path.isabs(file_name):
             self._asset_fname = file_name
         else:
-            self._asset_fname = os.path.join(AVATAR_ASSET_FOLDER, file_name)
+            self._asset_fname = os.path.join(CHARACTER_DIR, file_name)
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -112,6 +112,11 @@ class AvatarCharacter():
         """
         self._img.save(file_name)
 
+    def generate_circular_assets(self, file_name):
+        """
+        """
+        pass
+
 
 class AvatarConfParser():
     _categories = set()
@@ -121,33 +126,38 @@ class AvatarConfParser():
     _objects = {}
     _characters = {}
     _object_per_cat = {}
-    cat_lvl_label = 'category_levels'
+    _category_icons = {}
+    categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
 
     def __init__(self, conf_data):
-        if self.cat_lvl_label not in conf_data:
-            logger.error('{} dictionary not found'.format(self.cat_lvl_label))
+        if self.categories_label not in conf_data:
+            logger.error('{} dict not found'.format(self.categories_label))
         else:
-            self._populate_category_structures(conf_data)
+            self._populate_cat_structures(conf_data[self.categories_label])
 
         if self.char_label not in conf_data:
-            logger.error('{} dictionary not found'.format(self.char_label))
+            logger.error('{} dict not found'.format(self.char_label))
         else:
             self._populate_character_structures(conf_data)
 
         if self.objects_label not in conf_data:
-            logger.error('{} dictionary not found'.format(self.objects_label))
+            logger.error('{} dict not found'.format(self.objects_label))
         else:
             self._populate_object_structures(conf_data)
 
-    def _populate_category_structures(self, conf_data):
+    def _populate_cat_structures(self, categories):
         """ Populates internal structures related to categories
-        :param conf_data: YAML format configuration structure read from file
+        :param categories: categories section of YAML format configuration
+                           structure read from file
         """
-        # First convert the category name into lowercase
-        for cat, lvl in conf_data[self.cat_lvl_label].items():
-            self._cat_to_lvl[cat.lower()] = lvl
+        for cat in categories:
+            self._cat_to_lvl[cat['cat_name']] = cat['level']
+            icon_file = cat['disp_icon']
+            if not os.path.isabs(icon_file):
+                icon_file = os.path.join(CATEGORY_ICONS, icon_file)
+            self._category_icons[cat['cat_name']] = icon_file
 
         # Save both the unique set of levels and categories
         self._categories = set(self._cat_to_lvl.keys())
@@ -163,7 +173,7 @@ class AvatarConfParser():
         """
         for obj in conf_data[self.objects_label]:
             new_name = obj['display_name']
-            new_cat = obj['category'].lower()
+            new_cat = obj['category']
             new_fname = obj['img_name']
             new_x = obj['position_x']
             new_y = obj['position_y']
@@ -188,12 +198,10 @@ class AvatarConfParser():
             self._characters[new_name] = new_obj
 
     def get_lvl(self, category):
-        cat = category.lower()
-
-        if cat not in self._cat_to_lvl:
-            logger.error('Category {} not in available ones'.format(category))
+        if category not in self._cat_to_lvl:
+            logger.warn('Category {} not in available ones'.format(category))
         else:
-            return self._cat_to_lvl[cat]
+            return self._cat_to_lvl[category]
 
     def list_available_chars(self):
         """ Provides a list of available characters
@@ -212,6 +220,17 @@ class AvatarConfParser():
         :returns: list of categories (list of strings)
         """
         return [k for k in self._categories]
+
+    def get_category_icon(self, category_name):
+        """ Provides the filename of the icons of the provided category
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if category_name not in self._category_icons:
+            logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
+            return None
+        else:
+            return self._category_icons['category_name']
 
 
 class AvatarCreator(AvatarConfParser):

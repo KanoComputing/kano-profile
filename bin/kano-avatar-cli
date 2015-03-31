@@ -53,12 +53,12 @@ def main():
     if args.list:
         avail_conf = AvatarConfParser(configuration)
         if args.list == 'char':
-            logger.error(avail_conf.list_available_chars())
+            print avail_conf.list_available_chars()
         elif args.list == 'obj':
-            logger.error(avail_conf.list_all_available_objs())
+            print avail_conf.list_all_available_objs()
         elif args.list == 'all':
-            logger.error(avail_conf.list_available_chars())
-            logger.error(avail_conf.list_all_available_objs())
+            print avail_conf.list_available_chars()
+            print avail_conf.list_all_available_objs()
         return 0
 
     if args.create:

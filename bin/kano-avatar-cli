@@ -57,8 +57,15 @@ def main():
         elif args.list == 'obj':
             print avail_conf.list_all_available_objs()
         elif args.list == 'all':
-            print avail_conf.list_available_chars()
-            print avail_conf.list_all_available_objs()
+            chars = avail_conf.list_available_chars()
+            print chars
+            for char in chars:
+                print avail_conf.get_char_preview(char)
+
+            objs = avail_conf.list_all_available_objs()
+            print objs
+            for obj in objs:
+                print avail_conf.get_item_preview(obj)
         return 0
 
     if args.create:

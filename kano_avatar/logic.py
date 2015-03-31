@@ -404,7 +404,9 @@ class AvatarCreator(AvatarConfParser):
             self.save_image(save_to)
 
             if circ_assets:
-                self._sel_char.generate_circular_assets('out_circ.png')
+                file_name, file_ext = os.path.splitext(save_to)
+                file_name += '_circ' + file_ext
+                self._sel_char.generate_circular_assets(file_name)
 
         return True
 

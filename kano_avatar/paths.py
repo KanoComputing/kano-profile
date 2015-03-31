@@ -12,5 +12,5 @@ CHARACTER_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'characters')
 ITEM_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'items')
 CATEGORY_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'categories')
 
-CIRC_ASSET_MASK = 'circle_invert.png'
-RING_ASSET = 'grey_circle.png'
+CIRC_ASSET_MASK = os.path.join(AVATAR_ASSET_FOLDER, 'helper_assets', 'circle_mask.png')
+RING_ASSET = os.path.join(AVATAR_ASSET_FOLDER, 'helper_assets', 'grey_ring.png')

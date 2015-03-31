@@ -149,9 +149,9 @@ class AvatarCharacter():
 
 class AvatarConfParser():
     _categories = set()
-    _levels = set()
-    _cat_to_lvl = {}
-    _level_to_categories = {}
+    _zindex = set()
+    _cat_to_z_index = {}
+    _zindex_to_categories = {}
     _objects = {}
     _characters = {}
     _object_per_cat = {}
@@ -182,19 +182,19 @@ class AvatarConfParser():
                            structure read from file
         """
         for cat in categories:
-            self._cat_to_lvl[cat['cat_name']] = cat['level']
+            self._cat_to_z_index[cat['cat_name']] = cat['z_index']
             icon_file = cat['disp_icon']
             if not os.path.isabs(icon_file):
                 icon_file = os.path.join(CATEGORY_ICONS, icon_file)
             self._category_icons[cat['cat_name']] = icon_file
 
-        # Save both the unique set of levels and categories
-        self._categories = set(self._cat_to_lvl.keys())
-        self._levels = set(self._cat_to_lvl.values())
+        # Save both the unique set of z-indexes and categories
+        self._categories = set(self._cat_to_z_index.keys())
+        self._zindex = set(self._cat_to_z_index.values())
 
-        self._level_to_categories = {i: [] for i in self._levels}
-        for cat_name, lvl in self._cat_to_lvl.items():
-            self._level_to_categories[lvl].append(cat_name)
+        self._zindex_to_categories = {i: [] for i in self._zindex}
+        for cat_name, zindex in self._cat_to_z_index.items():
+            self._zindex_to_categories[zindex].append(cat_name)
 
     def _populate_object_structures(self, conf_data):
         """ Populates internal structures related to items
@@ -228,11 +228,11 @@ class AvatarConfParser():
             new_obj = AvatarCharacter(new_name, new_fname, x, y)
             self._characters[new_name] = new_obj
 
-    def get_lvl(self, category):
-        if category not in self._cat_to_lvl:
+    def get_zindex(self, category):
+        if category not in self._cat_to_z_index:
             logger.warn('Category {} not in available ones'.format(category))
         else:
-            return self._cat_to_lvl[category]
+            return self._cat_to_z_index[category]
 
     def list_available_chars(self):
         """ Provides a list of available characters
@@ -279,7 +279,7 @@ class AvatarCreator(AvatarConfParser):
     _sel_char = None
     _sel_obj = {}
     _sel_obj_per_cat = {}
-    _sel_objs_per_lvl = {}
+    _sel_objs_per_zindex = {}
 
     def char_select(self, char_name):
         """ Set a character as a base
@@ -312,7 +312,7 @@ class AvatarCreator(AvatarConfParser):
         """
         self._sel_obj.clear()
         self._sel_obj_per_cat.clear()
-        self._sel_objs_per_lvl.clear()
+        self._sel_objs_per_zindex.clear()
 
     def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character.
@@ -335,12 +335,12 @@ class AvatarCreator(AvatarConfParser):
                 self._sel_obj_per_cat[obj_cat] = obj_instance
                 self._sel_obj[obj_name] = self._objects[obj_name]
 
-                # Create a dictionary with which objects belong to each lvl
-                obj_lvl = self.get_lvl(obj_cat)
-                if obj_lvl not in self._sel_objs_per_lvl:
-                    self._sel_objs_per_lvl[obj_lvl] = []
+                # Create a dictionary with which objects belong to each z-index
+                obj_zindex = self.get_zindex(obj_cat)
+                if obj_zindex not in self._sel_objs_per_zindex:
+                    self._sel_objs_per_zindex[obj_zindex] = []
 
-                self._sel_objs_per_lvl[obj_lvl].append(obj_instance)
+                self._sel_objs_per_zindex[obj_zindex].append(obj_instance)
             else:
                 error_msg = 'Object {} not in available obj list'.format(obj_name)
                 logger.error(error_msg)
@@ -394,8 +394,8 @@ class AvatarCreator(AvatarConfParser):
             logger.error("Can't create image")
             return False
 
-        for lvl in sorted(self._sel_objs_per_lvl.keys()):
-            items = self._sel_objs_per_lvl[lvl]
+        for zindex in sorted(self._sel_objs_per_zindex.keys()):
+            items = self._sel_objs_per_zindex[zindex]
             for item in items:
                 item.paste_over_image(self._sel_char.get_img())
 

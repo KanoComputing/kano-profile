@@ -1,12 +1,12 @@
 categories:
     - cat_name: Hats
-      level: 2
+      z_index: 2
       disp_icon: hats.png
     - cat_name: Shirts
-      level: 1
+      z_index: 1
       disp_icon: shirts.png
     - cat_name: Face
-      level: 1
+      z_index: 1
       disp_icon: face.png
 
 characters:

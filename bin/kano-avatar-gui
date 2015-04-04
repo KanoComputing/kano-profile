@@ -16,12 +16,12 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.gtk3.application_window import ApplicationWindow
-from kano.gtk3.apply_styles import apply_colours_to_screen
 from kano.gtk3.top_bar import TopBar
 from kano.gtk3.heading import Heading
 
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano.logging import logger
+from kano_avatar_gui.Menu import Menu
 
 try:
     from kano_profile.tracker import Tracker
@@ -58,16 +58,28 @@ class MainWindow(ApplicationWindow):
 
         self._get_obj_data()
         # TODO Un hardcode the following
-        avatar_cr.char_select('Judoka')
+        avatar_cr.char_select('Judoka_Skin')
 
         self._grid = Gtk.Grid()
-        self._create_list_boxes()
+        # self._create_list_boxes()
         self._create_img_box(avatar_cr.selected_char_asset())
         self.title = Heading('Make your Avatar', 'Choose clothes and other swag')
         self._grid.attach(self.title.container, 0, 0, 9, 1)
 
         self._overlay.add(self._grid)
-        self._overlay.show_all()
+        self._attach_menu()
+
+        self.show_all()
+
+    def _attach_menu(self):
+        self._menu = Menu(avatar_cr)
+        self._menu.connect('asset_selected', self._update_img)
+        self._grid.attach(self._menu, 0, 1, 1, 1)
+
+    def _print_info(self, widget, info):
+        print "widget = {}".format(widget)
+        print "info = {}".format(info)
+        print "\n"
 
     def _get_obj_data(self):
         self._list_of_categories = avatar_cr.list_available_categories()
@@ -98,7 +110,7 @@ class MainWindow(ApplicationWindow):
 
             for obj in avatar_cr.get_avail_objs(cat):
                 cat_box.append_text(obj)
-            cat_box.append_text('')
+            cat_box.append_text('b')
 
             self._list_of_comboxes.append(cat_box)
 
@@ -106,11 +118,23 @@ class MainWindow(ApplicationWindow):
             i += 1
             cat_box.connect('changed', self._update_img)
 
+    '''
     def _update_img(self, combo):
+
         list_of_objs = []
         for box in self._list_of_comboxes:
             if box.get_active_text():
                 list_of_objs.append(box.get_active_text())
+        rc = avatar_cr.obj_select(list_of_objs)
+        if not rc:
+            logger.error('Error processing the list {}'.format(list_of_objs))
+        else:
+            avatar_cr.create_avatar(save_to='avatar.png')
+            self._imgbox.set_image('avatar.png')
+
+    '''
+    def _update_img(self, widget, selected):
+        list_of_objs = self._menu.get_all_selected_objs()
         rc = avatar_cr.obj_select(list_of_objs)
         if not rc:
             logger.error('Error processing the list {}'.format(list_of_objs))

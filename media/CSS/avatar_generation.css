@@ -1,0 +1,46 @@
+
+
+/* Pop up menu icons */
+/* This is an image that the user can choose */
+.category_item {
+    background: #ffffff;
+}
+
+.category_item:hover {
+    background: #dedede;
+}
+
+.category_item.selected {
+    background: #dedede;
+}
+
+.pop_up_menu_top_bar {
+    background: #dddddd;
+}
+
+.pop_up_menu_top_bar GtkLabel {
+    font: Bariol bold 15;
+    color: #222222;
+}
+
+.pop_up_menu_item {
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 10px;
+    border-color: transparent;
+    background: transparent;
+}
+.pop_up_menu_item:hover {
+    background: @kano_green;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: @kano_green;
+}
+.pop_up_menu_item.selected {
+    background: @kano_green;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: @kano_green;
+}

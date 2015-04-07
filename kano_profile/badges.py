@@ -255,6 +255,10 @@ def save_app_state_with_dialog(app_name, data):
 
     if not new_level_str and not new_items_str:
         return
+    else:
+        # New level detected, play sound in the background and do notifications.
+        sound_cmd='aplay /usr/share/kano-media/sounds/kano_xp.wav 2>&1 >/dev/null &'
+        run_bg(cmd)
 
     if is_gui():
         with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:

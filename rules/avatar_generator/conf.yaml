@@ -52,92 +52,92 @@ objects:
 #
 
 # Skin colours
-    - display_name: Orange
+    - display_name: Skin_Sand
       img_name: skins/skin-1.png
-      preview_img: skins/Kano-CharacterApp_07-02.png
+      preview_img: skins/skin-1.png
       position_x: 0
       position_y: 0
       category: Skins
 
-    - display_name: Chocolate
+    - display_name: Skin_Chocolate
       img_name: skins/skin-2.png
-      preview_img: skins/Kano-CharacterApp_07-03.png
+      preview_img: skins/skin-2.png
       position_x: 0
       position_y: 0
       category: Skins
 
-    - display_name: Dark_Brown
+    - display_name: Skin_Dark_Brown
       img_name: skins/skin-3.png
-      preview_img: skins/Kano-CharacterApp_07-04.png
+      preview_img: skins/skin-3.png
       position_x: 0
       position_y: 0
       category: Skins
 
-    - display_name: Warm
+    - display_name: Skin_Warm
       img_name: skins/skin-5.png
-      preview_img: skins/Kano-CharacterApp_07-04.png
+      preview_img: skins/skin-5.png
       position_x: 0
       position_y: 0
       category: Skins
 
-    - display_name: Brown
+    - display_name: Skin_Brown
       img_name: skins/skin-6.png
-      preview_img: skins/Kano-CharacterApp_07-05.png
+      preview_img: skins/skin-6.png
       position_x: 0
       position_y: 0
       category: Skins
 
-    - display_name: Pale
+    - display_name: Skin_Pale
       img_name: skins/skin-4.png
-      preview_img: skins/Kano-CharacterApp_07-06.png
+      preview_img: skins/skin-4.png
       position_x: 0
       position_y: 0
       category: Skins
 
-    - display_name: Sand
+    - display_name: Skin_Orange
       img_name: skins/skin-7.png
-      preview_img: skins/Kano-CharacterApp_07-07.png
+      preview_img: skins/skin-7.png
       position_x: 0
       position_y: 0
       category: Skins
 
 # Hair colours
-    - display_name: Dark_Blond
+    - display_name: Hair_Dark_Blond
       img_name: hair/hair-darkblonde.png
       preview_img: hair/Kano-CharacterApp_07-02.png
       position_x: 0
       position_y: 0
       category: Hair
 
-    - display_name: Light_Blond
+    - display_name: Hair_Light_Blond
       img_name: hair/hair-lightblonde.png
       preview_img: hair/Kano-CharacterApp_07-03.png
       position_x: 0
       position_y: 0
       category: Hair
 
-    - display_name: Dark_Brown
+    - display_name: Hair_Dark_Brown
       img_name: hair/hair-darkbrown.png
       preview_img: hair/Kano-CharacterApp_07-04.png
       position_x: 0
       position_y: 0
       category: Hair
 
-    - display_name: Brown
+    - display_name: Hair_Brown
       img_name: hair/hair-brown.png
       preview_img: hair/Kano-CharacterApp_07-05.png
       position_x: 0
       position_y: 0
       category: Hair
 
-    - display_name: Ginger
+    - display_name: Hair_Ginger
       img_name: hair/hair-ginger.png
       preview_img: hair/Kano-CharacterApp_07-06.png
       position_x: 0
       position_y: 0
       category: Hair
 
-    - display_name: Black
+    - display_name: Hair_Black
       img_name: hair/hair-dark.png
       preview_img: hair/Kano-CharacterApp_07.png
       position_x: 0
@@ -145,42 +145,42 @@ objects:
       category: Hair
 
 # Stickers
-    - display_name: Code
+    - display_name: Sticker_Code
       img_name: stickers/sticker-code.png
       preview_img: stickers/Kano-CharacterApp_07-02.png
       position_x: 0
       position_y: 0
       category: Stickers
 
-    - display_name: Atom
+    - display_name: Sticker_Atom
       img_name: stickers/sticker-atom.png
       preview_img: stickers/Kano-CharacterApp_07-03.png
       position_x: 0
       position_y: 0
       category: Stickers
 
-    - display_name: Note
+    - display_name: Sticker_Note
       img_name: stickers/sticker-note.png
       preview_img: stickers/Kano-CharacterApp_07-04.png
       position_x: 0
       position_y: 0
       category: Stickers
 
-    - display_name: Bolt
+    - display_name: Sticker_Bolt
       img_name: stickers/sticker-bolt.png
       preview_img: stickers/Kano-CharacterApp_07-05.png
       position_x: 0
       position_y: 0
       category: Stickers
 
-    - display_name: Star
+    - display_name: Sticker_Star
       img_name: stickers/sticker-star.png
       preview_img: stickers/Kano-CharacterApp_07-06.png
       position_x: 0
       position_y: 0
       category: Stickers
 
-    - display_name: Heart
+    - display_name: Sticker_Heart
       img_name: stickers/sticker-heart.png
       preview_img: stickers/Kano-CharacterApp_07.png
       position_x: 0
@@ -188,70 +188,70 @@ objects:
       category: Stickers
 
 # Suits
-    - display_name: Pink
+    - display_name: Suit_Pink
       img_name: suits/suit-pink.png
       preview_img: suits/Kano-CharacterApp_07-02.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Cyan
+    - display_name: Suit_Cyan
       img_name: suits/suit-cyan.png
       preview_img: suits/Kano-CharacterApp_07-03.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Green
+    - display_name: Suit_Green
       img_name: suits/suit-green.png
       preview_img: suits/Kano-CharacterApp_07-04.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Dark
+    - display_name: Suit_Dark
       img_name: suits/suit-dark.png
       preview_img: suits/Kano-CharacterApp_07-05.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: white
+    - display_name: Suit_White
       img_name: suits/suit-white.png
       preview_img: suits/Kano-CharacterApp_07-06.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Yellow
+    - display_name: Suit_Yellow
       img_name: suits/suit-yellow.png
       preview_img: suits/Kano-CharacterApp_07-07.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Orange
+    - display_name: Suit_Orange
       img_name: suits/suit-orange.png
       preview_img: suits/Kano-CharacterApp_07-08.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Purple
+    - display_name: Suit_Purple
       img_name: suits/suit-purple.png
       preview_img: suits/Kano-CharacterApp_07-09.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Red
+    - display_name: Suit_Red
       img_name: suits/suit-red.png
       preview_img: suits/Kano-CharacterApp_07-10.png
       position_x: 0
       position_y: 0
       category: Suits
 
-    - display_name: Blue
+    - display_name: Suit_Blue
       img_name: suits/suit-blue.png
       preview_img: suits/Kano-CharacterApp_07.png
       position_x: 0
@@ -259,56 +259,56 @@ objects:
       category: Suits
 
 # Faces
-    - display_name: Grumpy
+    - display_name: Face_Grumpy
       img_name: faces/face-grumpy.png
       preview_img: faces/Kano-CharacterApp_07-02.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: SuperHappy
+    - display_name: Face_SuperHappy
       img_name: faces/face-superhappy.png
       preview_img: faces/Kano-CharacterApp_07-03.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: Scared
+    - display_name: Face_Scared
       img_name: faces/face-scared.png
       preview_img: faces/Kano-CharacterApp_07-04.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: Cutey
+    - display_name: Face_Cutey
       img_name: faces/face-cutey.png
       preview_img: faces/Kano-CharacterApp_07-05.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: Wiggly
+    - display_name: Face_Wiggly
       img_name: faces/face-wiggley.png
       preview_img: faces/Kano-CharacterApp_07-06.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: Cheeky
+    - display_name: Face_Cheeky
       img_name: faces/face-cheeky.png
       preview_img: faces/Kano-CharacterApp_07-07.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: Ouh
+    - display_name: Face_Ouh
       img_name: faces/face-ouh.png
       preview_img: faces/Kano-CharacterApp_07-09.png
       position_x: 0
       position_y: 0
       category: Faces
 
-    - display_name: Happy
+    - display_name: Face_Happy
       img_name: faces/face-happy.png
       preview_img: faces/Kano-CharacterApp_07.png
       position_x: 0
@@ -316,70 +316,70 @@ objects:
       category: Faces
 
 # Belt
-    - display_name: Yellow
+    - display_name: Belt_Yellow
       img_name: belts/belt-yellow.png
       preview_img: belts/Kano-CharacterApp_07-02.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Black
+    - display_name: Belt_Black
       img_name: belts/belt-dark.png
       preview_img: belts/Kano-CharacterApp_07-03.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Orange
+    - display_name: Belt_Orange
       img_name: belts/belt-orange.png
       preview_img: belts/Kano-CharacterApp_07-04.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Red
+    - display_name: Belt_Red
       img_name: belts/belt-red.png
       preview_img: belts/Kano-CharacterApp_07-05.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Purple
+    - display_name: Belt_Belt_Purple
       img_name: belts/belt-purple.png
       preview_img: belts/Kano-CharacterApp_07-06.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Blue
+    - display_name: Belt_Blue
       img_name: belts/belt-blue.png
       preview_img: belts/Kano-CharacterApp_07-07.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Green
+    - display_name: Belt_Green
       img_name: belts/belt-green.png
       preview_img: belts/Kano-CharacterApp_07-08.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Pink
+    - display_name: Belt_Pink
       img_name: belts/belt-pinkish.png
       preview_img: belts/Kano-CharacterApp_07-09.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Cyan
+    - display_name: Belt_Cyan
       img_name: belts/belt-cyan.png
       preview_img: belts/Kano-CharacterApp_07-10.png
       position_x: 0
       position_y: 0
       category: Belts
 
-    - display_name: Beige
+    - display_name: Belt_Beige
       img_name: belts/belt-beige.png
       preview_img: belts/Kano-CharacterApp_07.png
       position_x: 0

@@ -16,6 +16,10 @@ class PopUpItemMenu(SelectMenu):
     # and they don't need to be passed as arguments
     def __init__(self, category, avatar_parser):
 
+        self.top_bar_height = 60
+        self.button_width = 60
+        self.button_height = 60
+
         self._category = category
         self._parser = avatar_parser
         self._signal_name = 'pop_up_item_selected'
@@ -33,7 +37,7 @@ class PopUpItemMenu(SelectMenu):
         # Labels the category
         top_bar = self._create_top_bar()
         vbox.pack_start(top_bar, False, False, 0)
-        vbox.pack_start(self._grid, False, False, 0)
+        vbox.pack_start(self._grid, False, False, 10)
 
         self._pack_items()
         # self.connect('pop_up_item_selected', self.print_event)
@@ -47,7 +51,7 @@ class PopUpItemMenu(SelectMenu):
         label.set_alignment(0, 0.5)
         label.set_margin_left(20)
         top_bar.add(label)
-        top_bar.set_size_request(150, 40)
+        top_bar.set_size_request(150, self.top_bar_height)
         return top_bar
 
     def _pack_items(self):
@@ -107,6 +111,7 @@ class PopUpItemMenu(SelectMenu):
         button.connect('clicked', self._only_style_selected, obj_name)
         button.connect('enter-notify-event', self._add_selected_appearence, obj_name)
         button.connect('leave-notify-event', self._remove_selected_appearence, obj_name)
+        button.set_size_request(self.button_width, self.button_height)
         return button
 
     def _add_selected_appearence(self, button, event, identifier):

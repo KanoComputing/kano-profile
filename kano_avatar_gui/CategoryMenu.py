@@ -11,8 +11,9 @@ class CategoryMenu(SelectMenu):
 
     def __init__(self, parser):
 
-        self._item_width = 60
-        self._item_height = 60
+        self.item_width = 65
+        self.item_height = 50
+
         self._signal_name = 'category_item_selected'
 
         self._parser = parser
@@ -25,7 +26,7 @@ class CategoryMenu(SelectMenu):
         SelectMenu.__init__(self, self.categories, self._signal_name)
 
         # The menu is one item by 7 items
-        self.set_size_request(self._item_width, 7 * self._item_height)
+        self.set_size_request(self.item_width, 7 * self.item_height)
 
         self._pack_buttons()
 

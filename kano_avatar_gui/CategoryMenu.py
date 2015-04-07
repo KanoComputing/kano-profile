@@ -27,12 +27,6 @@ class CategoryMenu(SelectMenu):
         # The menu is one item by 7 items
         self.set_size_request(self._item_width, 7 * self._item_height)
 
-        '''
-        for name in cat_names:
-            self._items[name] = {}
-            self._items[name]["selected"] = False
-        '''
-
         self._pack_buttons()
 
     def _add_selected_appearence(self, button, event, identifier):
@@ -40,8 +34,9 @@ class CategoryMenu(SelectMenu):
         self._add_selected_image(button, identifier)
 
     def _remove_selected_appearence(self, button, event, identifier):
-        self._remove_selected_css(button)
-        self._remove_selected_image(button, identifier)
+        if identifier != self.get_selected():
+            self._remove_selected_css(button)
+            self._remove_selected_image(button, identifier)
 
     def _pack_buttons(self):
         '''Pack the buttons into the menu.

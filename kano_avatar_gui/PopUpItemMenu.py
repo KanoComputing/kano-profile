@@ -40,10 +40,6 @@ class PopUpItemMenu(SelectMenu):
 
         self.show_all()
 
-    def print_event(self, arg1, arg2):
-        print "arg1 = {}".format(arg1)
-        print "arg2 = {}".format(arg2)
-
     def _create_top_bar(self):
         top_bar = Gtk.EventBox()
         top_bar.get_style_context().add_class("pop_up_menu_top_bar")

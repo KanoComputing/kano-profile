@@ -30,7 +30,7 @@ class SelectMenu(Gtk.EventBox):
 
         apply_styling_to_screen(css_path)
 
-        # Initialise self.__items
+        # Initialise self._items
         self._items = {}
 
         for name in list_of_names:
@@ -39,49 +39,47 @@ class SelectMenu(Gtk.EventBox):
 
         self._signal_name = signal_name
 
-    def _selected_image_cb(self, widget, identifier):
-        '''This is connected to the button-release-event when you click on a
-        button in the table.
-        If the image is unlocked, add the css selected class, select the image
-        and emit a signal that the parent window can use
-        '''
-
-        self._set_selected(identifier)
-
-        # When an image is selected, emit a signal giving the
-        # idenitifer as information
-        self.emit(self._signal_name, identifier)
+        # This is the selected_identifier
+        self._selected = None
 
     def _set_selected(self, identifier):
         '''Sets the selected element in the dictionary to True,
         and sets all the others to False
         '''
 
-        # Unselect current one
-        selected_identifier = self.get_selected()
-        if selected_identifier:
-            self._items[selected_identifier]['selected'] = False
+        self._selected = identifier
 
-        self._items[identifier]['selected'] = True
-        self._add_selected_css_class(identifier)
+        # Old version
+        # Unselect current one
+        # selected_identifier = self.get_selected()
+        # if selected_identifier:
+        #    self._items[selected_identifier]['selected'] = False
+        # self._items[identifier]['selected'] = True
+        # self._only_style_selected(identifier)
 
     def get_selected(self):
         '''Gets the name of the current selected image
         '''
-        for identifier, item_info in self._items.iteritems():
-            if item_info['selected']:
-                return identifier
+
+        return self._selected
+
+        # Old version
+        # for identifier, item_info in self._items.iteritems():
+        #    if item_info['selected']:
+        #        return identifier
 
     def _unselect_all(self):
         '''Remove all styling on all images, and sets the 'selected'
         field to False
         '''
+        # Alternative?
+        self._selected = None
 
-        for item in self._items:
-            item['selected'] = False
-
+        # Old version
+        # for item in self._items:
+        #    item['selected'] = False
         # Remove all styling
-        self._add_selected_css_class(None)
+        # self._only_style_selected(None)
 
     def _add_option_to_items(self, identifier, name, item):
         '''Adds a new option in the self._items
@@ -90,20 +88,26 @@ class SelectMenu(Gtk.EventBox):
         if identifier in self._items:
             self._items[identifier][name] = item
 
-    def _add_selected_css_class(self, identifier):
-        '''Adds the CSS class that shows the image that has been selected,
-        even when the mouse is moved away.
-        If identifier is None, will remove all styling
+    def _add_selected_css(self, button):
+        style = button.get_style_context()
+        style.add_class("selected")
+
+    def _remove_selected_css(self, button):
+        style = button.get_style_context()
+        style.remove_class("selected")
+
+    def _add_selected_image(self, button, identifier):
+        '''Pack the selected image into the button
         '''
+        if 'active_path' in self._items[identifier]:
+            path = self._items[identifier]["active_path"]
+            image = Gtk.Image.new_from_file(path)
+            button.set_image(image)
 
-        for name, img_dict in self._items.iteritems():
-            if 'button' in img_dict:
-                button = img_dict['button']
-                style = button.get_style_context()
-                style.remove_class("selected")
-
-        if identifier in self._items:
-            if 'button' in self._items[identifier]:
-                button = self._items[identifier]['button']
-                style = button.get_style_context()
-                style.add_class("selected")
+    def _remove_selected_image(self, button, identifier):
+        '''Pack the grey unselected image into the button
+        '''
+        if 'inactive_path' in self._items[identifier]:
+            path = self._items[identifier]["inactive_path"]
+            image = Gtk.Image.new_from_file(path)
+            button.set_image(image)

@@ -35,6 +35,14 @@ class CategoryMenu(SelectMenu):
 
         self._pack_buttons()
 
+    def _add_selected_appearence(self, button, event, identifier):
+        self._add_selected_css(button)
+        self._add_selected_image(button, identifier)
+
+    def _remove_selected_appearence(self, button, event, identifier):
+        self._remove_selected_css(button)
+        self._remove_selected_image(button, identifier)
+
     def _pack_buttons(self):
         '''Pack the buttons into the menu.
         '''
@@ -47,7 +55,26 @@ class CategoryMenu(SelectMenu):
         for category in categories:
             button = self._create_button(category)
             self._add_option_to_items(category, 'button', button)
+
+            inactive_icon_path = self._parser.get_inactive_category_icon(category)
+            self._add_option_to_items(category, 'inactive_path', inactive_icon_path)
+            active_icon_path = self._parser.get_active_category_icon(category)
+            self._add_option_to_items(category, 'active_path', active_icon_path)
+
             vbox.pack_start(button, True, True, 0)
+
+    def _selected_image_cb(self, widget, identifier):
+        '''This is connected to the button-release-event when you click on a
+        button in the table.
+        If the image is unlocked, add the css selected class, select the image
+        and emit a signal that the parent window can use
+        '''
+
+        self._set_selected(identifier)
+
+        # When an image is selected, emit a signal giving the
+        # idenitifer as information
+        self.emit(self._signal_name, identifier)
 
     def _create_button(self, identifier):
         '''Create a button with the styling needed for this
@@ -59,11 +86,36 @@ class CategoryMenu(SelectMenu):
         button = Gtk.Button()
         button.set_size_request(60, 60)
 
-        path = self._parser.get_category_icon(identifier)
+        path = self._parser.get_inactive_category_icon(identifier)
         icon = Gtk.Image.new_from_file(path)
         button.add(icon)
 
         button.get_style_context().add_class("category_item")
         button.connect("clicked", self._selected_image_cb,
                        identifier)
+        button.connect("clicked", self._only_style_selected, identifier)
+        # Replace the grey icon with an orange on when the pointer
+        # hovers over the button
+        button.connect("enter-notify-event", self._add_selected_appearence,
+                       identifier)
+        button.connect("leave-notify-event", self._remove_selected_appearence,
+                       identifier)
         return button
+
+    def _only_style_selected(self, button, identifier):
+        '''Adds the CSS class that shows the image that has been selected,
+        even when the mouse is moved away.
+        If identifier is None, will remove all styling
+        '''
+
+        for name, img_dict in self._items.iteritems():
+            if 'button' in img_dict:
+                button = img_dict['button']
+                self._remove_selected_css(button)
+                self._remove_selected_image(button, name)
+
+        if identifier in self._items:
+            if 'button' in self._items[identifier]:
+                button = self._items[identifier]['button']
+                self._add_selected_css(button)
+                self._add_selected_image(button, identifier)

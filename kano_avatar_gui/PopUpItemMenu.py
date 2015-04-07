@@ -19,6 +19,7 @@ class PopUpItemMenu(SelectMenu):
         self._category = category
         self._parser = avatar_parser
         self._signal_name = 'pop_up_item_selected'
+        self._border_path = self._parser.get_selected_border(self._category)
 
         obj_names = self._parser.get_avail_objs(self._category)
         SelectMenu.__init__(self, obj_names, self._signal_name)
@@ -53,10 +54,6 @@ class PopUpItemMenu(SelectMenu):
         top_bar.set_size_request(150, 40)
         return top_bar
 
-    ##############################################################
-    # There is no possibility of these functions being similar to
-    # CategoryMenu class
-
     def _pack_items(self):
         '''Pack the buttons into the menu.
         '''
@@ -88,9 +85,6 @@ class PopUpItemMenu(SelectMenu):
             # For now, we assume that none of the menus with
             # need more than 2 columns
 
-    #####################################################################
-    # These may not be needed depending on the assets given
-
     def _create_button(self, obj_name):
         '''This places the image onto a Gtk.Fixed so we can overlay a padlock
         on top (if the item is locked)
@@ -101,18 +95,95 @@ class PopUpItemMenu(SelectMenu):
         '''
 
         # Create the container for the thumbnails
-        container = Gtk.Fixed()
+        fixed = Gtk.Fixed()
 
         path = self._parser.get_item_preview(obj_name)
-        image = Gtk.Image.new_from_file(path)
-        container.put(image, 0, 0)
+        icon = Gtk.Image.new_from_file(path)
+
+        # preview icon size (for all assets but the environment) is 41 by 41,
+        # while the evironment is 42 by 42
+        fixed.put(icon, 1, 1)
 
         button = Gtk.Button()
         button.get_style_context().add_class('pop_up_menu_item')
-        button.add(container)
-        image.set_padding(3, 3)
-        button.connect('clicked', self._selected_image_cb, obj_name)
+        button.add(fixed)
+        # button.connect('clicked', self._selected_image_cb, obj_name)
+        button.connect('clicked', self._only_style_selected, obj_name)
+        button.connect('enter-notify-event', self._add_selected_appearence, obj_name)
+        button.connect('leave-notify-event', self._remove_selected_appearence, obj_name)
         return button
+
+    def _add_selected_appearence(self, button, event, identifier):
+        if identifier != self.get_selected():
+            self._add_selected_border(button, identifier)
+
+    def _remove_selected_appearence(self, button, event, identifier):
+        if identifier != self.get_selected():
+            self._remove_selected_border(button, identifier)
+
+    def _add_selected_border(self, button, identifier):
+        '''Add the border image on top of the image
+        It needs to be "above" as some of the border images also
+        have a white tick.
+        '''
+
+        if identifier in self._items:
+            # Get the fixed containing the image
+            fixed = button.get_child()
+
+            # The border_path depends on the image.
+            selected_border = Gtk.Image.new_from_file(self._border_path)
+
+            # Put the selected border on the button
+            fixed.put(selected_border, 0, 0)
+
+            self._add_option_to_items(identifier, "selected_border",
+                                      selected_border)
+            fixed.show_all()
+
+    def _remove_selected_border(self, button, identifier):
+        '''If the icon in the menu has a selected border, this will remove
+        the border.
+        If identifier is None, all items will have the border removed
+        '''
+        if identifier in self._items and \
+                'selected_border' in self._items[identifier]:
+            fixed = button.get_children()[0]
+            selected_border = self._items[identifier]["selected_border"]
+            fixed.remove(selected_border)
+            selected_border.hide()
+            button.show_all()
+
+    def _only_style_selected(self, button, identifier):
+        '''Adds the CSS class that shows the image that has been selected,
+        even when the mouse is moved away.
+        If identifier is None, will remove all styling
+        '''
+
+        old_selected_id = self.get_selected()
+
+        if old_selected_id:
+            button = self._items[old_selected_id]['button']
+            self._remove_selected_border(button, old_selected_id)
+
+        # Since the item shoudl already have the selected apearence from the
+        # mouse hovering over it, should not bee needed to add the border again
+        self._set_selected(identifier)
+        self.emit(self._signal_name, identifier)
+
+        '''
+        # old function
+
+        for name, img_dict in self._items.iteritems():
+            if 'button' in img_dict:
+                button = img_dict['button']
+                self._remove_selected_border(button, name)
+
+        if identifier in self._items:
+            if 'button' in self._items[identifier]:
+                button = self._items[identifier]['button']
+                self._add_selected_border(button, identifier)
+        '''
 
 
 def get_environment_dict():

@@ -411,7 +411,7 @@ objects:
 
     - display_name: Minecraft
       img_name: ''
-      preview_img: environments/mincraft.png
+      preview_img: environments/minecraft.png
       position_x: 0
       position_y: 0
       category: Environments
@@ -437,9 +437,9 @@ objects:
       position_y: 0
       category: Environments
 
-    - display_name: Scene-unavailable
+    - display_name: Scene_unavailable
       img_name: ''
-      preview_img: environments/scene-unavailable.png
+      preview_img: environments/scene_unavailable.png
       position_x: 0
       position_y: 0
       category: Environments

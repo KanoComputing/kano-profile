@@ -310,7 +310,8 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._inactive_category_icons:
-            logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
+            logger.warn('Cat {} was not found, can\'t provide inactive '
+                        'icon path'.format(category_name))
             return None
         else:
             return self._inactive_category_icons[category_name]
@@ -321,7 +322,8 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._active_category_icons:
-            logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
+            logger.warn('Cat {} was not found, can\'t provide active icon '
+                        'path'.format(category_name))
             return None
         else:
             return self._active_category_icons[category_name]
@@ -332,7 +334,8 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._selected_borders:
-            logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
+            logger.warn('Cat {} was not found, can\'t provide selected border '
+                        'path'.format(category_name))
             return None
         else:
             return self._selected_borders[category_name]

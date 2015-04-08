@@ -1,4 +1,7 @@
 
+* {
+    -GtkCheckButton-indicator-size: 40
+}
 
 /* Pop up menu icons */
 /* This is an image that the user can choose */
@@ -45,7 +48,22 @@
     border-radius: 5px;
 }
 
-.grey {
-    background: #dddddd;
-    color: #dddddd;
+.get_data_label {
+    font: Bariol 13;
+    color: #555555;
+}
+
+.get_data_entry {
+    color: #555555;
+    border-color: #bbbbbb;
+    border-style: solid;
+    border-width: 2px;
+    border-radius:3px;
+    padding: 15px;
+    font: Bariol bold 16;
+}
+
+.get_data_checkbutton {
+    border-color: #bbbbbb;
+    border-width: 2px;
 }

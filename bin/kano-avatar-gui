@@ -116,7 +116,7 @@ class Page2(Gtk.Box):
         data_screen = GetData1()
 
         # Put it with the same y coordinate as the menu
-        image_viewer.put(data_screen, 300, 60)
+        image_viewer.put(data_screen, 400, 60)
         self.show_all()
 
 
@@ -136,7 +136,7 @@ class Page3(Gtk.Box):
         data_screen = GetData2()
 
         # Put it with the same y coordinate as the menu
-        image_viewer.put(data_screen, 300, 60)
+        image_viewer.put(data_screen, 400, 60)
         self.show_all()
 
 

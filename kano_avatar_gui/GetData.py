@@ -19,7 +19,7 @@ class GetData1(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
 
         # TODO: Repeated
-        self.width = 400
+        self.width = 200
         self.height = 500
         self.set_size_request(self.width, self.height)
 
@@ -28,10 +28,14 @@ class GetData1(Gtk.EventBox):
         username_entry = LabelledEntry("Username")
         password_entry = LabelledEntry("Password - min. 6 letters")
         age_entry = LabelledEntry("Age")
+        age_entry.set_size_request(100, -1)
+        age_entry.set_margin_right(100)
+        age_box = Gtk.Box()
+        age_box.add(age_entry)
 
-        box.pack_start(username_entry, False, False, 0)
-        box.pack_start(password_entry, False, False, 0)
-        box.pack_start(age_entry, False, False, 0)
+        box.pack_start(username_entry, False, False, 10)
+        box.pack_start(password_entry, False, False, 10)
+        box.pack_start(age_box, False, False, 10)
 
         self.add(box)
 
@@ -44,7 +48,7 @@ class GetData2(Gtk.EventBox):
     def __init__(self):
         Gtk.EventBox.__init__(self)
 
-        self.width = 400
+        self.width = 200
         self.height = 500
         self.set_size_request(self.width, self.height)
 
@@ -56,15 +60,16 @@ class GetData2(Gtk.EventBox):
         # Terms and conditions check button
         checkbutton = Gtk.CheckButton()
         checkbutton.get_style_context().add_class("get_data_checkbutton")
+        checkbutton.set_size_request(50, 50)
         tc_button = OrangeButton("I agree to the terms and conditions")
         tc_button.connect("clicked", self.launch_t_and_cs)
         hbox = Gtk.Box()
         hbox.pack_start(checkbutton, False, False, 0)
         hbox.pack_start(tc_button, False, False, 0)
 
-        box.pack_start(email_entry, False, False, 0)
-        box.pack_start(guardian_email_entry, False, False, 0)
-        box.pack_start(hbox, False, False, 0)
+        box.pack_start(email_entry, False, False, 10)
+        box.pack_start(guardian_email_entry, False, False, 10)
+        box.pack_start(hbox, False, False, 10)
 
         self.add(box)
 
@@ -81,13 +86,13 @@ class LabelledEntry(Gtk.Box):
 
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
-        self._label = Gtk.Label(text)
+        self._label = Gtk.Label(text, xalign=0)
         self._label.get_style_context().add_class("get_data_label")
         self.pack_start(self._label, False, False, 0)
 
         self._entry = Gtk.Entry()
         self._entry.get_style_context().add_class("get_data_entry")
-        self.pack_start(self._entry, False, False, 0)
+        self.pack_start(self._entry, False, False, 10)
 
     def get_entry_text(self):
         return self._entry.get_text()

@@ -1,6 +1,7 @@
 import os
 from gi.repository import Gtk
 from kano.gtk3.apply_styles import apply_styling_to_screen
+from kano_avatar.paths import CSS_PATH
 
 
 class SelectMenu(Gtk.EventBox):
@@ -21,14 +22,7 @@ class SelectMenu(Gtk.EventBox):
         # }
 
         Gtk.EventBox.__init__(self)
-
-        # TODO: remove hardcoding
-        css_path = os.path.join(
-            os.path.expanduser('~'),
-            "kano-profile/media/CSS/avatar_generation.css"
-        )
-
-        apply_styling_to_screen(css_path)
+        apply_styling_to_screen(CSS_PATH)
 
         # Initialise self._items
         self._items = {}

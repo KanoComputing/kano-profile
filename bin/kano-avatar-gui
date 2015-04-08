@@ -16,12 +16,13 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano.gtk3.application_window import ApplicationWindow
-from kano.gtk3.top_bar import TopBar
 from kano.gtk3.heading import Heading
 
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano.logging import logger
 from kano_avatar_gui.Menu import Menu
+
+from kano_avatar.paths import CSS_PATH
 
 try:
     from kano_profile.tracker import Tracker
@@ -51,11 +52,11 @@ class MainWindow(ApplicationWindow):
         self._manage_styling()
 
         self._get_obj_data()
+
         # TODO Un hardcode the following
         avatar_cr.char_select('Judoka_Base')
 
         self._grid = Gtk.Grid()
-        # self._create_list_boxes()
         self._create_img_box(avatar_cr.selected_char_asset())
         self.title = Heading('Make your Avatar', 'Choose clothes and other swag')
         self._grid.attach(self.title.container, 0, 0, 9, 1)
@@ -76,8 +77,7 @@ class MainWindow(ApplicationWindow):
     def _manage_styling(self):
         screen = Gdk.Screen.get_default()
         specific_css_provider = Gtk.CssProvider()
-        # TODO remove hard-coded link
-        specific_css_provider.load_from_path('/usr/share/kano-profile/media/CSS/style.css')
+        specific_css_provider.load_from_path(CSS_PATH)
         specific_style_context = Gtk.StyleContext()
         specific_style_context.add_provider_for_screen(screen,
                                                        specific_css_provider,
@@ -90,22 +90,6 @@ class MainWindow(ApplicationWindow):
         self._grid.attach(self._imgbox, 2, 1, 7, 7)
 
         self._imgbox.set_image(img_name)
-
-    def _create_list_boxes(self):
-        i = 1
-        for cat in self._list_of_categories:
-            cat_box = Gtk.ComboBoxText()
-            cat_box.set_entry_text_column(0)
-
-            for obj in avatar_cr.get_avail_objs(cat):
-                cat_box.append_text(obj)
-            cat_box.append_text('b')
-
-            self._list_of_comboxes.append(cat_box)
-
-            self._grid.attach(cat_box, 0, i, 1, 1)
-            i += 1
-            cat_box.connect('changed', self._update_img)
 
     def _update_img(self, widget, selected):
         list_of_objs = self._menu.get_all_selected_objs()

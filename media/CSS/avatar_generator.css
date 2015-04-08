@@ -7,20 +7,20 @@
 }
 
 .category_item:hover {
-    background: #dedede;
+    background: #ebebeb;
 }
 
 .category_item.selected {
-    background: #dedede;
+    background: #ebebeb;
 }
 
 .pop_up_menu_top_bar {
-    background: #dddddd;
+    background: #ebebeb;
 }
 
 .pop_up_menu_top_bar GtkLabel {
     font: Bariol bold 15;
-    color: #222222;
+    color: #555555;
 }
 
 .pop_up_menu_item {
@@ -30,17 +30,7 @@
     border-color: transparent;
     background: transparent;
 }
-.pop_up_menu_item:hover {
-    background: @kano_green;
-    border-radius: 10px;
-    border-style: solid;
-    border-width: 3px;
-    border-color: @kano_green;
-}
-.pop_up_menu_item.selected {
-    background: @kano_green;
-    border-radius: 10px;
-    border-style: solid;
-    border-width: 3px;
-    border-color: @kano_green;
+
+.select_menu {
+    background: #ffffff;
 }

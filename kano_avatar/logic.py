@@ -46,7 +46,7 @@ class AvatarAccessory():
         if os.path.isabs(preview_img):
             self._img_preview = preview_img
         else:
-            self._img_preview = os.path.join(ITEM_DIR, preview_img)
+            self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
 
     def name(self):
         """ Provides the display name of the Item

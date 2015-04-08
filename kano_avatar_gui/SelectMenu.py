@@ -1,4 +1,11 @@
-import os
+#!/usr/bin/env python
+
+# SelectMenu.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
 from gi.repository import Gtk
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano_avatar.paths import CSS_PATH
@@ -6,20 +13,6 @@ from kano_avatar.paths import CSS_PATH
 
 class SelectMenu(Gtk.EventBox):
     def __init__(self, list_of_names, signal_name):
-        # The argument items can be of the form
-        #
-        # self._items = {
-        #
-        #   IDENTIFIER1: {
-        #       path: IMAGE.png,
-        #
-        #       # Should this be decided internally?
-        #       selected: False
-        #   },
-        #   IDENTIFIER2: {
-        #       ...
-        #   }
-        # }
 
         Gtk.EventBox.__init__(self)
         apply_styling_to_screen(CSS_PATH)
@@ -44,37 +37,17 @@ class SelectMenu(Gtk.EventBox):
 
         self._selected = identifier
 
-        # Old version
-        # Unselect current one
-        # selected_identifier = self.get_selected()
-        # if selected_identifier:
-        #    self._items[selected_identifier]['selected'] = False
-        # self._items[identifier]['selected'] = True
-        # self._only_style_selected(identifier)
-
     def get_selected(self):
         '''Gets the name of the current selected image
         '''
 
         return self._selected
 
-        # Old version
-        # for identifier, item_info in self._items.iteritems():
-        #    if item_info['selected']:
-        #        return identifier
-
     def _unselect_all(self):
         '''Remove all styling on all images, and sets the 'selected'
         field to False
         '''
-        # Alternative?
         self._selected = None
-
-        # Old version
-        # for item in self._items:
-        #    item['selected'] = False
-        # Remove all styling
-        # self._only_style_selected(None)
 
     def _add_option_to_items(self, identifier, name, item):
         '''Adds a new option in the self._items

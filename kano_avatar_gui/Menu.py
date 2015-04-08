@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+# Menu.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
 
 import os
 import sys
@@ -65,8 +72,6 @@ class Menu(Gtk.Fixed):
 
         if "menu" not in self.menus[category]:
             menu = PopUpItemMenu(category, self._parser)
-
-            # Propagate signal up
             menu.connect('pop_up_item_selected', self._emit_signal)
 
             self.menus[category]["menu"] = menu

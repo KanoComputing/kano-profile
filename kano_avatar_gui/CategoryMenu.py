@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+# CategoryMenu.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
 
 from gi.repository import Gtk, GObject
 from kano_avatar_gui.SelectMenu import SelectMenu
@@ -90,6 +97,7 @@ class CategoryMenu(SelectMenu):
         button.connect("clicked", self._selected_image_cb,
                        identifier)
         button.connect("clicked", self._only_style_selected, identifier)
+
         # Replace the grey icon with an orange on when the pointer
         # hovers over the button
         button.connect("enter-notify-event", self._add_selected_appearence,

@@ -10,7 +10,8 @@ import yaml
 from PIL import Image
 
 from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
-                               CATEGORY_ICONS, CIRC_ASSET_MASK, RING_ASSET)
+                               CATEGORY_ICONS, CIRC_ASSET_MASK, RING_ASSET,
+                               PREVIEW_ICONS)
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -185,7 +186,9 @@ class AvatarConfParser():
     _objects = {}
     _characters = {}
     _object_per_cat = {}
-    _category_icons = {}
+    _inactive_category_icons = {}
+    _active_category_icons = {}
+    _selected_borders = {}
     categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
@@ -215,8 +218,13 @@ class AvatarConfParser():
             self._cat_to_z_index[cat['cat_name']] = cat['z_index']
             icon_file = cat['disp_icon']
             if not os.path.isabs(icon_file):
-                icon_file = os.path.join(CATEGORY_ICONS, icon_file)
-            self._category_icons[cat['cat_name']] = icon_file
+                active_icon_file = os.path.join(CATEGORY_ICONS, 'active', icon_file)
+                inactive_icon_file = os.path.join(CATEGORY_ICONS, 'inactive', icon_file)
+            self._active_category_icons[cat['cat_name']] = active_icon_file
+            self._inactive_category_icons[cat['cat_name']] = inactive_icon_file
+
+            selected_border_file = os.path.join(PREVIEW_ICONS, cat['selected_border'])
+            self._selected_borders[cat['cat_name']] = selected_border_file
 
         # Save both the unique set of z-indexes and categories
         self._categories = set(self._cat_to_z_index.keys())
@@ -296,16 +304,38 @@ class AvatarConfParser():
         """
         return [k for k in self._categories]
 
-    def get_category_icon(self, category_name):
-        """ Provides the filename of the icons of the provided category
+    def get_inactive_category_icon(self, category_name):
+        """ Provides the filename of the active icons of the provided category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
-        if category_name not in self._category_icons:
+        if category_name not in self._inactive_category_icons:
             logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
             return None
         else:
-            return self._category_icons[category_name]
+            return self._inactive_category_icons[category_name]
+
+    def get_active_category_icon(self, category_name):
+        """ Provides the filename of the inactive icons of the provided category
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if category_name not in self._active_category_icons:
+            logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
+            return None
+        else:
+            return self._active_category_icons[category_name]
+
+    def get_selected_border(self, category_name):
+        """ Provides the filename of the selected border of the preview icon
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if category_name not in self._selected_borders:
+            logger.warn('Cat {} was not found, can\'t provide icon path'.format(category_name))
+            return None
+        else:
+            return self._selected_borders[category_name]
 
     def get_char_preview(self, char_name):
         """ Provides the preview image for a given character

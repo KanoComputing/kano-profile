@@ -9,6 +9,7 @@
 from gi.repository import Gtk, GObject
 from kano_profile.badges import calculate_badges
 from kano_avatar_gui.SelectMenu import SelectMenu
+from kano.logging import logger
 
 
 class PopUpItemMenu(SelectMenu):
@@ -20,6 +21,7 @@ class PopUpItemMenu(SelectMenu):
     }
 
     def __init__(self, category, avatar_parser):
+        logger.debug("Initialising pop up menu with category {}".format(category))
 
         self.top_bar_height = 60
         self.button_width = 60
@@ -74,6 +76,7 @@ class PopUpItemMenu(SelectMenu):
         column = 0
 
         obj_names = self._parser.get_avail_objs(self._category)
+        logger.debug("PopUpMenu packing items = {}".format(obj_names))
 
         for name in obj_names:
             button = self._create_button(name)

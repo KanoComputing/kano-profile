@@ -14,16 +14,18 @@ if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
-        print dir_path
 
 from kano_avatar_gui.PopUpItemMenu import PopUpItemMenu
 from kano_avatar_gui.CategoryMenu import CategoryMenu
+from kano.logging import logger
 
 
 class Menu(Gtk.Fixed):
 
     __gsignals__ = {
-        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        # Could add this if environment became a special case
+        'environment_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
     def __init__(self, parser):
@@ -68,6 +70,7 @@ class Menu(Gtk.Fixed):
 
     def launch_pop_up_menu(self, widget, category):
 
+        logger.debug("Launching PopUpMenu for category {}".format(category))
         self._hide_menus()
 
         if "menu" not in self.menus[category]:

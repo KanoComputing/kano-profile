@@ -34,3 +34,18 @@
 .select_menu {
     background: #ffffff;
 }
+
+.grey_dot {
+    background: #d1d1d1;
+    border-radius: 3px;
+}
+
+.orange_dot {
+    background: @kano_orange;
+    border-radius: 5px;
+}
+
+.grey {
+    background: #dddddd;
+    color: #dddddd;
+}

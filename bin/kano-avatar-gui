@@ -17,10 +17,12 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.heading import Heading
+from kano.gtk3.apply_styles import apply_colours_to_screen
 
-from kano_avatar.logic import AvatarCreator, get_avatar_conf
-from kano.logging import logger
-from kano_avatar_gui.Menu import Menu
+from kano_avatar_gui.PageControl import PageControl
+from kano_avatar_gui.CharacterCreator import CharacterCreator
+from kano_avatar_gui.ImageView import ImageView
+from kano_avatar_gui.GetData import GetData1, GetData2
 
 from kano_avatar.paths import CSS_PATH
 
@@ -30,10 +32,6 @@ try:
 except:
     pass
 
-configuration = get_avatar_conf()
-
-avatar_cr = AvatarCreator(configuration)
-
 
 class MainWindow(ApplicationWindow):
     _list_of_categories = []
@@ -42,90 +40,104 @@ class MainWindow(ApplicationWindow):
 
     def __init__(self):
         ApplicationWindow.__init__(self, 'Avatar', 755, 588)
-
-        # self.connect("show", self._app_loaded)
         self.connect("delete-event", Gtk.main_quit)
-
-        # self.set_icon_from_file("/usr/share/kano-profile/icons/avatar.png")
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.set_main_widget(self._vbox)
 
         # Styling
         self._manage_styling()
 
-        self._get_obj_data()
+        self._page = Page1(self)
+        self._vbox.pack_start(self._page, False, False, 0)
 
-        # TODO Un hardcode the following
-        avatar_cr.char_select('Judoka_Base')
-
-        self._grid = Gtk.Grid()
-        self._create_img_box(avatar_cr.selected_char_asset())
-        self.title = Heading('Make your Avatar', 'Choose clothes and other swag')
-        self._grid.attach(self.title.container, 0, 0, 9, 1)
-
-        self._overlay.add(self._grid)
-        self._attach_menu()
+        # Series of buttons controlling the pages
+        page_control = PageControl(3, 1)
+        self._vbox.pack_end(page_control, False, False, 0)
+        page_control.set_margin_bottom(35)
+        page_control.connect('back-button-clicked', self._go_to_page)
+        page_control.connect('next-button-clicked', self._go_to_page)
 
         self.show_all()
 
-    def _attach_menu(self):
-        self._menu = Menu(avatar_cr)
-        self._menu.connect('asset_selected', self._update_img)
-        self._grid.attach(self._menu, 0, 1, 1, 1)
-
-    def _get_obj_data(self):
-        self._list_of_categories = avatar_cr.list_available_categories()
-
     def _manage_styling(self):
+        apply_colours_to_screen()
+
         screen = Gdk.Screen.get_default()
         specific_css_provider = Gtk.CssProvider()
         specific_css_provider.load_from_path(CSS_PATH)
         specific_style_context = Gtk.StyleContext()
-        specific_style_context.add_provider_for_screen(screen,
-                                                       specific_css_provider,
-                                                       Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        specific_style_context.add_provider_for_screen(
+            screen,
+            specific_css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+        )
         style = self.get_style_context()
         style.add_class('main_window')
 
-    def _create_img_box(self, img_name):
-        self._imgbox = ImageView(self)
-        self._grid.attach(self._imgbox, 2, 1, 7, 7)
+    def _go_to_page(self, widget, index):
+        self._vbox.remove(self._page)
 
-        self._imgbox.set_image(img_name)
+        pages = {1: Page1, 2: Page2, 3: Page3}
+        self._page = pages[index](self)
+        self._vbox.pack_start(self._page, False, False, 0)
 
-    def _update_img(self, widget, selected):
-        list_of_objs = self._menu.get_all_selected_objs()
-        rc = avatar_cr.obj_select(list_of_objs)
-        if not rc:
-            logger.error('Error processing the list {}'.format(list_of_objs))
-        else:
-            avatar_cr.create_avatar(save_to='avatar.png')
-            self._imgbox.set_image('avatar.png')
+        self.show_all()
 
 
-class ImageView(Gtk.EventBox):
-    _img = None
+# Page 1 is the character personalisation
+class Page1(Gtk.Box):
 
     def __init__(self, win):
-        Gtk.EventBox.__init__(self, hexpand=True, vexpand=True)
-
-        style = self.get_style_context()
-        style.add_class('imageview')
-
-        self._current = None
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._win = win
 
-        self.show()
+        title = Heading('Make your Character', 'Change how the character looks')
+        self.pack_start(title.container, False, False, 0)
 
-    def get_window(self):
-        return self._win
+        self._char_creator = CharacterCreator()
+        self.pack_start(self._char_creator, False, False, 0)
 
-    def set_image(self, img_loc):
-        if not self._img:
-            self._img = Gtk.Image.new_from_file(img_loc)
-            self.add(self._img)
-            self._img.show()
-        else:
-            self._img.clear()
-            self._img.set_from_file(img_loc)
+        self.show_all()
+
+
+class Page2(Gtk.Box):
+
+    def __init__(self, win):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self._win = win
+
+        title = Heading('Make your Avatar', 'Choose clothes and other swag')
+        self.pack_start(title.container, False, False, 0)
+
+        # This time we need the picture with the login screen to one side.
+        image_viewer = ImageView(self)
+        self.pack_start(image_viewer, False, False, 0)
+
+        data_screen = GetData1()
+
+        # Put it with the same y coordinate as the menu
+        image_viewer.put(data_screen, 300, 60)
+        self.show_all()
+
+
+class Page3(Gtk.Box):
+
+    def __init__(self, win):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self._win = win
+
+        title = Heading('Make your Avatar', 'Choose clothes and other swag')
+        self.pack_start(title.container, False, False, 0)
+
+        # This time we need the picture with the login screen to one side.
+        image_viewer = ImageView(self)
+        self.pack_start(image_viewer, False, False, 0)
+
+        data_screen = GetData2()
+
+        # Put it with the same y coordinate as the menu
+        image_viewer.put(data_screen, 300, 60)
+        self.show_all()
 
 
 def main():

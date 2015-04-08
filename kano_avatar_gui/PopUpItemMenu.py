@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+# PopUpItemMenu.py
+#
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
 
 from gi.repository import Gtk, GObject
 from kano_profile.badges import calculate_badges
@@ -12,8 +19,6 @@ class PopUpItemMenu(SelectMenu):
         'pop_up_item_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
-    # Maybe in the future the items can be read form within the class
-    # and they don't need to be passed as arguments
     def __init__(self, category, avatar_parser):
 
         self.top_bar_height = 60
@@ -40,7 +45,6 @@ class PopUpItemMenu(SelectMenu):
         vbox.pack_start(self._grid, False, False, 10)
 
         self._pack_items()
-        # self.connect('pop_up_item_selected', self.print_event)
 
         self.show_all()
 
@@ -107,7 +111,6 @@ class PopUpItemMenu(SelectMenu):
         button = Gtk.Button()
         button.get_style_context().add_class('pop_up_menu_item')
         button.add(fixed)
-        # button.connect('clicked', self._selected_image_cb, obj_name)
         button.connect('clicked', self._only_style_selected, obj_name)
         button.connect('enter-notify-event', self._add_selected_appearence, obj_name)
         button.connect('leave-notify-event', self._remove_selected_appearence, obj_name)
@@ -171,20 +174,6 @@ class PopUpItemMenu(SelectMenu):
         # mouse hovering over it, should not bee needed to add the border again
         self._set_selected(identifier)
         self.emit(self._signal_name, identifier)
-
-        '''
-        # old function
-
-        for name, img_dict in self._items.iteritems():
-            if 'button' in img_dict:
-                button = img_dict['button']
-                self._remove_selected_border(button, name)
-
-        if identifier in self._items:
-            if 'button' in self._items[identifier]:
-                button = self._items[identifier]['button']
-                self._add_selected_border(button, identifier)
-        '''
 
 
 def get_environment_dict():

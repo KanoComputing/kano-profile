@@ -202,9 +202,9 @@ class AvatarEnvironment():
         return self._img_preview
 
     def load_image(self):
-        """ Loads the character's image internally.
+        """ Loads the environment image internally.
         """
-        self._img = Image.open(self._asset_fname)
+        self._img = Image.open(self._asset_fname).convert('RGBA')
 
     def attach_char(self, char_img, x=0.5, y=0.5):
         """ Attach a character to the environment. This method will overwrite
@@ -239,13 +239,30 @@ class AvatarEnvironment():
             logger.debug('Internal environment Image hasn\'t been loaded will load now')
             self.load_image()
 
-        top_left_x = int(self.get_img().size[0] * x - char_img.size[0]/2)
-        top_left_y = int(self.get_img().size[1] * y - char_img.size[1]/2)
+        # Resize avatar if we can't fit it in (Normally shouldn't happen
+        # but it makes testing without properly sized assets easier)
+        char_szx = char_img.size[0]
+        char_szy = char_img.size[1]
+
+        if char_szx > self.get_img().size[0] or char_szy > self.get_img().size[1]:
+            # First calculate the reduction coefficient
+            # so that no side is larger than 80% of the background canvas
+            coeff = 0.9
+            c_x = coeff * self.get_img().size[0] / char_szx
+            c_y = coeff * self.get_img().size[1] / char_szy
+            c = min(c_x, c_y)
+            new_size = (int(c * char_szx), int(c * char_szy))
+            resized_char = char_img.resize(new_size, Image.ANTIALIAS)
+        else:
+            resized_char = char_img
+
+        top_left_x = int(self.get_img().size[0] * x - resized_char.size[0]/2)
+        top_left_y = int(self.get_img().size[1] * y - resized_char.size[1]/2)
 
         # We need to create a temporary image to hold the avatar since
         # in order to composite images they need to have the same size
         temp_img = Image.new(self.get_img().mode, self.get_img().size)
-        temp_img.paste(char_img, (top_left_x, top_left_y))
+        temp_img.paste(resized_char, (top_left_x, top_left_y))
 
         self._img = Image.composite(temp_img, self.get_img(), temp_img)
 
@@ -492,7 +509,7 @@ class AvatarConfParser():
         :returns: The absolute path to the preview image as a str or
                   None if the environment is not available
         """
-        if environment_name not in self._objects:
+        if environment_name not in self._environments:
             logger.warn('Environment {} not in avail env list, can\'t return preview img'.format(environment_name))
             return None
         else:
@@ -608,11 +625,17 @@ class AvatarCreator(AvatarConfParser):
             return False
         # For categories where we haven't specified, select randomly
         for cat in self._categories.difference(set(self._sel_obj_per_cat.keys())):
-            available_objs = self._object_per_cat[cat][:]
-            available_objs.append(None)
-            choice = random.choice(available_objs)
-            if choice:
-                random_item_names.append(choice.name())
+            # Need to make sure that we can handle categories that contain no
+            # items
+            try:
+                available_objs = self._object_per_cat[cat][:]
+                available_objs.append(None)
+                choice = random.choice(available_objs)
+                if choice:
+                    random_item_names.append(choice.name())
+            except KeyError:
+                logger.debug('Category {} doesn\'t contain any items'.format(cat))
+                continue
 
         rc = self.obj_select(random_item_names, clear_existing=False)
 

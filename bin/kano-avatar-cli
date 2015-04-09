@@ -43,7 +43,7 @@ def main():
                               help='Generate circular assets as well')
     group_create.add_argument('-e', '--environment',
                               type=str,
-                              nargs=1,
+                              default='',
                               help='Set environment (background) for the avatar')
     group_create.add_argument('-o', '--output',
                               type=str,
@@ -74,7 +74,7 @@ def main():
             envs = avail_conf.list_all_available_environments()
             print envs
             for env in envs:
-                print env.get_environment_preview(env)
+                print avail_conf.get_environment_preview(env)
         return 0
 
     if args.create:

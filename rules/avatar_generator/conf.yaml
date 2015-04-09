@@ -52,10 +52,6 @@ environments:
       img_name: forest.png
       preview_img: environments/forest.png
 
-    - display_name: Dojo
-      img_name: dojo.png
-      preview_img: environments/locked.png
-
     - display_name: Minecraft
       img_name: minecraft.png
       preview_img: environments/minecraft.png

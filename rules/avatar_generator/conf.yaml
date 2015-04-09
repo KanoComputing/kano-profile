@@ -42,6 +42,40 @@ characters:
       crop_x: 0
       crop_y: 0
 
+environments:
+
+    - display_name: Dojo
+      img_name: dojo.png
+      preview_img: environments/dojo.png
+
+    - display_name: Forest
+      img_name: forest.png
+      preview_img: environments/forest.png
+
+    - display_name: Dojo
+      img_name: dojo.png
+      preview_img: environments/locked.png
+
+    - display_name: Minecraft
+      img_name: minecraft.png
+      preview_img: environments/minecraft.png
+
+    - display_name: Pong
+      img_name: arcade_hall.png
+      preview_img: environments/pong.png
+
+    - display_name: Space
+      img_name: space.png
+      preview_img: environments/space.png
+
+    - display_name: Stage
+      img_name: concert_hall.png
+      preview_img: environments/stage.png
+
+    - display_name: Scene_unavailable
+      img_name: video_set.png
+      preview_img: environments/scene_unavailable.png
+
 objects:
 #   - display_name:
 #     img_name:
@@ -385,61 +419,3 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
-
-# Environment
-
-    - display_name: Dojo
-      img_name: ''
-      preview_img: environments/dojo.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Forest
-      img_name: ''
-      preview_img: environments/forest.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Dojo
-      img_name: ''
-      preview_img: environments/locked.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Minecraft
-      img_name: ''
-      preview_img: environments/minecraft.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Pong
-      img_name: ''
-      preview_img: environments/pong.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Space
-      img_name: ''
-      preview_img: environments/space.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Stage
-      img_name: ''
-      preview_img: environments/stage.png
-      position_x: 0
-      position_y: 0
-      category: Environments
-
-    - display_name: Scene_unavailable
-      img_name: ''
-      preview_img: environments/scene_unavailable.png
-      position_x: 0
-      position_y: 0
-      category: Environments

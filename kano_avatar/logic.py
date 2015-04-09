@@ -11,7 +11,7 @@ from PIL import Image
 
 from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
                                CATEGORY_ICONS, CIRC_ASSET_MASK, RING_ASSET,
-                               PREVIEW_ICONS)
+                               PREVIEW_ICONS, ENVIRONMENT_DIR)
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -173,6 +173,104 @@ class AvatarCharacter():
         return self._img_preview
 
 
+class AvatarEnvironment():
+    """ Class for handling the environment (background) for a character. As
+    it contains the image that will work as the background (lowest z-index)
+    but also the largest in terms of size, it deserves a class of its own.
+    """
+    _name = ''
+    _asset_fname = ''
+    _img_preview = ''
+    _img = None
+
+    def __init__(self, name, file_name, preview_img):
+        self._name = name
+        if os.path.isabs(file_name):
+            self._asset_fname = file_name
+        else:
+            self._asset_fname = os.path.join(ENVIRONMENT_DIR, file_name)
+
+        if os.path.isabs(preview_img):
+            self._img_preview = preview_img
+        else:
+            self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
+
+    def get_preview_img(self):
+        """ Provides the Background preview image path
+        :returns: absolute path to preview image as a string
+        """
+        return self._img_preview
+
+    def load_image(self):
+        """ Loads the character's image internally.
+        """
+        self._img = Image.open(self._asset_fname)
+
+    def attach_char(self, char_img, x=0.5, y=0.5):
+        """ Attach a character to the environment. This method will overwrite
+        the internal image to include the character with the environment in
+        the background. In order to reset the environment you may use the
+        .load_image() method
+        :param char_img: Image object to be attached to the environment
+        :param x: Value between [0,1) to control the position of the character
+                  on the environment. It can be thought of like a percentage
+                  of the total x axis of the image where the centre of the new
+                  image will be pasted
+        :param y: Value between [0,1) to control the position of the character
+                  on the environment. It can be thought of like a percentage
+                  of the total y axis of the image where the centre of the new
+                  image will be pasted
+        :returns: False if the operation is not successful (with appropriate
+                  logging)
+        """
+
+        if not char_img:
+            logger.warn('Image to be attached to the environment doesn\'t is None, will exit')
+            return False
+
+        if x < 0 or x >= 1:
+            logger.error('Argument x given to attach_char is out of bounds [0,1)')
+            return False
+        if y < 0 or y >= 1:
+            logger.error('Argument x given to attach_char is out of bounds [0,1)')
+            return False
+
+        if not self._img:
+            logger.debug('Internal environment Image hasn\'t been loaded will load now')
+            self.load_image()
+
+        top_left_x = int(self.get_img().size[0] * x - char_img.size[0]/2)
+        top_left_y = int(self.get_img().size[1] * y - char_img.size[1]/2)
+
+        # We need to create a temporary image to hold the avatar since
+        # in order to composite images they need to have the same size
+        temp_img = Image.new(self.get_img().mode, self.get_img().size)
+        temp_img.paste(char_img, (top_left_x, top_left_y))
+
+        self._img = Image.composite(temp_img, self.get_img(), temp_img)
+
+        return True
+
+    def get_img(self):
+        """ Get the image class for the character.
+        :returns: Image class (from PIL module)
+        """
+        return self._img
+
+    def get_fname(self):
+        """ Provides the item's asset filename
+        :returns: filename as a string
+        """
+        return self._asset_fname
+
+    def save_image(self, file_name):
+        """ Save character image (together with items that have been pasted on
+        it), to a file.
+        :param file_name: filename to be saved to as a string
+        """
+        self._img.save(file_name)
+
+
 class AvatarConfParser():
     """ A class to take on the important task of parsing the configuration
     file used for generating new Avatars.
@@ -185,6 +283,7 @@ class AvatarConfParser():
     _zindex_to_categories = {}
     _objects = {}
     _characters = {}
+    _environments = {}
     _object_per_cat = {}
     _inactive_category_icons = {}
     _active_category_icons = {}
@@ -192,6 +291,7 @@ class AvatarConfParser():
     categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
+    env_label = 'environments'
 
     def __init__(self, conf_data):
         if self.categories_label not in conf_data:
@@ -208,6 +308,11 @@ class AvatarConfParser():
             logger.error('{} dict not found'.format(self.objects_label))
         else:
             self._populate_object_structures(conf_data)
+
+        if self.env_label not in conf_data:
+            logger.error('{} dict not found'.format(self.env_label))
+        else:
+            self._populate_environment_structures(conf_data)
 
     def _populate_cat_structures(self, categories):
         """ Populates internal structures related to categories
@@ -269,6 +374,17 @@ class AvatarConfParser():
             new_obj = AvatarCharacter(new_name, new_fname, new_prev_img, x, y)
             self._characters[new_name] = new_obj
 
+    def _populate_environment_structures(self, conf_data):
+        """ Populates internal structures related to environments (backgrounds)
+        :param conf_data: YAML format configuration structure read from file
+        """
+        for env in conf_data[self.env_label]:
+            new_name = env['display_name']
+            new_fname = env['img_name']
+            new_prev_img = env['preview_img']
+            new_env = AvatarEnvironment(new_name, new_fname, new_prev_img)
+            self._environments[new_name] = new_env
+
     def get_zindex(self, category):
         if category not in self._cat_to_z_index:
             logger.warn('Category {} not in available ones'.format(category))
@@ -286,6 +402,12 @@ class AvatarConfParser():
         :returns: list of objects (list of strings)
         """
         return [k for k in self._objects.keys()]
+
+    def list_all_available_environments(self):
+        """ Provides a list of available environments
+        :returns: list of environments (list of strings)
+        """
+        return [k for k in self._environments.keys()]
 
     def get_avail_objs(self, category):
         """ Provides a list of available objects for the specific category
@@ -356,13 +478,25 @@ class AvatarConfParser():
         """ Provides the preview image for a given item
         :param item_name: item whose preview image will be returned
         :returns: The absolute path to the preview image as a str or
-                  None if the character is not available
+                  None if the item is not available
         """
         if item_name not in self._objects:
             logger.warn('Item {} not in avail obj list, can\'t return preview img'.format(item_name))
             return None
         else:
             return self._objects[item_name].get_preview_img()
+
+    def get_environment_preview(self, environment_name):
+        """ Provides the preview image for a given environment
+        :param environment_name: environment whose preview image will be returned
+        :returns: The absolute path to the preview image as a str or
+                  None if the environment is not available
+        """
+        if environment_name not in self._objects:
+            logger.warn('Environment {} not in avail env list, can\'t return preview img'.format(environment_name))
+            return None
+        else:
+            return self._environments[environment_name].get_preview_img()
 
 
 class AvatarCreator(AvatarConfParser):
@@ -377,6 +511,7 @@ class AvatarCreator(AvatarConfParser):
     _sel_obj = {}
     _sel_obj_per_cat = {}
     _sel_objs_per_zindex = {}
+    _sel_env = None
 
     def __init__(self, conf_data):
         AvatarConfParser.__init__(self, conf_data)
@@ -392,6 +527,19 @@ class AvatarCreator(AvatarConfParser):
             return True
         else:
             error_msg = 'Character {} is not in the available char list'.format(char_name)
+            logger.error(error_msg)
+            return False
+
+    def env_select(self, env_name):
+        """ Set an environment for the background
+        :param env_name: Environment name
+        :returns: True iff the environment exists (is available)
+        """
+        if env_name in self._environments:
+            self._sel_env = self._environments[env_name]
+            return True
+        else:
+            error_msg = 'Environment {} is not in the available env list'.format(env_name)
             logger.error(error_msg)
             return False
 
@@ -483,12 +631,15 @@ class AvatarCreator(AvatarConfParser):
     def selected_items(self):
         return self._sel_obj.keys()
 
-    def create_avatar(self, save_to='', circ_assets=True):
+    def create_avatar(self, save_to='', circ_assets=True, save_background=True):
         """ Create the finished image and (optionally) save it to file.
         :param save_to: (Optional) filename to save the image to
-        :param circ_assets: (Optional) If set the circular assets are
-                            with a file_name same at the one set in
-                            the save_to parameter with '_circ' appended
+        :param circ_assets: (Optional) If set the circular assets are with a
+                            file_name same at the one set in the save_to
+                            parameter with '_circ' appended
+        :param save_background: (Optional) If set the the avatar together with
+                                the background will be saved to a file_name
+                                with '_inc_env' appended
         :returns: False if the base character hasn't been specified
         """
         rc = self._create_base_img()
@@ -510,6 +661,14 @@ class AvatarCreator(AvatarConfParser):
                 file_name, file_ext = os.path.splitext(save_to)
                 file_name += '_circ' + file_ext
                 self._sel_char.generate_circular_assets(file_name)
+
+            if save_background:
+                # If no environment has been selected, do nothing
+                if self._sel_env:
+                    file_name, file_ext = os.path.splitext(save_to)
+                    file_name += '_inc_env' + file_ext
+                    self._sel_env.attach_char(self._sel_char.get_img())
+                    self._sel_env.save_image(file_name)
 
         return True
 

@@ -31,7 +31,7 @@ def main():
     parser = argparse.ArgumentParser(description=program_desc)
     group_view = parser.add_argument_group('View', 'View available choices')
     group_view.add_argument('-l', '--list',
-                            choices=['char', 'obj', 'all'],
+                            choices=['char', 'obj', 'env', 'all'],
                             help='List available choices for characters (char),objects (obj), or all (all).')
     group_create = parser.add_argument_group('Create', 'Create a new avatar')
     group_create.add_argument('-c', '--create',
@@ -41,6 +41,10 @@ def main():
     group_create.add_argument('-a', '--circular',
                               action='store_true',
                               help='Generate circular assets as well')
+    group_create.add_argument('-e', '--environment',
+                              type=str,
+                              nargs=1,
+                              help='Set environment (background) for the avatar')
     group_create.add_argument('-o', '--output',
                               type=str,
                               default='new_avatar.png',
@@ -56,21 +60,29 @@ def main():
             print avail_conf.list_available_chars()
         elif args.list == 'obj':
             print avail_conf.list_all_available_objs()
+        elif args.list == 'env':
+            print avail_conf.list_all_available_environments()
         elif args.list == 'all':
             chars = avail_conf.list_available_chars()
             print chars
             for char in chars:
                 print avail_conf.get_char_preview(char)
-
             objs = avail_conf.list_all_available_objs()
             print objs
             for obj in objs:
                 print avail_conf.get_item_preview(obj)
+            envs = avail_conf.list_all_available_environments()
+            print envs
+            for env in envs:
+                print env.get_environment_preview(env)
         return 0
 
     if args.create:
         avatar_creator = AvatarCreator(configuration)
         avatar_creator.char_select(args.create.pop(0))
+        if args.environment:
+            avatar_creator.env_select(args.environment)
+
         if not args.randomise:
             rc = avatar_creator.obj_select(args.create)
         else:

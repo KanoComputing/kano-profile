@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+# kano-profile-gui-with-avatar
+#
+# Copyright (C) 2014-2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+import os
+import sys
+from gi.repository import Gtk, Gdk
+
+if __name__ == '__main__' and __package__ is None:
+    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if dir_path != '/usr':
+        sys.path.insert(1, dir_path)
+
+import kano_profile_gui.home as home
+import kano_profile_gui.badges as badges
+import kano_profile_gui.projects as projects
+import kano_profile_gui.swags as swags
+from kano_profile_gui.menu_bar_components.menu_bar import MenuBar
+import kano_profile_gui.components.constants as constants
+from kano.gtk3.apply_styles import apply_colours_to_screen
+from kano.gtk3.application_window import ApplicationWindow
+from kano_avatar_gui.character_creator import CharacterCreator
+
+
+class MainWindow(ApplicationWindow):
+    table = None
+    box = None
+    label = None
+
+    def __init__(self):
+        # Create main window
+        self.height = 596
+        self.width = 734
+        ApplicationWindow.__init__(self, 'Kano Profile', self.width,
+                                   self.height)
+        self._char_creator = CharacterCreator()
+
+        # Remove decoration
+        self.set_decorated(False)
+        self.set_resizable(False)
+        self.set_position(Gtk.WindowPosition.CENTER)
+
+        self.set_icon_name("kano-world")
+
+        self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.menu_bar = MenuBar(self.width)
+        self.menu_bar.home_button.connect('home-button-clicked', self.go_to_home)
+        for button in self.menu_bar.buttons:
+            button.connect('menu-button-clicked', self.go_to_category)
+
+        self.vbox.pack_start(self.top_bar, False, False, 0)
+
+        # init home screen
+        self.goto(self.menu_bar.home_button, 'home')
+
+    def get_char_creator(self):
+        return self._char_creator
+
+    def pack_widget(self, widget):
+        self.vbox.pack_start(widget, False, False, 0)
+
+    def goto(self, button, page):
+
+        refs = {
+            'home': home,
+            'badges': badges,
+            'projects': projects,
+            'swags': swags,
+        }
+
+        module = refs[page]
+
+        for i in self.box.get_children():
+            self.box.remove(i)
+
+        # Hacky way to get home image changed
+        # self.menu_bar.home_button.update() needs to get called on equipping
+        if page == "swags":
+            module.activate(self, self.box, self.menu_bar.home_button)
+        else:
+            module.activate(self, self.box)
+
+
+def main():
+
+    # Create style sheet
+    css_provider = Gtk.CssProvider()
+    css_provider.load_from_path(constants.media + '/CSS/style.css')
+    screen = Gdk.Screen.get_default()
+    style_context = Gtk.StyleContext()
+    style_context.add_provider_for_screen(
+        screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER
+    )
+
+    apply_colours_to_screen()
+
+    win = MainWindow()
+    win.connect('delete-event', Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
+
+
+if __name__ == '__main__':
+    main()

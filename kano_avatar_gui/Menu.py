@@ -50,6 +50,9 @@ class Menu(Gtk.Fixed):
 
         self.show_all()
 
+    def unselect_categories(self):
+        self._cat_menu.remove_selected_on_all()
+
     def get_selected_category(self):
         return self._cat_menu.get_selected()
 
@@ -71,7 +74,7 @@ class Menu(Gtk.Fixed):
     def launch_pop_up_menu(self, widget, category):
 
         logger.debug("Launching PopUpMenu for category {}".format(category))
-        self._hide_menus()
+        self.hide_pop_ups()
 
         if "menu" not in self.menus[category]:
             menu = PopUpItemMenu(category, self._parser)
@@ -81,11 +84,9 @@ class Menu(Gtk.Fixed):
             self.put(self.menus[category]['menu'],
                      self.pop_up_pos_x, self.pop_up_pos_y)
 
-            self.menus[category]['menu'].show()
-        else:
-            self.menus[category]["menu"].show()
+        self.menus[category]['menu'].show()
 
-    def _hide_menus(self):
+    def hide_pop_ups(self):
         for category, menu_dict in self.menus.iteritems():
 
             if "menu" in self.menus[category]:

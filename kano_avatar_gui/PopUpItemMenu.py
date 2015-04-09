@@ -108,7 +108,7 @@ class PopUpItemMenu(SelectMenu):
         icon = Gtk.Image.new_from_file(path)
 
         # preview icon size (for all assets but the environment) is 41 by 41,
-        # while the evironment is 42 by 42
+        # while the border is 42 by 42
         fixed.put(icon, 1, 1)
 
         button = Gtk.Button()

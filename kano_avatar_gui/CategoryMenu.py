@@ -37,14 +37,37 @@ class CategoryMenu(SelectMenu):
 
         self._pack_buttons()
 
-    def _add_selected_appearence(self, button, event, identifier):
+    def _add_selected_appearence(self, identifier, button=None):
+        if not button:
+            button = self._items[identifier]['button']
+
         self._add_selected_css(button)
         self._add_selected_image(button, identifier)
 
-    def _remove_selected_appearence(self, button, event, identifier):
+    def _remove_selected_appearence(self, identifier, button=None):
+        if not button:
+            button = self._items[identifier]['button']
+
         if identifier != self.get_selected():
             self._remove_selected_css(button)
             self._remove_selected_image(button, identifier)
+
+    def _add_selected_appearence_wrapper(self, button, event, identifier):
+        '''Wrapper of the _add_selected_appearence for buttons
+        '''
+        self._add_selected_appearence(identifier, button)
+
+    def _remove_selected_appearence_wrapper(self, button, event, identifier):
+        '''Wrapper of the _remove_selected_appearence for buttons
+        '''
+        self._remove_selected_appearence(identifier, button)
+
+    def remove_selected_on_all(self):
+        '''Remove the selected appearence on all the category buttons
+        '''
+        self._set_selected(None)
+        for cat in self.categories:
+            self._remove_selected_appearence(cat)
 
     def _pack_buttons(self):
         '''Pack the buttons into the menu.
@@ -100,9 +123,11 @@ class CategoryMenu(SelectMenu):
 
         # Replace the grey icon with an orange on when the pointer
         # hovers over the button
-        button.connect("enter-notify-event", self._add_selected_appearence,
+        button.connect("enter-notify-event",
+                       self._add_selected_appearence_wrapper,
                        identifier)
-        button.connect("leave-notify-event", self._remove_selected_appearence,
+        button.connect("leave-notify-event",
+                       self._remove_selected_appearence_wrapper,
                        identifier)
         return button
 

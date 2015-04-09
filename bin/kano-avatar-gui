@@ -47,15 +47,15 @@ class MainWindow(ApplicationWindow):
         # Styling
         self._manage_styling()
 
+        # Series of buttons controlling the pages
+        self.page_control = PageControl(3, 1)
+        self._vbox.pack_end(self.page_control, False, False, 0)
+        self.page_control.set_margin_bottom(35)
+        self.page_control.connect('back-button-clicked', self._go_to_page)
+        self.page_control.connect('next-button-clicked', self._go_to_page)
+
         self._page = Page1(self)
         self._vbox.pack_start(self._page, False, False, 0)
-
-        # Series of buttons controlling the pages
-        page_control = PageControl(3, 1)
-        self._vbox.pack_end(page_control, False, False, 0)
-        page_control.set_margin_bottom(35)
-        page_control.connect('back-button-clicked', self._go_to_page)
-        page_control.connect('next-button-clicked', self._go_to_page)
 
         self.show_all()
 
@@ -97,7 +97,14 @@ class Page1(Gtk.Box):
         self._char_creator = CharacterCreator()
         self.pack_start(self._char_creator, False, False, 0)
 
+        self._win.page_control.connect("next-button-clicked",
+                                       self.save_avatar_assets)
+
         self.show_all()
+
+    def save_avatar_assets(self, widget, character):
+        print "entered save_avatar_assets"
+        self._char_creator.save()
 
 
 class Page2(Gtk.Box):

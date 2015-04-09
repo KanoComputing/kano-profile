@@ -11,6 +11,10 @@ from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano_avatar.paths import CSS_PATH
 
 
+# TODO: try and replace the current structure with the parser?
+# the selected functions would then be redundant
+# However, the parser doesn't have a selected category section, so it may not
+# work for the selcted categories.
 class SelectMenu(Gtk.EventBox):
     def __init__(self, list_of_names, signal_name):
 

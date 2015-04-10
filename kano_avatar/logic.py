@@ -340,6 +340,11 @@ class AvatarConfParser():
         else:
             self._populate_environment_structures(conf_data)
 
+        if self.spec_cat_label not in conf_data:
+            logger.error('{} dict not found'.format(self.spec_cat_label))
+        else:
+            self._populate_special_category_structures(conf_data)
+
     def _populate_cat_structures(self, categories):
         """ Populates internal structures related to categories
         :param categories: categories section of YAML format configuration
@@ -421,16 +426,16 @@ class AvatarConfParser():
 
         for special_cat in self.special_category_labels:
             active_icon_file = special_cat_data[special_cat]['active_icon']
-            if os.path.isabs(active_icon_file):
+            if not os.path.isabs(active_icon_file):
                 active_icon_file = os.path.join(ACTIVE_SPECIAL_CATEGORY_ICONS, active_icon_file)
 
             inactive_icon_file = special_cat_data[special_cat]['inactive_icon']
-            if os.path.isabs(inactive_icon_file):
+            if not os.path.isabs(inactive_icon_file):
                 inactive_icon_file = os.path.join(INACTIVE_SPECIAL_CATEGORY_ICONS, inactive_icon_file)
 
             border_icon_file = special_cat_data[special_cat]['selected_border']
-            if os.path.isabs(border_icon_file):
-                border_icon_file = os.path.join(CATEGORY_ICONS, border_icon_file)
+            if not os.path.isabs(border_icon_file):
+                border_icon_file = os.path.join(PREVIEW_ICONS, border_icon_file)
 
             self._active_special_category_icons[special_cat] = active_icon_file
             self._inactive_special_category_icons[special_cat] = inactive_icon_file
@@ -476,6 +481,12 @@ class AvatarConfParser():
         :returns: list of categories (list of strings)
         """
         return [k for k in self._categories]
+
+    def list_special_categories(self):
+        """ Provides a list of available categories (not case sensitive)
+        :returns: list of categories (list of strings)
+        """
+        return self.special_category_labels
 
     def get_inactive_category_icon(self, category_name):
         """ Provides the filename of the active icons of the provided category

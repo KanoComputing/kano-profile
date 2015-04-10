@@ -12,7 +12,6 @@ from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano_avatar_gui.Menu import Menu
 from kano_avatar_gui.ImageView import ImageView
 from kano.logging import logger
-from kano_profile.apps import save_app_state_variable, load_app_state_variable
 
 
 # We make the inheritance from Gtk.EventBox so we can grab the events
@@ -20,13 +19,18 @@ class CharacterCreator(Gtk.EventBox):
     configuration = get_avatar_conf()
     avatar_cr = AvatarCreator(configuration)
 
-    def __init__(self):
+    def __init__(self, randomise=False):
         Gtk.EventBox.__init__(self)
 
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
 
         self._get_obj_data()
+
+        if randomise:
+            # Create random button
+            random_button = self._create_random_button()
+            self.fixed.put(random_button, 600, 0)
 
         # Check profile information and load up either the created avatar or
         # the default
@@ -45,6 +49,31 @@ class CharacterCreator(Gtk.EventBox):
         self.fixed.put(self._menu, 30, 30)
 
         self.connect("button-release-event", self._hide_pop_ups)
+
+    def get_image_path(self):
+        containing_dir = os.path.join(os.path.expanduser('~'), "avatar-content")
+        if not os.path.exists(containing_dir):
+            os.mkdir(containing_dir)
+        return os.path.join(containing_dir, "avatar.png")
+
+    def _create_random_button(self):
+        random_button = Gtk.Button()
+        width = 60
+        height = 60
+
+        # TODO: get file path for the random icon
+        icon = Gtk.Image()
+        random_button.add(icon)
+        random_button.get_style_context().add_class("random_button")
+        random_button.set_size_request(width, height)
+        random_button.connect("clicked", self._randomise_avatar_wrapper)
+
+        return random_button
+
+    def _randomise_avatar_wrapper(self, button):
+        self.avatar_cr.randomise_all_items()
+        self.avatar_cr.create_avatar('avatar.png')
+        self.show_all()
 
     def _hide_pop_ups(self, widget, event):
         self._menu.hide_pop_ups()
@@ -99,12 +128,8 @@ class CharacterCreator(Gtk.EventBox):
         '''When saving character, we save all the images in kano-profile
         and move the img filename to a place we can share it from.
         '''
-        containing_dir = os.path.join(os.path.expanduser('~'), "avatar-content")
-        if not os.path.exists(containing_dir):
-            os.mkdir(containing_dir)
 
-        saved_path = os.path.join(containing_dir, "avatar.png")
-
+        saved_path = self.get_image_path()
         logger.debug("Saving generated avatar image to {}".format(saved_path))
         # Save the image as hard copy somewhere safe, store it,
         # and also lists which assets in kano-profile

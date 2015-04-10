@@ -7,11 +7,10 @@
 #
 from gi.repository import Gtk
 from kano_profile_gui_with_avatar.progress_bar import ProgressBar
-from kano_avatar_gui.CharacterCreator import CharacterCreator
 from kano.gtk3.buttons import KanoButton, OrangeButton
 
 
-class CharacterScreenDisplay(Gtk.EventBox):
+class CharacterDisplay(Gtk.EventBox):
     '''Show the character created by the user, progress bar,
     and button with option to edit.
     The window passed/template we're using should already
@@ -25,25 +24,25 @@ class CharacterScreenDisplay(Gtk.EventBox):
         self._win = win
 
         # Pack this part of the screen into the window
-        self._win.pack_widget(self)
         self._char_creator = self._win.get_char_creator()
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vbox)
+        # get picture of character creator and pack it into the window
+        path = self._char_creator.get_image_path()
+        image = Gtk.Image.new_from_file(path)
+        self._win.pack_in_main_content(image)
 
         # Get the image from the character creator, and then display it
-        self._progress = ProgressBar(self.width)
-
-        vbox.pack_start(self._char_creator, False, False, 0)
-        vbox.pack_start(self._progress, False, False, 0)
+        self._progress = ProgressBar(self._win.width)
+        self._win.pack_in_bottom_bar(self._progress.fixed)
 
         self._win.show_all()
 
     def go_to_edit_character_screen(self):
-        CharacterScreenEdit(self._win)
+        self.empty_main_content()
+        self.empty_bottom_bar()
+        CharacterEdit(self._win)
 
 
-class CharacterScreenEdit(Gtk.EventBox):
+class CharacterEdit(Gtk.EventBox):
     '''Offer the user the option to modify their avatar
     '''
 
@@ -51,14 +50,11 @@ class CharacterScreenEdit(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
 
         self._win = win
-        self._win.pack_widget(self)
 
         # Should this be inherited, passed as a variable, or global?
         # Could be a member variable in window.
         self.char_creator = self._win.get_char_creator()
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vbox)
+        self._win.pack_in_main_content(self.char_creator)
 
         save_changes_button = KanoButton("SAVE CHANGES")
         save_changes_button.connect("clicked", self.save_changes)
@@ -72,8 +68,7 @@ class CharacterScreenEdit(Gtk.EventBox):
         button_box.pack_start(save_changes_button, False, False, 0)
         button_box.pack_start(empty_label, False, False, 0)
 
-        vbox.pack_start(self.char_creator, False, False, 0)
-        vbox.pack_start(button_box, False, False, 0)
+        self._win.pack_in_bottom_bar(button_box)
 
         self._win.show_all()
 
@@ -83,4 +78,6 @@ class CharacterScreenEdit(Gtk.EventBox):
     def discard_changes(self):
         '''Don't save, just go back to the edit character screen
         '''
-        CharacterScreenDisplay(self._win)
+        self.empty_main_content()
+        self.empty_bottom_bar()
+        CharacterDisplay(self._win)

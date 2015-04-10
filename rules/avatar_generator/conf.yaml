@@ -1,4 +1,6 @@
 categories:
+    # Note that the names characters and environments are reseved and should
+    # not be uses as category names
     - cat_name: Faces
       z_index: 2
       disp_icon: face.png
@@ -29,10 +31,16 @@ categories:
       disp_icon: stickers.png
       selected_border: active-itemBorder.png
 
-    - cat_name: Environments
-      z_index: -1
-      disp_icon: environment.png
-      selected_border: active-environment.png
+special_categories:
+    environments:
+        active_icon: environment.png
+        inactive_icon: environment.png
+        selected_border: active-environment.png
+
+    characters:
+        active_icon: character.png
+        inactive_icon: character.png
+        selected_border: active-character.png
 
 characters:
 

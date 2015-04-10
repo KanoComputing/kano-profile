@@ -14,9 +14,13 @@ CHARACTER_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'characters')
 ENVIRONMENT_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'environments')
 ITEM_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'items')
 
-CATEGORY_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'categories')
+CATEGORY_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'category_icons')
 ACTIVE_CATEGORY_ICONS = os.path.join(CATEGORY_ICONS, 'active')
 INACTIVE_CATEGORY_ICONS = os.path.join(CATEGORY_ICONS, 'inactive')
+
+SPECIAL_CATEGORY_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'special_category_icons')
+ACTIVE_SPECIAL_CATEGORY_ICONS = os.path.join(SPECIAL_CATEGORY_ICONS, 'active')
+INACTIVE_SPECIAL_CATEGORY_ICONS = os.path.join(SPECIAL_CATEGORY_ICONS, 'inactive')
 
 PREVIEW_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'preview')
 CIRC_ASSET_MASK = os.path.join(AVATAR_ASSET_FOLDER, 'helper_assets', 'circle_mask.png')

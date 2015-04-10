@@ -10,8 +10,12 @@ import yaml
 from PIL import Image
 
 from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
-                               CATEGORY_ICONS, CIRC_ASSET_MASK, RING_ASSET,
-                               PREVIEW_ICONS, ENVIRONMENT_DIR)
+                               ACTIVE_CATEGORY_ICONS, INACTIVE_CATEGORY_ICONS,
+                               SPECIAL_CATEGORY_ICONS,
+                               ACTIVE_SPECIAL_CATEGORY_ICONS,
+                               INACTIVE_SPECIAL_CATEGORY_ICONS ,
+                               CIRC_ASSET_MASK, RING_ASSET, PREVIEW_ICONS,
+                               ENVIRONMENT_DIR)
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -225,7 +229,7 @@ class AvatarEnvironment():
         """
 
         if not char_img:
-            logger.warn('Image to be attached to the environment doesn\'t is None, will exit')
+            logger.warn("Image to be attached to the environment doesn't is None, will exit")
             return False
 
         if x < 0 or x >= 1:
@@ -236,7 +240,7 @@ class AvatarEnvironment():
             return False
 
         if not self._img:
-            logger.debug('Internal environment Image hasn\'t been loaded will load now')
+            logger.debug("Internal environment Image hasn't been loaded will load now")
             self.load_image()
 
         # Resize avatar if we can't fit it in (Normally shouldn't happen
@@ -305,10 +309,15 @@ class AvatarConfParser():
     _inactive_category_icons = {}
     _active_category_icons = {}
     _selected_borders = {}
+    _inactive_special_category_icons = {}
+    _active_special_category_icons = {}
+    _border_special_cat = {}
     categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
     env_label = 'environments'
+    spec_cat_label = 'special_categories'
+    special_category_labels = [char_label, env_label]
 
     def __init__(self, conf_data):
         if self.categories_label not in conf_data:
@@ -339,9 +348,10 @@ class AvatarConfParser():
         for cat in categories:
             self._cat_to_z_index[cat['cat_name']] = cat['z_index']
             icon_file = cat['disp_icon']
+            # TODO Fix the following if the icon_file is absolute
             if not os.path.isabs(icon_file):
-                active_icon_file = os.path.join(CATEGORY_ICONS, 'active', icon_file)
-                inactive_icon_file = os.path.join(CATEGORY_ICONS, 'inactive', icon_file)
+                active_icon_file = os.path.join(ACTIVE_CATEGORY_ICONS, icon_file)
+                inactive_icon_file = os.path.join(INACTIVE_CATEGORY_ICONS, icon_file)
             self._active_category_icons[cat['cat_name']] = active_icon_file
             self._inactive_category_icons[cat['cat_name']] = inactive_icon_file
 
@@ -402,6 +412,30 @@ class AvatarConfParser():
             new_env = AvatarEnvironment(new_name, new_fname, new_prev_img)
             self._environments[new_name] = new_env
 
+    def _populate_special_category_structures(self, conf_data):
+        """ Populate internal structures related to the special categories
+        such as characters and environments
+        :param conf_data: YAML format configuration structure read from file
+        """
+        special_cat_data = conf_data[self.spec_cat_label]
+
+        for special_cat in self.special_category_labels:
+            active_icon_file = special_cat_data[special_cat]['active_icon']
+            if os.path.isabs(active_icon_file):
+                active_icon_file = os.path.join(ACTIVE_SPECIAL_CATEGORY_ICONS, active_icon_file)
+
+            inactive_icon_file = special_cat_data[special_cat]['inactive_icon']
+            if os.path.isabs(inactive_icon_file):
+                inactive_icon_file = os.path.join(INACTIVE_SPECIAL_CATEGORY_ICONS, inactive_icon_file)
+
+            border_icon_file = special_cat_data[special_cat]['selected_border']
+            if os.path.isabs(border_icon_file):
+                border_icon_file = os.path.join(CATEGORY_ICONS, border_icon_file)
+
+            self._active_special_category_icons[special_cat] = active_icon_file
+            self._inactive_special_category_icons[special_cat] = inactive_icon_file
+            self._border_special_cat[special_cat] = border_icon_file
+
     def get_zindex(self, category):
         if category not in self._cat_to_z_index:
             logger.warn('Category {} not in available ones'.format(category))
@@ -432,7 +466,7 @@ class AvatarConfParser():
                   None if category is not found
         """
         if category not in self._object_per_cat:
-            logger.warn('cat {} not found, can\'t return objects'.format(category))
+            logger.warn("cat {} not found, can't return objects".format(category))
             return None
         else:
             return [it.name() for it in self._object_per_cat[category]]
@@ -449,8 +483,7 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._inactive_category_icons:
-            logger.warn('Cat {} was not found, can\'t provide inactive '
-                        'icon path'.format(category_name))
+            logger.warn("Cat {} was not found, can't provide inactive icon path".format(category_name))
             return None
         else:
             return self._inactive_category_icons[category_name]
@@ -461,8 +494,7 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._active_category_icons:
-            logger.warn('Cat {} was not found, can\'t provide active icon '
-                        'path'.format(category_name))
+            logger.warn("Cat {} was not found, can't provide active icon path".format(category_name))
             return None
         else:
             return self._active_category_icons[category_name]
@@ -473,11 +505,44 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._selected_borders:
-            logger.warn('Cat {} was not found, can\'t provide selected border '
-                        'path'.format(category_name))
+            logger.warn("Cat {} was not found, can't provide selected border path".format(category_name))
             return None
         else:
             return self._selected_borders[category_name]
+
+    def get_inactive_special_category_icon(self, special_category_name):
+        """ Provides the filename of the active icons of the provided category
+        :param special_category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if special_category_name not in self._inactive_special_category_icons:
+            logger.warn("Special Cat {} was not found, can't provide inactive icon path".format(special_category_name))
+            return None
+        else:
+            return self._inactive_special_category_icons[special_category_name]
+
+    def get_active_special_category_icon(self, special_category_name):
+        """ Provides the filename of the inactive icons of the provided category
+        :param special_category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if special_category_name not in self._active_special_category_icons:
+            logger.warn("Special Cat {} was not found, can't provide active icon path".format(special_category_name))
+            return None
+        else:
+            return self._active_special_category_icons[special_category_name]
+
+    def get_selected_border_special(self, special_category_name):
+        """ Provides the filename of the selected border of the preview icon
+        :param special_category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        self._border_special_cat
+        if special_category_name not in self._border_special_cat:
+            logger.warn("Special Cat {} was not found, can't provide selected border path".format(special_category_name))
+            return None
+        else:
+            return self._border_special_cat[special_category_name]
 
     def get_char_preview(self, char_name):
         """ Provides the preview image for a given character
@@ -486,7 +551,7 @@ class AvatarConfParser():
                   None if the character is not available
         """
         if char_name not in self._characters:
-            logger.warn('Char {} not in avail char list, can\'t return preview img'.format(char_name))
+            logger.warn("Char {} not in avail char list, can't return preview img".format(char_name))
             return None
         else:
             return self._characters[char_name].get_preview_img()
@@ -498,7 +563,7 @@ class AvatarConfParser():
                   None if the item is not available
         """
         if item_name not in self._objects:
-            logger.warn('Item {} not in avail obj list, can\'t return preview img'.format(item_name))
+            logger.warn("Item {} not in avail obj list, can't return preview img".format(item_name))
             return None
         else:
             return self._objects[item_name].get_preview_img()
@@ -510,7 +575,7 @@ class AvatarConfParser():
                   None if the environment is not available
         """
         if environment_name not in self._environments:
-            logger.warn('Environment {} not in avail env list, can\'t return preview img'.format(environment_name))
+            logger.warn("Environment {} not in avail env list, can't return preview img".format(environment_name))
             return None
         else:
             return self._environments[environment_name].get_preview_img()
@@ -567,7 +632,7 @@ class AvatarCreator(AvatarConfParser):
                   selected
         """
         if self._sel_char is None:
-            logger.warn('Character not selected, can\'t return path to asset')
+            logger.warn("Character not selected, can't return path to asset")
             return None
         else:
             return self._sel_char.get_fname()
@@ -634,7 +699,7 @@ class AvatarCreator(AvatarConfParser):
                 if choice:
                     random_item_names.append(choice.name())
             except KeyError:
-                logger.debug('Category {} doesn\'t contain any items'.format(cat))
+                logger.debug("Category {} doesn't contain any items".format(cat))
                 continue
 
         rc = self.obj_select(random_item_names, clear_existing=False)
@@ -705,14 +770,14 @@ class AvatarCreator(AvatarConfParser):
             return None
 
         if not self._sel_char:
-            logger.error('Haven\'t selected a character, will not save circulat assets')
+            logger.error("Haven't selected a character, will not save circulat assets")
             return None
         self._sel_char.generate_circular_assets(file_name)
         return True
 
     def _create_base_img(self):
         if self._sel_char is None:
-            logger.error('You haven\'t specified a character')
+            logger.error("You haven't specified a character")
             return False
 
         self._sel_char.load_image()
@@ -725,7 +790,7 @@ class AvatarCreator(AvatarConfParser):
                   True otherwise
         """
         if self._sel_char is None:
-            logger.error('You haven\'t specified a character')
+            logger.error("You haven't specified a character")
             return False
 
         self._sel_char.save_image(file_name)

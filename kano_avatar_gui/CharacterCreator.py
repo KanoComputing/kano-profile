@@ -24,7 +24,6 @@ class CharacterCreator(Gtk.EventBox):
 
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
-
         self._get_obj_data()
 
         if randomise:
@@ -34,12 +33,8 @@ class CharacterCreator(Gtk.EventBox):
 
         # Check profile information and load up either the created avatar or
         # the default
-
-        # read file, and if no record, show default
-        self._set_defaults()
-
-        self._create_img_box('avatar.png')
         self._create_menu()
+        self._create_img_box(self.get_image_path())
 
         self.width = self._imgbox.width
         self.height = self._imgbox.height
@@ -49,6 +44,7 @@ class CharacterCreator(Gtk.EventBox):
         self.fixed.put(self._menu, 30, 30)
 
         self.connect("button-release-event", self._hide_pop_ups)
+        self._update_img(None, None)
 
     def get_image_path(self):
         containing_dir = os.path.join(os.path.expanduser('~'), "avatar-content")
@@ -72,36 +68,12 @@ class CharacterCreator(Gtk.EventBox):
 
     def _randomise_avatar_wrapper(self, button):
         self.avatar_cr.randomise_all_items()
-        self.avatar_cr.create_avatar('avatar.png')
+        self.avatar_cr.create_avatar(self.get_image_path())
         self.show_all()
 
     def _hide_pop_ups(self, widget, event):
         self._menu.hide_pop_ups()
         self._menu.unselect_categories()
-
-    def _set_defaults(self):
-        '''Set the default selection of the avatar creator.
-        This should look like the Kano Judoka.
-        '''
-        # To select the defaults, you need to both pick them and create
-        # a default image, and also select them in the category.
-        # The second is less of a priority.
-
-        # if the user has created one, that should be the default shown.
-        # So maybe show the one that currently exists?
-        # TODO Un hardcode the following
-        self.avatar_cr.char_select('Judoka_Base')
-        self.avatar_cr.obj_select(
-            [
-                'Skin_Orange',
-                'Suit_White',
-                'Face_Happy',
-                'Hair_Black',
-                'Belt_Orange',
-                'Sticker_Code'
-            ]
-        )
-        self.avatar_cr.create_avatar(save_to='avatar.png')
 
     def _create_menu(self):
         self._menu = Menu(self.avatar_cr)
@@ -120,8 +92,8 @@ class CharacterCreator(Gtk.EventBox):
         if not rc:
             logger.error('Error processing the list {}'.format(list_of_objs))
         else:
-            self.avatar_cr.create_avatar(save_to='avatar.png')
-            self._imgbox.set_image('avatar.png')
+            self.avatar_cr.create_avatar(self.get_image_path())
+            self._imgbox.set_image(self.get_image_path())
 
     # Public function so external buttons can access it.
     def save(self):

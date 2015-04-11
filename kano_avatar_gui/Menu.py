@@ -18,6 +18,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_avatar_gui.PopUpItemMenu import PopUpItemMenu
 from kano_avatar_gui.CategoryMenu import CategoryMenu
 from kano.logging import logger
+from kano_profile.apps import load_app_state_variable, save_app_state_variable
 
 
 class Menu(Gtk.Fixed):
@@ -43,10 +44,9 @@ class Menu(Gtk.Fixed):
 
         self.put(self._cat_menu, 0, 0)
 
-        self.menus = {}
-
-        for category in self._cat_menu.categories:
-            self.menus[category] = {}
+        # initialises self.menus
+        self._initialise_pop_up_menus()
+        self._create_start_up_image()
 
         self.show_all()
 
@@ -71,19 +71,71 @@ class Menu(Gtk.Fixed):
 
         return objs
 
+    def _initialise_pop_up_menus(self):
+        '''Initialise the pop up menus
+        '''
+        logger.debug("Initialising PopUpMenu for all categories")
+        self.menus = {}
+
+        for category in self._cat_menu.categories:
+            menu = PopUpItemMenu(category, self._parser)
+            menu.connect('pop_up_item_selected', self._emit_signal)
+
+            self.menus[category] = {}
+            self.menus[category]["menu"] = menu
+
+            self.put(self.menus[category]['menu'],
+                     self.pop_up_pos_x, self.pop_up_pos_y)
+            self.menus[category]['menu'].hide()
+
+    def _create_start_up_image(self):
+        '''We check what has been saved on kano-profile, and we use a default if
+        something hasn't been specified
+        '''
+        logger.debug("Creating start up image")
+
+        # TODO: fix this. This is only here to make this work.
+        self._parser.char_select('Judoka_Base')
+
+        object_list = []
+
+        categories = ['Belts', "Faces", "Hair", "Skins", "Stickers", "Suits"]
+        defaults = {
+            "Belts": 'Belt_Orange',
+            'Suits': 'Suit_White',
+            'Faces': 'Face_Happy',
+            'Hair': 'Hair_Black',
+            'Stickers': 'Sticker_Code',
+            'Skins': 'Skin_Orange'
+        }
+
+        for category in categories:
+            available_objects = self._parser.get_avail_objs(category)
+            logger.debug("available_objects = {}".format(available_objects))
+
+            obj_name = load_app_state_variable("kano-avatar", category)
+            logger.debug("loading obj_name = {}".format(obj_name))
+
+            if obj_name and obj_name in self._parser.get_avail_objs(category):
+                logger.debug("Loading saved object {} for category {}".format(obj_name, category))
+            else:
+                obj_name = defaults[category]
+                logger.debug("Loading default object {} for category {}".format(obj_name, category))
+                save_app_state_variable("kano-avatar", category, obj_name)
+
+            # object_list.append(obj_name)
+            self.menus[category]["menu"]._set_selected(obj_name)
+            self.menus[category]["menu"]._only_style_selected(obj_name)
+            self.menus[category]["menu"].hide()
+            logger.debug("Hid menu for category {}".format(category))
+
+        # self._parser.obj_select(object_list)
+        # self._parser.create_avatar(save_to='avatar.png')
+
     def launch_pop_up_menu(self, widget, category):
 
         logger.debug("Launching PopUpMenu for category {}".format(category))
         self.hide_pop_ups()
-
-        if "menu" not in self.menus[category]:
-            menu = PopUpItemMenu(category, self._parser)
-            menu.connect('pop_up_item_selected', self._emit_signal)
-
-            self.menus[category]["menu"] = menu
-            self.put(self.menus[category]['menu'],
-                     self.pop_up_pos_x, self.pop_up_pos_y)
-
         self.menus[category]['menu'].show()
 
     def hide_pop_ups(self):

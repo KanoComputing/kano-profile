@@ -114,13 +114,14 @@ class PopUpItemMenu(SelectMenu):
         button = Gtk.Button()
         button.get_style_context().add_class('pop_up_menu_item')
         button.add(fixed)
-        button.connect('clicked', self._only_style_selected, obj_name)
+        button.connect('clicked', self._on_clicking_item, obj_name)
         button.connect('enter-notify-event', self._add_selected_appearence, obj_name)
         button.connect('leave-notify-event', self._remove_selected_appearence, obj_name)
         button.set_size_request(self.button_width, self.button_height)
         return button
 
     def _add_selected_appearence(self, button, event, identifier):
+        logger.debug("hit _add_selected_appearence")
         if identifier != self.get_selected():
             self._add_selected_border(button, identifier)
 
@@ -133,7 +134,7 @@ class PopUpItemMenu(SelectMenu):
         It needs to be "above" as some of the border images also
         have a white tick.
         '''
-
+        logger.debug("_add_selected_border")
         if identifier in self._items:
             # Get the fixed containing the image
             fixed = button.get_child()
@@ -161,21 +162,35 @@ class PopUpItemMenu(SelectMenu):
             selected_border.hide()
             button.show_all()
 
-    def _only_style_selected(self, button, identifier):
-        '''Adds the CSS class that shows the image that has been selected,
-        even when the mouse is moved away.
-        If identifier is None, will remove all styling
-        '''
-
+    def _on_clicking_item(self, button, identifier):
         old_selected_id = self.get_selected()
 
         if old_selected_id:
             button = self._items[old_selected_id]['button']
             self._remove_selected_border(button, old_selected_id)
 
-        # Since the item shoudl already have the selected apearence from the
+        # Since the item should already have the selected apearence from the
         # mouse hovering over it, should not bee needed to add the border again
         self._set_selected(identifier)
+        self.emit(self._signal_name, identifier)
+
+    def _only_style_selected(self, identifier):
+        '''Adds the CSS class that shows the image that has been selected,
+        even when the mouse is moved away.
+        If identifier is None, will remove all styling
+        '''
+
+        logger.debug("Entered _only_style_selected")
+        old_selected_id = self.get_selected()
+
+        if old_selected_id:
+            button = self._items[old_selected_id]['button']
+            self._remove_selected_border(button, old_selected_id)
+
+        # Since the item should already have the selected apearence from the
+        # mouse hovering over it, should not bee needed to add the border again
+        self._set_selected(identifier)
+        self._add_selected_border(button, identifier)
         self.emit(self._signal_name, identifier)
 
 

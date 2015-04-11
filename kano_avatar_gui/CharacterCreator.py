@@ -12,6 +12,7 @@ from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano_avatar_gui.Menu import Menu
 from kano_avatar_gui.ImageView import ImageView
 from kano.logging import logger
+from kano_profile.apps import save_app_state_variable
 
 
 # We make the inheritance from Gtk.EventBox so we can grab the events
@@ -100,6 +101,7 @@ class CharacterCreator(Gtk.EventBox):
         '''When saving character, we save all the images in kano-profile
         and move the img filename to a place we can share it from.
         '''
+        logger.debug("Saving data")
 
         saved_path = self.get_image_path()
         logger.debug("Saving generated avatar image to {}".format(saved_path))
@@ -114,4 +116,5 @@ class CharacterCreator(Gtk.EventBox):
 
         for category in categories:
             # TODO
-            pass
+            obj_name = self._menu.get_selected_obj(category)
+            save_app_state_variable('kano-avatar', category, obj_name)

@@ -77,6 +77,9 @@ class MainWindow(ApplicationWindow):
     def _go_to_page(self, widget, index):
         self._vbox.remove(self._page)
 
+        if self._page == 1:
+            self._char_creator.save()
+
         pages = {1: Page1, 2: Page2, 3: Page3}
         self._page = pages[index](self)
         self._vbox.pack_start(self._page, False, False, 0)

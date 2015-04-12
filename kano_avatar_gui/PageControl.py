@@ -49,6 +49,18 @@ class PageControl(Gtk.Alignment):
         self.connect("next-button-clicked", self.select_dot)
         self.connect("back-button-clicked", self.select_dot)
 
+    def disable_next(self):
+        self._next_button.set_sensitive(False)
+
+    def enable_next(self):
+        self._next_button.set_sensitive(True)
+
+    def set_back_button_text(self, text):
+        self._back_button.set_label(text)
+
+    def set_next_button_text(self, text):
+        self._next_button.set_label(text)
+
     def get_back_button(self):
         return self._back_button
 
@@ -106,6 +118,9 @@ class PageControl(Gtk.Alignment):
         '''index is the integers 1 - 3, to represent the page numbers
         '''
 
+        if index not in range(self.num_of_pages):
+            return
+
         self._create_progress_dots(index)
 
         if index == 1:
@@ -123,7 +138,6 @@ class PageControl(Gtk.Alignment):
     # These give external windows a way of knowing when these buttons have been
     # clicked, without mixing up the classes
     def back_button_clicked(self, widget):
-        print 'back_button_clicked'
         self.selected -= 1
         self.emit('back-button-clicked', self.selected)
 

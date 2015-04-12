@@ -8,22 +8,30 @@
 
 import os
 import sys
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GObject
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
+from kano.network import is_internet
+from kano.logging import logger
+from kano_world.functions import register as register_
+from kano_profile.tracker import save_hardware_info, save_kano_version
+from kano_profile.paths import bin_dir, legal_dir
+from kano_profile.profile import save_profile_variable
+from kano.utils import run_bg
+
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.heading import Heading
 from kano.gtk3.apply_styles import apply_colours_to_screen
+from kano.gtk3.kano_dialog import KanoDialog
 
 from kano_avatar_gui.PageControl import PageControl
 from kano_avatar_gui.CharacterCreator import CharacterCreator
 from kano_avatar_gui.ImageView import ImageView
-from kano_avatar_gui.GetData import GetData1, GetData2
-
+from kano_avatar_gui.GetData import GetData2, GetData3
 from kano_avatar.paths import CSS_PATH
 
 try:
@@ -39,10 +47,13 @@ class MainWindow(ApplicationWindow):
     _grid = None
 
     def __init__(self):
-        ApplicationWindow.__init__(self, 'Avatar', 755, 588)
+        ApplicationWindow.__init__(self, 'Avatar', 900, 900)
         self.connect("delete-event", Gtk.main_quit)
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_main_widget(self._vbox)
+
+        # This is what we fill up as we get data
+        self.data = {}
 
         # Styling
         self._manage_styling()
@@ -75,16 +86,19 @@ class MainWindow(ApplicationWindow):
         style.add_class('main_window')
 
     def _go_to_page(self, widget, index):
+
+        if index > 3:
+            # skip
+            return
+
         self._vbox.remove(self._page)
-
-        if self._page == 1:
-            self._char_creator.save()
-
         pages = {1: Page1, 2: Page2, 3: Page3}
         self._page = pages[index](self)
         self._vbox.pack_start(self._page, False, False, 0)
-
         self.show_all()
+
+    def get_page_control(self):
+        return self.page_control
 
 
 # Page 1 is the character personalisation
@@ -100,14 +114,16 @@ class Page1(Gtk.Box):
         self._char_creator = CharacterCreator()
         self.pack_start(self._char_creator, False, False, 0)
 
-        self._win.page_control.connect("next-button-clicked",
-                                       self.save_avatar_assets)
+        self.save_avatar_assets = self._win.page_control.connect(
+            "next-button-clicked",
+            self.save_avatar_assets
+        )
 
         self.show_all()
 
     def save_avatar_assets(self, widget, character):
-        print "entered save_avatar_assets"
         self._char_creator.save()
+        self._win.page_control.disconnect(self.save_avatar_assets)
 
 
 class Page2(Gtk.Box):
@@ -115,6 +131,9 @@ class Page2(Gtk.Box):
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._win = win
+        self.page_control = self._win.get_page_control()
+        self.page_control.set_next_button_text("NEXT")
+        self.page_control.disable_next()
 
         title = Heading('Make your Avatar', 'Choose clothes and other swag')
         self.pack_start(title.container, False, False, 0)
@@ -123,11 +142,23 @@ class Page2(Gtk.Box):
         image_viewer = ImageView(self)
         self.pack_start(image_viewer, False, False, 0)
 
-        data_screen = GetData1()
+        # Get character image.  This hardcoding needs to be removed
+        filename = os.path.join(os.path.expanduser('~'), "avatar-content/avatar.png")
+        image_viewer.set_image(filename)
+
+        self.data_screen = GetData2()
+        self.data_screen.connect("entries-filled", self.enable_next)
+        self._win.page_control.connect("next-button-clicked", self.get_birthday_data)
 
         # Put it with the same y coordinate as the menu
-        image_viewer.put(data_screen, 400, 60)
+        image_viewer.put(self.data_screen, 550, 60)
         self.show_all()
+
+    def get_birthday_data(self, widget, event):
+        self._win.data = self.data_screen.get_data()
+
+    def enable_next(self, widget):
+        self.page_control.enable_next()
 
 
 class Page3(Gtk.Box):
@@ -135,6 +166,9 @@ class Page3(Gtk.Box):
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._win = win
+        self.page_control = self._win.get_page_control()
+        self.page_control.set_next_button_text("COMPLETE")
+        self.page_control.disable_next()
 
         title = Heading('Make your Avatar', 'Choose clothes and other swag')
         self.pack_start(title.container, False, False, 0)
@@ -143,11 +177,81 @@ class Page3(Gtk.Box):
         image_viewer = ImageView(self)
         self.pack_start(image_viewer, False, False, 0)
 
-        data_screen = GetData2()
+        # Get character image
+        filename = os.path.join(os.path.expanduser('~'), "avatar-content/avatar.png")
+        image_viewer.set_image(filename)
+
+        self.data_screen = GetData3()
+        self.data_screen.connect("entries-filled", self.enable_next)
+
+        self.register_cb = self.page_control.connect("next-button-clicked", self.register)
+        self.back_cb = self.page_control.connect("back-button-clicked", self.remove_event_listeners)
 
         # Put it with the same y coordinate as the menu
-        image_viewer.put(data_screen, 400, 60)
+        image_viewer.put(self.data_screen, 550, 60)
         self.show_all()
+
+    def remove_event_listeners(self, widget, index):
+        self.page_control.disconnect(self.register_cb)
+        self.page_control.disconnect(self.back_cb)
+
+    def enable_next(self, widget):
+        self.page_control.enable_next()
+
+    def register(self, widget=None, arg=None):
+        self._win.data.update(self.data_screen.get_data())
+
+        if not is_internet():
+            title = "You don't have internet!"
+            description = "Connect via wifi or ethernet to register"
+            return_value = 0
+        else:
+            email = self._win.data["email"]
+            username = self._win.data["username"]
+            password = self._win.data["password"]
+            date_year = self._win.data["year"]
+            date_month = self._win.data["month"]
+            date_day = self._win.data["day"]
+
+            success, text = register_(email, username, password,
+                                      date_year, date_month, date_day)
+
+            if not success:
+                logger.info('problem with registration: {}'.format(text))
+                title = "Houston, we have a problem"
+                description = str(text)
+                return_value = 0
+
+            else:
+                logger.info('registration successful')
+
+                # saving hardware info and initial Kano version
+                save_hardware_info()
+                save_kano_version()
+
+                # running kano-sync after registration
+                logger.info('running kano-sync after successful registration')
+                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                run_bg(cmd)
+
+                title = "You've registered!"
+                description = "Awesome stuff"
+                return_value = 1
+
+        def done(title, description, return_value):
+            kdialog = KanoDialog(
+                title, description,
+                {"OK": {"return_value": return_value}},
+                parent_window=self._win
+            )
+            response = kdialog.run()
+
+            self._win.get_window().set_cursor(None)
+
+            if response == 1:
+                print "AWESOME STUFF"
+
+        GObject.idle_add(done, title, description, return_value)
 
 
 def main():

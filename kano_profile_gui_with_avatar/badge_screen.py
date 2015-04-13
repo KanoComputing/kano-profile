@@ -134,7 +134,9 @@ class BadgeGrid(Gtk.Grid):
                 background_colour, locked
             )
 
-            badge_widget.connect("clicked", self._go_to_badge_info_wrapper, i)
+            # This is the index of the badge in the ordered array of all the badges
+            index = page_number * 6 + i
+            badge_widget.connect("clicked", self._go_to_badge_info_wrapper, index)
             self.attach(badge_widget, column, row, 1, 1)
 
     def _go_to_badge_info_wrapper(self, widget, index):
@@ -184,16 +186,21 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _show_badge(self):
         background = Gtk.EventBox()
 
-        bg_color = self.item_info['bg_color']
-        color = Gdk.RGBA()
-        color.parse('#' + bg_color)
+        locked = not self.item_info['achieved']
+        if locked:
+            color = Gdk.RGBA()
+            color.parse('#dddddd')
+        else:
+            bg_color = self.item_info['bg_color']
+            color = Gdk.RGBA()
+            color.parse('#' + bg_color)
 
         background.override_background_color(Gtk.StateFlags.NORMAL,
                                              color)
 
         category = self.item_info['category']
         name = self.item_info['name']
-        locked = not self.item_info['achieved']
+
         filename = get_image_path_at_size(
             category, name, locked, self.image_width, self.image_height
         )

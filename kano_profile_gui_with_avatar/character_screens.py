@@ -83,8 +83,10 @@ class CharacterEdit(Gtk.EventBox):
         button_box.pack_start(empty_label, False, False, 0)
 
         self._win.pack_in_bottom_bar(button_box)
-
         self._win.show_all()
+
+        # Hide all the pop ups
+        self.char_creator._hide_pop_ups()
 
     def save_changes(self, widget):
         self.char_creator.save()

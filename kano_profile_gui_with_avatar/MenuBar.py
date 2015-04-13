@@ -50,12 +50,16 @@ class MenuBar(Gtk.EventBox):
         for name in name_array:
             button = MenuButton(name)
             button.connect("clicked", self.emit_menu_signal, name)
+            button.connect("clicked", self.set_selected_wrapper, name)
             hbox.pack_end(button, False, False, 0)
 
-            label = self._create_divider_label()
+            # add to the self.buttons dictionary
+            self.buttons[name] = {}
+            self.buttons[name]["button"] = button
 
-            # avoiding packing the last element
+            # HACKY: avoiding packing the label divider after the last element
             if name != "CHARACTER":
+                label = self._create_divider_label()
                 hbox.pack_end(label, False, False, 0)
 
             attach_cursor_events(button)
@@ -69,7 +73,6 @@ class MenuBar(Gtk.EventBox):
         # Close button
         cross_icon = get_ui_icon("cross")
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        # cross_icon.set_padding(5, 5)
         close_button = Gtk.Button()
         close_button.add(box)
         box.add(cross_icon)
@@ -87,8 +90,20 @@ class MenuBar(Gtk.EventBox):
     def get_selected_button(self):
         return self.selected
 
+    def set_selected_wrapper(self, widget, name):
+        self.set_selected(name)
+
     def set_selected(self, name):
         self.selected = name
+
+        for button_id, id_dict in self.buttons.iteritems():
+            button = self.buttons[button_id]['button']
+            button.selected = False
+            button.remove_selected_style()
+
+        button = self.buttons[name]['button']
+        button.selected = True
+        button.set_selected_style()
 
     def close_window(self, button):
         Gtk.main_quit()
@@ -127,6 +142,7 @@ class MenuButton(Gtk.Button):
         self.name = name
 
         Gtk.Button.__init__(self)
+        self.selected = False
 
         # an icon may be added later
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -147,9 +163,11 @@ class MenuButton(Gtk.Button):
         self.connect("leave-notify-event", self.remove_selected_wrapper)
 
     def set_selected_style(self):
+        '''We shouldn't have to worry about applying this when it
+        already has been applied.
+        '''
 
         if not self.icon_align.get_children():
-            # get filename from paths
             self.get_style_context().add_class("selected")
             icon = get_ui_icon("dropdown_arrow")
             self.icon_align.add(icon)
@@ -166,4 +184,5 @@ class MenuButton(Gtk.Button):
         self.set_selected_style()
 
     def remove_selected_wrapper(self, widget, args):
-        self.remove_selected_style()
+        if not self.selected:
+            self.remove_selected_style()

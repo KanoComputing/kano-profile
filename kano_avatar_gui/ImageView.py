@@ -39,10 +39,7 @@ class ImageView(Gtk.Fixed):
     def set_image(self, img_loc):
         if not self._img:
             self._img = Gtk.Image.new_from_file(img_loc)
-
-            # TODO: this is temporary to improve the appearence for now
-            self.put(self._img, 250, 0)
-            # self.put(self._img, 500, 0)
+            self.put(self._img, 0, 0)
             self._img.show()
         else:
             self._img.clear()

@@ -8,7 +8,7 @@
 
 import os
 from gi.repository import Gtk, Gdk, Pango
-from kano_profile_gui_with_avatar.SelectionTableItem import BadgeItem
+from kano_profile_gui_with_avatar.BadgeItem import BadgeItem
 from kano_profile_gui_with_avatar.backend import create_item_page_list
 from kano_profile_gui.paths import media_dir
 
@@ -105,8 +105,8 @@ class BadgeGrid(Gtk.Grid):
         self._win = win
         self._item_width = 230
         self._item_height = 180
-        self.row = 3
-        self.column = 4
+        self.row = 2
+        self.column = 3
         self.number_on_page = self.row * self.column
 
         self._split_info_into_pages()

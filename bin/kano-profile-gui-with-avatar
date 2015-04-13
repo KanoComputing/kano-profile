@@ -28,9 +28,8 @@ from kano_profile_gui_with_avatar.MenuBar import MenuBar
 class MainWindow(ApplicationWindow):
 
     def __init__(self):
-        # Create main window
-        self.height = 750
-        self.width = 920
+        self.height = 596
+        self.width = 734
         ApplicationWindow.__init__(self, 'Kano Profile', self.width,
                                    self.height)
 
@@ -64,9 +63,6 @@ class MainWindow(ApplicationWindow):
         # init home screen
         self.go_to_category(self._menu_bar.home_button, 'CHARACTER')
         self.show_all()
-
-    def get_char_creator(self):
-        return self._char_creator
 
     def pack_in_main_content(self, widget):
         self._main_content.add(widget)

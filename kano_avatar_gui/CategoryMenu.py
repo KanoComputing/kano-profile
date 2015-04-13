@@ -19,8 +19,8 @@ class CategoryMenu(SelectMenu):
 
     def __init__(self, parser):
 
-        self.item_width = 65
-        self.item_height = 50
+        self.item_width = 40
+        self.item_height = 40
 
         self._signal_name = 'category_item_selected'
 
@@ -110,7 +110,7 @@ class CategoryMenu(SelectMenu):
         '''
 
         button = Gtk.Button()
-        button.set_size_request(60, 60)
+        button.set_size_request(self.item_width, self.item_height)
 
         path = self._parser.get_inactive_category_icon(identifier)
         icon = Gtk.Image.new_from_file(path)

@@ -327,15 +327,15 @@ GtkSwitch.slider {
 }
 
 .navigation_button.back {
-    padding: 0px 0px 35px 40px;
+    padding: 0px 0px 25px 40px;
 }
 
 .navigation_button.next {
-    padding: 0px 40px 35px 0px;
+    padding: 0px 40px 25px 0px;
 }
 
 .navigation_button.middle {
-    padding: 0px 0px 35px 0px;
+    padding: 0px 0px 25px 0px;
 }
 
 .navigation_button GtkLabel {

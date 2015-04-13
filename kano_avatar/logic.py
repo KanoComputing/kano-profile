@@ -260,7 +260,7 @@ class AvatarEnvironment():
         if char_szx > self.get_img().size[0] or \
            char_szy > self.get_img().size[1]:
             # First calculate the reduction coefficient
-            # so that no side is larger than 80% of the background canvas
+            # so that no side is larger than 90% of the background canvas
             coeff = 0.9
             c_x = coeff * self.get_img().size[0] / char_szx
             c_y = coeff * self.get_img().size[1] / char_szy
@@ -886,10 +886,18 @@ class AvatarCreator(AvatarConfParser):
             if save_background:
                 # If no environment has been selected, do nothing
                 if self._sel_env:
+                    # Save the final image with the background
                     file_name, file_ext = os.path.splitext(save_to)
-                    file_name += '_inc_env' + file_ext
+                    file_name_env = file_name + '_inc_env' + file_ext
                     self._sel_env.attach_char(self._sel_char.get_img())
-                    self._sel_env.save_image(file_name)
+                    self._sel_env.save_image(file_name_env)
+
+                    # Save the final image with the background, but with
+                    # a slight offset for the character
+                    self._sel_env.load_image()
+                    file_name_env_p2 = file_name + '_inc_env_page2' + file_ext
+                    self._sel_env.attach_char(self._sel_char.get_img(), x=0.4)
+                    self._sel_env.save_image(file_name_env_p2)
 
         return True
 

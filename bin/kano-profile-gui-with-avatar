@@ -26,9 +26,6 @@ from kano_profile_gui_with_avatar.MenuBar import MenuBar
 
 
 class MainWindow(ApplicationWindow):
-    table = None
-    box = None
-    label = None
 
     def __init__(self):
         # Create main window

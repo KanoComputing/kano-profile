@@ -65,6 +65,9 @@ class MenuBar(Gtk.EventBox):
 
             attach_cursor_events(button)
 
+        # initialise with the CHARACTER button selected
+        self.set_selected("CHARACTER")
+
     def _create_divider_label(self):
         label = Gtk.Label("|")
         label.get_style_context().add_class("button_divider")

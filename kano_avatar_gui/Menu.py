@@ -97,14 +97,15 @@ class Menu(Gtk.Fixed):
         # TODO: fix this. This is only here to make this work.
         self._parser.char_select('Judoka_Base')
 
-        categories = ['Belts', "Faces", "Hair", "Skins", "Stickers", "Suits"]
+        categories = ['Belts', "Faces", "Hair", "Skins", "Stickers", "Suits", "environments"]
         defaults = {
             "Belts": 'Belt_Orange',
             'Suits': 'Suit_White',
             'Faces': 'Face_Happy',
             'Hair': 'Hair_Black',
             'Stickers': 'Sticker_Code',
-            'Skins': 'Skin_Orange'
+            'Skins': 'Skin_Orange',
+            'environments': 'Dojo'
         }
 
         for category in categories:

@@ -32,7 +32,7 @@ def main():
     group_view = parser.add_argument_group('View', 'View available choices')
     group_view.add_argument('-l', '--list',
                             choices=['char', 'obj', 'env', 'cat', 'spec_cat', 'all'],
-                            help='List available choices for characters (char),objects (obj),environment(env), categories(cat), special categories (spec_cat) or all (all).')
+                            help='List available choices for characters (char),objects (obj), categories(cat) or all (all).')
     group_create = parser.add_argument_group('Create', 'Create a new avatar')
     group_create.add_argument('-c', '--create',
                               type=str,
@@ -60,12 +60,8 @@ def main():
             print avail_conf.list_available_chars()
         elif args.list == 'obj':
             print avail_conf.list_all_available_objs()
-        elif args.list == 'env':
-            print avail_conf.list_all_available_environments()
         elif args.list == 'cat':
             print avail_conf.list_available_categories()
-        elif args.list == 'spec_cat':
-            print avail_conf.list_special_categories()
         elif args.list == 'all':
             # Chars
             chars = avail_conf.list_available_chars()
@@ -87,20 +83,6 @@ def main():
                 icon_inac = "Cat: {} | Inactive Icon: {}".format(cat, avail_conf.get_inactive_category_icon(cat))
                 print icon_ac
                 print icon_inac
-            # Special Categories
-            spec_cats = avail_conf.list_special_categories()
-            print spec_cats
-            for cat in spec_cats:
-                icon_ac = "Special Cat: {} | Active Icon: {}".format(cat, avail_conf.get_active_special_category_icon(cat))
-                icon_inac = "Special Cat: {} | Inactive Icon: {}".format(cat, avail_conf.get_inactive_special_category_icon(cat))
-                print icon_ac
-                print icon_inac
-            # Environments
-            envs = avail_conf.list_all_available_environments()
-            print envs
-            for env in envs:
-                prev = "Environment: {} | Preview: {}".format(env, avail_conf.get_environment_preview(env))
-                print prev
         return 0
 
     if args.create:

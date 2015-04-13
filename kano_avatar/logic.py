@@ -198,6 +198,12 @@ class AvatarEnvironment():
         else:
             self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
 
+    def name(self):
+        """ Provides the display name of the Item
+        :returns: display name of character as a string
+        """
+        return self._name
+
     def get_preview_img(self):
         """ Provides the Background preview image path
         :returns: absolute path to preview image as a string
@@ -463,8 +469,8 @@ class AvatarConfParser():
         """
         return [k for k in self._characters.keys()]
 
-    def list_all_available_objs(self):
-        """ Provides a list of available objects
+    def _list_all_available_regular_objs(self):
+        """ Provides a list of available regular objects
         :returns: list of objects (list of strings)
         """
         return [k for k in self._objects.keys()]
@@ -475,8 +481,16 @@ class AvatarConfParser():
         """
         return [k for k in self._environments.keys()]
 
-    def get_avail_objs(self, category):
-        """ Provides a list of available objects for the specific category
+    def list_all_available_objs(self):
+        """ Provides a list of available objects
+        :returns: list of objects (list of strings)
+        """
+        ret = self._list_all_available_regular_objs()
+        ret.extend(self.list_all_available_environments())
+        return ret
+
+    def _get_avail_objs_regular_cat(self, category):
+        """ Provides a list of available objects for the specific normal category
         :returns: [] of object names
                   None if category is not found
         """
@@ -487,20 +501,54 @@ class AvatarConfParser():
         else:
             return [it.name() for it in self._object_per_cat[category]]
 
-    def list_available_categories(self):
-        """ Provides a list of available categories (not case sensitive)
+    def get_avail_objs(self, category):
+        """ Provides a list of available objects for the category provided
+        :returns: [] of object names
+                  None if category is not found
+        """
+        if category == self.env_label:
+            return self.list_all_available_environments()
+        else:
+            return self._get_avail_objs_regular_cat(category)
+
+    def _list_available_regular_categories(self):
+        """ Provides a list of available regular categories (not case
+        sensitive)
         :returns: list of categories (list of strings)
         """
         return [k for k in self._categories]
 
-    def list_special_categories(self):
+    def _list_available_special_categories(self):
+        """ Provides a list of available special categories (not case
+        sensitive)
+        :returns: list of categories (list of strings)
+        """
+        # TODO Temporary hardcoding
+        # return self.special_category_labels
+        return [self.env_label]
+
+    def list_available_categories(self):
         """ Provides a list of available categories (not case sensitive)
         :returns: list of categories (list of strings)
         """
-        return self.special_category_labels
+        cats = self._list_available_regular_categories()
+        specs = self._list_available_special_categories()
+
+        cats.extend(specs)
+        return cats
 
     def get_inactive_category_icon(self, category_name):
-        """ Provides the filename of the active icons of the provided category
+        """ Provides the filename of the inactive icons of the provided
+        category
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        return self._get_inactive_reg_category_icon(category_name) or \
+            self._get_inactive_special_category_icon(category_name)
+
+    def _get_inactive_reg_category_icon(self, category_name):
+        """ Provides the filename of the active icons of the provided
+        regular category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
@@ -512,7 +560,16 @@ class AvatarConfParser():
             return self._inactive_category_icons[category_name]
 
     def get_active_category_icon(self, category_name):
-        """ Provides the filename of the inactive icons of the provided category
+        """ Provides the filename of the active icons of the provided category
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        return self._get_active_reg_category_icon(category_name) or \
+            self._get_active_special_category_icon(category_name)
+
+    def _get_active_reg_category_icon(self, category_name):
+        """ Provides the filename of the active icons of the provided active
+        category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
@@ -527,13 +584,21 @@ class AvatarConfParser():
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
+        return self._get_selected_border_regular(category_name) or \
+            self._get_selected_border_special(category_name)
+
+    def _get_selected_border_regular(self, category_name):
+        """ Provides the filename of the selected border of the preview icon
+        :param category_name: Regular category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
         if category_name not in self._selected_borders:
             logger.warn("Cat {} was not found, can't provide selected border path".format(category_name))
             return None
         else:
             return self._selected_borders[category_name]
 
-    def get_inactive_special_category_icon(self, special_category_name):
+    def _get_inactive_special_category_icon(self, special_category_name):
         """ Provides the filename of the active icons of the provided category
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
@@ -544,7 +609,7 @@ class AvatarConfParser():
         else:
             return self._inactive_special_category_icons[special_category_name]
 
-    def get_active_special_category_icon(self, special_category_name):
+    def _get_active_special_category_icon(self, special_category_name):
         """ Provides the filename of the inactive icons of the provided category
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
@@ -555,7 +620,7 @@ class AvatarConfParser():
         else:
             return self._active_special_category_icons[special_category_name]
 
-    def get_selected_border_special(self, special_category_name):
+    def _get_selected_border_special(self, special_category_name):
         """ Provides the filename of the selected border of the preview icon
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
@@ -585,13 +650,22 @@ class AvatarConfParser():
         :returns: The absolute path to the preview image as a str or
                   None if the item is not available
         """
+        return self._get_reg_item_preview(item_name) or \
+            self._get_environment_preview(item_name)
+
+    def _get_reg_item_preview(self, item_name):
+        """ Provides the preview image for a given regular item
+        :param item_name: item whose preview image will be returned
+        :returns: The absolute path to the preview image as a str or
+                  None if the item is not available
+        """
         if item_name not in self._objects:
             logger.warn("Item {} not in avail obj list, can't return preview img".format(item_name))
             return None
         else:
             return self._objects[item_name].get_preview_img()
 
-    def get_environment_preview(self, environment_name):
+    def _get_environment_preview(self, environment_name):
         """ Provides the preview image for a given environment
         :param environment_name: environment whose preview image will be
                                  returned
@@ -650,6 +724,11 @@ class AvatarCreator(AvatarConfParser):
             logger.error(error_msg)
             return False
 
+    def clear_env(self):
+        """ Clear the selection for the environment
+        """
+        self._sel_env = None
+
     def selected_char_asset(self):
         """ Get the asset path for the image corresponding to the
         characted that has been selected
@@ -677,9 +756,13 @@ class AvatarCreator(AvatarConfParser):
         """
         if clear_existing:
             self.clear_sel_objs()
+            self.clear_env()
+
+        sel_env_flag = False
 
         for obj_name in obj_names:
             if obj_name in self._objects:
+                # Deal with the object if it is a regular item
                 obj_instance = self._objects[obj_name]
                 if obj_instance.category() in self._sel_obj_per_cat:
                     error_msg = 'Multiple objects in category {}'.format(obj_instance.category())
@@ -696,15 +779,27 @@ class AvatarCreator(AvatarConfParser):
                     self._sel_objs_per_zindex[obj_zindex] = []
 
                 self._sel_objs_per_zindex[obj_zindex].append(obj_instance)
+            elif obj_name in self._environments:
+                # Deal with the object if it is an environment
+                if not sel_env_flag:
+                    self.env_select(obj_name)
+                    sel_env_flag = True
+                else:
+                    msg = "Provided multiple environments to select {}, {}".format(self._sel_env.name(), obj_name)
+                    logger.error(msg)
+                    return False
             else:
-                error_msg = 'Object {} not in available obj list'.format(obj_name)
+                # if it is neither show error message
+                error_msg = 'Object {} not in available obj or env list'.format(obj_name)
                 logger.error(error_msg)
                 return False
         return True
 
-    def randomise_rest(self, obj_names):
+    def randomise_rest(self, obj_names, empty_cats=False):
         """ Add specified objects and randomise the remaining ones
         :param obj_names: list of item names
+        :param empty_cats: (Optional) set to True if it is acceptable to get
+                           categories without any objects.
         :returns: False if any of the objects doesn't exist or if there are
                   multiple items from the same category are selected.
         """
@@ -719,7 +814,8 @@ class AvatarCreator(AvatarConfParser):
             # items
             try:
                 available_objs = self._object_per_cat[cat][:]
-                available_objs.append(None)
+                if empty_cats:
+                    available_objs.append(None)
                 choice = random.choice(available_objs)
                 if choice:
                     random_item_names.append(choice.name())
@@ -727,6 +823,10 @@ class AvatarCreator(AvatarConfParser):
                 log_msg = "Category {} doesn't contain any items".format(cat)
                 logger.debug(log_msg)
                 continue
+
+        if not self._sel_env:
+            choice_env = random.choice(self.list_all_available_environments())
+            random_item_names.append(choice_env)
 
         rc = self.obj_select(random_item_names, clear_existing=False)
 
@@ -743,7 +843,14 @@ class AvatarCreator(AvatarConfParser):
         return self.selected_items()
 
     def selected_items(self):
-        return self._sel_obj.keys()
+        """ Returns a list of the items that have been selected
+        :returns: A list of the selected items
+        """
+        ret = self._sel_obj.keys()
+        # if there is an env selected, append it to the list to be returned
+        if self._sel_env:
+            ret.append(self._sel_env.name())
+        return ret
 
     def create_avatar(self, save_to='', circ_assets=True, save_background=True):
         """ Create the finished image and (optionally) save it to file.

@@ -56,11 +56,14 @@ class CharacterCreator(Gtk.EventBox):
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
 
-    def get_image_path(self):
+    def get_image_path(self, avatar_only=False):
         containing_dir = os.path.join(os.path.expanduser('~'), "avatar-content")
         if not os.path.exists(containing_dir):
             os.mkdir(containing_dir)
-        return os.path.join(containing_dir, "avatar.png")
+        if avatar_only:
+            return os.path.join(containing_dir, "avatar.png")
+        else:
+            return os.path.join(containing_dir, "avatar_inc_env.png")
 
     def _create_random_button(self):
         random_button = Gtk.Button()
@@ -80,7 +83,7 @@ class CharacterCreator(Gtk.EventBox):
 
     def _randomise_avatar_wrapper(self, button):
         self.avatar_cr.randomise_all_items()
-        self.avatar_cr.create_avatar(self.get_image_path())
+        self.avatar_cr.create_avatar(self.get_image_path(avatar_only=True))
         self.show_all()
 
     def _hide_pop_ups(self, widget=None, event=None):
@@ -104,7 +107,7 @@ class CharacterCreator(Gtk.EventBox):
         if not rc:
             logger.error('Error processing the list {}'.format(list_of_objs))
         else:
-            self.avatar_cr.create_avatar(self.get_image_path())
+            self.avatar_cr.create_avatar(self.get_image_path(avatar_only=True))
             self._imgbox.set_image(self.get_image_path())
 
     # Public function so external buttons can access it.
@@ -114,7 +117,7 @@ class CharacterCreator(Gtk.EventBox):
         '''
         logger.debug("Saving data")
 
-        saved_path = self.get_image_path()
+        saved_path = self.get_image_path(avatar_only=True)
         logger.debug("Saving generated avatar image to {}".format(saved_path))
         # Save the image as hard copy somewhere safe, store it,
         # and also lists which assets in kano-profile

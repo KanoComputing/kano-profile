@@ -16,7 +16,7 @@ from kano_profile.apps import save_app_state_variable
 from kano_profile_gui.paths import media_dir
 # from kano_avatar.paths import CSS_PATH
 from kano.gtk3.apply_styles import apply_styling_to_screen
-from kano_profile_gui.components.cursor import attach_cursor_events
+from kano.gtk3.cursor import attach_cursor_events
 
 
 # We make the inheritance from Gtk.EventBox so we can grab the events

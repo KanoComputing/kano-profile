@@ -12,7 +12,7 @@ from kano.utils import get_home, read_json
 from kano_profile.apps import get_app_list, get_app_data_dir, launch_project
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
-import kano_profile_gui.components.cursor as cursor
+import kano.gtk3.cursor as cursor
 import kano_profile_gui.components.icons as icons
 from .paths import image_dir
 from kdesk.hourglass import hourglass_start, hourglass_end

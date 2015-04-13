@@ -16,6 +16,7 @@ from kano_profile.apps import save_app_state_variable
 from kano_profile_gui.paths import media_dir
 # from kano_avatar.paths import CSS_PATH
 from kano.gtk3.apply_styles import apply_styling_to_screen
+from kano_profile_gui.components.cursor import attach_cursor_events
 
 
 # We make the inheritance from Gtk.EventBox so we can grab the events
@@ -73,6 +74,7 @@ class CharacterCreator(Gtk.EventBox):
         random_button.get_style_context().add_class("random_button")
         random_button.set_size_request(width, height)
         random_button.connect("clicked", self._randomise_avatar_wrapper)
+        attach_cursor_events(random_button)
 
         return random_button
 
@@ -81,7 +83,7 @@ class CharacterCreator(Gtk.EventBox):
         self.avatar_cr.create_avatar(self.get_image_path())
         self.show_all()
 
-    def _hide_pop_ups(self, widget, event):
+    def _hide_pop_ups(self, widget=None, event=None):
         self._menu.hide_pop_ups()
         self._menu.unselect_categories()
 

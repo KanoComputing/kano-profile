@@ -8,6 +8,7 @@
 
 from gi.repository import Gtk, GObject
 from kano_avatar_gui.SelectMenu import SelectMenu
+from kano.gtk3.cursor import attach_cursor_events
 
 
 class CategoryMenu(SelectMenu):
@@ -115,6 +116,7 @@ class CategoryMenu(SelectMenu):
         path = self._parser.get_inactive_category_icon(identifier)
         icon = Gtk.Image.new_from_file(path)
         button.add(icon)
+        attach_cursor_events(button)
 
         button.get_style_context().add_class("category_item")
         button.connect("clicked", self._selected_image_cb,

@@ -310,10 +310,12 @@ GtkSwitch.slider {
 .info_heading {
     font: Bariol Bold 20;
     color: @title_color;
+    padding: 40px 30px 15px 30px;
 }
 .info_paragraph {
     font: Bariol 14;
     color: @subheading_color;
+    padding: 10px 30px;
 }
 
 .info_box {

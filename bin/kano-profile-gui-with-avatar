@@ -29,8 +29,8 @@ class MainWindow(ApplicationWindow):
 
     def __init__(self):
         # Create main window
-        self.height = 570
-        self.width = 690
+        self.height = 750
+        self.width = 920
         ApplicationWindow.__init__(self, 'Kano Profile', self.width,
                                    self.height)
 

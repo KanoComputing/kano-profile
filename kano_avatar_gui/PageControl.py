@@ -10,6 +10,7 @@
 from gi.repository import Gtk, GObject
 from kano.gtk3.buttons import OrangeButton
 from kano.logging import logger
+from kano.gtk3.cursor import attach_cursor_events
 
 
 class PageControl(Gtk.Alignment):
@@ -32,9 +33,11 @@ class PageControl(Gtk.Alignment):
         # the NEXT button goes grey.
         self._back_button = OrangeButton("BACK")
         self._back_button.connect("clicked", self.back_button_clicked)
+        attach_cursor_events(self._back_button)
 
         self._next_button = OrangeButton("NEXT")
         self._next_button.connect("clicked", self.next_button_clicked)
+        attach_cursor_events(self._next_button)
 
         self.dot_box = Gtk.Box()
         self._create_progress_dots(self.selected)

@@ -105,6 +105,9 @@ class BadgeGrid(Gtk.Grid):
         self._win = win
         self._item_width = 230
         self._item_height = 180
+        self.row = 3
+        self.column = 4
+        self.number_on_page = self.row * self.column
 
         self._split_info_into_pages()
         # self._pack_badge_grid(1)
@@ -113,7 +116,9 @@ class BadgeGrid(Gtk.Grid):
         return len(self.page_list)
 
     def _split_info_into_pages(self):
-        self.badge_list, self.page_list = create_item_page_list()
+        self.badge_list, self.page_list = create_item_page_list(
+            self.row, self.column
+        )
 
     def _pack_badge_grid(self, page_number):
         badge_list = self.page_list[page_number]
@@ -143,7 +148,7 @@ class BadgeGrid(Gtk.Grid):
             )
 
             # This is the index of the badge in the ordered array of all the badges
-            index = page_number * 6 + i
+            index = page_number * self.number_on_page + i
             badge_widget.connect("clicked", self._go_to_badge_info_wrapper, index)
             self.attach(badge_widget, column, row, 1, 1)
 
@@ -194,6 +199,10 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _show_badge(self):
         background = Gtk.EventBox()
 
+        # Make it the same size as the badge grid
+        background.set_size_request(920, 540)
+
+        # TODO: this is repeated.  Fix this.
         locked = not self.item_info['achieved']
         if locked:
             color = Gdk.RGBA()
@@ -212,20 +221,27 @@ class BadgeInfoScreen(Gtk.EventBox):
         filename = get_image_path_at_size(
             category, name, locked, self.image_width, self.image_height
         )
+
         self.image = Gtk.Image.new_from_file(filename)
         info_box = self._create_info_box()
 
         hbox = Gtk.Box()
         hbox.pack_start(self.image, False, False, 0)
-        hbox.pack_start(info_box, False, False, 0)
+        hbox.pack_start(info_box, False, False, 20)
 
         background.add(hbox)
 
         self._win.pack_in_main_content(background)
 
     def _create_info_box(self):
+        info_width = 380
+
         info_box = Gtk.EventBox()
+        info_box.set_size_request(info_width, -1)
         info_box.get_style_context().add_class("info_box")
+        info_box.set_margin_top(60)
+        info_box.set_margin_bottom(100)
+        info_box.set_margin_right(50)
 
         title = self.item_info["title"]
         locked = not self.item_info['achieved']
@@ -242,13 +258,11 @@ class BadgeInfoScreen(Gtk.EventBox):
         description_label.get_style_context().add_class("info_paragraph")
         description_label.set_line_wrap(True)
         description_label.set_line_wrap_mode(Pango.WrapMode.WORD)
+        description_label.set_size_request(info_width, -1)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        vbox.pack_start(title_label, False, False, 10)
-        vbox.pack_start(description_label, False, False, 10)
-        vbox.set_margin_left(20)
-        vbox.set_margin_left(20)
-        vbox.set_margin_top(20)
+        vbox.pack_start(title_label, False, False, 0)
+        vbox.pack_start(description_label, False, False, 0)
 
         info_box.add(vbox)
 

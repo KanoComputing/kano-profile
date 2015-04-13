@@ -10,6 +10,7 @@ from gi.repository import Gtk, GObject
 from kano_profile.badges import calculate_badges
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.logging import logger
+from kano.gtk3.cursor import attach_cursor_events
 
 
 class PopUpItemMenu(SelectMenu):
@@ -47,7 +48,6 @@ class PopUpItemMenu(SelectMenu):
         vbox.pack_start(self._grid, False, False, 10)
 
         self._pack_items()
-
         self.show_all()
 
     def _create_top_bar(self):
@@ -115,9 +115,13 @@ class PopUpItemMenu(SelectMenu):
         button.get_style_context().add_class('pop_up_menu_item')
         button.add(fixed)
         button.connect('clicked', self._on_clicking_item, obj_name)
-        button.connect('enter-notify-event', self._add_selected_appearence, obj_name)
-        button.connect('leave-notify-event', self._remove_selected_appearence, obj_name)
+        button.connect('enter-notify-event', self._add_selected_appearence,
+                       obj_name)
+        button.connect('leave-notify-event', self._remove_selected_appearence,
+                       obj_name)
         button.set_size_request(self.button_width, self.button_height)
+        attach_cursor_events(button)
+
         return button
 
     def _add_selected_appearence(self, button, event, identifier):

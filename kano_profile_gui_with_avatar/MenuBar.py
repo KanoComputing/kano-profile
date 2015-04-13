@@ -8,7 +8,7 @@
 # This controls the styling of the (pretend) top window bar.
 
 from gi.repository import Gtk, GObject
-from kano_profile_gui.components.cursor import attach_cursor_events
+from kano.gtk3.cursor import attach_cursor_events
 from kano_world.functions import get_mixed_username
 from kano_profile.badges import calculate_kano_level
 from kano_profile_gui.components.icons import get_ui_icon
@@ -82,6 +82,7 @@ class MenuBar(Gtk.EventBox):
         box.add(cross_icon)
         close_button.get_style_context().add_class("close_button")
         close_button.connect("clicked", self.close_window)
+        attach_cursor_events(close_button)
 
         return close_button
 
@@ -117,6 +118,7 @@ class HomeButton(Gtk.Button):
 
     def __init__(self):
         Gtk.Button.__init__(self)
+        attach_cursor_events(self)
         self.get_style_context().add_class('home_button')
 
         # Get the username or kano world name

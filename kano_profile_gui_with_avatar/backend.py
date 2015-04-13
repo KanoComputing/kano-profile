@@ -30,14 +30,11 @@ def filter_item_info():
     return badge_list
 
 
-def create_item_page_list():
+def create_item_page_list(max_row, max_column):
     '''Split the badges into pages
     so we can show the correct number.
     '''
     badge_list = filter_item_info()
-
-    max_row = 2
-    max_column = 3
     number_on_a_page = max_row * max_column
 
     number_of_badges = 0

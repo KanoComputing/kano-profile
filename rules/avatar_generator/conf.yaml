@@ -57,7 +57,7 @@ environments:
       preview_img: environments/dojo.png
 
     - display_name: Forest
-      img_name: forest.png
+      img_name: jungle.png
       preview_img: environments/forest.png
 
     - display_name: Minecraft

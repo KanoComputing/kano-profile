@@ -136,8 +136,8 @@ class MenuButton(Gtk.Button):
         vbox.add(label)
 
         # Makes it easy to access exactly where the icon is
-        self.icon_box = Gtk.Box()
-        vbox.pack_start(self.icon_box, False, False, 0)
+        self.icon_align = Gtk.Alignment(xscale=0, xalign=0.5)
+        vbox.pack_start(self.icon_align, False, False, 0)
 
         self.get_style_context().add_class("menu_bar_button")
         self.set_property("always-show-image", True)
@@ -148,19 +148,19 @@ class MenuButton(Gtk.Button):
 
     def set_selected_style(self):
 
-        if not self.icon_box.get_children():
+        if not self.icon_align.get_children():
             # get filename from paths
             self.get_style_context().add_class("selected")
             icon = get_ui_icon("dropdown_arrow")
-            self.icon_box.add(icon)
+            self.icon_align.add(icon)
             self.show_all()
 
-        self.icon_box.show()
+        self.icon_align.show()
 
     def remove_selected_style(self):
         self.get_style_context().remove_class("selected")
-        for child in self.icon_box.get_children():
-            self.icon_box.remove(child)
+        for child in self.icon_align.get_children():
+            self.icon_align.remove(child)
 
     def set_selected_wrapper(self, widget, args):
         self.set_selected_style()

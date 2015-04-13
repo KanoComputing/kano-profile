@@ -249,7 +249,7 @@ class BadgeInfoScreen(Gtk.EventBox):
     # TODO: move this outside, or get this from inheritance,
     # as this is the same height across all screens
     def _create_bottom_navigation_bar(self):
-        bottom_bar = Gtk.Box()
+        bottom_bar = Gtk.ButtonBox()
 
         self.prev_button = self._create_navigation_button("previous")
         self.grid_button = self._create_navigation_button("middle")
@@ -257,7 +257,7 @@ class BadgeInfoScreen(Gtk.EventBox):
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)
         bottom_bar.pack_start(self.grid_button, False, False, 0)
-        bottom_bar.pack_start(self.next_button, False, False, 0)
+        bottom_bar.pack_end(self.next_button, False, False, 0)
 
         self._win.pack_in_bottom_bar(bottom_bar)
 
@@ -301,6 +301,7 @@ class BadgeInfoScreen(Gtk.EventBox):
                 title = "BACK TO GRID"
                 label = Gtk.Label(title)
                 button.connect("clicked", self._go_to_grid)
+                button.get_style_context().add_class("middle")
 
             icon = Gtk.Image.new_from_file(icon_path)
             hbox.pack_start(icon, False, False, 0)

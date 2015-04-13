@@ -332,6 +332,10 @@ GtkSwitch.slider {
     padding: 0px 40px 35px 0px;
 }
 
+.navigation_button.middle {
+    padding: 0px 0px 35px 0px;
+}
+
 .navigation_button GtkLabel {
     color: @menu_bar_active;
     font: Bariol bold 13;

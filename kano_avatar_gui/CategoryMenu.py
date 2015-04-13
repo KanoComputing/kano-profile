@@ -78,8 +78,7 @@ class CategoryMenu(SelectMenu):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(vbox)
 
-        categories = self._parser.list_available_categories()
-        for category in categories:
+        for category in self.categories:
             button = self._create_button(category)
             self._add_option_to_items(category, 'button', button)
 

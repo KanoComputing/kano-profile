@@ -200,7 +200,7 @@ class BadgeInfoScreen(Gtk.EventBox):
         background = Gtk.EventBox()
 
         # Make it the same size as the badge grid
-        background.set_size_request(920, 540)
+        # background.set_size_request(920, 540)
 
         # TODO: this is repeated.  Fix this.
         locked = not self.item_info['achieved']
@@ -227,21 +227,21 @@ class BadgeInfoScreen(Gtk.EventBox):
 
         hbox = Gtk.Box()
         hbox.pack_start(self.image, False, False, 0)
-        hbox.pack_start(info_box, False, False, 20)
+        hbox.pack_start(info_box, False, False, 0)
 
         background.add(hbox)
 
         self._win.pack_in_main_content(background)
 
     def _create_info_box(self):
-        info_width = 380
+        info_width = 200
 
         info_box = Gtk.EventBox()
         info_box.set_size_request(info_width, -1)
         info_box.get_style_context().add_class("info_box")
-        info_box.set_margin_top(60)
+        info_box.set_margin_top(20)
         info_box.set_margin_bottom(100)
-        info_box.set_margin_right(50)
+        info_box.set_margin_right(20)
 
         title = self.item_info["title"]
         locked = not self.item_info['achieved']
@@ -272,6 +272,7 @@ class BadgeInfoScreen(Gtk.EventBox):
     # as this is the same height across all screens
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.ButtonBox()
+        # bottom_bar.set_size_request(-1, 80)
 
         self.prev_button = self._create_navigation_button("previous")
         self.grid_button = self._create_navigation_button("middle")
@@ -280,6 +281,8 @@ class BadgeInfoScreen(Gtk.EventBox):
         bottom_bar.pack_start(self.prev_button, False, False, 0)
         bottom_bar.pack_start(self.grid_button, False, False, 0)
         bottom_bar.pack_end(self.next_button, False, False, 0)
+        # TODO: move this to CSS
+        bottom_bar.set_margin_top(25)
 
         self._win.pack_in_bottom_bar(bottom_bar)
 

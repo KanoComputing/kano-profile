@@ -8,10 +8,10 @@
 # This controls the styling of the (pretend) top window bar.
 
 from gi.repository import Gtk, GObject
-import kano_profile_gui.components.icons as icons
 from kano_profile_gui.components.cursor import attach_cursor_events
 from kano_world.functions import get_mixed_username
 from kano_profile.badges import calculate_kano_level
+from kano_profile_gui.components.icons import get_ui_icon
 
 
 # In case we change the colour of the menu bar, we have a background
@@ -27,12 +27,12 @@ class MenuBar(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
         self.get_style_context().add_class('menu_bar_container')
 
-        self.height = 96
+        self.height = 110
         self.width = win_width
+        self.set_size_request(self.width, self.height)
 
-        self.set_size_request(win_width, self.height)
-        self.hbox = Gtk.Box()
-        self.add(self.hbox)
+        hbox = Gtk.Box()
+        self.add(hbox)
 
         self.buttons = {}
         self.selected = None
@@ -40,30 +40,49 @@ class MenuBar(Gtk.EventBox):
         # Home button
         self.home_button = HomeButton()
         self.home_button.connect("clicked", self.emit_home_signal)
+        hbox.pack_start(self.home_button, False, False, 0)
 
-        name_array = ['CHARACTER', 'BADGES', 'SAVES']
+        close_button = self._create_cross_button()
+        hbox.pack_end(close_button, False, False, 0)
+        close_button.connect("clicked", self.close_window)
+
+        name_array = ['SAVES', 'BADGES', 'CHARACTER']
         for name in name_array:
             button = MenuButton(name)
-            button.connect("clicked", self.emit_menu_signal)
-            self.hbox.pack_start(button, False, False, 0)
+            button.connect("clicked", self.emit_menu_signal, name)
+            hbox.pack_end(button, False, False, 0)
+
+            label = self._create_divider_label()
+
+            # avoiding packing the last element
+            if name != "CHARACTER":
+                hbox.pack_end(label, False, False, 0)
+
             attach_cursor_events(button)
 
+    def _create_divider_label(self):
+        label = Gtk.Label("|")
+        label.get_style_context().add_class("button_divider")
+        return label
+
+    def _create_cross_button(self):
         # Close button
-        cross = icons.set_from_name("cross")
-        cross.set_padding(5, 5)
-        self.close_button = Gtk.Button()
-        self.close_button.set_image(cross)
-        self.close_button.get_style_context().add_class("menu_bar_button")
-        self.close_button.get_style_context().add_class("close_button")
-        self.close_button.connect("clicked", self.close_window)
+        cross_icon = get_ui_icon("cross")
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # cross_icon.set_padding(5, 5)
+        close_button = Gtk.Button()
+        close_button.add(box)
+        box.add(cross_icon)
+        close_button.get_style_context().add_class("close_button")
+        close_button.connect("clicked", self.close_window)
 
-        # TODO: pack the close button in the container
+        return close_button
 
-    def emit_menu_signal(self, widget):
-        self.emit("menu-button-clicked", self.name)
+    def emit_menu_signal(self, widget, name):
+        self.emit("menu-button-clicked", name)
 
     def emit_home_signal(self, widget):
-        self.emit('home-button-clicked', 'character')
+        self.emit('home-button-clicked', 'CHARACTER')
 
     def get_selected_button(self):
         return self.selected
@@ -79,6 +98,7 @@ class HomeButton(Gtk.Button):
 
     def __init__(self):
         Gtk.Button.__init__(self)
+        self.get_style_context().add_class('home_button')
 
         # Get the username or kano world name
         # Get username here
@@ -87,11 +107,11 @@ class HomeButton(Gtk.Button):
             username = username[:12] + '...'
 
         # Info about the different settings
-        title_label = Gtk.Label(username)
+        title_label = Gtk.Label(username, xalign=0)
         title_label.get_style_context().add_class("home_button_name")
 
         level, progress = calculate_kano_level()
-        level_label = Gtk.Label("Level {}".format(level))
+        level_label = Gtk.Label("Level {}".format(level), xalign=0)
         level_label.get_style_context().add_class("home_button_level")
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -115,4 +135,35 @@ class MenuButton(Gtk.Button):
         label = Gtk.Label(name)
         vbox.add(label)
 
-        self.get_style_context().add_class("menu_button")
+        # Makes it easy to access exactly where the icon is
+        self.icon_box = Gtk.Box()
+        vbox.pack_start(self.icon_box, False, False, 0)
+
+        self.get_style_context().add_class("menu_bar_button")
+        self.set_property("always-show-image", True)
+
+        # select on hover over
+        self.connect("enter-notify-event", self.set_selected_wrapper)
+        self.connect("leave-notify-event", self.remove_selected_wrapper)
+
+    def set_selected_style(self):
+
+        if not self.icon_box.get_children():
+            # get filename from paths
+            self.get_style_context().add_class("selected")
+            icon = get_ui_icon("dropdown_arrow")
+            self.icon_box.add(icon)
+            self.show_all()
+
+        self.icon_box.show()
+
+    def remove_selected_style(self):
+        self.get_style_context().remove_class("selected")
+        for child in self.icon_box.get_children():
+            self.icon_box.remove(child)
+
+    def set_selected_wrapper(self, widget, args):
+        self.set_selected_style()
+
+    def remove_selected_wrapper(self, widget, args):
+        self.remove_selected_style()

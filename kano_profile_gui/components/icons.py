@@ -10,6 +10,7 @@
 import os
 from gi.repository import Gtk, Gdk, GdkPixbuf
 import kano_profile_gui.components.constants as constants
+from kano_profile_gui.paths import media_dir
 
 
 # name = ["badges", "challenges", "swag", "next_arrow", "padlock", "locked", "unlocked", "cross"]
@@ -21,12 +22,6 @@ def set_from_name(name):
 MEDIA_LOCS = ['../media', '/usr/share/kano-profile/media']
 APP_ICON_SIZE = 68
 
-def media_dir():
-    for path in MEDIA_LOCS:
-        if os.path.exists(path):
-            return os.path.abspath(path) + '/'
-    
-    raise Exception('Media directory not found.')
 
 def get_app_icon(loc, size=APP_ICON_SIZE):
     try:
@@ -35,8 +30,9 @@ def get_app_icon(loc, size=APP_ICON_SIZE):
     except:
         icon = Gtk.Image.new_from_icon_name(loc, -1)
         icon.set_pixel_size(size)
-    
+
     return icon
+
 
 def get_ui_icon(name):
     if name == 'green_arrow':
@@ -57,13 +53,14 @@ def get_ui_icon(name):
         icon_number = 7
     else:
         raise Exception('Unknown icon name ' + name)
-    
-    src_loc = media_dir() + 'images/icons/systemsetup-icons.png'
+
+    src_loc = os.path.join(media_dir, 'images/icons/systemsetup-icons.png')
     pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(src_loc, 192, 24)
-    
+
     subpixbuf = pixbuf.new_subpixbuf(24 * icon_number, 0, 24, 24)
     buf = subpixbuf.add_alpha(True, 255, 255, 255)
-    
-    icon = Gtk.Image(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
+
+    # icon = Gtk.Image(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
+    icon = Gtk.Image()
     icon.set_from_pixbuf(buf)
     return icon

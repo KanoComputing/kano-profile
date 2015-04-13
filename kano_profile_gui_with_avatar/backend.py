@@ -7,18 +7,15 @@ def filter_item_info():
     '''This is a dictionary of the names and the corresponding
     bg colour, badge description etc.
     '''
-    badge_dictionary = calculate_badges()
+    badge_dictionary = calculate_badges()['badges']
     badge_list = []
 
-    for category, cat_dict in badge_dictionary:
-        for name, item_dict in cat_dict:
-            properties = item_dict.keys()
-            if 'order' in properties:
-                item_dict['order'] = properties['order']
-            else:
+    for category, cat_dict in badge_dictionary.iteritems():
+        for filename, item_dict in cat_dict.iteritems():
+            if 'order' not in item_dict:
                 item_dict['order'] = 0
             item_dict['category'] = category
-            item_dict['name'] = name
+            item_dict['name'] = filename
 
             badge_list.append(item_dict)
 
@@ -43,25 +40,28 @@ def create_item_page_list():
     page = 0
 
     page_list = []
+    page_list.append([])
 
     for badge_info in badge_list:
+
         badge_info["row"] = row
         badge_info['column'] = column
-        badge_info['page'] = page - 1
+        badge_info['page'] = page
 
-        page_list[page - 1].append(badge_info)
+        page_list[page].append(badge_info)
 
-        row += 1
+        column += 1
         number_of_badges += 1
 
         if number_of_badges == number_on_a_page:
             page += 1
             row = 0
             column = 0
-            page_list[page - 1] = []
+            number_of_badges = 0
+            page_list.append([])
 
-        if row == max_row:
-            row = 0
-            column += 1
+        if column == max_column:
+            column = 0
+            row += 1
 
     return (badge_list, page_list)

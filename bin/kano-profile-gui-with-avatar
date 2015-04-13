@@ -21,7 +21,6 @@ from kano_profile_gui.paths import media_dir
 
 from kano.gtk3.apply_styles import apply_colours_to_screen, apply_styling_to_screen
 from kano.gtk3.application_window import ApplicationWindow
-from kano_avatar_gui.CharacterCreator import CharacterCreator
 from kano_profile_gui_with_avatar.MenuBar import MenuBar
 
 
@@ -39,9 +38,6 @@ class MainWindow(ApplicationWindow):
 
         self.css_path = os.path.join(media_dir, "CSS/style.css")
         apply_styling_to_screen(self.css_path)
-        # the reason this is here is so we only initialise this once.
-        # We don't want to initalise it everytime you go into the character creator
-        self._char_creator = CharacterCreator(randomise=True)
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         # Remove decoration
@@ -59,6 +55,7 @@ class MainWindow(ApplicationWindow):
 
         # style white
         self._bottom_bar = Gtk.EventBox()
+        self._bottom_bar.set_size_request(-1, 70)
 
         self._vbox.pack_start(self._menu_bar, False, False, 0)
         self._vbox.pack_start(self._main_content, False, False, 0)

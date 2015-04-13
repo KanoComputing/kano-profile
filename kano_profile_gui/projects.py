@@ -126,7 +126,7 @@ class ProjectItem():
         logger.info('share: {} {}'.format(app, filename))
 
 
-def activate(_win, _box):
+def activate(_win):
     project_list = ProjectList()
 
     header_box = Gtk.Box()
@@ -141,6 +141,10 @@ def activate(_win, _box):
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.add_with_viewport(project_list.background)
     scrolledwindow.set_size_request(734, 404)
+
+    _box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     _box.pack_start(header_box, False, False, 0)
     _box.pack_start(scrolledwindow, False, False, 0)
+
+    _win.pack_in_main_content(_box)
     _win.show_all()

@@ -10,6 +10,7 @@ import re
 from gi.repository import Gtk, GObject
 from kano.gtk3.buttons import OrangeButton
 from kano.gtk3.apply_styles import apply_styling_to_screen
+from kano_avatar.paths import CSS_PATH
 
 
 def is_email(email):
@@ -33,7 +34,6 @@ class DataTemplate(Gtk.EventBox):
         self.height = 400
         self.set_size_request(self.width, self.height)
 
-        CSS_PATH = "/home/kano/kano-profile/media/CSS/avatar_generator.css"
         apply_styling_to_screen(CSS_PATH)
         self.get_style_context().add_class("data_screen")
 

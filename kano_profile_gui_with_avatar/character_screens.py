@@ -74,6 +74,7 @@ class CharacterEdit(Gtk.EventBox):
 
         discard_changes_button = OrangeButton("DISCARD")
         discard_changes_button.connect("clicked", self.discard)
+        discard_changes_button.set_margin_left(100)
         empty_label = Gtk.Label("")
 
         button_box = Gtk.ButtonBox()

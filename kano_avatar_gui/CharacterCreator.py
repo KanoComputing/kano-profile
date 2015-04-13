@@ -13,6 +13,9 @@ from kano_avatar_gui.Menu import Menu
 from kano_avatar_gui.ImageView import ImageView
 from kano.logging import logger
 from kano_profile.apps import save_app_state_variable
+from kano_profile_gui.paths import media_dir
+# from kano_avatar.paths import CSS_PATH
+from kano.gtk3.apply_styles import apply_styling_to_screen
 
 
 # We make the inheritance from Gtk.EventBox so we can grab the events
@@ -22,6 +25,11 @@ class CharacterCreator(Gtk.EventBox):
 
     def __init__(self, randomise=False):
         Gtk.EventBox.__init__(self)
+
+        # when called from kano-profile, we don't get this styling
+        # otherwise
+        css_path = os.path.join(media_dir, "CSS/avatar_generator.css")
+        apply_styling_to_screen(css_path)
 
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
@@ -59,7 +67,8 @@ class CharacterCreator(Gtk.EventBox):
         height = 60
 
         # TODO: get file path for the random icon
-        icon = Gtk.Image()
+        icon_path = os.path.join(media_dir, "images/icons/random.png")
+        icon = Gtk.Image.new_from_file(icon_path)
         random_button.add(icon)
         random_button.get_style_context().add_class("random_button")
         random_button.set_size_request(width, height)

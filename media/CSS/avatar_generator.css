@@ -1,3 +1,11 @@
+/*
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# This controls the kano-avatar styling
+
+*/
 
 * {
     -GtkCheckButton-indicator-size: 40
@@ -70,4 +78,17 @@
 
 .data_screen {
     background: #ffffff;
+}
+
+.random_button {
+    background: #ffffff;
+    border-radius: 3px;
+    /* Doesn't seem to work */
+    /*box-shadow: 0px 0px 3px alpha(#000000, 0.5);*/
+    border-width: 3px;
+    border-color: #dddddd;
+}
+
+.random_button:hover {
+    border-color: #dddddd;
 }

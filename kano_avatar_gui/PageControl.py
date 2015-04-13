@@ -5,6 +5,7 @@
 # Copyright (C) 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+# This creates a widget that you can use to control the screen
 
 from gi.repository import Gtk, GObject
 from kano.gtk3.buttons import OrangeButton

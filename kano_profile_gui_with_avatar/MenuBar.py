@@ -40,6 +40,7 @@ class MenuBar(Gtk.EventBox):
         # Home button
         self.home_button = HomeButton()
         self.home_button.connect("clicked", self.emit_home_signal)
+        self.home_button.connect("clicked", self.set_selected_wrapper, "CHARACTER")
         hbox.pack_start(self.home_button, False, False, 0)
 
         close_button = self._create_cross_button()

@@ -923,6 +923,7 @@ class AvatarCreator(AvatarConfParser):
             return False
 
         self._sel_char.load_image()
+        self._sel_env.load_image()
         return True
 
     def save_image(self, file_name):

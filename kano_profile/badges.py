@@ -53,9 +53,13 @@ def calculate_xp():
 
 
 def calculate_kano_level():
+    '''
+    Calculates the current level of the user
+    Returns: level, percentage and current xp
+    '''
     level_rules = read_json(levels_file)
     if not level_rules:
-        return -1, 0
+        return -1, 0, 0
 
     max_level = max([int(n) for n in level_rules.keys()])
     xp_now = calculate_xp()
@@ -72,7 +76,7 @@ def calculate_kano_level():
             reached_level = level
             reached_percentage = (xp_now - level_min) / (level_max + 1 - level_min)
 
-            return int(reached_level), reached_percentage
+            return int(reached_level), reached_percentage, xp_now
 
 
 def calculate_min_current_max_xp():
@@ -209,12 +213,12 @@ def load_online_badges():
 def save_app_state_with_dialog(app_name, data):
     logger.debug('save_app_state_with_dialog {}'.format(app_name))
 
-    old_level, _ = calculate_kano_level()
+    old_level, _, old_xp = calculate_kano_level()
     old_badges = calculate_badges()
 
     save_app_state(app_name, data)
 
-    new_level, _ = calculate_kano_level()
+    new_level, _, new_xp = calculate_kano_level()
     new_badges = calculate_badges()
 
     # TODO: This function needs a bit of refactoring in the future
@@ -234,12 +238,13 @@ def save_app_state_with_dialog(app_name, data):
                 for item, rules in items.iteritems():
                     new_items_str += ' {}:{}:{}'.format(category, subcat, item)
 
+    # Check if XP has changed, if so play sound in the backgrond
+    if old_xp != new_xp:
+        sound_cmd = 'aplay /usr/share/kano-media/sounds/kano_xp.wav 2>&1 >/dev/null &'
+        run_bg(sound_cmd)
+
     if not new_level_str and not new_items_str:
         return
-    else:
-        # New level detected, play sound in the background and do notifications.
-        sound_cmd='aplay /usr/share/kano-media/sounds/kano_xp.wav 2>&1 >/dev/null &'
-        run_bg(cmd)
 
     if is_gui():
         with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:

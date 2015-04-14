@@ -98,7 +98,7 @@ def calculate_min_current_max_xp():
             return level_min, xp_now, level_max
 
 
-def calculate_badges(DEBUG_MODE=False):
+def calculate_badges():
     # helper function to calculate operations
     def do_calculate(select_push_back):
         for category, subcats in all_rules.iteritems():
@@ -108,14 +108,7 @@ def calculate_badges(DEBUG_MODE=False):
                     if target_pushback != select_push_back:
                         continue
 
-                    if DEBUG_MODE:
-                        print category, subcat, item
-
                     if rules['operation'] == 'each_greater':
-
-                        if DEBUG_MODE:
-                            print '\teach_greater'
-
                         achieved = True
                         for target in rules['targets']:
                             app = target[0]
@@ -124,17 +117,9 @@ def calculate_badges(DEBUG_MODE=False):
 
                             if variable == 'level' and value == -1:
                                 value = app_profiles[app]['max_level']
-
-                            if DEBUG_MODE:
-                                print '\t', app, variable, value
-
                             if app not in app_list or variable not in app_state[app]:
                                 achieved = False
                                 break
-
-                            if DEBUG_MODE:
-                                print '\tvalue: {}'.format(app_state[app][variable])
-
                             achieved &= app_state[app][variable] >= value
 
                     elif rules['operation'] == 'sum_greater':
@@ -151,12 +136,7 @@ def calculate_badges(DEBUG_MODE=False):
                         achieved = sum >= rules['value']
 
                     else:
-                        if DEBUG_MODE:
-                            print 'unknown uperation {}'.format(rules['operation'])
                         continue
-
-                    if DEBUG_MODE:
-                        print '\tachieved: {}'.format(achieved)
 
                     calculated_badges.setdefault(category, dict()).setdefault(subcat, dict())[item] \
                         = all_rules[category][subcat][item]
@@ -224,6 +204,7 @@ def load_online_badges():
         online_badges = json.load(f)
 
     return online_badges
+
 
 def save_app_state_with_dialog(app_name, data):
     logger.debug('save_app_state_with_dialog {}'.format(app_name))

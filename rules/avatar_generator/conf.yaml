@@ -5,42 +5,66 @@ categories:
       z_index: 2
       disp_icon: face.png
       selected_border: active-itemBorder.png
+      category_id: c8922230bfaf40da94bdcceaae0e7821
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - cat_name: Skins
       z_index: 1
       disp_icon: skintone.png
       selected_border: active-item.png
+      category_id: ca46bd4cb983449eab4ab43eec13db84
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - cat_name: Belts
       z_index: 3
       disp_icon: belt.png
       selected_border: active-item.png
+      category_id : 07fcf015755b46ba9cf0223d4b3864d1
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - cat_name: Hair
       z_index: 2
       disp_icon: hair.png
       selected_border: active-item.png
+      category_id : 3494acec8bcf43c7846a5c76e8226f0a
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - cat_name: Suits
       z_index: 2
       disp_icon: suit.png
       selected_border: active-item.png
+      category_id : f1e3cb13f40243f0aeac2c11bf6df6aa
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - cat_name: Stickers
       z_index: 3
       disp_icon: stickers.png
       selected_border: active-itemBorder.png
+      category_id : 80f6071b781f42e696d6030d4067eaff
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
 special_categories:
     environments:
         active_icon: environment.png
         inactive_icon: environment.png
         selected_border: active-environment.png
+        category_id : a867e7f833a546b1b1efe485bf1e11e6
+        display_order: 7
+        date_created: 2015-04-14T10:54:14Z
 
     characters:
         active_icon: character.png
         inactive_icon: character.png
         selected_border: active-character.png
+        category_id : d1f12f322c1a41ca9fd35519f56ef6cc
+        display_order: 1000
+        date_created: 2015-04-14T10:54:14Z
 
 characters:
 
@@ -49,36 +73,60 @@ characters:
       preview_img: judoka_base.png
       crop_x: 0
       crop_y: 0
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
+      character_id: 6df0b2d7985b4381a28c4dd4e24818b7
 
 environments:
 
     - display_name: Dojo
       img_name: dojo.png
       preview_img: environments/dojo.png
+      item_id: 46fa7e1c0bdc43e18114b8e452776b07
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Forest
       img_name: jungle.png
       preview_img: environments/forest.png
+      item_id: 7d03fd052c0f4093aa50ae06cdb11b58
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Minecraft
       img_name: minecraft.png
       preview_img: environments/minecraft.png
+      item_id: 7c35cae9155d4d1994efbd7e59d6607b
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Pong
       img_name: arcade_hall.png
       preview_img: environments/pong.png
+      item_id: cea1a14c48154a5299855a9c0c23eb72
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Space
       img_name: space.png
       preview_img: environments/space.png
+      item_id: c7a632a21c5042478abbfb8eb49321ed
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Stage
       img_name: concert_hall.png
       preview_img: environments/stage.png
+      item_id: a82f8768e82a44d38973a90424503530
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Scene_unavailable
       img_name: video_set.png
       preview_img: environments/scene_unavailable.png
+      item_id: 621df9b6faa1442184985591f1704c17
+      display_order: 7
+      date_created: 2015-04-14T10:54:14Z
 
 objects:
 #   - display_name:
@@ -96,6 +144,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: 86faf385cf3b4315a88d38aa2a473e77
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Skin_Chocolate
       img_name: skins/skin-2.png
@@ -103,6 +154,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: d1f51cd83bc64743bd1de7d520096421
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Skin_Dark_Brown
       img_name: skins/skin-3.png
@@ -110,6 +164,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: e352fef8efff451786eb3aeaec33dca0
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Skin_Warm
       img_name: skins/skin-5.png
@@ -117,6 +174,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: f5eb1d295f5b490e89c31d77b32481fa
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Skin_Brown
       img_name: skins/skin-6.png
@@ -124,6 +184,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: b2172424a7bc4f96889ae775355e7b95
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Skin_Pale
       img_name: skins/skin-4.png
@@ -131,6 +194,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: 6f51e55a563b45aeb95f0c0fc587bf56
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Skin_Orange
       img_name: skins/skin-7.png
@@ -138,6 +204,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Skins
+      item_id: 2e55ea9b9d334e2d83874899aea71c35
+      display_order: 7
+      date_created: 2015-04-14T10:54:14Z
 
 # Hair colours
     - display_name: Hair_Dark_Blond
@@ -146,6 +215,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Hair
+      item_id: 90043b2cc81f4998b4ffb4b857172dc9
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Hair_Light_Blond
       img_name: hair/hair-lightblonde.png
@@ -153,6 +225,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Hair
+      item_id: 86acd89c882647709ed30c483ae40c43
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Hair_Dark_Brown
       img_name: hair/hair-darkbrown.png
@@ -160,6 +235,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Hair
+      item_id: 861aff8be4a64af7968eabb073dc5ce5
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Hair_Brown
       img_name: hair/hair-brown.png
@@ -167,6 +245,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Hair
+      item_id: dbd71a0c9a854941bdc6f09e6a87f34f
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Hair_Ginger
       img_name: hair/hair-ginger.png
@@ -174,6 +255,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Hair
+      item_id: 7406583f7deb4b8694e20efcc7a0b59c
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Hair_Black
       img_name: hair/hair-dark.png
@@ -181,6 +265,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Hair
+      item_id: 948648f3c72c458a8826fb29be3f02b5
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
 # Stickers
     - display_name: Sticker_Code
@@ -189,6 +276,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Stickers
+      item_id: 7987cabf9d704960a5d4270d80d5f012
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Sticker_Atom
       img_name: stickers/sticker-atom.png
@@ -196,6 +286,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Stickers
+      item_id: e7752169b859436f8e620508f82c8229
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Sticker_Note
       img_name: stickers/sticker-note.png
@@ -203,6 +296,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Stickers
+      item_id: a2694ba41aab41e9af19ff119edef87b
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Sticker_Bolt
       img_name: stickers/sticker-bolt.png
@@ -210,6 +306,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Stickers
+      item_id: 56d84ec944f54767ad0dd1eb3306148f
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Sticker_Star
       img_name: stickers/sticker-star.png
@@ -217,6 +316,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Stickers
+      item_id: 85e21471a08440db9e10e90ed212c6f2
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Sticker_Heart
       img_name: stickers/sticker-heart.png
@@ -224,6 +326,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Stickers
+      item_id: c92dc9022a704d6eac3ef60feabf7892
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
 # Suits
     - display_name: Suit_Pink
@@ -232,6 +337,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: 28062f8ea13e45b792870ec7a7a3b935
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Cyan
       img_name: suits/suit-cyan.png
@@ -239,6 +347,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: 8bef71905f6b4de297658f4ad5b661b0
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Green
       img_name: suits/suit-green.png
@@ -246,6 +357,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: 94c8ab0aee14401da30457cd89ad6d99
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Dark
       img_name: suits/suit-dark.png
@@ -253,6 +367,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: b7bce4689f054d218dc432f5d7676adb
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_White
       img_name: suits/suit-white.png
@@ -260,6 +377,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: b7aaead231aa43c5a1109ad54d9cd14c
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Yellow
       img_name: suits/suit-yellow.png
@@ -267,6 +387,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: 6d8f31b729bd48ba91c820ccd2e6094a
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Orange
       img_name: suits/suit-orange.png
@@ -274,6 +397,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: 8089ea6ad17c42178a6ee6941a9c49fd
+      display_order: 7
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Purple
       img_name: suits/suit-purple.png
@@ -281,6 +407,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: e53413fb26b94918b9a52e88f2b13545
+      display_order: 8
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Red
       img_name: suits/suit-red.png
@@ -288,6 +417,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: 7ac5a7e7d3004ad485e2c6d33bbe4dd4
+      display_order: 9
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Suit_Blue
       img_name: suits/suit-blue.png
@@ -295,6 +427,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Suits
+      item_id: bdd87f53c97049f2a2f0ed880ff33623
+      display_order: 10
+      date_created: 2015-04-14T10:54:14Z
 
 # Faces
     - display_name: Face_Grumpy
@@ -303,6 +438,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: bc1fe4f26e91436d9be0ff4475e21ddc
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_SuperHappy
       img_name: faces/face-superhappy.png
@@ -310,6 +448,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: 8f2be4214e714b759cc9ebcfcc5d33a4
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_Scared
       img_name: faces/face-scared.png
@@ -317,6 +458,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: ea129d0762454efb8e0ec863d96b5464
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_Cutey
       img_name: faces/face-cutey.png
@@ -324,6 +468,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: 8f5f7a34a2b545079ed57611bad07a7b
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_Wiggly
       img_name: faces/face-wiggley.png
@@ -331,6 +478,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: 2266ee43395343f1a4b971334a585afd
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_Cheeky
       img_name: faces/face-cheeky.png
@@ -338,6 +488,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: 636a2bdebd2144b2aa29125006c4442a
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_Ouh
       img_name: faces/face-ouh.png
@@ -345,6 +498,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: 48293703bd2446b1976f6f1ab5771794
+      display_order: 7
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Face_Happy
       img_name: faces/face-happy.png
@@ -352,6 +508,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Faces
+      item_id: 002a634f16da4386b16b7c3e7c3cbed2
+      display_order: 8
+      date_created: 2015-04-14T10:54:14Z
 
 # Belt
     - display_name: Belt_Yellow
@@ -360,6 +519,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: f113ebf4f70e4601828ab575120a2996
+      display_order: 1
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Black
       img_name: belts/belt-dark.png
@@ -367,6 +529,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: d567c06d281142629cbac08287a4c69b
+      display_order: 2
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Orange
       img_name: belts/belt-orange.png
@@ -374,6 +539,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: 6f2cd5ceedba4012a412b50423e7ddb8
+      display_order: 3
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Red
       img_name: belts/belt-red.png
@@ -381,6 +549,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: b79cd94c116049f69ab0585f75a36b43
+      display_order: 4
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Belt_Purple
       img_name: belts/belt-purple.png
@@ -388,6 +559,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: c9615473592c45b08101e4d6cc1c64a5
+      display_order: 5
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Blue
       img_name: belts/belt-blue.png
@@ -395,6 +569,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: 2f126a4fa90d446786169e9518eaba77
+      display_order: 6
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Green
       img_name: belts/belt-green.png
@@ -402,6 +579,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: a88082fd24984d9d8a72d0764b79e03e
+      display_order: 7
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Pink
       img_name: belts/belt-pinkish.png
@@ -409,6 +589,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: ecf1c105ee62484eb28e203085e88b24
+      display_order: 8
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Cyan
       img_name: belts/belt-cyan.png
@@ -416,6 +599,9 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: 794234818f424f449d157dc1fd01cb74
+      display_order: 9
+      date_created: 2015-04-14T10:54:14Z
 
     - display_name: Belt_Beige
       img_name: belts/belt-beige.png
@@ -423,3 +609,6 @@ objects:
       position_x: 0
       position_y: 0
       category: Belts
+      item_id: 0f7d7f6a2c764ccb96101a7d6f772f1d
+      display_order: 10
+      date_created: 2015-04-14T10:54:14Z

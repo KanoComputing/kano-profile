@@ -206,19 +206,19 @@ class AvatarCharacter():
         return self._img_preview
 
     def get_id(self):
-        """ Provides the unique id for the item
+        """ Provides the unique id for the character
         :returns: unique id as a string
         """
         return self._character_id
 
     def get_date(self):
-        """ Provides the creation date of the item
+        """ Provides the creation date of the character
         :returns: creation date as a string
         """
         return self._date_created
 
     def get_disp_order(self):
-        """ Provides the display order of the item
+        """ Provides the display order of the character
         :returns: display index as an integer
         """
         return self._display_order
@@ -356,19 +356,19 @@ class AvatarEnvironment():
         self._img.save(file_name)
 
     def get_id(self):
-        """ Provides the unique id for the item
+        """ Provides the unique id for the environment
         :returns: unique id as a string
         """
         return self._environment_id
 
     def get_date(self):
-        """ Provides the creation date of the item
+        """ Provides the creation date of the environment
         :returns: creation date as a string
         """
         return self._date_created
 
     def get_disp_order(self):
-        """ Provides the display order of the item
+        """ Provides the display order of the environment
         :returns: display index as an integer
         """
         return self._display_order
@@ -603,7 +603,7 @@ class AvatarConfParser():
         else:
 
             item_inst_sorted = sorted(self._object_per_cat[category],
-                                      key=lambda obj: obj.get_disp_ord())
+                                      key=lambda obj: obj.get_disp_order())
             return [it.name() for it in item_inst_sorted]
 
     def get_avail_objs(self, category):

@@ -16,11 +16,16 @@ from kano.gtk3.cursor import attach_cursor_events
 class PageControl(Gtk.Alignment):
 
     __gsignals__ = {
-        'back-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, (int,)),
-        'next-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, (int,))
+        'back-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, ()),  # (int,)),
+        'next-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, ())  # (int,))
     }
 
-    def __init__(self, num_of_pages=3, selected_page=1):
+    def __init__(self,
+                 num_of_pages=3,
+                 selected_page=1,
+                 back_text="BACK",
+                 next_text="NEXT"):
+
         Gtk.Alignment.__init__(self, xalign=0.5, xscale=0)
         self.num_of_pages = num_of_pages
         self.selected = selected_page
@@ -31,11 +36,11 @@ class PageControl(Gtk.Alignment):
         # The back button has subtly different styling to the next button
         # When the back button is disabled, it goes invisible, while
         # the NEXT button goes grey.
-        self._back_button = OrangeButton("BACK")
+        self._back_button = OrangeButton(back_text)
         self._back_button.connect("clicked", self.back_button_clicked)
         attach_cursor_events(self._back_button)
 
-        self._next_button = OrangeButton("NEXT")
+        self._next_button = OrangeButton(next_text)
         self._next_button.connect("clicked", self.next_button_clicked)
         attach_cursor_events(self._next_button)
 
@@ -50,14 +55,32 @@ class PageControl(Gtk.Alignment):
         if self.selected == self.num_of_pages:
             self._next_button.set_sensitive(False)
 
-        self.connect("next-button-clicked", self.select_dot)
-        self.connect("back-button-clicked", self.select_dot)
+        # self.connect("next-button-clicked", self.select_dot)
+        # self.connect("back-button-clicked", self.select_dot)
+
+    @property
+    def back_button(self):
+        return self._back_button
+
+    @property
+    def next_button(self):
+        return self._next_button
+
+    def disable_buttons(self):
+        self._next_button.set_sensitive(False)
+        self._back_button.set_sensitive(False)
+
+    def enable_next(self):
+        self._next_button.set_sensitive(True)
+
+    def enable_back(self):
+        self._back_button.set_sensitive(True)
 
     def disable_next(self):
         self._next_button.set_sensitive(False)
 
-    def enable_next(self):
-        self._next_button.set_sensitive(True)
+    def disable_back(self):
+        self._back_button.set_sensitive(False)
 
     def set_back_button_text(self, text):
         self._back_button.set_label(text)
@@ -118,6 +141,7 @@ class PageControl(Gtk.Alignment):
         orange_dot.set_size_request(10, 10)
         return orange_dot
 
+    # these functions may not be needed
     def select_dot(self, widget, index):
         '''index is the integers 1 - 3, to represent the page numbers
         '''
@@ -142,9 +166,10 @@ class PageControl(Gtk.Alignment):
     # These give external windows a way of knowing when these buttons have been
     # clicked, without mixing up the classes
     def back_button_clicked(self, widget):
-        self.selected -= 1
-        self.emit('back-button-clicked', self.selected)
+        # Are these needed?
+        # self.selected -= 1
+        self.emit('back-button-clicked')  # , self.selected)
 
     def next_button_clicked(self, widget):
-        self.selected += 1
-        self.emit('next-button-clicked', self.selected)
+        # self.selected += 1
+        self.emit('next-button-clicked')  # , self.selected)

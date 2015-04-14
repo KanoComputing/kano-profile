@@ -31,14 +31,20 @@ class AvatarAccessory():
     _img_preview = ''
     _img_position_x = 0
     _img_position_y = 0
+    _date_created = ''
+    _item_id = ''
+    _display_order = 0
 
     _img = None
 
-    def __init__(self, name, category, file_name, preview_img, x, y):
+    def __init__(self, name, category, file_name, preview_img, x, y, date_created, item_id, display_order):
         self._category = category
         self._name = name
         self._img_position_x = x
         self._img_position_y = y
+        self._date_created = date_created
+        self._item_id = item_id
+        self._display_order = display_order
         # if an absolute path is given use it instead, so that we can
         # override elements
         if os.path.isabs(file_name):
@@ -95,6 +101,24 @@ class AvatarAccessory():
         """
         return self._img_preview
 
+    def get_id(self):
+        """ Provides the unique id for the item
+        :returns: unique id as a string
+        """
+        return self._item_id
+
+    def get_date(self):
+        """ Provides the creation date of the item
+        :returns: creation date as a string
+        """
+        return self._date_created
+
+    def get_disp_order(self):
+        """ Provides the display order of the item
+        :returns: display index as an integer
+        """
+        return self._display_order
+
 
 class AvatarCharacter():
     """ Class for handling an Avatar character. It holds the image data for
@@ -106,8 +130,11 @@ class AvatarCharacter():
     _img = None
     _crop_x = 0
     _crop_y = 0
+    _display_order = 0
+    _date_created = ''
+    _character_id = ''
 
-    def __init__(self, name, file_name, preview_img, x, y):
+    def __init__(self, name, file_name, preview_img, x, y, date_created, char_id, display_order):
         self._name = name
         if os.path.isabs(file_name):
             self._asset_fname = file_name
@@ -120,6 +147,9 @@ class AvatarCharacter():
             self._img_preview = os.path.join(CHARACTER_DIR, preview_img)
         self._crop_x = x
         self._crop_y = y
+        self._display_order = display_order
+        self._character_id = char_id
+        self._date_created = date_created
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -175,6 +205,24 @@ class AvatarCharacter():
         """
         return self._img_preview
 
+    def get_id(self):
+        """ Provides the unique id for the character
+        :returns: unique id as a string
+        """
+        return self._character_id
+
+    def get_date(self):
+        """ Provides the creation date of the character
+        :returns: creation date as a string
+        """
+        return self._date_created
+
+    def get_disp_order(self):
+        """ Provides the display order of the character
+        :returns: display index as an integer
+        """
+        return self._display_order
+
 
 class AvatarEnvironment():
     """ Class for handling the environment (background) for a character. As
@@ -185,9 +233,15 @@ class AvatarEnvironment():
     _asset_fname = ''
     _img_preview = ''
     _img = None
+    _date_created = ''
+    _environment_id = ''
+    _display_order = 0
 
-    def __init__(self, name, file_name, preview_img):
+    def __init__(self, name, file_name, preview_img, date_created, env_id, display_order):
         self._name = name
+        self._date_created = date_created
+        self._display_order = display_order
+        self._environment_id = env_id
         if os.path.isabs(file_name):
             self._asset_fname = file_name
         else:
@@ -301,6 +355,24 @@ class AvatarEnvironment():
         """
         self._img.save(file_name)
 
+    def get_id(self):
+        """ Provides the unique id for the environment
+        :returns: unique id as a string
+        """
+        return self._environment_id
+
+    def get_date(self):
+        """ Provides the creation date of the environment
+        :returns: creation date as a string
+        """
+        return self._date_created
+
+    def get_disp_order(self):
+        """ Provides the display order of the environment
+        :returns: display index as an integer
+        """
+        return self._display_order
+
 
 class AvatarConfParser():
     """ A class to take on the important task of parsing the configuration
@@ -311,6 +383,7 @@ class AvatarConfParser():
     _categories = set()
     _zindex = set()
     _cat_to_z_index = {}
+    _cat_to_disp_order = {}
     _zindex_to_categories = {}
     _objects = {}
     _characters = {}
@@ -328,6 +401,7 @@ class AvatarConfParser():
     env_label = 'environments'
     spec_cat_label = 'special_categories'
     special_category_labels = [char_label, env_label]
+    _special_cat_to_disp_order = {}
 
     def __init__(self, conf_data):
         if self.categories_label not in conf_data:
@@ -375,6 +449,7 @@ class AvatarConfParser():
             selected_border_file = os.path.join(PREVIEW_ICONS,
                                                 cat['selected_border'])
             self._selected_borders[cat['cat_name']] = selected_border_file
+            self._cat_to_disp_order[cat['cat_name']] = cat['display_order']
 
         # Save both the unique set of z-indexes and categories
         self._categories = set(self._cat_to_z_index.keys())
@@ -395,12 +470,18 @@ class AvatarConfParser():
             new_prev_img = obj['preview_img']
             new_x = obj['position_x']
             new_y = obj['position_y']
+            new_disp_ord = obj['display_order']
+            new_date = obj['date_created']
+            new_id = obj['item_id']
             new_obj = AvatarAccessory(new_name,
                                       new_cat,
                                       new_fname,
                                       new_prev_img,
                                       new_x,
-                                      new_y)
+                                      new_y,
+                                      new_date,
+                                      new_id,
+                                      new_disp_ord)
             self._objects[new_name] = new_obj
             if new_cat not in self._object_per_cat:
                 self._object_per_cat[new_cat] = []
@@ -416,7 +497,17 @@ class AvatarConfParser():
             new_prev_img = obj['preview_img']
             x = obj['crop_x']
             y = obj['crop_y']
-            new_obj = AvatarCharacter(new_name, new_fname, new_prev_img, x, y)
+            new_disp_ord = obj['display_order']
+            new_date = obj['date_created']
+            new_id = obj['character_id']
+            new_obj = AvatarCharacter(new_name,
+                                      new_fname,
+                                      new_prev_img,
+                                      x,
+                                      y,
+                                      new_date,
+                                      new_id,
+                                      new_disp_ord)
             self._characters[new_name] = new_obj
 
     def _populate_environment_structures(self, conf_data):
@@ -427,7 +518,15 @@ class AvatarConfParser():
             new_name = env['display_name']
             new_fname = env['img_name']
             new_prev_img = env['preview_img']
-            new_env = AvatarEnvironment(new_name, new_fname, new_prev_img)
+            new_id = env['item_id']
+            new_disp_ord = env['display_order']
+            new_date = env['date_created']
+            new_env = AvatarEnvironment(new_name,
+                                        new_fname,
+                                        new_prev_img,
+                                        new_date,
+                                        new_id,
+                                        new_disp_ord)
             self._environments[new_name] = new_env
 
     def _populate_special_category_structures(self, conf_data):
@@ -456,6 +555,7 @@ class AvatarConfParser():
             self._active_special_category_icons[special_cat] = active_icon_file
             self._inactive_special_category_icons[special_cat] = inactive_icon_file
             self._border_special_cat[special_cat] = border_icon_file
+            self._special_cat_to_disp_order[special_cat] = special_cat_data[special_cat]['display_order']
 
     def get_zindex(self, category):
         if category not in self._cat_to_z_index:
@@ -479,7 +579,9 @@ class AvatarConfParser():
         """ Provides a list of available environments
         :returns: list of environments (list of strings)
         """
-        return [k for k in self._environments.keys()]
+        env_inst_ord = sorted(self._environments.itervalues(),
+                              key=lambda env: env.get_disp_order())
+        return [k.name() for k in env_inst_ord]
 
     def list_all_available_objs(self):
         """ Provides a list of available objects
@@ -499,7 +601,10 @@ class AvatarConfParser():
             logger.warn(err_msg)
             return None
         else:
-            return [it.name() for it in self._object_per_cat[category]]
+
+            item_inst_sorted = sorted(self._object_per_cat[category],
+                                      key=lambda obj: obj.get_disp_order())
+            return [it.name() for it in item_inst_sorted]
 
     def get_avail_objs(self, category):
         """ Provides a list of available objects for the category provided
@@ -516,7 +621,9 @@ class AvatarConfParser():
         sensitive)
         :returns: list of categories (list of strings)
         """
-        return [k for k in self._categories]
+        reg_cats_ord = sorted(self._cat_to_disp_order.iteritems(),
+                              key=lambda k: k[1])
+        return [k[0] for k in reg_cats_ord]
 
     def _list_available_special_categories(self):
         """ Provides a list of available special categories (not case
@@ -525,6 +632,7 @@ class AvatarConfParser():
         """
         # TODO Temporary hardcoding
         # return self.special_category_labels
+        # At the time it is only one so it is sorted
         return [self.env_label]
 
     def list_available_categories(self):
@@ -923,6 +1031,7 @@ class AvatarCreator(AvatarConfParser):
             return False
 
         self._sel_char.load_image()
+        self._sel_env.load_image()
         return True
 
     def save_image(self, file_name):

@@ -8,15 +8,14 @@
 # Creates pixbufs that we can use to make images from.  Uses a strip of icons, each 24px by 24px.
 
 import os
-from gi.repository import Gtk, Gdk, GdkPixbuf
-import kano_profile_gui.components.constants as constants
+from gi.repository import Gtk, GdkPixbuf
 from kano_profile_gui.paths import media_dir
 
 
 # name = ["badges", "challenges", "swag", "next_arrow", "padlock", "locked", "unlocked", "cross"]
 def set_from_name(name):
     image = Gtk.Image()
-    image.set_from_file(constants.media + "/images/icons/" + name + ".png")
+    image.set_from_file(media_dir + "/images/icons/" + name + ".png")
     return image
 
 MEDIA_LOCS = ['../media', '/usr/share/kano-profile/media']
@@ -60,7 +59,6 @@ def get_ui_icon(name):
     subpixbuf = pixbuf.new_subpixbuf(24 * icon_number, 0, 24, 24)
     buf = subpixbuf.add_alpha(True, 255, 255, 255)
 
-    # icon = Gtk.Image(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
     icon = Gtk.Image()
     icon.set_from_pixbuf(buf)
     return icon

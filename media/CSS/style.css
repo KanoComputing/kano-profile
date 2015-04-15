@@ -83,18 +83,6 @@ GtkWindow GtkBox {
     font: Bariol 13;
 }
 
-/* Environment / avatar toggle buttons */
-.header_button {
-    background: #ffffff;
-    border-radius: 0;
-}
-.header_button {
-    background: transparent;
-}
-.header_button:active {
-    background: @kano_green;
-}
-
 /* The bar at the top that mimics the window bar */
 .menu_bar_container {
     background: @menu_bar_background;
@@ -132,27 +120,6 @@ GtkWindow GtkBox {
 .emptybox {
     background: #e7e7e7;
     color: #e7e7e7;
-}
-
-/* Home stats shown on home screen */
-.stat_title {
-    color: @subheading_color;
-    font: Bariol 13;
-}
-.stat_number {
-    color: @title_color;
-    font: Bariol Bold 18;
-}
-
-/* The title that appears at the top of Badges, Environments, etc */
-.heading {
-    font: Bariol Bold 13px;
-    color: @title_color;
-}
-
-.heading.active {
-    font: Bariol Bold 13px;
-    color: #ffffff;
 }
 
 /* Writing next to padlocks indicating how many badges/environemnts are locked/unlocked */
@@ -200,29 +167,6 @@ GtkWindow GtkBox {
     background: @inactive_writing;
 }
 
-/* Project UI screen */
-/* Shows title of the projects that you've achived */
-.project_item_title {
-    font: Bariol Bold 18;
-    color: @active_writing;
-}
-.project_item_time {
-    font: Bariol Bold 14;
-    color: @inactive_writing;
-}
-.project_list_background {
-    background: #f0f0f0
-}
-.project_make_button {
-    background: @kano_orange;
-    padding: 0px 20px 0px 20px;
-    font: Bariol Bold 15;
-    border-radius: 3px;
-}
-.project_make_button GtkLabel {
-    color: #ffffff;
-}
-
 /*** GtkSwitch styling ****/
 
 /* Custom slider CSS */
@@ -256,6 +200,32 @@ GtkSwitch.slider {
     /*padding: 6px;*/
 }
 
+
+/* Project UI screen */
+.project_item_title {
+    font: Bariol Bold 18;
+    color: @active_writing;
+}
+.project_item_time {
+    font: Bariol Bold 14;
+    color: @inactive_writing;
+}
+.project_list_background {
+    background: #f0f0f0
+}
+.project_make_button {
+    background: @kano_orange;
+    padding: 0px 20px 0px 20px;
+    font: Bariol Bold 15;
+    border-radius: 3px;
+}
+.project_make_button GtkLabel {
+    color: #ffffff;
+}
+
+/* All below are used in the refactor of kano_profile_gui */
+/* Info screen oof individual badges/environments/avatars */
+
 /* Styling specific to the grid shown on the swag/badges screen */
 
 .hover_box {
@@ -266,47 +236,8 @@ GtkSwitch.slider {
     font: Bariol bold 13px;
     color: #ffffff;
 }
-.equipped_box {
-    background: @kano_green;
-}
 
-.equipped_box GtkLabel {
-    font: Bariol bold 13px;
-    color: #ffffff;
-}
-
-.equipped_box2 {
-    border-radius: 5px;
-    background: linear-gradient(to top, @kano_green);
-}
-
-.equipped_box2 GtkLabel {
-    font: Bariol bold 11px;
-    color: #ffffff;
-}
-
-.equipped_border {
-    border-radius: 7px;
-    background: linear-gradient(to top, #ffffff);
-}
-
-/* Info screen equipped box */
-.big_equipped_box {
-    border-radius: 8px;
-    background: linear-gradient(to top, @kano_green)
-}
-
-.big_equipped_box GtkLabel {
-    font: Bariol bold 14px;
-    color: #ffffff;
-}
-/* Info screen equipped border */
-.big_equipped_border {
-    border-radius: 10px;
-    background: linear-gradient(to top, #ffffff);
-}
-
-/* Info screen oof individual badges/environments/avatars */
+/* Used on the badge info screen */
 .info_heading {
     font: Bariol Bold 20;
     color: @title_color;

@@ -107,7 +107,7 @@ class Page2(Gtk.Box):
 
         # Get character image.  This hardcoding needs to be removed
         filename = os.path.join(os.path.expanduser('~'),
-                                "avatar-content/avatar_inc_env.png")
+                                "avatar-content/avatar_inc_env_page2.png")
         image_viewer.set_image(filename)
 
         self.data_screen = GetData2()
@@ -167,7 +167,7 @@ class Page3(Gtk.Box):
 
         # Get character image
         filename = os.path.join(os.path.expanduser('~'),
-                                "avatar-content/avatar_inc_env.png")
+                                "avatar-content/avatar_inc_env_page2.png")
         image_viewer.set_image(filename)
 
         self.data_screen = GetData3()

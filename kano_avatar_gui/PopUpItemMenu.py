@@ -102,10 +102,10 @@ class PopUpItemMenu(SelectMenu):
             # For now, we assume that none of the menus with
             # need more than 2 columns
 
-        self._grid.set_margin_top(6)
-        self._grid.set_margin_bottom(6)
-        self._grid.set_margin_left(6)
-        self._grid.set_margin_right(6)
+        self._grid.set_margin_top(0)
+        self._grid.set_margin_bottom(2)
+        self._grid.set_margin_left(13)
+        self._grid.set_margin_right(2)
 
     def _create_button(self, obj_name):
         '''This places the image onto a Gtk.Fixed so we can overlay a padlock
@@ -138,10 +138,10 @@ class PopUpItemMenu(SelectMenu):
         attach_cursor_events(button)
 
         # set a margin all the way around it
-        button.set_margin_right(6)
-        button.set_margin_left(6)
-        button.set_margin_bottom(6)
-        button.set_margin_top(6)
+        button.set_margin_right(3)
+        button.set_margin_left(3)
+        button.set_margin_bottom(3)
+        button.set_margin_top(3)
 
         return button
 

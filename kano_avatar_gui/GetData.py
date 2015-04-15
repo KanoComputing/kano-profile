@@ -243,7 +243,6 @@ class GetData3(DataTemplate):
             self.password_entry
         ]
 
-        # Terms and conditions check button
         self.checkbutton = Gtk.CheckButton()
         self.checkbutton.get_style_context().add_class("get_data_checkbutton")
         self.checkbutton.set_size_request(50, 50)
@@ -251,8 +250,8 @@ class GetData3(DataTemplate):
         self.checkbutton.set_margin_left(30)
 
         self.tc_button = OrangeButton("I agree to the terms and\nconditions")
-        # tc_button.connect("clicked", self.show_terms_and_conditions)
         self.tc_button.connect("clicked", self._emit_t_and_c_signal)
+
         hbox = Gtk.Box()
         hbox.pack_start(self.checkbutton, False, False, 0)
         hbox.pack_start(self.tc_button, False, False, 0)

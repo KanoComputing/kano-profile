@@ -227,9 +227,11 @@ class Page3(Gtk.Box):
 
             def done():
                 self.win.get_window().set_cursor(None)
-                kdialog = KanoDialog("finished!",
-                                     "yay!",
-                                     parent_window=self.win)
+                kdialog = KanoDialog(
+                    "Profile created!",
+                    "Now you can share stuff, build your character, and connect with friends.",
+                    parent_window=self.win
+                )
                 kdialog.run()
                 self.data_screen.enable_all()
                 self.page_control.enable_buttons()

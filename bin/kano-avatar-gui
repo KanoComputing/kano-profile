@@ -66,7 +66,9 @@ class Page1(Gtk.Box):
         self.pack_end(page_control, False, False, 0)
         page_control.connect("next-button-clicked", self.next_page)
 
-        # hide popups
+        self.win.show_all()
+
+        # This hides the pop up category when using the back button
         self.win.char_creator._hide_pop_ups()
 
     def next_page(self, widget):

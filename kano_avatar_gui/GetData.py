@@ -250,12 +250,12 @@ class GetData3(DataTemplate):
         self.checkbutton.connect('toggled', self.widgets_full)
         self.checkbutton.set_margin_left(30)
 
-        tc_button = OrangeButton("I agree to the terms and\nconditions")
+        self.tc_button = OrangeButton("I agree to the terms and\nconditions")
         # tc_button.connect("clicked", self.show_terms_and_conditions)
-        tc_button.connect("clicked", self._emit_t_and_c_signal)
+        self.tc_button.connect("clicked", self._emit_t_and_c_signal)
         hbox = Gtk.Box()
         hbox.pack_start(self.checkbutton, False, False, 0)
-        hbox.pack_start(tc_button, False, False, 0)
+        hbox.pack_start(self.tc_button, False, False, 0)
 
         box.pack_start(self.username_entry, False, False, 10)
         box.pack_start(self.password_entry, False, False, 10)
@@ -269,11 +269,13 @@ class GetData3(DataTemplate):
         self.checkbutton.set_sensitive(False)
         self.username_entry.set_sensitive(False)
         self.password_entry.set_sensitive(False)
+        self.tc_button.set_sensitive(False)
 
     def enable_all(self):
         self.checkbutton.set_sensitive(True)
         self.username_entry.set_sensitive(True)
         self.password_entry.set_sensitive(True)
+        self.tc_button.set_sensitive(True)
 
     def _emit_t_and_c_signal(self, widget):
         self.emit("terms-and-conditions")

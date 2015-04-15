@@ -61,6 +61,11 @@
     color: #555555;
 }
 
+.get_data_label:insensitive {
+    background: #ffffff;
+    color: #bbbbbb;
+}
+
 .get_data_entry {
     color: #555555;
     border-color: #bbbbbb;
@@ -69,6 +74,11 @@
     border-radius: 3px;
     /*padding: 15px; */
     font: Bariol bold 16;
+}
+
+.get_data_entry:insensitive {
+    background: #ffffff;
+    color: #dddddd;
 }
 
 .get_data_checkbutton {

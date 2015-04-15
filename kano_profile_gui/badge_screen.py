@@ -96,7 +96,6 @@ class BadgeScreen(Gtk.EventBox):
         # It's probably a lot more complicated than this as we need to
         # style the buttons and have a hover over label
         button.add(image)
-        # check button order?
 
 
 class BadgeGrid(Gtk.Grid):

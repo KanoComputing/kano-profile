@@ -67,8 +67,6 @@ class Page1(Gtk.Box):
         page_control = self.win.create_page_control(1, "", "NEXT")
         self.pack_end(page_control, False, False, 0)
         page_control.connect("next-button-clicked", self.next_page)
-        css_path = os.path.join(media_dir, "CSS/style.css")
-        apply_styling_to_screen(css_path)
 
         self.win.show_all()
 
@@ -286,7 +284,8 @@ class MainWindow(ApplicationWindow):
 
         # Styling
         # take the function from kano-toolset
-        apply_styling_to_screen(CSS_PATH)
+        css_path = os.path.join(media_dir, "CSS/style.css")
+        apply_styling_to_screen(css_path)
 
         # Load up the character creator at the start
         self._char_creator = CharacterCreator()

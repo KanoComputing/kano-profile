@@ -129,21 +129,11 @@ class ProjectItem():
 def activate(_win):
     project_list = ProjectList()
 
-    header_box = Gtk.Box()
-    header_box.set_size_request(734, 44)
-    header_halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
-    header_halign.set_size_request(734, 44)
-    header_title_label = Gtk.Label("CHALLENGES")
-    header_title_label.get_style_context().add_class("heading")
-    header_halign.add(header_title_label)
-    header_box.add(header_halign)
-
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.add_with_viewport(project_list.background)
     scrolledwindow.set_size_request(734, 404)
 
     _box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    _box.pack_start(header_box, False, False, 0)
     _box.pack_start(scrolledwindow, False, False, 0)
 
     _win.pack_in_main_content(_box)

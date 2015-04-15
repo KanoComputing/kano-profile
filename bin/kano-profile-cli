@@ -106,7 +106,7 @@ elif sys.argv[1] == 'get_stats':
 
     print 'xp: {}'.format(calculate_xp())
 
-    level, progress = calculate_kano_level()
+    level, progress, _ = calculate_kano_level()
     progress = int(progress * 100)
     print 'level: {}'.format(level)
     print 'progress: {}'.format(progress)

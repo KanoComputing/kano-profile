@@ -28,7 +28,7 @@ class HomeButton():
         if len(self.username) > 12:
             self.username = self.username[:12] + '...'
 
-        level, progress = calculate_kano_level()
+        level, progress, _ = calculate_kano_level()
 
         # Info about the different settings
         self.title = Gtk.Label(self.username)
@@ -59,7 +59,7 @@ class HomeButton():
         self.button.add(self.container)
 
     def update(self):
-        level, progress = calculate_kano_level()
+        level, progress, _ = calculate_kano_level()
         self.description.set_text("Level " + str(level))
         self.set_image()
 

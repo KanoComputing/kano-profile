@@ -93,7 +93,12 @@ class AvatarAccessory():
             self.load_image()
         # position of upper left corner
         position = (self._img_position_x, self._img_position_y)
-        img.paste(self._img, position, self._img)
+        # We need to remove the transparency of the item so that it doesn't
+        # cause a gap on the base layer.
+        r, g, b, a = self._img.split()
+        item = Image.merge('RGB', (r, g, b))
+        transp_mask = Image.merge("L", (a,))
+        img.paste(item, position, transp_mask)
 
     def get_preview_img(self):
         """ Provides the item's preview image path

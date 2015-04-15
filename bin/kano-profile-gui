@@ -15,14 +15,14 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_profile_gui_with_avatar.character_screens import CharacterDisplay
-from kano_profile_gui_with_avatar.badge_screen import BadgeScreen
+from kano_profile_gui.character_screens import CharacterDisplay
+from kano_profile_gui.badge_screen import BadgeScreen
 from kano_profile_gui.paths import media_dir
 from kano_profile_gui import projects
 
 from kano.gtk3.apply_styles import apply_colours_to_screen, apply_styling_to_screen
 from kano.gtk3.application_window import ApplicationWindow
-from kano_profile_gui_with_avatar.MenuBar import MenuBar
+from kano_profile_gui.MenuBar import MenuBar
 
 
 class MainWindow(ApplicationWindow):

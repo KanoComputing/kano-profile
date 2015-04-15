@@ -9,6 +9,7 @@
 import os
 import sys
 import threading
+import datetime
 
 from gi.repository import Gtk, Gdk, GObject
 
@@ -29,16 +30,13 @@ from kano.utils import run_bg
 
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.heading import Heading
-from kano.gtk3.apply_styles import apply_colours_to_screen, apply_styling_to_screen
+from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano.gtk3.kano_dialog import KanoDialog
 
 from kano_avatar_gui.PageControl import PageControl
 from kano_avatar_gui.CharacterCreator import CharacterCreator
 from kano_avatar_gui.ImageView import ImageView
 from kano_avatar_gui.GetData import GetData2, GetData3
-from kano_avatar.paths import CSS_PATH
-
-import time
 
 try:
     from kano_profile.tracker import Tracker
@@ -74,6 +72,7 @@ class Page1(Gtk.Box):
         self.win.char_creator._hide_pop_ups()
 
     def next_page(self, widget):
+        self.win.char_creator.save()
 
         # Go to page 2
         self.win.remove_main_widget()
@@ -81,10 +80,6 @@ class Page1(Gtk.Box):
 
         page = Page2(self.win)
         self.win.set_main_widget(page)
-
-    def save_avatar_assets(self, widget, character):
-        self.win.char_creator.save()
-        self.win.page_control.disconnect(self.save_avatar_assets)
 
 
 # Get emails and birthday data from user
@@ -221,44 +216,77 @@ class Page3(Gtk.Box):
         self.win.get_window().set_cursor(watch_cursor)
 
         def lengthy_process():
-            self.register()
+            (title, description, return_value) = self.register_user()
 
             def done():
                 self.win.get_window().set_cursor(None)
                 kdialog = KanoDialog(
                     "Profile created!",
-                    "Now you can share stuff, build your character, and connect with friends.",
+                    "Now you can share stuff, build your character, "
+                    "and connect with friends.",
                     parent_window=self.win
                 )
                 kdialog.run()
-                self.data_screen.enable_all()
-                self.page_control.enable_buttons()
 
-            GObject.idle_add(done)
+                if return_value == 0:
+                    Gtk.main_quit()
+                else:
+                    self.data_screen.enable_all()
+                    self.page_control.enable_buttons()
+
+            GObject.idle_add(done, title, description, return_value)
 
         thread = threading.Thread(target=lengthy_process)
         thread.start()
 
-    def register(self):
+    def register_user(self):
+        if not is_internet():
+            title = "You don't have internet!"
+            description = "Connect to WiFi and try again."
+            return_value = 0
+        else:
+            email = self.win.data["email"]
 
-        # TODO: put registration function here
-        email = self.win.data["email"]
-        guardian_email = self.win.data["guardian_email"]
-        username = self.win.data["username"]
-        password = self.win.data["password"]
-        date_year = self.win.data["year"]
-        date_month = self.win.data["month"]
-        date_day = self.win.data["day"]
+            # use this in update of registration
+            guardian_email = self.win.data["guardian_email"]
+            username = self.win.data["username"]
+            password = self.win.data["password"]
+            date_year = self.win.data["year"]
+            date_month = self.win.data["month"]
+            date_day = self.win.data["day"]
 
-        print "email = {}".format(email)
-        print "guardian_email = {}".format(guardian_email)
-        print "username = {}".format(username)
-        print "password = {}".format(password)
-        print "date_year = {}".format(date_year)
-        print "date_month = {}".format(date_month)
-        print "date_day = {}".format(date_day)
+            logger.info('trying to register user')
 
-        time.sleep(3)
+            success, text = register_(email, username, password,
+                                      date_year, date_month, date_day)
+
+            if not success:
+                logger.info('problem with registration: {}'.format(text))
+                title = "Houston, we have a problem"
+                description = str(text)
+                return_value = 0
+
+            else:
+                logger.info('registration successful')
+
+                bday_date = str(datetime.date(date_year, date_month, date_day))
+                save_profile_variable('birthdate', bday_date)
+
+                # saving hardware info and initial Kano version
+                save_hardware_info()
+                save_kano_version()
+
+                # running kano-sync after registration
+                logger.info('running kano-sync after successful registration')
+                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+                run_bg(cmd)
+
+                title = "Profile created!"
+                description = ("Now you can share stuff, build your character, "
+                               "and connect with friends.")
+                return_value = 1
+
+        return (title, description, return_value)
 
 
 class MainWindow(ApplicationWindow):
@@ -288,17 +316,14 @@ class MainWindow(ApplicationWindow):
         apply_styling_to_screen(css_path)
 
         # Load up the character creator at the start
-        self._char_creator = CharacterCreator()
+        self.char_creator = CharacterCreator()
 
         self._show_page(start_page)
-        self._char_creator._hide_pop_ups()
-
-    @property
-    def char_creator(self):
-        return self._char_creator
+        self.char_creator._hide_pop_ups()
 
     def _show_page(self, page_number):
         self._page_classes[page_number](self)
+        self.char_creator._hide_pop_ups()
 
     def set_data(self, data_label, data):
         self._data[data_label] = data

@@ -19,8 +19,9 @@ class CategoryMenu(SelectMenu):
 
     def __init__(self, parser):
 
-        self.item_width = 40
-        self.item_height = 40
+        # for some reason, this is not being obeyed
+        self.item_width = 55
+        self.item_height = 50
 
         self._signal_name = 'category_item_selected'
 

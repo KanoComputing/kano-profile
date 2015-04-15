@@ -35,11 +35,6 @@ class CharacterCreator(Gtk.EventBox):
         self.add(self.fixed)
         self._get_obj_data()
 
-        if randomise:
-            # Create random button
-            random_button = self._create_random_button()
-            self.fixed.put(random_button, 600, 0)
-
         # Check profile information and load up either the created avatar or
         # the default
         self._create_menu()
@@ -52,9 +47,13 @@ class CharacterCreator(Gtk.EventBox):
         self.fixed.put(self._imgbox, 0, 0)
         self.fixed.put(self._menu, 30, 30)
 
+        if randomise:
+            # Create random button
+            random_button = self._create_random_button()
+            self.fixed.put(random_button, 630, 30)
+
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
-        self._hide_pop_ups()
 
     def get_image_path(self, avatar_only=False):
         containing_dir = os.path.join(os.path.expanduser('~'), "avatar-content")
@@ -85,6 +84,7 @@ class CharacterCreator(Gtk.EventBox):
         self.avatar_cr.randomise_all_items()
         self.avatar_cr.create_avatar(self.get_image_path(avatar_only=True))
         self.show_all()
+        self._hide_pop_ups()
 
     def _hide_pop_ups(self, widget=None, event=None):
         self._menu.hide_pop_ups()

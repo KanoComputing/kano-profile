@@ -70,6 +70,10 @@ class PageControl(Gtk.Alignment):
         self._next_button.set_sensitive(False)
         self._back_button.set_sensitive(False)
 
+    def enable_buttons(self):
+        self._next_button.set_sensitive(True)
+        self._back_button.set_sensitive(True)
+
     def enable_next(self):
         self._next_button.set_sensitive(True)
 

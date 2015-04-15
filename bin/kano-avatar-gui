@@ -128,7 +128,6 @@ class Page2(Gtk.Box):
             return
 
         data = self.data_screen.get_data()
-        print "data = {}".format(data)
 
         self.win.data = data
 
@@ -206,7 +205,6 @@ class Page3(Gtk.Box):
         self.page_control.disable_next()
 
     def get_data(self):
-        print self.data_screen.get_data()
         self.win.data.update(self.data_screen.get_data())
 
     def register_handler(self, widget=None, arg=None):
@@ -228,6 +226,7 @@ class Page3(Gtk.Box):
                                      parent_window=self.win)
                 kdialog.run()
                 self.data_screen.enable_all()
+                self.page_control.enable_buttons()
 
             GObject.idle_add(done)
 
@@ -235,7 +234,6 @@ class Page3(Gtk.Box):
         thread.start()
 
     def register(self):
-        print self.win.data
 
         # TODO: put registration function here
         email = self.win.data["email"]

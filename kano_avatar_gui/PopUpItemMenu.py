@@ -11,6 +11,7 @@ from kano_profile.badges import calculate_badges
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.logging import logger
 from kano.gtk3.cursor import attach_cursor_events
+from kano.gtk3.scrolled_window import ScrolledWindow
 
 
 class PopUpItemMenu(SelectMenu):
@@ -44,10 +45,17 @@ class PopUpItemMenu(SelectMenu):
         # Grid which the buttons are packed into
         self._grid = Gtk.Grid()
 
+        # pack the grid into a sw of a specified height
+        sw = ScrolledWindow()
+        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        sw.apply_styling_to_widget()
+        sw.add(self._grid)
+        sw.set_size_request(-1, 290)
+
         # Labels the category
         top_bar = self._create_top_bar()
         vbox.pack_start(top_bar, False, False, 0)
-        vbox.pack_start(self._grid, False, False, 10)
+        vbox.pack_start(sw, False, False, 10)
 
         self._pack_items()
         self.show_all()

@@ -24,9 +24,11 @@ class PopUpItemMenu(SelectMenu):
     def __init__(self, category, avatar_parser):
         logger.debug("Initialising pop up menu with category {}".format(category))
 
-        self.top_bar_height = 60
-        self.button_width = 60
-        self.button_height = 60
+        self.top_bar_height = 50
+
+        # Size of the selected icon
+        self.button_width = 42
+        self.button_height = 42
 
         self._category = category
         self._parser = avatar_parser
@@ -57,7 +59,7 @@ class PopUpItemMenu(SelectMenu):
         label.set_alignment(0, 0.5)
         label.set_margin_left(20)
         top_bar.add(label)
-        top_bar.set_size_request(150, self.top_bar_height)
+        top_bar.set_size_request(-1, self.top_bar_height)
         return top_bar
 
     def _pack_items(self):
@@ -92,6 +94,11 @@ class PopUpItemMenu(SelectMenu):
             # For now, we assume that none of the menus with
             # need more than 2 columns
 
+        self._grid.set_margin_top(6)
+        self._grid.set_margin_bottom(6)
+        self._grid.set_margin_left(6)
+        self._grid.set_margin_right(6)
+
     def _create_button(self, obj_name):
         '''This places the image onto a Gtk.Fixed so we can overlay a padlock
         on top (if the item is locked)
@@ -121,6 +128,12 @@ class PopUpItemMenu(SelectMenu):
                        obj_name)
         button.set_size_request(self.button_width, self.button_height)
         attach_cursor_events(button)
+
+        # set a margin all the way around it
+        button.set_margin_right(6)
+        button.set_margin_left(6)
+        button.set_margin_bottom(6)
+        button.set_margin_top(6)
 
         return button
 

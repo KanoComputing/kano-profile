@@ -80,11 +80,13 @@ def do_login():
 
 
 def _should_display_notifications(profile):
+    if 'last_notifications_prompt' not in profile:
+        return True
+
     NOTIFY_INTERVAL = 60*60*12  # 12 hours in seconds
     time_since_last_notification = (time.time() -
                                     int(profile['last_notifications_prompt']))
-    return 'last_notifications_prompt' not in profile or \
-           time_since_last_notification > NOTIFY_INTERVAL
+    return time_since_last_notification > NOTIFY_INTERVAL
 
 def _any_notifications_available(profile):
     return ('notifications' in profile and
@@ -120,8 +122,9 @@ def do_sync():
                 logger.debug('No notifications to show')
         else:
             logger.debug('Too early to show notifications')
-    except:
-        pass
+    except Exception as e:
+        logger.warn("Unable to display notifications due to an exception "
+                    "({}: {})".format(e.__class__.__name__, str(e)))
 
     display_msg('Sync OK', 'info')
 

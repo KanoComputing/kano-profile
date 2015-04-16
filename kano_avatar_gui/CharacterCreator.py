@@ -9,6 +9,7 @@
 import os
 from gi.repository import Gtk
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
+from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano_avatar_gui.Menu import Menu
 from kano_avatar_gui.ImageView import ImageView
 from kano.logging import logger
@@ -55,14 +56,18 @@ class CharacterCreator(Gtk.EventBox):
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
 
-    def get_image_path(self, avatar_only=False):
-        containing_dir = os.path.join(os.path.expanduser('~'), "avatar-content")
-        if not os.path.exists(containing_dir):
-            os.mkdir(containing_dir)
-        if avatar_only:
-            return os.path.join(containing_dir, "avatar.png")
-        else:
-            return os.path.join(containing_dir, "avatar_inc_env.png")
+    def get_image_path(self):
+        img_path = self.avatar_cr.get_default_final_image_path()
+        containing_dir = os.path.dirname(img_path)
+
+        if not containing_dir:
+            os.makekdirs(containing_dir)
+        return img_path
+
+    def get_avatar_save_path(self):
+        return os.path.abspath(
+                os.path.expanduser(
+                    os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)))
 
     def _create_random_button(self):
         random_button = Gtk.Button()
@@ -82,7 +87,7 @@ class CharacterCreator(Gtk.EventBox):
 
     def _randomise_avatar_wrapper(self, button):
         self.avatar_cr.randomise_all_items()
-        self.avatar_cr.create_avatar(self.get_image_path(avatar_only=True))
+        self.avatar_cr.create_avatar()
         self.show_all()
         self._hide_pop_ups()
 
@@ -107,8 +112,8 @@ class CharacterCreator(Gtk.EventBox):
         if not rc:
             logger.error('Error processing the list {}'.format(list_of_objs))
         else:
-            self.avatar_cr.create_avatar(self.get_image_path(avatar_only=True))
-            self._imgbox.set_image(self.get_image_path())
+            displ_img = self.avatar_cr.create_avatar()
+            self._imgbox.set_image(displ_img)
 
     # Public function so external buttons can access it.
     def save(self):
@@ -117,13 +122,13 @@ class CharacterCreator(Gtk.EventBox):
         '''
         logger.debug("Saving data")
 
-        saved_path = self.get_image_path(avatar_only=True)
-        logger.debug("Saving generated avatar image to {}".format(saved_path))
+        saved_path = self.get_avatar_save_path()
         # Save the image as hard copy somewhere safe, store it,
-        # and also lists which assets in kano-profile
-        self.avatar_cr.save_image(saved_path)
+        self.avatar_cr.save_final_assets(saved_path)
+        logger.debug("Saving generated avatar image to {}".format(saved_path))
 
         logger.debug("Saving all kano assets")
+        # and also lists which assets in kano-profile
 
         # for all categories, check the item that was selected
         categories = self.avatar_cr.list_available_categories()

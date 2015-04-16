@@ -6,6 +6,10 @@
 #
 import os
 
+AVATAR_SCRATCH = '/tmp/avatar_gen_scratch/avatar.png'
+AVATAR_DEFAULT_LOC = '~/avatar-content/'
+AVATAR_DEFAULT_NAME = 'avatar.png'
+
 AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
 AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'
 CSS_PATH = '/usr/share/kano-profile/media/CSS/avatar_generator.css'

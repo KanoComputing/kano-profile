@@ -14,7 +14,8 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
                                ACTIVE_SPECIAL_CATEGORY_ICONS,
                                INACTIVE_SPECIAL_CATEGORY_ICONS,
                                CIRC_ASSET_MASK, RING_ASSET, PREVIEW_ICONS,
-                               ENVIRONMENT_DIR)
+                               ENVIRONMENT_DIR, AVATAR_SCRATCH,
+                               AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -187,6 +188,7 @@ class AvatarCharacter():
         :param file_name: Path to where the completed file should be saved as a
                           string
         """
+        # TODO Error handling
         ring = Image.open(RING_ASSET)
         ring_mask = Image.open(CIRC_ASSET_MASK)
 
@@ -203,6 +205,8 @@ class AvatarCharacter():
         img_out = Image.composite(ring, cropped_img, ring_mask)
 
         img_out.save(file_name)
+        logger.debug("created {}".format(file_name))
+        return True
 
     def get_preview_img(self):
         """ Provides the Character's preview image path
@@ -357,8 +361,11 @@ class AvatarEnvironment():
         """ Save character image (together with items that have been pasted on
         it), to a file.
         :param file_name: filename to be saved to as a string
+        :returns: Always True (for now, wink wink)
         """
+        # TODO Error checking
         self._img.save(file_name)
+        return True
 
     def get_id(self):
         """ Provides the unique id for the environment
@@ -965,22 +972,19 @@ class AvatarCreator(AvatarConfParser):
             ret.append(self._sel_env.name())
         return ret
 
-    def create_avatar(self, save_to='', circ_assets=True, save_background=True):
-        """ Create the finished image and (optionally) save it to file.
-        :param save_to: (Optional) filename to save the image to
-        :param circ_assets: (Optional) If set the circular assets are with a
-                            file_name same at the one set in the save_to
-                            parameter with '_circ' appended
-        :param save_background: (Optional) If set the the avatar together with
-                                the background will be saved to a file_name
-                                with '_inc_env' appended
-        :returns: False if the base character hasn't been specified
+    def create_avatar(self, file_name=''):
+        """ Create the finished main image and save it to file.
+        :param file_name: (Optional) A filename to be used for the asset that
+                          is generated
+        :returns: None if there was an issue while creating avatar, the location
+                  of the created file otherwise
         """
+        ret = None
         rc = self._create_base_img()
 
         if not rc:
             logger.error("Can't create image")
-            return False
+            return None
 
         for zindex in sorted(self._sel_objs_per_zindex.keys()):
             items = self._sel_objs_per_zindex[zindex]
@@ -988,29 +992,90 @@ class AvatarCreator(AvatarConfParser):
                 item.paste_over_image(self._sel_char.get_img())
 
         # write to specified location
-        if save_to:
-            self.save_image(save_to)
+        fname_actual = file_name[:]
+        if not fname_actual:
+            logger.info("Haven't provided a filename to save asset,using default")
 
-            if circ_assets:
-                file_name, file_ext = os.path.splitext(save_to)
-                file_name += '_circ' + file_ext
-                self._sel_char.generate_circular_assets(file_name)
+            fname_actual = AVATAR_SCRATCH
+            if not os.path.isdir(os.path.dirname(fname_actual)):
+                os.makedirs(os.path.dirname(fname_actual))
 
-            if save_background:
-                # If no environment has been selected, do nothing
-                if self._sel_env:
-                    # Save the final image with the background
-                    file_name, file_ext = os.path.splitext(save_to)
-                    file_name_env = file_name + '_inc_env' + file_ext
-                    self._sel_env.attach_char(self._sel_char.get_img())
-                    self._sel_env.save_image(file_name_env)
+        if not self._sel_env:
+            logger.error("Haven't selected environment, can't save character")
+            return None
+        else:
+            # Save the final image with the background
+            file_name_env = append_suffix_to_fname(fname_actual, '_inc_env')
+            self.create_avatar_with_background(file_name_env)
+            ret = file_name_env
 
-                    # Save the final image with the background, but with
-                    # a slight offset for the character
-                    self._sel_env.load_image()
-                    file_name_env_p2 = file_name + '_inc_env_page2' + file_ext
-                    self._sel_env.attach_char(self._sel_char.get_img(), x=0.4)
-                    self._sel_env.save_image(file_name_env_p2)
+        return ret
+
+    def get_default_final_image_path(self):
+        dn = os.path.join(os.path.abspath(os.path.expanduser(AVATAR_DEFAULT_LOC)), AVATAR_DEFAULT_NAME)
+        return append_suffix_to_fname(dn, '_inc_env')
+
+    def create_auxiliary_assets(self, file_name):
+        """ Creates all of the auxiliary assets. This is to be used after the
+        user has finalised his choices and we are about to synchronise with
+        Kano World
+        :param file_name: To be used as the base for generating the filenames of the other assets
+        :returns: False iff the generation of any of the assets fails
+        """
+        # Avatar on its own
+        rc = self.save_image(file_name)
+        if not rc:
+            logger.error("Couldn't save character, aborting auxiliary asset generation")
+            return False
+
+        # Circular assets
+        fname_circ = append_suffix_to_fname(file_name, '_circ')
+        rc_c = self._sel_char.generate_circular_assets(fname_circ)
+        if not rc_c:
+            logger.error("Couldn't create circular assets, aborting auxiliary asset generation")
+            return False
+
+        # Environment + avatar
+        fname_env = append_suffix_to_fname(file_name, '_inc_env_page2')
+        rc_env = self._sel_env.save_image(fname_env)
+        if not rc_env:
+            logger.error("Couldn't create environment asset, aborting auxiliary asset generation")
+            return False
+        # Shifted environment
+        fname_env_23 = append_suffix_to_fname(file_name, '_inc_env_page2')
+        rc_23 = self.create_avatar_with_background(fname_env_23, x_offset=0.33, reload_img=True)
+        if not rc_23:
+            logger.error("Couldn't create shifted environment asset, aborting auxiliary asset generation")
+            return False
+
+        return True
+
+    def save_final_assets(self, dir_name):
+        dn = os.path.abspath(os.path.expanduser(dir_name))
+
+        direc = os.path.dirname(dn)
+        # if the path to file does not exist, create it
+        if not os.path.isdir(direc):
+            os.makedirs(direc)
+
+        self.create_avatar(dn)
+        logger.debug("Created {}".format(dn))
+        self.create_auxiliary_assets(dn)
+
+    def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
+        """ Generates and saves the final image together with the background
+        :param file_name: name of the file to save the image to
+        :param x_offset: offset (as a percentage) of the avatar on the x axis
+        :param y_offset: offset (as a percentage) of the avatar on the y axis
+        :param reload_img: Set to True to reset the image with the selected
+                           background
+        """
+        if reload_img:
+            self._sel_env.load_image()
+
+        self._sel_env.attach_char(self._sel_char.get_img(), x=x_offset, y=y_offset)
+        self._sel_env.save_image(file_name)
+        logger.debug("created {}".format(file_name))
 
         return True
 
@@ -1051,6 +1116,24 @@ class AvatarCreator(AvatarConfParser):
 
         self._sel_char.save_image(file_name)
         return True
+
+
+# TODO Maybe transfer this to kano utils?
+def append_suffix_to_fname(filename, suffix):
+    """ Given a filename (that includes the extension) and a suffix, this
+    function appends the suffix to the filename.
+    Ex.
+    'example.png', '_new' -> 'example_new.png'
+    '/usr/local/share/foo.txt', '_old' -> '/usr/local/share/foo_old.txt'
+    'foo', '_bar' -> 'foo_bar'
+    :param filename: a string that contains a filename absolute, or relative,
+                     with or without a an extension
+    :param suffix: a string to be appended to the filename (before the
+                   extension)
+    :returns: The finalised string as file + suffix + extension
+    """
+    fname, exten = os.path.splitext(filename)
+    return fname + suffix + exten
 
 
 def get_avatar_conf():

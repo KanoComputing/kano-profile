@@ -1,0 +1,204 @@
+/*
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# This controls the styles for the kano-profile-gui application
+
+*/
+
+/* Define colours */
+@define-color menu_bar_active #555555;
+@define-color menu_bar_inactive #aaaaaa;
+@define-color menu_bar_background #ffffff;
+@define-color hover_box_background #44423d;
+
+/* The menu bar specific styling */
+
+.home_button {
+    background: transparent;
+    padding: 30px 50px 30px 30px;
+}
+
+.home_button .menu_bar_button GtkLabel {
+    color: @menu_bar_inactive;
+}
+.home_button_active .menu_bar_button_active GtkLabel {
+    color: @menu_bar_active;
+}
+.home_button_title {
+    font: Bariol Bold 17;
+}
+.home_button_description {
+    font: Bariol 13;
+}
+.home_button_name {
+    color: @menu_bar_active;
+    font: Bariol Bold 20;
+}
+.home_button_level {
+    color: @menu_bar_active;
+    font: Bariol 13;
+}
+
+/* The bar at the top that mimics the window bar */
+.menu_bar_container {
+    background: @menu_bar_background;
+}
+.menu_bar_button {
+    background: transparent;
+    padding: 45px 20px 0px 20px;
+}
+.menu_bar_button GtkLabel {
+    font: Bariol Bold 13;
+    color: @menu_bar_inactive;
+}
+.menu_bar_button.selected GtkLabel {
+    color: @menu_bar_active;
+}
+.close_button {
+    background: #ffffff;
+}
+
+/* This is the empty box on the table UI */
+.emptybox {
+    background: #e7e7e7;
+    color: #e7e7e7;
+}
+
+/* Writing next to padlocks indicating how many badges/environemnts are locked/unlocked */
+.padlock_label {
+    font: Bariol Bold 15;
+    color: @inactive_writing;
+}
+/* Testing classes */
+.white {
+    background: #ffffff;
+    color: #ffffff;
+    font: Bariol Bold 13;
+}
+.black {
+    background: #000000;
+    color: #000000;
+}
+.transparent {
+    background: transparent;
+}
+
+/*** GtkSwitch styling ****/
+
+/* Custom slider CSS */
+GtkSwitch {
+    -GtkSwitch-slider-length: 5px;
+    -GtkRange-slider-width: 5px;
+    -GtkRange-trough-border: 0;
+    -GtkScale-slider-length: 5px;
+    /*-GtkWidget-focus-line-width: 5;*/ /* Should be 0 */
+    /*-GtkSwitch-value-spacing: 7;*/
+    -GtkSwitch-trough-height: 10px;
+    -GtkSwitch-trough-length: 20px;
+    -GtkSwitch-slider-length: 5px;
+    -GtkSwitch-slider-width: 5px;
+    -GtkSwitch-trough-border: 0px;
+
+}
+
+GtkSwitch.trough {
+    border-radius: 20px;
+    background: @kano_green;
+    color: @kano_green;
+    font: Bariol 5;
+}
+GtkSwitch.slider {
+    border-radius: 20px;
+    background: #ffffff;
+    border-color: @kano_green;
+    border-width: 1px;
+    border-style: solid;
+    /*padding: 6px;*/
+}
+
+
+/* Project UI screen */
+.project_item_title {
+    font: Bariol Bold 18;
+    color: @active_writing;
+}
+.project_item_time {
+    font: Bariol Bold 14;
+    color: @inactive_writing;
+}
+.project_list_background {
+    background: #f0f0f0
+}
+.project_make_button {
+    background: @kano_orange;
+    padding: 0px 20px 0px 20px;
+    font: Bariol Bold 15;
+    border-radius: 3px;
+}
+.project_make_button GtkLabel {
+    color: #ffffff;
+}
+
+/* All below are used in the refactor of kano_profile_gui */
+/* Info screen oof individual badges/environments/avatars */
+
+/* Styling specific to the grid shown on the swag/badges screen */
+
+.hover_box {
+    background: alpha(@hover_box_background, 0.5);
+}
+
+.hover_label {
+    font: Bariol bold 13px;
+    color: #ffffff;
+}
+
+/* Used on the badge info screen */
+.info_heading {
+    font: Bariol Bold 20;
+    color: @title_color;
+    padding: 40px 30px 15px 30px;
+}
+.info_paragraph {
+    font: Bariol 14;
+    color: @subheading_color;
+    padding: 10px 30px;
+}
+
+.info_box {
+    background: #ffffff;
+    border-radius: 4px;
+}
+
+.navigation_button {
+    background: #ffffff;
+}
+
+.navigation_button.back {
+    padding: 0px 0px 25px 40px;
+}
+
+.navigation_button.next {
+    padding: 0px 40px 25px 0px;
+}
+
+.navigation_button.middle {
+    padding: 0px 0px 25px 0px;
+}
+
+.navigation_button GtkLabel {
+    color: @menu_bar_active;
+    font: Bariol bold 13;
+}
+
+.navigation_button GtkLabel:insensitive {
+    color: @menu_bar_inactive;
+    font: Bariol bold 14;
+    background: #ffffff;
+}
+
+.button_divider {
+    color: @menu_bar_inactive;
+}

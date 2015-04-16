@@ -12,7 +12,7 @@ from kano.utils import get_home, read_json
 from kano_profile.apps import get_app_list, get_app_data_dir, launch_project
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
-import kano_profile_gui.components.cursor as cursor
+import kano.gtk3.cursor as cursor
 import kano_profile_gui.components.icons as icons
 from .paths import image_dir
 from kdesk.hourglass import hourglass_start, hourglass_end
@@ -126,21 +126,15 @@ class ProjectItem():
         logger.info('share: {} {}'.format(app, filename))
 
 
-def activate(_win, _box):
+def activate(_win):
     project_list = ProjectList()
-
-    header_box = Gtk.Box()
-    header_box.set_size_request(734, 44)
-    header_halign = Gtk.Alignment(xscale=0.0, yscale=0.0, xalign=0.5, yalign=0.5)
-    header_halign.set_size_request(734, 44)
-    header_title_label = Gtk.Label("CHALLENGES")
-    header_title_label.get_style_context().add_class("heading")
-    header_halign.add(header_title_label)
-    header_box.add(header_halign)
 
     scrolledwindow = Gtk.ScrolledWindow()
     scrolledwindow.add_with_viewport(project_list.background)
     scrolledwindow.set_size_request(734, 404)
-    _box.pack_start(header_box, False, False, 0)
+
+    _box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     _box.pack_start(scrolledwindow, False, False, 0)
+
+    _win.pack_in_main_content(_box)
     _win.show_all()

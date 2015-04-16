@@ -1,0 +1,62 @@
+/*
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# This controls the styling of the character creator
+
+*/
+
+* {
+    -GtkCheckButton-indicator-size: 40
+}
+
+/* Pop up menu icons */
+/* This is an image that the user can choose */
+.category_item {
+    background: #ffffff;
+    padding: 0;
+}
+
+.category_item:hover {
+    background: #ebebeb;
+}
+
+.category_item.selected {
+    background: #ebebeb;
+}
+
+.pop_up_menu_top_bar {
+    background: #ebebeb;
+}
+
+.pop_up_menu_top_bar GtkLabel {
+    font: Bariol bold 15;
+    color: #555555;
+}
+
+.pop_up_menu_item {
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 10px;
+    border-color: transparent;
+    background: transparent;
+    padding: 0px;
+}
+
+.select_menu {
+    background: #ffffff;
+}
+
+.random_button {
+    background: #ff0000;
+    border-radius: 3px;
+    color: #00ff00;
+    border-color: #dedede;
+    padding: 0px;
+}
+
+
+/*.random_button:hover {
+    background: #ebebeb;
+}*/

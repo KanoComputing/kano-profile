@@ -1,0 +1,34 @@
+/*
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# progress_bar.css
+# This controls the styling of the progress bar.
+
+# Orange progress bar shown just below top bar */
+
+.progress_bar {
+    color: @kano_orange;
+    background: @kano_orange;
+}
+.progress_background {
+    background: @kano_orange;
+    border-radius: 3px;
+}
+.progress_background GtkLabel {
+    color: #ffffff;
+    font: Bariol Bold 13;
+}
+.endpoint_background {
+    background: #939087;
+    /*color: #939087;*/
+}
+.endpoint_background GtkLabel {
+    color: #ffffff;
+    font: Bariol Bold 13;
+}
+.rest_of_bar {
+    color: @inactive_writing;
+    background: @inactive_writing;
+}

@@ -4,6 +4,8 @@ kano_profile usr/lib/python2.7/dist-packages
 kano_world usr/lib/python2.7/dist-packages
 kano_login usr/lib/python2.7/dist-packages
 kano_profile_gui usr/lib/python2.7/dist-packages
+kano_avatar usr/lib/python2.7/dist-packages
+kano_avatar_gui usr/lib/python2.7/dist-packages
 
 media usr/share/kano-profile
 rules usr/share/kano-profile

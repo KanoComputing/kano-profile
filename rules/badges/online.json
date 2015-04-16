@@ -1,4 +1,34 @@
 {
+  "super_sharer": {
+    "bg_color": "ffea8c",
+    "desc_locked": "Share your creations - get the badge!",
+    "desc_unlocked": "You put your work online for the world to see. Keep it up, super sharer...",
+    "operation": "sum_greater",
+    "targets": [
+      [
+        "make-pong",
+        "shared"
+      ],
+      [
+        "make-minecraft",
+        "shared"
+      ],
+      [
+        "make-music",
+        "shared"
+      ],
+      [
+        "kano-draw",
+        "shared"
+      ],
+      [
+        "make-snake",
+        "shared"
+      ]
+    ],
+    "title": "Super Sharer",
+    "value": 1
+  },
   "community_champion": {
     "bg_color": "ffea8c",
     "desc_locked": "Share five challenges to unlock this badge!",

@@ -28,7 +28,8 @@ class CharacterDisplay(Gtk.EventBox):
 
         # Pack this part of the screen into the window
         self._char_creator = CharacterCreator(randomise=True)
-        # get picture of character creator and pack it into the window
+
+        # Get picture of character creator and pack it into the window
         path = self._char_creator.get_image_path()
         image = Gtk.Image.new_from_file(path)
 
@@ -42,10 +43,11 @@ class CharacterDisplay(Gtk.EventBox):
         self._win.show_all()
 
     def _pack_progress_bar(self):
+
         # Get the image from the character creator, and then display it
         self._progress = ProgressBar(self._win.width)
         alignment = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-        alignment.add(self._progress.fixed)
+        alignment.add(self._progress)
         self._win.pack_in_bottom_bar(alignment)
 
     def go_to_edit_character_screen(self, widget=None):

@@ -12,8 +12,6 @@ import datetime
 from gi.repository import Gtk, GObject
 from kano.utils import is_number
 from kano.gtk3.buttons import OrangeButton
-from kano.gtk3.apply_styles import apply_styling_to_screen
-from kano_avatar.paths import CSS_PATH
 from kano_profile.paths import legal_dir
 from kano.logging import logger
 
@@ -38,8 +36,6 @@ class DataTemplate(Gtk.EventBox):
         self.width = 250
         self.height = 350
         self.set_size_request(self.width, self.height)
-
-        apply_styling_to_screen(CSS_PATH)
         self.get_style_context().add_class("data_screen")
 
 

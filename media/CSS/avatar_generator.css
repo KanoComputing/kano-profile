@@ -3,7 +3,7 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# This controls the kano-avatar styling
+# This controls the styling of the character creator
 
 */
 
@@ -15,6 +15,7 @@
 /* This is an image that the user can choose */
 .category_item {
     background: #ffffff;
+    padding: 0;
 }
 
 .category_item:hover {
@@ -40,66 +41,22 @@
     border-radius: 10px;
     border-color: transparent;
     background: transparent;
+    padding: 0px;
 }
 
 .select_menu {
     background: #ffffff;
 }
 
-.grey_dot {
-    background: #d1d1d1;
-    border-radius: 3px;
-}
-
-.orange_dot {
-    background: @kano_orange;
-    border-radius: 5px;
-}
-
-.get_data_label {
-    font: Bariol 13;
-    color: #555555;
-}
-
-.get_data_label:insensitive {
-    background: #ffffff;
-    color: #bbbbbb;
-}
-
-.get_data_entry {
-    color: #555555;
-    border-color: #bbbbbb;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 3px;
-    /*padding: 15px; */
-    font: Bariol bold 16;
-}
-
-.get_data_entry:insensitive {
-    background: #ffffff;
-    color: #dddddd;
-}
-
-.get_data_checkbutton {
-    border-color: #bbbbbb;
-    border-width: 2px;
-}
-
-.data_screen {
-    background: #ffffff;
-    border-radius: 3px;
-}
-
 .random_button {
-    background: #ffffff;
+    background: #ff0000;
     border-radius: 3px;
-    /* Doesn't seem to work */
-    /*box-shadow: 0px 0px 3px alpha(#000000, 0.5);*/
-    border-width: 3px;
-    border-color: #dddddd;
+    color: #00ff00;
+    border-color: #dedede;
+    padding: 0px;
 }
 
-.random_button:hover {
-    border-color: #dddddd;
-}
+
+/*.random_button:hover {
+    background: #ebebeb;
+}*/

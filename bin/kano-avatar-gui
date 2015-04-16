@@ -312,7 +312,7 @@ class MainWindow(ApplicationWindow):
 
         # Styling
         # take the function from kano-toolset
-        css_path = os.path.join(media_dir, "CSS/style.css")
+        css_path = os.path.join(media_dir, "CSS/register.css")
         apply_styling_to_screen(css_path)
 
         # Load up the character creator at the start

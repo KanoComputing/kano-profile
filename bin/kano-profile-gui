@@ -33,7 +33,9 @@ class MainWindow(ApplicationWindow):
         ApplicationWindow.__init__(self, 'Kano Profile', self.width,
                                    self.height)
 
-        self.css_path = os.path.join(media_dir, "CSS/style.css")
+        apply_colours_to_screen()
+
+        self.css_path = os.path.join(media_dir, "CSS/kano_profile_gui.css")
         apply_styling_to_screen(self.css_path)
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -97,8 +99,6 @@ class MainWindow(ApplicationWindow):
 
 
 def main():
-
-    apply_colours_to_screen()
 
     win = MainWindow()
     win.connect('delete-event', Gtk.main_quit)

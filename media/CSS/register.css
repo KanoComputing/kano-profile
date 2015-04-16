@@ -1,0 +1,63 @@
+/*
+
+# Copyright (C) 2014 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# Styling specific to the registration screens
+
+*/
+
+
+GtkCheckButton:active:insensitive {
+    color: @kano_grey;
+}
+
+/* These are the dot that indicate your current page */
+.grey_dot {
+    background: #d1d1d1;
+    border-radius: 3px;
+}
+
+.orange_dot {
+    background: @kano_orange;
+    border-radius: 5px;
+}
+
+/* This is the background for all the widgets that collect information */
+.data_screen {
+    background: #ffffff;
+    border-radius: 3px;
+}
+
+/* Styling for the entries that users use to input information */
+.get_data_entry {
+    color: #555555;
+    border-color: #bbbbbb;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 3px;
+    /*padding: 15px; */
+    font: Bariol bold 16;
+}
+
+.get_data_entry:insensitive {
+    background: #ffffff;
+    color: #dddddd;
+}
+
+/* The label above the entries */
+.get_data_label {
+    font: Bariol 13;
+    color: #555555;
+}
+
+.get_data_label:insensitive {
+    background: #ffffff;
+    color: #bbbbbb;
+}
+
+/* When accepting terms and conditions, this must be checked */
+.get_data_checkbutton {
+    border-color: #bbbbbb;
+    border-width: 2px;
+}

@@ -22,12 +22,12 @@ from kano.gtk3.cursor import attach_cursor_events
 class CharacterCreator(Gtk.EventBox):
     configuration = get_avatar_conf()
     avatar_cr = AvatarCreator(configuration)
+    meny_y_pos = 20
 
     def __init__(self, randomise=False):
         Gtk.EventBox.__init__(self)
 
-        # when called from kano-profile, we don't get this styling
-        # otherwise
+        # This is the avatar specific styling
         css_path = os.path.join(media_dir, "CSS/avatar_generator.css")
         apply_styling_to_screen(css_path)
 
@@ -45,12 +45,12 @@ class CharacterCreator(Gtk.EventBox):
         self.set_size_request(self.width, self.height)
 
         self.fixed.put(self._imgbox, 0, 0)
-        self.fixed.put(self._menu, 30, 30)
+        self.fixed.put(self._menu, 20, self.meny_y_pos)
 
         if randomise:
             # Create random button
             random_button = self._create_random_button()
-            self.fixed.put(random_button, 630, 30)
+            self.fixed.put(random_button, 645, self.meny_y_pos)
 
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
@@ -66,8 +66,8 @@ class CharacterCreator(Gtk.EventBox):
 
     def _create_random_button(self):
         random_button = Gtk.Button()
-        width = 60
-        height = 60
+        width = 40
+        height = 40
 
         # TODO: get file path for the random icon
         icon_path = os.path.join(media_dir, "images/icons/random.png")

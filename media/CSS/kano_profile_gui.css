@@ -3,7 +3,7 @@
 # Copyright (C) 2014 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# This controls the styles
+# This controls the styles for the kano-profile-gui application
 
 */
 
@@ -13,63 +13,13 @@
 @define-color menu_bar_background #ffffff;
 @define-color hover_box_background #44423d;
 
-/* All */
-* {
-    -GtkButton-inner-border: 0;
-    -GtkButton-outer-border: 0;
-    -GtkButton-inner-padding: 0;
-    -GtkButton-outer-padding: 0;
-    -GtkButton-internal-padding: 0;
-    -GtkButton-child-displacement-x: 0;
-    -GtkButton-child-displacement-y: 0;
-    -GtkButton-default-border: 0;
-    -GtkButton-default-outside-border: 0;
-    -GtkButton-image-spacing: 0;
-    -GtkEntry-inner-border: 0;
-    -GtkComboBox-inner-border: 0;
-    -GtkImage-outer-border: 0;
-    -GtkImage-inner-border: 0;
-    -GtkMenuToolButton-inner-border: 0;
-    -GtkScrolledWindow-scrollbar-spacing: 0;
-    -GtkTreeMenu-inner-border: 0;
-    -unico-focus-border-color: transparent; /* Removes the annoying red outline on active buttons*/
-    engine: none; /* Turns off annoying borders */
-    border-width: 0px;
-    -GtkWidget-focus-line-width: 0px;
-    -GtkTreeView-vertical-separator: 0;
-    -GtkWidget-separator-width: 0;
-    -GtkWidget-separator-height: 0;
-    -GtkWidget-focus-padding: 0;
-    -GtkWidget-focus-line-width: 0;
-    -GtkWidget-outer-border: 0;
-    -GtkWidget-inner-border: 0;
-    -GtkWidget-padding: 0;
-}
-
-GtkWindow {
-    background: #ffffff;
-}
-
-/* This is to remove padding */
-GtkContainer GtkBox,
-GtkContainer GtkEvent,
-GtkContainer GtkFixed,
-GtkBox GtkEventBox,
-GtkBox GtkFixed,
-GtkBox GtkGrid,
-GtkBox GtkContainer,
-GtkGrid GtkEventBox,
-GtkFixed GtkImage,
-GtkFixed GtkEventBox,
-GtkWindow GtkGrid,
-GtkWindow GtkBox {
-    padding: 0;
-}
+/* The menu bar specific styling */
 
 .home_button {
     background: transparent;
-    padding-left:20px;
+    padding: 30px 50px 30px 30px;
 }
+
 .home_button .menu_bar_button GtkLabel {
     color: @menu_bar_inactive;
 }
@@ -80,6 +30,14 @@ GtkWindow GtkBox {
     font: Bariol Bold 17;
 }
 .home_button_description {
+    font: Bariol 13;
+}
+.home_button_name {
+    color: @menu_bar_active;
+    font: Bariol Bold 20;
+}
+.home_button_level {
+    color: @menu_bar_active;
     font: Bariol 13;
 }
 
@@ -100,20 +58,6 @@ GtkWindow GtkBox {
 }
 .close_button {
     background: #ffffff;
-}
-
-.home_button_name {
-    color: @menu_bar_active;
-    font: Bariol Bold 20;
-}
-
-.home_button_level {
-    color: @menu_bar_active;
-    font: Bariol 13;
-}
-
-.home_button {
-    padding: 30px;
 }
 
 /* This is the empty box on the table UI */
@@ -139,32 +83,6 @@ GtkWindow GtkBox {
 }
 .transparent {
     background: transparent;
-}
-
-/* Orange progress bar shown just below top bar */
-.progress_bar {
-    color: @kano_orange;
-    background: @kano_orange;
-}
-.progress_background {
-    background: @kano_orange;
-    border-radius: 3px;
-}
-.progress_background GtkLabel {
-    color: #ffffff;
-    font: Bariol Bold 13;
-}
-.endpoint_background {
-    background: #939087;
-    /*color: #939087;*/
-}
-.endpoint_background GtkLabel {
-    color: #ffffff;
-    font: Bariol Bold 13;
-}
-.rest_of_bar {
-    color: @inactive_writing;
-    background: @inactive_writing;
 }
 
 /*** GtkSwitch styling ****/

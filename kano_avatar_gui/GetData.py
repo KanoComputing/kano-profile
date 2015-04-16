@@ -7,14 +7,12 @@
 #
 
 import re
-import os
 import time
 import datetime
 from gi.repository import Gtk, GObject
 from kano.utils import is_number
 from kano.gtk3.buttons import OrangeButton
 from kano.gtk3.apply_styles import apply_styling_to_screen
-from kano.gtk3.kano_dialog import KanoDialog
 from kano_avatar.paths import CSS_PATH
 from kano_profile.paths import legal_dir
 from kano.logging import logger
@@ -78,26 +76,29 @@ class GetData2(DataTemplate):
 
     def _create_birthday_widget(self):
         self._day_entry = Gtk.Entry()
-        self._day_entry.set_size_request(50, -1)
+        self._day_entry.set_size_request(60, -1)
         self._day_entry.set_width_chars(2)
         self._day_entry.set_placeholder_text("DD")
+        self._day_entry.get_style_context().add_class("get_data_entry")
         self._day_entry.connect('key-release-event', self.widgets_full)
 
         self._month_entry = Gtk.Entry()
-        self._month_entry.set_size_request(50, -1)
+        self._month_entry.set_size_request(60, -1)
         self._month_entry.set_width_chars(2)
         self._month_entry.set_placeholder_text("MM")
+        self._month_entry.get_style_context().add_class("get_data_entry")
         self._month_entry.connect('key-release-event', self.widgets_full)
 
         self._year_entry = Gtk.Entry()
         self._year_entry.set_size_request(70, -1)
         self._year_entry.set_width_chars(4)
         self._year_entry.set_placeholder_text("YYYY")
+        self._year_entry.get_style_context().add_class("get_data_entry")
         self._year_entry.connect('key-release-event', self.widgets_full)
 
         hbox = Gtk.Box()
         hbox.pack_start(self._day_entry, False, False, 0)
-        hbox.pack_start(self._month_entry, False, False, 20)
+        hbox.pack_start(self._month_entry, False, False, 10)
         hbox.pack_start(self._year_entry, False, False, 0)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

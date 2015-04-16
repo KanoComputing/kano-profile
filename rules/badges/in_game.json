@@ -26,7 +26,7 @@
   "pong_painter": {
     "bg_color": "afe5fa",
     "desc_locked": "Complete the Paint the Board challenge in Pong to unlock this badge.",
-    "desc_unlocked": "Beautiful! You added your own colors to the world of Pong and made the world’s oldest videogame seem fresh and sexy. You’re a true Pong Painter.",
+    "desc_unlocked": "Beautiful! You added your own colors to the world of Pong and made the world’s oldest videogame fresh again. You’re a true Pong Painter.",
     "operation": "each_greater",
     "targets": [["make-pong", "level", 2]],
     "title": "Pong Painter"

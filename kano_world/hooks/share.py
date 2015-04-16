@@ -2,7 +2,7 @@
 
 # share.py
 #
-# Copyright (C) 2014 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
@@ -24,6 +24,7 @@ from kano_profile.apps import launch_project
 from kdesk.hourglass import hourglass_start, hourglass_end
 from kano_world.connection import request_wrapper
 from kano_world.functions import get_glob_session, login_using_token
+
 
 def run(args):
     try:
@@ -65,11 +66,12 @@ def launch(data):
         launch_project(app, attachment_name, folder)
         _report_share_opened(item_id)
 
+
 def _report_share_opened(item_id):
     success, value = login_using_token()
-            if success:
-                endpoint = '/share/{}/installed'.format(item_id)
-                gs = get_glob_session()
-                if gs:
-                    success, text, data = request_wrapper('post', endpoint,
-                                                          session=gs.session)
+    if success:
+        endpoint = '/share/{}/installed'.format(item_id)
+        gs = get_glob_session()
+        if gs:
+            success, text, data = request_wrapper('post', endpoint,
+                                                  session=gs.session)

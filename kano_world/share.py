@@ -129,4 +129,4 @@ def download_share(entry):
     json_name = '{}.{}'.format(title_slugified, 'json')
     json_path = os.path.join(folder, json_name)
     write_json(json_path, data)
-    return True, (title, attachment_path, app, attachment_name, folder)
+    return True, [title, attachment_path, app, attachment_name, folder]

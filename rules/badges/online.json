@@ -62,5 +62,13 @@
     "operation": "each_greater",
     "targets": [["computed", "online_you_follow", 10]],
     "title": "Talent Tracker"
+  },
+  "mixtape_master": {
+    "bg_color": "eee85f",
+    "desc_locked": "Check out Make Music to unlock this badge...",
+    "desc_unlocked": "You mashed mad beats, created a killer tune and shared it for the world to rock to. Never let the music stop - you're a Mixtape Master",
+    "operation": "each_greater",
+    "targets": [["make-music", "shared", 1]],
+    "title": "Mixtape Master"
   }
 }

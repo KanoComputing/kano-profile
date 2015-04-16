@@ -1,8 +1,8 @@
 kano-profile (1.3-8) unstable; urgency=low
 
-  * Add kano-avatar
+  * kano-sync now supports --upload-tracking-data
 
- -- Team Kano <dev@kano.me>  Fri, 27 Mar 2015 14:30:00 +0000
+ -- Team Kano <dev@kano.me>  Tue, 17 Mar 2015 11:51:00 +0000
 
 kano-profile (1.3-7) unstable; urgency=low
 

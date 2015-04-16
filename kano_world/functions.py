@@ -152,6 +152,17 @@ def restore_content(file_path):
     return glob_session.restore_content(file_path)
 
 
+def upload_tracking_data():
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    success, value = glob_session.upload_tracking_data()
+    if not success:
+        return False, value
+    
+    return True, None
+
+
 def get_glob_session():
     return glob_session
 

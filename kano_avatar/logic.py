@@ -556,8 +556,9 @@ class AvatarConfParser():
 
             inactive_icon_file = special_cat_data[special_cat]['inactive_icon']
             if not os.path.isabs(inactive_icon_file):
-                inactive_icon_file = os.path.join(INACTIVE_SPECIAL_CATEGORY_ICONS,
-                                                  inactive_icon_file)
+                inactive_icon_file = os.path.join(
+                    INACTIVE_SPECIAL_CATEGORY_ICONS,
+                    inactive_icon_file)
 
             border_icon_file = special_cat_data[special_cat]['selected_border']
             if not os.path.isabs(border_icon_file):
@@ -567,7 +568,8 @@ class AvatarConfParser():
             self._active_special_category_icons[special_cat] = active_icon_file
             self._inactive_special_category_icons[special_cat] = inactive_icon_file
             self._border_special_cat[special_cat] = border_icon_file
-            self._special_cat_to_disp_order[special_cat] = special_cat_data[special_cat]['display_order']
+            self._special_cat_to_disp_order[special_cat] = \
+                special_cat_data[special_cat]['display_order']
 
     def get_zindex(self, category):
         if category not in self._cat_to_z_index:
@@ -694,7 +696,8 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._active_category_icons:
-            logger.warn("Cat {} not found, can't provide active icon path".format(category_name))
+            logger.warn("Cat {} not found, can't provide active icon path"
+                        .format(category_name))
             return None
         else:
             return self._active_category_icons[category_name]
@@ -929,7 +932,8 @@ class AvatarCreator(AvatarConfParser):
         if not rc:
             return False
         # For categories where we haven't specified, select randomly
-        for cat in self._categories.difference(set(self._sel_obj_per_cat.keys())):
+        for cat in self._categories.difference(
+                set(self._sel_obj_per_cat.keys())):
             # Need to make sure that we can handle categories that contain no
             # items
             try:
@@ -994,7 +998,8 @@ class AvatarCreator(AvatarConfParser):
         # write to specified location
         fname_actual = file_name[:]
         if not fname_actual:
-            logger.info("Haven't provided a filename to save asset,using default")
+            logger.info(
+                "Haven't provided a filename to save asset,using default")
 
             fname_actual = AVATAR_SCRATCH
             if not os.path.isdir(os.path.dirname(fname_actual)):
@@ -1012,7 +1017,9 @@ class AvatarCreator(AvatarConfParser):
         return ret
 
     def get_default_final_image_path(self):
-        dn = os.path.join(os.path.abspath(os.path.expanduser(AVATAR_DEFAULT_LOC)), AVATAR_DEFAULT_NAME)
+        dn = os.path.join(
+                os.path.abspath(os.path.expanduser(AVATAR_DEFAULT_LOC)),
+                AVATAR_DEFAULT_NAME)
         return append_suffix_to_fname(dn, '_inc_env')
 
     def create_auxiliary_assets(self, file_name):
@@ -1043,7 +1050,9 @@ class AvatarCreator(AvatarConfParser):
             return False
         # Shifted environment
         fname_env_23 = append_suffix_to_fname(file_name, '_inc_env_page2')
-        rc_23 = self.create_avatar_with_background(fname_env_23, x_offset=0.33, reload_img=True)
+        rc_23 = self.create_avatar_with_background(fname_env_23,
+                                                   x_offset=0.33,
+                                                   reload_img=True)
         if not rc_23:
             logger.error("Couldn't create shifted environment asset, aborting auxiliary asset generation")
             return False
@@ -1073,7 +1082,9 @@ class AvatarCreator(AvatarConfParser):
         if reload_img:
             self._sel_env.load_image()
 
-        self._sel_env.attach_char(self._sel_char.get_img(), x=x_offset, y=y_offset)
+        self._sel_env.attach_char(self._sel_char.get_img(),
+                                  x=x_offset,
+                                  y=y_offset)
         self._sel_env.save_image(file_name)
         logger.debug("created {}".format(file_name))
 

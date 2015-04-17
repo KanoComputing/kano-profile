@@ -33,10 +33,12 @@ def login(login_name, password):
         return False, 'Cannot log in, problem: {}'.format(text)
 
 
-def register(email, username, password, date_year, date_month, date_day):
+def register(email, username, password, date_year, date_month, date_day, secondary_email=''):
     email = email.strip()
     username = username.strip()
     password = password.strip()
+    if secondary_email:
+        secondary_email.strip()
 
     if not is_number(date_year) or not is_number(date_month) or not is_number(date_day):
         return False, 'Date in bad format!'
@@ -48,6 +50,9 @@ def register(email, username, password, date_year, date_month, date_day):
         'birthdate': '{}-{}-{}'.format(date_year, date_month, date_day),
         # 'gender': '',
     }
+
+    if secondary_email:
+        payload['secondary_email'] = secondary_email
 
     success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)
     if success:
@@ -64,6 +69,8 @@ def login_register_data(data):
     profile['kanoworld_username'] = data['session']['user']['username']
     profile['kanoworld_id'] = data['session']['user']['id']
     profile['email'] = data['session']['user']['email']
+    if 'secondary_email' in data['session']['user']:
+        profile['secondary_email'] = data['session']['user']['secondary_email']
     save_profile(profile)
     try:
         glob_session = KanoWorldSession(profile['token'])
@@ -92,6 +99,7 @@ def remove_registration():
     profile.pop('kanoworld_username', None)
     profile.pop('kanoworld_id', None)
     profile.pop('email', None)
+    profile.pop('secondary_email', None)
     save_profile(profile)
 
 
@@ -159,7 +167,7 @@ def upload_tracking_data():
     success, value = glob_session.upload_tracking_data()
     if not success:
         return False, value
-    
+
     return True, None
 
 
@@ -191,6 +199,14 @@ def get_email():
     return email
 
 
+def get_secondary_email():
+    try:
+        sec_email = load_profile()['secondary_email']
+    except Exception:
+        sec_email = ''
+    return sec_email
+
+
 def reset_password(email):
     payload = {
         'email': email,
@@ -204,4 +220,3 @@ def reset_password(email):
         return success, None
     else:
         return success, text
-

@@ -49,14 +49,12 @@
 }
 
 .random_button {
-    background: #ff0000;
+    background: #ffffff;
     border-radius: 3px;
-    color: #00ff00;
     border-color: #dedede;
     padding: 0px;
 }
 
-
-/*.random_button:hover {
-    background: #ebebeb;
-}*/
+.random_button:hover {
+    background: #dedede;
+}

@@ -27,7 +27,7 @@ class CharacterDisplay(Gtk.EventBox):
         button.connect("clicked", self.go_to_edit_character_screen)
 
         # Pack this part of the screen into the window
-        self._char_creator = CharacterCreator(randomise=True)
+        self._char_creator = self._win.char_creator
 
         # Get picture of character creator and pack it into the window
         path = self._char_creator.get_image_path()
@@ -95,6 +95,7 @@ class CharacterEdit(Gtk.EventBox):
         self._go_back_to_display_screen()
 
     def discard(self, widget):
+        self.char_creator.update_from_saved_image()
         self._go_back_to_display_screen()
 
     def _go_back_to_display_screen(self):

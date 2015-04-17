@@ -64,6 +64,9 @@ class CharacterCreator(Gtk.EventBox):
             os.makekdirs(containing_dir)
         return img_path
 
+    def update_from_saved_image(self):
+        self._imgbox.set_image(self.get_image_path())
+
     def get_avatar_save_path(self):
         return os.path.abspath(
                 os.path.expanduser(

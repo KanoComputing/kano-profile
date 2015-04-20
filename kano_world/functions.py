@@ -69,7 +69,9 @@ def login_register_data(data):
     profile['kanoworld_username'] = data['session']['user']['username']
     profile['kanoworld_id'] = data['session']['user']['id']
     profile['email'] = data['session']['user']['email']
-    if 'secondary_email' in data['session']['user']:
+    # We know this field will be returned from the API even if it is empty
+    # However we only need to store it if it has a meaningful value
+    if data['session']['user']['secondary_email']:
         profile['secondary_email'] = data['session']['user']['secondary_email']
     save_profile(profile)
     try:

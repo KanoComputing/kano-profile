@@ -60,6 +60,13 @@ class SelectMenu(Gtk.EventBox):
         if identifier in self._items:
             self._items[identifier][name] = item
 
+    def get_option(self, identifier, option):
+        if identifier in self._items:
+            if option in self._items[identifier]:
+                return self._items[identifier][option]
+
+        return None
+
     def _add_selected_css(self, button):
         style = button.get_style_context()
         style.add_class("selected")

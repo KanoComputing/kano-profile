@@ -15,7 +15,7 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_avatar_gui.PopUpItemMenu import PopUpItemMenu
+from kano_avatar_gui.PopUpItemMenu2 import PopUpItemMenu
 from kano_avatar_gui.CategoryMenu import CategoryMenu
 from kano.logging import logger
 from kano_profile.apps import load_app_state_variable, save_app_state_variable
@@ -57,8 +57,8 @@ class Menu(Gtk.Fixed):
         return self._cat_menu.get_selected()
 
     def get_selected_obj(self, category):
-        if "menu" in self.menus[category]:
-            return self.menus[category]["menu"].get_selected()
+        if "pop_up" in self.menus[category]:
+            return self.menus[category]["pop_up"].get_selected()
         else:
             return ""
 
@@ -78,15 +78,15 @@ class Menu(Gtk.Fixed):
         self.menus = {}
 
         for category in self._cat_menu.categories:
-            menu = PopUpItemMenu(category, self._parser)
-            menu.connect('pop_up_item_selected', self._emit_signal)
+            pop_up = PopUpItemMenu(category, self._parser)
+            pop_up.connect('pop_up_item_selected', self._emit_signal)
 
             self.menus[category] = {}
-            self.menus[category]["menu"] = menu
+            self.menus[category]["pop_up"] = pop_up
 
-            self.put(self.menus[category]['menu'],
+            self.put(self.menus[category]['pop_up'],
                      self.pop_up_pos_x, self.pop_up_pos_y)
-            self.menus[category]['menu'].hide()
+            self.menus[category]['pop_up'].hide()
 
     def _create_start_up_image(self):
         '''We check what has been saved on kano-profile, and we use a default if
@@ -123,9 +123,9 @@ class Menu(Gtk.Fixed):
                 save_app_state_variable("kano-avatar", category, obj_name)
 
             # object_list.append(obj_name)
-            self.menus[category]["menu"]._set_selected(obj_name)
-            self.menus[category]["menu"]._only_style_selected(obj_name)
-            self.menus[category]["menu"].hide()
+            self.menus[category]["pop_up"]._set_selected(obj_name)
+            self.menus[category]["pop_up"]._only_style_selected(obj_name)
+            self.menus[category]["pop_up"].hide()
             logger.debug("Hid menu for category {}".format(category))
 
         # self._parser.obj_select(object_list)
@@ -135,13 +135,13 @@ class Menu(Gtk.Fixed):
 
         logger.debug("Launching PopUpMenu for category {}".format(category))
         self.hide_pop_ups()
-        self.menus[category]['menu'].show()
+        self.menus[category]['pop_up'].show()
 
     def hide_pop_ups(self):
         for category, menu_dict in self.menus.iteritems():
 
-            if "menu" in self.menus[category]:
-                self.menus[category]["menu"].hide()
+            if "pop_up" in self.menus[category]:
+                self.menus[category]["pop_up"].hide()
 
     def _emit_signal(self, widget, category):
         '''This is to propagate the signal the signal up a widget

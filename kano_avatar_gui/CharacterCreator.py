@@ -90,24 +90,7 @@ class CharacterCreator(Gtk.EventBox):
 
     def _randomise_avatar_wrapper(self, button):
         logger.debug("\n_randomise_avatar_wrapper")
-        selected_item_dict = {}
-        selected_item_list = self.avatar_cr.randomise_all_items()
-
-        # Get the category
-        # TODO: this should be moved into the AvatarCreator
-        all_objects = {}
-        all_objects.update(self.avatar_cr._objects)
-        all_objects.update(self.avatar_cr._environments)
-
-        for item in selected_item_list:
-            item_obj = all_objects[item]
-            # TODO: this is very very very hacky
-            try:
-                category = item_obj.category()
-            except Exception as e:
-                print str(e)
-                category = "environments"
-            selected_item_dict[category] = item
+        selected_item_dict = self.avatar_cr.randomise_all_items()
 
         filepath = self.avatar_cr.create_avatar()
         self._imgbox.set_image(filepath)

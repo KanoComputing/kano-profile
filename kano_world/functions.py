@@ -73,6 +73,8 @@ def login_register_data(data):
     # However we only need to store it if it has a meaningful value
     if data['session']['user']['secondary_email']:
         profile['secondary_email'] = data['session']['user']['secondary_email']
+    else:
+        profile.pop('secondary_email', None)
     save_profile(profile)
     try:
         glob_session = KanoWorldSession(profile['token'])

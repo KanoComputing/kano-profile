@@ -339,8 +339,7 @@ class MainWindow(ApplicationWindow):
 
 
 def main():
-    win = MainWindow(1)
-    win.show_all()
+    MainWindow(1)
     Gtk.main()
 
 

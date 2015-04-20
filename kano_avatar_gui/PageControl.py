@@ -16,8 +16,8 @@ from kano.gtk3.cursor import attach_cursor_events
 class PageControl(Gtk.Alignment):
 
     __gsignals__ = {
-        'back-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, ()),  # (int,)),
-        'next-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, ())  # (int,))
+        'back-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, ()),
+        'next-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, ())
     }
 
     def __init__(self,

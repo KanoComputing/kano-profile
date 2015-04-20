@@ -219,22 +219,27 @@ class Page3(Gtk.Box):
             (title, description, return_value) = self.register_user()
 
             def done():
+                # the values for tile, description and return_value are
+                # accessible since this function's namespace directly
+                # inherits from the function above
                 self.win.get_window().set_cursor(None)
                 kdialog = KanoDialog(
-                    "Profile created!",
-                    "Now you can share stuff, build your character, "
-                    "and connect with friends.",
+                    title,
+                    description,
                     parent_window=self.win
                 )
                 kdialog.run()
 
-                if return_value == 0:
+                if return_value == 1:
+                    # If we succeed quit the program
                     Gtk.main_quit()
                 else:
+                    # If we encountered a problem, allow the user to
+                    # fix the issue and retry
                     self.data_screen.enable_all()
                     self.page_control.enable_buttons()
 
-            GObject.idle_add(done, title, description, return_value)
+            GObject.idle_add(done)
 
         thread = threading.Thread(target=lengthy_process)
         thread.start()

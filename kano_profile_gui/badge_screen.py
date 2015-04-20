@@ -11,6 +11,9 @@ from gi.repository import Gtk, Gdk, Pango
 from kano_profile_gui.BadgeItem import BadgeItem
 from kano_profile_gui.backend import create_item_page_list
 from kano_profile_gui.paths import media_dir
+from kano_profile_gui.navigation_buttons import create_navigation_button
+from kano.gtk3.apply_styles import apply_styling_to_screen
+from kano.gtk3.cursor import attach_cursor_events
 
 
 class BadgeScreen(Gtk.EventBox):
@@ -20,6 +23,9 @@ class BadgeScreen(Gtk.EventBox):
 
         self._win = win
         self._page = 0
+
+        css_file = os.path.join(media_dir, "CSS/badge_screen.css")
+        apply_styling_to_screen(css_file)
 
         self.badge_grid = BadgeGrid(win)
         bottom_bar = self._create_bottom_navigation_bar()
@@ -33,39 +39,15 @@ class BadgeScreen(Gtk.EventBox):
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.Box()
 
-        self.next_button = self._create_navigation_button("NEXT PAGE")
-        self.prev_button = self._create_navigation_button("PREVIOUS")
+        self.next_button = create_navigation_button("NEXT PAGE", "next")
+        self.next_button.connect("clicked", self._load_page_wrapper, 1)
+
+        self.prev_button = create_navigation_button("PREVIOUS", "previous")
+        self.prev_button.connect("clicked", self._load_page_wrapper, -1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)
         bottom_bar.pack_end(self.next_button, False, False, 0)
         return bottom_bar
-
-    def _create_navigation_button(self, title):
-        hbox = Gtk.Box()
-        label = Gtk.Label(title)
-        button = Gtk.Button()
-        button.get_style_context().add_class("navigation_button")
-
-        if title == "PREVIOUS":
-            # path is for previous icon
-            button.get_style_context().add_class("back")
-            prev_arrow_path = os.path.join(media_dir, "images/icons/previous.png")
-            icon = Gtk.Image.new_from_file(prev_arrow_path)
-            hbox.pack_start(icon, False, False, 0)
-            hbox.pack_start(label, False, False, 0)
-            button.connect("clicked", self._load_page_wrapper, -1)
-
-        elif title == "NEXT PAGE":
-            # path is for next icon
-            button.get_style_context().add_class("next")
-            next_arrow_path = os.path.join(media_dir, "images/icons/next.png")
-            icon = Gtk.Image.new_from_file(next_arrow_path)
-            hbox.pack_start(label, False, False, 0)
-            hbox.pack_start(icon, False, False, 0)
-            button.connect("clicked", self._load_page_wrapper, 1)
-
-        button.add(hbox)
-        return button
 
     def _load_page_wrapper(self, widget, page_increment):
         self._page += page_increment
@@ -102,14 +84,19 @@ class BadgeGrid(Gtk.Grid):
     def __init__(self, win):
         Gtk.Grid.__init__(self)
         self._win = win
+        self.get_style_context().add_class("badge_grid")
+
+        # We use these to find the filepath leading to the images
+        # of these sizes, these aren't necessarily the size of the grid
+        # items
         self._item_width = 230
         self._item_height = 180
+
         self.row = 2
         self.column = 3
         self.number_on_page = self.row * self.column
 
         self._split_info_into_pages()
-        # self._pack_badge_grid(1)
 
     def get_number_of_pages(self):
         return len(self.page_list)
@@ -146,9 +133,11 @@ class BadgeGrid(Gtk.Grid):
                 background_colour, locked
             )
 
-            # This is the index of the badge in the ordered array of all the badges
+            # This is the index of the badge in the ordered array of all the
+            # badges
             index = page_number * self.number_on_page + i
-            badge_widget.connect("clicked", self._go_to_badge_info_wrapper, index)
+            badge_widget.connect("clicked", self._go_to_badge_info_wrapper,
+                                 index)
             self.attach(badge_widget, column, row, 1, 1)
 
     def _go_to_badge_info_wrapper(self, widget, index):
@@ -198,9 +187,6 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _show_badge(self):
         background = Gtk.EventBox()
 
-        # Make it the same size as the badge grid
-        # background.set_size_request(920, 540)
-
         # TODO: this is repeated.  Fix this.
         locked = not self.item_info['achieved']
         if locked:
@@ -229,7 +215,6 @@ class BadgeInfoScreen(Gtk.EventBox):
         hbox.pack_start(info_box, False, False, 0)
 
         background.add(hbox)
-
         self._win.pack_in_main_content(background)
 
     def _create_info_box(self):
@@ -271,11 +256,21 @@ class BadgeInfoScreen(Gtk.EventBox):
     # as this is the same height across all screens
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.ButtonBox()
-        # bottom_bar.set_size_request(-1, 80)
 
-        self.prev_button = self._create_navigation_button("previous")
-        self.grid_button = self._create_navigation_button("middle")
-        self.next_button = self._create_navigation_button("end")
+        prev_pos = self._make_index_in_range(self.index - 1)
+        next_pos = self._make_index_in_range(self.index + 1)
+        prev_title = self.item_list[prev_pos]["title"].upper()
+        next_title = self.item_list[next_pos]["title"].upper()
+        grid_title = "BACK TO GRID"
+
+        self.prev_button = create_navigation_button(prev_title, "previous")
+        self.prev_button.connect("clicked", self._go_to_other_badge, -1)
+
+        self.grid_button = create_navigation_button(grid_title, "middle")
+        self.grid_button.connect("clicked", self._go_to_grid)
+
+        self.next_button = create_navigation_button(next_title, "next")
+        self.next_button.connect("clicked", self._go_to_other_badge, 1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)
         bottom_bar.pack_start(self.grid_button, False, False, 0)
@@ -285,54 +280,13 @@ class BadgeInfoScreen(Gtk.EventBox):
 
         self._win.pack_in_bottom_bar(bottom_bar)
 
-    def _create_navigation_button(self, position='previous'):
-        '''position is either 'previous', 'middle' or 'end'
-        This is to determine the position of the icon on the button
+    def _make_index_in_range(self, index):
+        '''Making sure the index is valid by returning one that is.
+        Returns a number between 0 and the number of items in the grid.
         '''
-        hbox = Gtk.Box()
-        button = Gtk.Button()
-        button.get_style_context().add_class("navigation_button")
-
-        # If the button is at the end, the icon comes after the label
-        if position == "end":
-            # path is for next icon
-            next_icon_path = os.path.join(media_dir, "images/icons/next.png")
-            icon = Gtk.Image.new_from_file(next_icon_path)
-            button.get_style_context().add_class("next")
-
-            # get title of end button
-            title = self.item_list[self.index + 1]["title"].upper()
-            label = Gtk.Label(title)
-
-            hbox.pack_start(label, False, False, 0)
-            hbox.pack_start(icon, False, False, 0)
-            button.connect("clicked", self._go_to_other_badge, 1)
-
-        # Otherwise if the icon is at the middle or start,
-        # the icon comes before the text
-        else:
-            if position == "previous":
-                # get previous icon path
-                icon_path = os.path.join(media_dir, "images/icons/next.png")
-                title = self.item_list[self.index - 1]["title"].upper()
-                label = Gtk.Label(title)
-                button.connect("clicked", self._go_to_other_badge, -1)
-                button.get_style_context().add_class("back")
-
-            elif position == "middle":
-                # path is for middle icon
-                icon_path = os.path.join(media_dir, "images/icons/grid.png")
-                title = "BACK TO GRID"
-                label = Gtk.Label(title)
-                button.connect("clicked", self._go_to_grid)
-                button.get_style_context().add_class("middle")
-
-            icon = Gtk.Image.new_from_file(icon_path)
-            hbox.pack_start(icon, False, False, 0)
-            hbox.pack_start(label, False, False, 0)
-
-        button.add(hbox)
-        return button
+        total_num_of_items = len(self.item_list)
+        new_index = index % total_num_of_items
+        return new_index
 
     def _go_to_other_badge(self, widget, change_index):
         # we know the index of the current widget, so we
@@ -340,7 +294,7 @@ class BadgeInfoScreen(Gtk.EventBox):
         # unpack the current widgets and pack the new widgets
         self._win.empty_bottom_bar()
         self._win.empty_main_content()
-        new_index = self.index + change_index
+        new_index = self._make_index_in_range(self.index + change_index)
         BadgeInfoScreen(self._win, self.item_list, new_index)
 
     def _go_to_grid(self, widget):

@@ -1,0 +1,34 @@
+/* Badge Grid */
+/* Styling specific to the grid shown on the swag/badges screen */
+
+
+/* This is to remove padding */
+/* GtkBox GtkEventBox,
+GtkBox GtkGrid,
+GtkEventBox GtkImage,
+GtkGrid GtkEventBox,
+GtkFixed GtkImage,
+GtkFixed GtkEventBox,
+GtkWindow GtkImage,
+GtkWindow GtkGrid,
+GtkWindow GtkBox,
+GtkWindow GtkEventBox {
+    padding: 0;
+}*/
+
+.badge_grid .badge_item,
+.badge_item GtkFixed,
+GtkFixed GtkImage,
+GtkFixed .hover_box {
+    padding: 0px;
+    margin: 0px;
+}
+
+.hover_box {
+    background: alpha(@hover_box_background, 0.5);
+}
+
+.hover_label {
+    font: Bariol bold 13px;
+    color: #ffffff;
+}

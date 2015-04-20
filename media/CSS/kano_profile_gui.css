@@ -144,16 +144,6 @@ GtkSwitch.slider {
 /* All below are used in the refactor of kano_profile_gui */
 /* Info screen oof individual badges/environments/avatars */
 
-/* Styling specific to the grid shown on the swag/badges screen */
-
-.hover_box {
-    background: alpha(@hover_box_background, 0.5);
-}
-
-.hover_label {
-    font: Bariol bold 13px;
-    color: #ffffff;
-}
 
 /* Used on the badge info screen */
 .info_heading {

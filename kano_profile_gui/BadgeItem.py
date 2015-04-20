@@ -22,7 +22,7 @@ class BadgeItem(Gtk.Button):
         Gtk.Button.__init__(self)
 
         # This is the dimensions of the actual item
-        self.width = 245
+        self.width = 243
         self.height = 194
 
         # Dimensions of the image
@@ -31,6 +31,8 @@ class BadgeItem(Gtk.Button):
 
         # Dimensions of the hover over label.
         self.label_height = 44
+
+        self.get_style_context().add_class("badge_item")
 
         self.unlocked_description = unlocked_description
         self.locked_description = locked_description
@@ -63,7 +65,6 @@ class BadgeItem(Gtk.Button):
 
     def create_hover_box(self):
         self.hover_box = Gtk.EventBox()
-        self.hover_box.set_size_request(self.width, self.height)
         self.hover_box.get_style_context().add_class("hover_box")
         self.hover_label = Gtk.Label(self.get_title())
         self.hover_label.get_style_context().add_class("hover_label")
@@ -76,9 +77,7 @@ class BadgeItem(Gtk.Button):
     def change_locked_style(self):
         if self.locked:
             self.padlock = icons.set_from_name("padlock")
-            # old measurement
             self.fixed.put(self.padlock, 100, 77)
-            # self.fixed.put(self.padlock, 95, 70)
             self.override_background_color(Gtk.StateFlags.NORMAL,
                                            self.locked_background_color)
         else:

@@ -258,7 +258,8 @@ class Page3(Gtk.Box):
             logger.info('trying to register user')
 
             success, text = register_(email, username, password,
-                                      date_year, date_month, date_day)
+                                      date_year, date_month, date_day,
+                                      secondary_email=guardian_email)
 
             if not success:
                 logger.info('problem with registration: {}'.format(text))

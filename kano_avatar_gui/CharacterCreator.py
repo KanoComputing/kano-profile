@@ -69,8 +69,8 @@ class CharacterCreator(Gtk.EventBox):
 
     def get_avatar_save_path(self):
         return os.path.abspath(
-                os.path.expanduser(
-                    os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)))
+            os.path.expanduser(
+                os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)))
 
     def _create_random_button(self):
         random_button = Gtk.Button()
@@ -89,10 +89,29 @@ class CharacterCreator(Gtk.EventBox):
         return random_button
 
     def _randomise_avatar_wrapper(self, button):
-        self.avatar_cr.randomise_all_items()
-        self.avatar_cr.create_avatar()
-        self.show_all()
-        self._hide_pop_ups()
+        logger.debug("\n_randomise_avatar_wrapper")
+        selected_item_dict = {}
+        selected_item_list = self.avatar_cr.randomise_all_items()
+
+        # Get the category
+        # TODO: this should be moved into the AvatarCreator
+        all_objects = {}
+        all_objects.update(self.avatar_cr._objects)
+        all_objects.update(self.avatar_cr._environments)
+
+        for item in selected_item_list:
+            item_obj = all_objects[item]
+            # TODO: this is very very very hacky
+            try:
+                category = item_obj.category()
+            except Exception as e:
+                print str(e)
+                category = "environments"
+            selected_item_dict[category] = item
+
+        filepath = self.avatar_cr.create_avatar()
+        self._imgbox.set_image(filepath)
+        self._menu.select_pop_up_items(selected_item_dict)
 
     def _hide_pop_ups(self, widget=None, event=None):
         self._menu.hide_pop_ups()

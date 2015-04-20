@@ -225,7 +225,7 @@ class PopUpItemMenu(SelectMenu):
         even when the mouse is moved away.
         If identifier is None, will remove all styling.
         '''
-        logger.debug("Entered _only_style_selected")
+        logger.debug("Entered the pop up _only_style_selected")
         old_selected_id = self.get_selected()
         self._set_selected(identifier)
 
@@ -235,7 +235,7 @@ class PopUpItemMenu(SelectMenu):
         # Since the item should already have the selected apearence from the
         # mouse hovering over it, should not bee needed to add the border again
         self.add_selected_border_if_not_added(identifier)
-        self.emit(self._signal_name, identifier)
+        logger.debug("\nLEAVING Leaving _only_style_selected")
 
     #########################################################################
     # Wrapper functions, for callbacks
@@ -255,6 +255,7 @@ class PopUpItemMenu(SelectMenu):
     def _on_clicking_item(self, button, identifier):
         logger.debug("_on_clicking_item")
         self._only_style_selected(identifier)
+        self.emit(self._signal_name, identifier)
 
 
 def get_environment_dict():

@@ -15,7 +15,7 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_avatar_gui.PopUpItemMenu2 import PopUpItemMenu
+from kano_avatar_gui.PopUpItemMenu import PopUpItemMenu
 from kano_avatar_gui.CategoryMenu import CategoryMenu
 from kano.logging import logger
 from kano_profile.apps import load_app_state_variable, save_app_state_variable
@@ -36,6 +36,7 @@ class Menu(Gtk.Fixed):
         self._cat_menu = CategoryMenu(self._parser)
         self._cat_menu.connect('category_item_selected',
                                self.launch_pop_up_menu)
+        self.categories = self._cat_menu.categories
 
         self.cat_position_x = 0
         self.cat_position_y = 0
@@ -49,6 +50,17 @@ class Menu(Gtk.Fixed):
         self._create_start_up_image()
 
         self.show_all()
+
+    def select_pop_up_items(self, selected_items):
+        '''selected_items are of the form
+        {category: {name: item_name}}
+        '''
+        logger.debug("select_pop_up_items entered")
+
+        for category, item_dict in selected_items.iteritems():
+            pop_up = self.menus[category]["pop_up"]
+            identifier = selected_items[category]
+            pop_up._only_style_selected(identifier)
 
     def unselect_categories(self):
         self._cat_menu.remove_selected_on_all()
@@ -86,7 +98,6 @@ class Menu(Gtk.Fixed):
 
             self.put(self.menus[category]['pop_up'],
                      self.pop_up_pos_x, self.pop_up_pos_y)
-            self.menus[category]['pop_up'].hide()
 
     def _create_start_up_image(self):
         '''We check what has been saved on kano-profile, and we use a default if
@@ -97,7 +108,6 @@ class Menu(Gtk.Fixed):
         # TODO: fix this. This is only here to make this work.
         self._parser.char_select('Judoka_Base')
 
-        categories = ['Belts', "Faces", "Hair", "Skins", "Stickers", "Suits", "environments"]
         defaults = {
             "Belts": 'Belt_Orange',
             'Suits': 'Suit_White',
@@ -108,7 +118,7 @@ class Menu(Gtk.Fixed):
             'environments': 'Dojo'
         }
 
-        for category in categories:
+        for category in self.categories:
             available_objects = self._parser.get_avail_objs(category)
             logger.debug("available_objects = {}".format(available_objects))
 
@@ -127,9 +137,6 @@ class Menu(Gtk.Fixed):
             self.menus[category]["pop_up"]._only_style_selected(obj_name)
             self.menus[category]["pop_up"].hide()
             logger.debug("Hid menu for category {}".format(category))
-
-        # self._parser.obj_select(object_list)
-        # self._parser.create_avatar(save_to='avatar.png')
 
     def launch_pop_up_menu(self, widget, category):
 

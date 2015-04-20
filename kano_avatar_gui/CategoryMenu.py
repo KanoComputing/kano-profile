@@ -9,6 +9,7 @@
 from gi.repository import Gtk, GObject
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.gtk3.cursor import attach_cursor_events
+from kano.logging import logger
 
 
 class CategoryMenu(SelectMenu):
@@ -24,7 +25,6 @@ class CategoryMenu(SelectMenu):
         self.item_height = 50
 
         self._signal_name = 'category_item_selected'
-
         self._parser = parser
 
         # Initialise self._items
@@ -36,7 +36,6 @@ class CategoryMenu(SelectMenu):
 
         # The menu is one item by 7 items
         self.set_size_request(self.item_width, 7 * self.item_height)
-
         self._pack_buttons()
 
     def _add_selected_appearence(self, identifier, button=None):
@@ -138,6 +137,7 @@ class CategoryMenu(SelectMenu):
         even when the mouse is moved away.
         If identifier is None, will remove all styling
         '''
+        logger.debug("Hit CategoryMenu _only_style_selected")
 
         for name, img_dict in self._items.iteritems():
             if 'button' in img_dict:

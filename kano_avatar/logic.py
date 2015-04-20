@@ -577,6 +577,22 @@ class AvatarConfParser():
         else:
             return self._cat_to_z_index[category]
 
+    def _get_reg_item_cat(self, item_name):
+        if item_name in self._objects:
+            return self._objects[item_name].category()
+        else:
+            return None
+
+    def get_item_category(self, item_name):
+        cat_label = self._get_reg_item_cat(item_name)
+        if not cat_label:
+            if item_name not in self._environments:
+                logger.warn('Item {} neither in obj nor in env list'.format(item_name))
+                return None
+            else:
+                cat_label = self.env_label
+        return cat_label
+
     def list_available_chars(self):
         """ Provides a list of available characters
         :returns: list of characters (list of strings)
@@ -964,7 +980,7 @@ class AvatarCreator(AvatarConfParser):
         """
         self.randomise_rest('')
 
-        return self.selected_items()
+        return self.selected_items_per_cat()
 
     def selected_items(self):
         """ Returns a list of the items that have been selected
@@ -975,6 +991,13 @@ class AvatarCreator(AvatarConfParser):
         if self._sel_env:
             ret.append(self._sel_env.name())
         return ret
+
+    def selected_items_per_cat(self):
+        """ Returns a dictionary of the selected items organised by their
+        category.
+        :returns: A dict with [categ_labels] -> item_selected
+        """
+        return {cat: item.name() for cat, item in self._sel_obj_per_cat.iteritems()}
 
     def create_avatar(self, file_name=''):
         """ Create the finished main image and save it to file.

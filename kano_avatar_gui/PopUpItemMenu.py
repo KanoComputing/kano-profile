@@ -187,7 +187,6 @@ class PopUpItemMenu(SelectMenu):
         if identifier in self._items and \
                 'selected_border' in self._items[identifier]:
 
-            logger.debug("removing ")
             button = self._items[identifier]['button']
             fixed = button.get_children()[0]
 
@@ -209,7 +208,7 @@ class PopUpItemMenu(SelectMenu):
     def remove_selected_border_if_not_selected(self, identifier):
         '''Adds the selected styling if the item is not selected
         '''
-        logger.debug("\nremove_selected_border_if_not_selected")
+        logger.debug("remove_selected_border_if_not_selected")
 
         if not (self.get_selected() == identifier) and \
                 self.get_if_selected_styling_set(identifier):
@@ -235,7 +234,6 @@ class PopUpItemMenu(SelectMenu):
         # Since the item should already have the selected apearence from the
         # mouse hovering over it, should not bee needed to add the border again
         self.add_selected_border_if_not_added(identifier)
-        logger.debug("\nLEAVING Leaving _only_style_selected")
 
     #########################################################################
     # Wrapper functions, for callbacks

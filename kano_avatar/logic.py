@@ -188,13 +188,25 @@ class AvatarCharacter():
         :param file_name: Path to where the completed file should be saved as a
                           string
         """
-        # TODO Error handling
+        # TODO remove the hardcoding of 54
+        return self._generate_white_circular(file_name, resize=90)
+
+    def _generate_white_circular(self, file_name, resize=0):
+        """ Creates the circular asset to be used in the top left corner on the
+        desktop
+        :param file_name: Path to where the completed (and resized if set so)
+                          file will be saved as a string
+        :param resize: (Optional) The size of the side of the resulting resized
+                       image (Will be a square)
+        """
         ring = Image.open(RING_ASSET)
         ring_mask = Image.open(CIRC_ASSET_MASK)
 
         if ring.size != ring_mask.size:
             logger.warn('Mask and ring asset do not have the same size')
+            return False
 
+        # Create a box of useful image data
         box = (self._crop_x,
                self._crop_y,
                self._crop_x + ring.size[0],
@@ -203,6 +215,17 @@ class AvatarCharacter():
         cropped_img = self._img.crop(box)
 
         img_out = Image.composite(ring, cropped_img, ring_mask)
+
+        # Resize to specified width if set
+        if resize != 0:
+            if img_out.size[0] != img_out.size[1]:
+                logger.warn("Image is not square, resizing it will distort it")
+            if resize < 0:
+                logger.error(
+                    "Resize value negative: {}, won't continue".format(resize)
+                )
+                return False
+            img_out.thumbnail((resize, resize), Image.ANTIALIAS)
 
         img_out.save(file_name)
         logger.debug("created {}".format(file_name))

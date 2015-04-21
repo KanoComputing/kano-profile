@@ -270,8 +270,12 @@ class KanoWorldSession(object):
         return True, None
 
     def refresh_notifications(self):
-        next_page = 1
+        rv = True
+        error = None
+
+        next_page = 0
         notifications = []
+        mark_as_read_ids = []
         while next_page is not None:
             success, text, data = request_wrapper(
                 'get',
@@ -280,22 +284,41 @@ class KanoWorldSession(object):
             )
 
             if not success:
-                return False, text
+                rv = False
+                error = text
+                break
 
             for entry in data['entries']:
                 if entry['read'] is False:
                     n = self._process_notification(entry)
                     notifications.append(n)
+                    mark_as_read_ids.append(entry['id'])
 
             try:
                 next_page = data['next']
             except:
                 break
 
-        profile = load_profile()
-        profile['notifications'] = notifications
-        save_profile(profile)
-        return True, None
+        if rv:
+            profile = load_profile()
+            profile['notifications'] = notifications
+            save_profile(profile)
+
+            for n_id in mark_as_read_ids:
+                self._mark_notification_read(n_id)
+                print "marking as read", n_id
+
+        return rv, error
+
+    def _mark_notification_read(self, n_id):
+        # Mark the notification as read
+        success, text, data = request_wrapper(
+            'post',
+            '/notifications/read/{}'.format(n_id),
+            session=self.session
+        )
+
+        return success
 
     def upload_tracking_data(self):
         data = get_tracker_events(old_only=True)
@@ -398,12 +421,13 @@ class KanoWorldSession(object):
             n['image'] = FOLLOWER_IMG
 
             # Link to whomever followed this user
-            if self._dict_path_exists(entry, ['meta', 'author', 'username']):
-                user = entry['meta']['author']['username']
+            user = self._get_dict_value(entry, ['meta', 'author', 'username'])
+            if user:
                 n['command'] = "kano-world-launcher /users/{}".format(user)
 
         elif entry['category'] in ['share-items', 'shares']:
             n['title'] = 'New share!'
+            n['byline'] = entry['title']
 
             if entry['type'] == 'make-minecraft':
                 n['image'] = MINECRAFT_SHARE_IMG
@@ -411,60 +435,67 @@ class KanoWorldSession(object):
                 n['image'] = PONG_SHARE_IMG
 
             # Link to the share
-            if self._dict_path_exists(entry, ['meta', 'item', 'id']):
-                sh_id = entry['meta']['item']['id']
-                n['command'] = "kano-world-launcher /shared/{}".format(sh_id)
+            share_id = self._get_dict_value(entry, ['meta', 'item', 'id'])
+            if share_id:
+                n['command'] = "kano-world-launcher /shared/{}".format(share_id)
 
         elif entry['category'] == 'comments':
             n['title'] = 'New comment!'
             n['byline'] = entry['title']
 
-            if self._dict_path_exists(entry, ['meta', 'item', 'type']):
+            slug = self._get_dict_value(entry, ['meta', 'item', 'slug'])
+            if slug:
                 obj_type = entry['meta']['item']['type']
-                slug = entry['meta']['item']['slug']
                 if obj_type == "app":
                     n['command'] = "kano-world-launcher /apps/{}".format(slug)
                 elif obj_type == "share":
                     n['command'] = "kano-world-launcher /shared/{}".format(slug)
                 elif obj_type == "project":
                     n['command'] = "kano-world-launcher /projects/{}".format(slug)
-        elif entry['category'] == 'updates':
-            if entry['type'] == 'saturday-projects':
-                n['title'] = entry['title']
-                n['byline'] = entry['text']
-                n['image'] = SP_IMG
+
+        # If a notification has both the title and text, override the default one
+        if entry.has_key('title') and entry['title'] and \
+           entry.has_key('text') and entry['text']:
+            n['title'] = entry['title']
+            n['byline'] = entry['text']
 
         # Some notifications may have images
         # If so, we need to download them and resize
-        if entry.has_key('img_url') and entry['img_url']:
-            filename = os.path.basename()
+        if entry.has_key('image_url') and entry['image_url']:
+            filename = os.path.basename(entry['image_url'])
 
             img_path = "{}/notifications/{}".format(profile_dir, filename)
             ensure_dir(os.path.dirname(img_path))
 
-            rv, e = download_url(entry['img_url'], img_path)
+            rv, e = download_url(entry['image_url'], img_path)
             if rv:
                 # Resize image to 280x170
                 # FIXME: We import GdkPixbuf locally to make sure not to
                 # bugger up anything else, but we should move it up to the top.
                 from gi.repository import GdkPixbuf
 
-                pixbuf = GdkPixbuf.new_from_file_at_size(img_path, 280, 170)
-                pixbuf.savev(img_path, 'png')
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(img_path, 280, 170)
+                pixbuf.savev(img_path, 'png', [None], [None])
 
                 n['image'] = img_path
             else:
                 msg = "Notifications image failed to download ({}).".format(e)
                 logger.error(msg)
 
+        # Certain notifications may come with a command as well.
+        # If so, override the default one.
+        cmd = self._get_dict_value(entry, ['meta', 'cmd'])
+        if cmd:
+            n['command'] = cmd
+
         return n
 
-    def _dict_path_exists(self, root, elements):
+    def _get_dict_value(self, root, elements):
         cur_root = root
         for el in elements:
             if type(cur_root) == dict and cur_root.has_key(el):
                 cur_root = cur_root[el]
             else:
-                return False
+                return None
 
-        return True
+        return cur_root

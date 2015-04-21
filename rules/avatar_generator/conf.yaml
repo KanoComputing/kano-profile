@@ -71,8 +71,8 @@ characters:
     - display_name: Judoka_Base
       img_name: judoka_base.png
       preview_img: judoka_base.png
-      crop_x: 57
-      crop_y: 0
+      crop_x: 172
+      crop_y: 115
       display_order: 1
       date_created: 2015-04-14T10:54:14Z
       character_id: 6df0b2d7985b4381a28c4dd4e24818b7

@@ -15,7 +15,8 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
                                INACTIVE_SPECIAL_CATEGORY_ICONS,
                                CIRC_ASSET_MASK, RING_ASSET, PREVIEW_ICONS,
                                ENVIRONMENT_DIR, AVATAR_SCRATCH,
-                               AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
+                               AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME,
+                               PLAIN_MASK)
 from kano.logging import logger
 
 # TODO Check which types of names are case sensitive
@@ -182,31 +183,81 @@ class AvatarCharacter():
         """
         self._img.save(file_name)
 
-    def generate_circular_assets(self, file_name):
+    def generate_circular_assets(self, file_name_plain, file_name_ring):
         """ This function creates the circular assets that are required for the
         kano profile
         :param file_name: Path to where the completed file should be saved as a
                           string
         """
-        # TODO Error handling
-        ring = Image.open(RING_ASSET)
-        ring_mask = Image.open(CIRC_ASSET_MASK)
+        rc_plain = self._generate_plain_circular(file_name_plain)
 
-        if ring.size != ring_mask.size:
+        # TODO remove the hardcoding of 90
+        rc_ring = self._generate_white_circular(file_name_ring, resize=90)
+        return rc_plain and rc_ring
+
+    def _generate_white_circular(self, file_name, resize=0):
+        return self._generate_ring_circular(file_name, RING_ASSET, CIRC_ASSET_MASK, resize=resize)
+
+    def _generate_plain_circular(self, file_name):
+        return self._generate_ring_circular(file_name, PLAIN_MASK, PLAIN_MASK, invert_order=True)
+
+    def _generate_ring_circular(self, file_name, ring, mask, invert_order=False, resize=0):
+        """ Creates the circular asset to be used in the top left corner on the
+        desktop
+        :param file_name: Path to where the completed (and resized if set so)
+                          file will be saved as a string
+        :param resize: (Optional) The size of the side of the resulting resized
+                       image (Will be a square)
+        """
+        ring_img = Image.open(ring)
+        mask_img = Image.open(mask)
+
+        if ring_img.size != mask_img.size:
             logger.warn('Mask and ring asset do not have the same size')
+            return False
 
-        box = (self._crop_x,
-               self._crop_y,
-               self._crop_x + ring.size[0],
-               self._crop_y + ring.size[1])
+        cropped_img = self._get_image_cropped(mask_img.size[0], mask_img.size[1])
 
-        cropped_img = self._img.crop(box)
+        if not invert_order:
+            img_out = Image.composite(ring_img, cropped_img, mask_img)
+        else:
+            img_out = Image.composite(cropped_img, ring_img, mask_img)
 
-        img_out = Image.composite(ring, cropped_img, ring_mask)
+        # Resize to specified width if set
+        if resize != 0:
+            if img_out.size[0] != img_out.size[1]:
+                logger.warn("Image is not square, resizing it will distort it")
+            if resize < 0:
+                logger.error(
+                    "Resize value negative: {}, won't continue".format(resize)
+                )
+                return False
+            img_out.thumbnail((resize, resize), Image.ANTIALIAS)
 
         img_out.save(file_name)
         logger.debug("created {}".format(file_name))
         return True
+
+    def _get_image_cropped(self, size_x, size_y):
+        """ Get an instance of the base image centred at the coordinates held
+        by the internal variables and cropped to an exact size
+        :param size_x: Size of the final image in the x dimension
+        :param size_y: Size of the final image in the y dimension
+        :returns: Instance of PIL Image
+        """
+        # Create a box of useful image data
+        x_left = int(size_x / 2)
+        x_right = size_x - x_left
+
+        y_up = int(size_y / 2)
+        y_down = size_y - y_up
+
+        box = (self._crop_x - x_left,
+               self._crop_y - y_up,
+               self._crop_x + x_right,
+               self._crop_y + y_down)
+
+        return self._img.crop(box)
 
     def get_preview_img(self):
         """ Provides the Character's preview image path
@@ -1059,8 +1110,9 @@ class AvatarCreator(AvatarConfParser):
             return False
 
         # Circular assets
-        fname_circ = append_suffix_to_fname(file_name, '_circ')
-        rc_c = self._sel_char.generate_circular_assets(fname_circ)
+        fname_circ = append_suffix_to_fname(file_name, '_circ_ring')
+        fname_plain = append_suffix_to_fname(file_name, '_circ_plain')
+        rc_c = self.create_circular_assets(fname_plain, fname_circ)
         if not rc_c:
             logger.error("Couldn't create circular assets, aborting auxiliary asset generation")
             return False
@@ -1113,20 +1165,20 @@ class AvatarCreator(AvatarConfParser):
 
         return True
 
-    def create_circular_assets(self, file_name):
+    def create_circular_assets(self, file_name_plain, file_name_ring):
         """ Save circular assets with the filename given
         :param file_name: filename to save the image to
         :returns: False if there was a problem, True otherwise
         """
-        if not file_name:
-            logger.warn('No filename given, will not save circular assets')
+        if not file_name_plain or not file_name_ring:
+            logger.warn('No filenames given, will not save circular assets')
             return None
 
         if not self._sel_char:
             err_msg = "No character is selected, will not save circular assets"
             logger.error(err_msg)
             return None
-        self._sel_char.generate_circular_assets(file_name)
+        self._sel_char.generate_circular_assets(file_name_plain, file_name_ring)
         return True
 
     def _create_base_img(self):

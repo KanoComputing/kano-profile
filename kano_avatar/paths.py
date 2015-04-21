@@ -29,3 +29,4 @@ INACTIVE_SPECIAL_CATEGORY_ICONS = os.path.join(SPECIAL_CATEGORY_ICONS, 'inactive
 PREVIEW_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'preview')
 CIRC_ASSET_MASK = os.path.join(AVATAR_ASSET_FOLDER, 'helper_assets', 'circle_mask.png')
 RING_ASSET = os.path.join(AVATAR_ASSET_FOLDER, 'helper_assets', 'grey_ring.png')
+PLAIN_MASK = os.path.join(AVATAR_ASSET_FOLDER, 'helper_assets', 'plain_mask.png')

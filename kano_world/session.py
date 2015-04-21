@@ -17,7 +17,7 @@ from kano_profile.profile import load_profile, set_avatar, set_environment, \
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file, online_badges_dir, \
-    online_badges_file
+    online_badges_file, profile_dir
 from kano_profile.tracker import get_tracker_events, clear_tracker_events
 from kano_profile_gui.paths import media_dir
 
@@ -386,7 +386,7 @@ class KanoWorldSession(object):
 
         n = {
             'title': 'Kano World',
-            'byline': entry['title'],
+            'byline': '',
             'image': GENERIC_ALERT_IMG,
             'command': 'kano-world-launcher /notifications/open/{}'.format(entry['id'])
         }
@@ -394,7 +394,14 @@ class KanoWorldSession(object):
         # Customise settings for known types
         if entry['category'] == 'follows':
             n['title'] = 'New follower!'
+            n['byline'] = entry['title']
             n['image'] = FOLLOWER_IMG
+
+            # Link to whomever followed this user
+            if self._dict_path_exists(entry, ['meta', 'author', 'username']):
+                user = entry['meta']['author']['username']
+                n['command'] = "kano-world-launcher /users/{}".format(user)
+
         elif entry['category'] in ['share-items', 'shares']:
             n['title'] = 'New share!'
 
@@ -402,11 +409,62 @@ class KanoWorldSession(object):
                 n['image'] = MINECRAFT_SHARE_IMG
             elif entry['type'] == 'make-pong':
                 n['image'] = PONG_SHARE_IMG
-        elif entry.has_key('updates'):
-            n['title'] = 'New Update!'
 
-            if entry['type'] == 'saturday-project':
-                n['title'] = 'New Project!'
+            # Link to the share
+            if self._dict_path_exists(entry, ['meta', 'item', 'id']):
+                sh_id = entry['meta']['item']['id']
+                n['command'] = "kano-world-launcher /shared/{}".format(sh_id)
+
+        elif entry['category'] == 'comments':
+            n['title'] = 'New comment!'
+            n['byline'] = entry['title']
+
+            if self._dict_path_exists(entry, ['meta', 'item', 'type']):
+                obj_type = entry['meta']['item']['type']
+                slug = entry['meta']['item']['slug']
+                if obj_type == "app":
+                    n['command'] = "kano-world-launcher /apps/{}".format(slug)
+                elif obj_type == "share":
+                    n['command'] = "kano-world-launcher /shared/{}".format(slug)
+                elif obj_type == "project":
+                    n['command'] = "kano-world-launcher /projects/{}".format(slug)
+        elif entry['category'] == 'updates':
+            if entry['type'] == 'saturday-projects':
+                n['title'] = entry['title']
+                n['byline'] = entry['text']
                 n['image'] = SP_IMG
 
+        # Some notifications may have images
+        # If so, we need to download them and resize
+        if entry.has_key('img_url') and entry['img_url']:
+            filename = os.path.basename()
+
+            img_path = "{}/notifications/{}".format(profile_dir, filename)
+            ensure_dir(os.path.dirname(img_path))
+
+            rv, e = download_url(entry['img_url'], img_path)
+            if rv:
+                # Resize image to 280x170
+                # FIXME: We import GdkPixbuf locally to make sure not to
+                # bugger up anything else, but we should move it up to the top.
+                from gi.repository import GdkPixbuf
+
+                pixbuf = GdkPixbuf.new_from_file_at_size(img_path, 280, 170)
+                pixbuf.savev(img_path, 'png')
+
+                n['image'] = img_path
+            else:
+                msg = "Notifications image failed to download ({}).".format(e)
+                logger.error(msg)
+
         return n
+
+    def _dict_path_exists(self, root, elements):
+        cur_root = root
+        for el in elements:
+            if type(cur_root) == dict and cur_root.has_key(el):
+                cur_root = cur_root[el]
+            else:
+                return False
+
+        return True

@@ -189,7 +189,6 @@ class AvatarCharacter():
         :param file_name: Path to where the completed file should be saved as a
                           string
         """
-        # TODO Remove hardcoded file
         rc_plain = self._generate_plain_circular(file_name_plain)
 
         # TODO remove the hardcoding of 90

@@ -123,7 +123,7 @@ elif sys.argv[1] == 'get_stats':
     print 'avatar_image_path: {}'.format(avatar_image_path)
 
     progress_value = progress / 5
-    progress_image_path = os.path.join('/usr/share/kano-profile/media/images/progress_icons/90x90/',
+    progress_image_path = os.path.join('/usr/share/kano-profile/media/images/progress_icons/209x80/',
                                        '{}.png'.format(progress_value))
     if not os.path.exists(progress_image_path):
         progress_image_path = 'image_missing'

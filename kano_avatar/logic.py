@@ -191,8 +191,8 @@ class AvatarCharacter():
         """
         rc_plain = self._generate_plain_circular(file_name_plain)
 
-        # TODO remove the hardcoding of 90
-        rc_ring = self._generate_white_circular(file_name_ring, resize=90)
+        # TODO remove the hardcoding of 54
+        rc_ring = self._generate_white_circular(file_name_ring, resize=54)
         return rc_plain and rc_ring
 
     def _generate_white_circular(self, file_name, resize=0):

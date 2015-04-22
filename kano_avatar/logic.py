@@ -19,6 +19,8 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
                                PLAIN_MASK)
 from kano.logging import logger
 
+from kano_profile.badges import calculate_badges
+
 # TODO Check which types of names are case sensitive
 # TODO Add support to save multiple circular assets, atm only 1 is supported
 
@@ -36,10 +38,11 @@ class AvatarAccessory():
     _date_created = ''
     _item_id = ''
     _display_order = 0
+    _is_unlocked = False
 
     _img = None
 
-    def __init__(self, name, category, file_name, preview_img, x, y, date_created, item_id, display_order):
+    def __init__(self, name, category, file_name, preview_img, x, y, date_created, item_id, is_unlocked, display_order):
         self._category = category
         self._name = name
         self._img_position_x = x
@@ -47,6 +50,7 @@ class AvatarAccessory():
         self._date_created = date_created
         self._item_id = item_id
         self._display_order = display_order
+        self._is_unlocked = is_unlocked
         # if an absolute path is given use it instead, so that we can
         # override elements
         if os.path.isabs(file_name):
@@ -64,6 +68,9 @@ class AvatarAccessory():
         :returns: display name of character as a string
         """
         return self._name
+
+    def is_unlocked(self):
+        return self._is_unlocked
 
     def category(self):
         """ Provides the category name to which the Item belongs to
@@ -140,8 +147,9 @@ class AvatarCharacter():
     _display_order = 0
     _date_created = ''
     _character_id = ''
+    _is_unlocked = False
 
-    def __init__(self, name, file_name, preview_img, x, y, date_created, char_id, display_order):
+    def __init__(self, name, file_name, preview_img, x, y, date_created, char_id, is_unlocked, display_order):
         self._name = name
         if os.path.isabs(file_name):
             self._asset_fname = file_name
@@ -157,6 +165,7 @@ class AvatarCharacter():
         self._display_order = display_order
         self._character_id = char_id
         self._date_created = date_created
+        self._is_unlocked = is_unlocked
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -169,6 +178,9 @@ class AvatarCharacter():
         :returns: Image class (from PIL module)
         """
         return self._img
+
+    def is_unlocked(self):
+        return self._is_unlocked
 
     def get_fname(self):
         """ Provides the item's asset filename
@@ -296,12 +308,14 @@ class AvatarEnvironment():
     _date_created = ''
     _environment_id = ''
     _display_order = 0
+    _is_unlocked = False
 
-    def __init__(self, name, file_name, preview_img, date_created, env_id, display_order):
+    def __init__(self, name, file_name, preview_img, date_created, env_id, is_unlocked, display_order):
         self._name = name
         self._date_created = date_created
         self._display_order = display_order
         self._environment_id = env_id
+        self._is_unlocked = is_unlocked
         if os.path.isabs(file_name):
             self._asset_fname = file_name
         else:
@@ -323,6 +337,9 @@ class AvatarEnvironment():
         :returns: absolute path to preview image as a string
         """
         return self._img_preview
+
+    def is_unlocked(self):
+        return self._is_unlocked
 
     def load_image(self):
         """ Loads the environment image internally.
@@ -536,6 +553,8 @@ class AvatarConfParser():
             new_disp_ord = obj['display_order']
             new_date = obj['date_created']
             new_id = obj['item_id']
+            # TODO hardcoded True for now
+            new_unlock = True
             new_obj = AvatarAccessory(new_name,
                                       new_cat,
                                       new_fname,
@@ -544,6 +563,7 @@ class AvatarConfParser():
                                       new_y,
                                       new_date,
                                       new_id,
+                                      new_unlock,
                                       new_disp_ord)
             self._objects[new_name] = new_obj
             if new_cat not in self._object_per_cat:
@@ -563,6 +583,8 @@ class AvatarConfParser():
             new_disp_ord = obj['display_order']
             new_date = obj['date_created']
             new_id = obj['character_id']
+            # TODO This is hardcoded for now
+            new_unlock = True
             new_obj = AvatarCharacter(new_name,
                                       new_fname,
                                       new_prev_img,
@@ -570,6 +592,7 @@ class AvatarConfParser():
                                       y,
                                       new_date,
                                       new_id,
+                                      new_unlock,
                                       new_disp_ord)
             self._characters[new_name] = new_obj
 
@@ -577,18 +600,26 @@ class AvatarConfParser():
         """ Populates internal structures related to environments (backgrounds)
         :param conf_data: YAML format configuration structure read from file
         """
-        for env in conf_data[self.env_label]:
-            new_name = env['display_name']
+        envirs = calculate_badges()
+
+        for _, env in envirs[self.env_label]['all'].iteritems():
+            new_name = env['title']
             new_fname = env['img_name']
-            new_prev_img = env['preview_img']
             new_id = env['item_id']
             new_disp_ord = env['display_order']
             new_date = env['date_created']
+            new_unlocked = env['achieved']
+            if new_unlocked:
+                new_prev_img = env['preview_img']
+            else:
+                # TODO Unhardcode this
+                new_prev_img = 'environments/locked.png'
             new_env = AvatarEnvironment(new_name,
                                         new_fname,
                                         new_prev_img,
                                         new_date,
                                         new_id,
+                                        new_unlocked,
                                         new_disp_ord)
             self._environments[new_name] = new_env
 
@@ -868,6 +899,28 @@ class AvatarConfParser():
             return None
         else:
             return self._environments[environment_name].get_preview_img()
+
+    def is_unlocked(self, item_name):
+        """ Returns whether the item/environment is locked
+        :param item_name: item whose lock status will be returned
+        :returns: True iff it is unlocked
+        """
+        return self._is_unlocked_reg_item(item_name) or self._is_unlocked_env(item_name)
+
+    def _is_unlocked_reg_item(self, item_name):
+        if item_name not in self._objects:
+            logger.debug("Item {} not in avail obj list, can't return lock state".format(item_name))
+            return None
+        else:
+            return self._objects[item_name].is_unlocked()
+
+    def _is_unlocked_env(self, item_name):
+        if item_name not in self._environments:
+            logger.debug("Item {} not in avail env list, can't return lock state".format(item_name))
+            return None
+        else:
+            return self._environments[item_name].is_unlocked()
+
 
 
 class AvatarCreator(AvatarConfParser):

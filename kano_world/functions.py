@@ -224,3 +224,16 @@ def reset_password(email):
         return success, None
     else:
         return success, text
+
+
+def mark_notification_read(n_id):
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    success, text, data = request_wrapper(
+        'post',
+        '/notifications/read/{}'.format(n_id),
+        session=glob_session.session
+    )
+
+    return success, text

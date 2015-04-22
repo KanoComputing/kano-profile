@@ -275,7 +275,6 @@ class KanoWorldSession(object):
 
         next_page = 0
         notifications = []
-        mark_as_read_ids = []
         while next_page is not None:
             success, text, data = request_wrapper(
                 'get',
@@ -292,7 +291,6 @@ class KanoWorldSession(object):
                 if entry['read'] is False:
                     n = self._process_notification(entry)
                     notifications.append(n)
-                    mark_as_read_ids.append(entry['id'])
 
             try:
                 next_page = data['next']
@@ -304,21 +302,7 @@ class KanoWorldSession(object):
             profile['notifications'] = notifications
             save_profile(profile)
 
-            for n_id in mark_as_read_ids:
-                self._mark_notification_read(n_id)
-                print "marking as read", n_id
-
         return rv, error
-
-    def _mark_notification_read(self, n_id):
-        # Mark the notification as read
-        success, text, data = request_wrapper(
-            'post',
-            '/notifications/read/{}'.format(n_id),
-            session=self.session
-        )
-
-        return success
 
     def upload_tracking_data(self):
         data = get_tracker_events(old_only=True)
@@ -408,6 +392,7 @@ class KanoWorldSession(object):
         GENERIC_ALERT_IMG = media_dir + '/images/notification/280x170/notification.png'
 
         n = {
+            'id': entry['id'],
             'title': 'Kano World',
             'byline': '',
             'image': GENERIC_ALERT_IMG,

@@ -5,7 +5,12 @@
     "desc_unlocked": "The walls flash with reds and yellows as paddles clack and asteroids go boom. Welcome to The Arcade Hall.",
     "operation": "each_greater",
     "targets": [["make-pong", "level", -1]],
-    "title": "Arcade Hall"
+    "title": "Arcade Hall",
+    "img_name": "arcade_hall.png",
+    "preview_img": "environments/pong.png",
+    "item_id": "cea1a14c48154a5299855a9c0c23eb72",
+    "display_order": 4,
+    "date_created": "2015-04-14T10:54:14Z"
   },
   "concert_hall": {
     "bg_color": "ffffff",
@@ -13,7 +18,12 @@
     "desc_unlocked": "Beethoven, The Beach Boys, Busta Rhymes... you. You used code to make music, and unlocked this ancient concert hall, where the sounds of synth mingle with trippy bass lines and acid loops.",
     "operation": "each_greater",
     "targets": [["make-music", "level", -1]],
-    "title": "Concert Hall"
+    "title": "Concert Hall",
+    "img_name": "concert_hall.png",
+    "preview_img": "environments/stage.png",
+    "item_id": "a82f8768e82a44d38973a90424503530",
+    "display_order": 6,
+    "date_created": "2015-04-14T10:54:14Z"
   },
   "jungle": {
     "bg_color": "ffffff",
@@ -21,7 +31,12 @@
     "desc_unlocked": "The rainforest is thick with trees, older than human memory, prowled by jaguar, cougar, anaconda – and species not yet discovered. The trees may be beautiful, but don't lick any frogs!",
     "operation": "each_greater",
     "targets": [["make-snake", "level", -1]],
-    "title": "Jungle"
+    "title": "Jungle",
+    "img_name": "jungle.png",
+    "preview_img": "environments/forest.png",
+    "item_id": "7d03fd052c0f4093aa50ae06cdb11b58",
+    "display_order": 2,
+    "date_created": "2015-04-14T10:54:14Z"
   },
   "space": {
     "bg_color": "ffffff",
@@ -30,7 +45,12 @@
     "operation": "each_greater",
     "push_back": true,
     "targets": [["computed", "num_offline_badges", 30]],
-    "title": "Space"
+    "title": "Space",
+    "img_name": "space.png",
+    "preview_img": "environments/space.png",
+    "item_id": "7c35cae9155d4d1994efbd7e59d6607b",
+    "display_order": 3,
+    "date_created": "2015-04-14T10:54:14Z"
   },
   "dojo": {
     "bg_color": "ffffff",
@@ -38,7 +58,12 @@
     "desc_unlocked": "Kano Jigoro was a Japanese schoolteacher – he was also a tough dude. He founded judo, the martial art for all ages, all over the world. Judo is about using your creativity to turn your opponent's strengths against him. In the Kano dojo, develop your code powers, and start combining them to change the world – padawan.",
     "operation": "each_greater",
     "targets": [["computed", "kano_level", 1]],
-    "title": "Dojo"
+    "title": "Dojo",
+    "img_name": "dojo.png",
+    "preview_img": "environments/dojo.png",
+    "item_id": "46fa7e1c0bdc43e18114b8e452776b07",
+    "display_order": 1,
+    "date_created": "2015-04-14T10:54:14Z"
   },
   "video_set": {
     "bg_color": "ffffff",
@@ -46,7 +71,12 @@
     "desc_unlocked": "To make a video, your computer lights up thousands of tiny pixels, one-by-one, across your screen. The rules for how to do this come from data on the Internet or in your memory – all your favorite movies and shows, from Star Trek to The Simpsons, start as stories, then become code – your computer can make them come to life.",
     "operation": "each_greater",
     "targets": [["kano-video", "level", -1]],
-    "title": "Video Set"
+    "title": "Video Set",
+    "img_name": "video_set.png",
+    "preview_img": "environments/scene_unavailable.png",
+    "item_id": "621df9b6faa1442184985591f1704c17",
+    "display_order": 7,
+    "date_created": "2015-04-14T10:54:14Z"
   },
   "minecraft": {
     "bg_color": "ffffff",
@@ -54,6 +84,11 @@
     "desc_unlocked": "Blocks and towers, water and fire, and a little man with a pick-axe... You can take control of the Minecraft world using Kano code blocks. Keep practicing your skills to become the ultimate Master Builder.",
     "operation": "each_greater",
     "targets": [["make-minecraft", "level", -1]],
-    "title": "Minecraft"
+    "title": "Minecraft",
+    "img_name": "minecraft.png",
+    "preview_img": "environments/minecraft.png",
+    "item_id": "7c35cae9155d4d1994efbd7e59d6607b",
+    "display_order": 3,
+    "date_created": "2015-04-14T10:54:14Z"
   }
 }

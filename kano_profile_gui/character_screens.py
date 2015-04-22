@@ -39,6 +39,15 @@ class CharacterDisplay(Gtk.EventBox):
 
         # Get picture of character creator and pack it into the window
         path = self._char_creator.get_image_path()
+
+        # TODO: this should only be a temporary fix until the init flow has been set up
+        # This puts a random collection of the assets together if an image doesn't
+        # currently exist
+        if not os.path.exists(path):
+            self._char_creator.randomise_avatar()
+            self._char_creator.save()
+            path = self._char_creator.get_image_path()
+
         image = Gtk.Image.new_from_file(path)
 
         self.fixed = Gtk.Fixed()

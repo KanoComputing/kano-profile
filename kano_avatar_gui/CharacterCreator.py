@@ -102,8 +102,10 @@ class CharacterCreator(Gtk.EventBox):
 
     def _randomise_avatar_wrapper(self, button):
         logger.debug("\n_randomise_avatar_wrapper")
-        selected_item_dict = self.avatar_cr.randomise_all_items()
+        self.randomise_avatar()
 
+    def randomise_avatar(self):
+        selected_item_dict = self.avatar_cr.randomise_all_items()
         filepath = self.avatar_cr.create_avatar()
         self._imgbox.set_image(filepath)
         self._menu.select_pop_up_items(selected_item_dict)

@@ -41,6 +41,13 @@
     font: Bariol 13;
 }
 
+.character_cog {
+    background: #ffffff;
+}
+.character_cog:hover {
+    background: #dddddd;
+}
+
 /* The bar at the top that mimics the window bar */
 .menu_bar_container {
     background: @menu_bar_background;

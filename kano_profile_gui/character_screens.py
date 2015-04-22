@@ -5,10 +5,11 @@
 # Copyright (C) 2014-2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+import os
 from gi.repository import Gtk
 from kano_profile_gui.progress_bar import ProgressBar
 from kano.gtk3.buttons import KanoButton, OrangeButton
-from kano_avatar_gui.CharacterCreator import CharacterCreator
+from kano_profile_gui.paths import media_dir
 
 
 class CharacterDisplay(Gtk.EventBox):
@@ -23,8 +24,15 @@ class CharacterDisplay(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
 
         self._win = win
-        button = Gtk.Button("Launch char_creator")
-        button.connect("clicked", self.go_to_edit_character_screen)
+
+        icon_filename = os.path.join(media_dir, "images/icons/edit.png")
+        icon = Gtk.Image.new_from_file(icon_filename)
+        launch_char_creator_btn = Gtk.Button()
+        launch_char_creator_btn.set_image(icon)
+        launch_char_creator_btn.connect("clicked", self.go_to_edit_character_screen)
+        launch_char_creator_btn.connect("enter-notify-event", self.set_orange_cog)
+        launch_char_creator_btn.connect("leave-notify-event", self.set_grey_cog)
+        launch_char_creator_btn.get_style_context().add_class("character_cog")
 
         # Pack this part of the screen into the window
         self._char_creator = self._win.char_creator
@@ -35,12 +43,22 @@ class CharacterDisplay(Gtk.EventBox):
 
         self.fixed = Gtk.Fixed()
         self.fixed.put(image, 0, 0)
-        self.fixed.put(button, 30, 30)
+        self.fixed.put(launch_char_creator_btn, 30, 30)
 
         self._win.pack_in_main_content(self.fixed)
         self._pack_progress_bar()
 
         self._win.show_all()
+
+    def set_orange_cog(self, widget, event):
+        icon_filename = os.path.join(media_dir, "images/icons/edit-active.png")
+        icon = Gtk.Image.new_from_file(icon_filename)
+        widget.set_image(icon)
+
+    def set_grey_cog(self, widget, event):
+        icon_filename = os.path.join(media_dir, "images/icons/edit.png")
+        icon = Gtk.Image.new_from_file(icon_filename)
+        widget.set_image(icon)
 
     def _pack_progress_bar(self):
 

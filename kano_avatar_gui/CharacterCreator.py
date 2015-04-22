@@ -80,13 +80,25 @@ class CharacterCreator(Gtk.EventBox):
         # TODO: get file path for the random icon
         icon_path = os.path.join(media_dir, "images/icons/random.png")
         icon = Gtk.Image.new_from_file(icon_path)
-        random_button.add(icon)
+        random_button.set_image(icon)
         random_button.get_style_context().add_class("random_button")
         random_button.set_size_request(width, height)
         random_button.connect("clicked", self._randomise_avatar_wrapper)
+        random_button.connect("enter-notify-event", self._set_random_orange_icon)
+        random_button.connect("leave-notify-event", self._set_random_grey_icon)
         attach_cursor_events(random_button)
 
         return random_button
+
+    def _set_random_orange_icon(self, random_btn, event):
+        icon_path = os.path.join(media_dir, "images/icons/random-active.png")
+        icon = Gtk.Image.new_from_file(icon_path)
+        random_btn.set_image(icon)
+
+    def _set_random_grey_icon(self, random_btn, event):
+        icon_path = os.path.join(media_dir, "images/icons/random.png")
+        icon = Gtk.Image.new_from_file(icon_path)
+        random_btn.set_image(icon)
 
     def _randomise_avatar_wrapper(self, button):
         logger.debug("\n_randomise_avatar_wrapper")
@@ -139,6 +151,5 @@ class CharacterCreator(Gtk.EventBox):
         categories = self.avatar_cr.list_available_categories()
 
         for category in categories:
-            # TODO
             obj_name = self._menu.get_selected_obj(category)
             save_app_state_variable('kano-avatar', category, obj_name)

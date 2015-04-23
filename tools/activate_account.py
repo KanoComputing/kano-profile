@@ -19,12 +19,16 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_world.connection import api_url
 
-
 if len(sys.argv) != 2:
     sys.exit('Wrong usage, needs to supply code')
 else:
     code = sys.argv[1]
 
-r = requests.post(api_url + '/accounts/activate/' + code)
+# Provide 2 separate timeouts - for CONNECT and READ, to requests library
+connect_timeout=5
+read_timeout=20
+
+r = requests.post(api_url + '/accounts/activate/' + code, \
+                      timeout=(connect_timeout, read_timeout))
 
 print r.text

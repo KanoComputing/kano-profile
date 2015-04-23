@@ -499,10 +499,7 @@ class AvatarConfParser():
         else:
             self._populate_object_structures(conf_data)
 
-        if self.env_label not in conf_data:
-            logger.error('{} dict not found'.format(self.env_label))
-        else:
-            self._populate_environment_structures(conf_data)
+        self._populate_environment_structures(conf_data)
 
         if self.spec_cat_label not in conf_data:
             logger.error('{} dict not found'.format(self.spec_cat_label))
@@ -955,12 +952,20 @@ class AvatarCreator(AvatarConfParser):
             return False
 
     def env_select(self, env_name):
-        """ Set an environment for the background
+        """ Set an environment for the background. If the environment given is
+        not unlocked a different unlocked one is selected in random
         :param env_name: Environment name
         :returns: True iff the environment exists (is available)
         """
         if env_name in self._environments:
-            self._sel_env = self._environments[env_name]
+            if not self._environments[env_name].is_unlocked():
+                warn_msg = "Environment {} is locked, replacing with random".format(env_name)
+                logger.warn(warn_msg)
+                # Select randomly among the unlocked environments
+                self._sel_env = random.choice([env for env in self._environments.itervalues() if env.is_unlocked()])
+            else:
+                self._sel_env = self._environments[env_name]
+            logger.debug('Selected Environment: {}'.format(self._sel_env.name()))
             return True
         else:
             error_msg = 'Environment {} is not in the available env list'.format(env_name)
@@ -992,7 +997,9 @@ class AvatarCreator(AvatarConfParser):
         self._sel_objs_per_zindex.clear()
 
     def obj_select(self, obj_names, clear_existing=True):
-        """ Specify the items to be used for the character.
+        """ Specify the items to be used for the character. if any of the
+        items are locked, replace with a different unlocked one from the
+        same category.
         :param obj_names: list of item names
         :returns: False if any of the objects doesn't exist or if there are
                   multiple items from the same category are selected.
@@ -1007,14 +1014,20 @@ class AvatarCreator(AvatarConfParser):
             if obj_name in self._objects:
                 # Deal with the object if it is a regular item
                 obj_instance = self._objects[obj_name]
+                # Check whether we have selected multiple items from the same category
                 if obj_instance.category() in self._sel_obj_per_cat:
                     error_msg = 'Multiple objects in category {}'.format(obj_instance.category())
                     logger.error(error_msg)
                     return False
+                # Check whether it is unlocked
+                if not obj_instance.is_unlocked():
+                    error_msg = 'Item {} is locked, replacing with random from category {}'.format(obj_name, obj_instance.category())
+                    logger.warn(error_msg)
+                    obj_instance = random.choice([obj for obj in self._object_per_cat[obj_instance.category()] if obj.is_unlocked()])
 
                 obj_cat = obj_instance.category()
                 self._sel_obj_per_cat[obj_cat] = obj_instance
-                self._sel_obj[obj_name] = self._objects[obj_name]
+                self._sel_obj[obj_instance.name()] = obj_instance
 
                 # Create a dictionary with which objects belong to each z-index
                 obj_zindex = self.get_zindex(obj_cat)
@@ -1057,7 +1070,8 @@ class AvatarCreator(AvatarConfParser):
             # Need to make sure that we can handle categories that contain no
             # items
             try:
-                available_objs = self._object_per_cat[cat][:]
+                available_objs = [obj for obj in self._object_per_cat[cat]
+                                  if obj.is_unlocked()]
                 if empty_cats:
                     available_objs.append(None)
                 choice = random.choice(available_objs)
@@ -1069,7 +1083,8 @@ class AvatarCreator(AvatarConfParser):
                 continue
 
         if not self._sel_env:
-            choice_env = random.choice(self.list_all_available_environments())
+            available_envs = [env.name() for env in self._environments.itervalues() if env.is_unlocked()]
+            choice_env = random.choice(available_envs)
             random_item_names.append(choice_env)
 
         rc = self.obj_select(random_item_names, clear_existing=False)
@@ -1231,7 +1246,8 @@ class AvatarCreator(AvatarConfParser):
             err_msg = "No character is selected, will not save circular assets"
             logger.error(err_msg)
             return None
-        self._sel_char.generate_circular_assets(file_name_plain, file_name_ring)
+        self._sel_char.generate_circular_assets(file_name_plain,
+                                                file_name_ring)
         return True
 
     def _create_base_img(self):

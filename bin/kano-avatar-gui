@@ -25,6 +25,8 @@ from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_profile.paths import bin_dir, legal_dir
 from kano_profile.profile import save_profile_variable
 
+from kano_world.connection import request_wrapper
+
 from kano_profile_gui.paths import media_dir
 from kano.utils import run_bg
 
@@ -45,6 +47,25 @@ except:
     pass
 
 GObject.threads_init()
+
+
+def does_user_exist(username):
+    '''username is the string of the username which we want to see
+    is registered.
+    If return True, exists,
+    If return False, does not exist
+    May return None, in which case not sure?
+    '''
+    user_request = "/users/username/{}".format(username)
+    success, text, data = request_wrapper('get', user_request)
+    if success:
+        return True
+    elif not success and text == "User not found":
+        return False
+
+    # Could have failed because of bad internet connection, or server timed
+    # out.  Inconclusive.
+    return None
 
 
 # Page 1 is the character personalisation
@@ -106,9 +127,9 @@ class Page2(Gtk.Box):
         filename = os.path.join(os.path.expanduser('~'),
                                 "avatar-content/avatar_inc_env_page2.png")
         image_viewer.set_image(filename)
-
         self.data_screen = GetData2()
         self.data_screen.connect("widgets-filled", self.enable_next)
+        self.data_screen.connect("widgets-empty", self.disable_next)
 
         # Put it with the same y coordinate as the menu
         image_viewer.put(self.data_screen, 400, 30)
@@ -126,9 +147,10 @@ class Page2(Gtk.Box):
             self._show_error_dialog(error[0], error[1])
             return
 
-        data = self.data_screen.get_data()
+        data = self.data_screen.get_entry_data()
 
         self.win.data = data
+        self.data_screen.save_username_and_birthday()
 
         self.win.remove_main_widget()
         Page3(self.win)
@@ -139,6 +161,9 @@ class Page2(Gtk.Box):
 
     def enable_next(self, widget):
         self.page_control.enable_next()
+
+    def disable_next(self, widget):
+        self.page_control.disable_next()
 
 
 # Get username and password
@@ -169,44 +194,31 @@ class Page3(Gtk.Box):
 
         self.data_screen = GetData3()
         self.data_screen.connect("widgets-filled", self.enable_next)
-        self.data_screen.connect("widget-empty", self.disable_next)
-        self.data_screen.connect("terms-and-conditions", self.show_terms_and_conditions)
+        self.data_screen.connect("widgets-empty", self.disable_next)
 
         # Put it with the same y coordinate as the menu
         image_viewer.put(self.data_screen, 400, 30)
 
         self.show_all()
 
-    def show_terms_and_conditions(self, widget):
-        '''This is the dialog containing the terms and conditions - same as
-        shown before creating an account
-        '''
-
-        legal_text = ''
-        for file in os.listdir(legal_dir):
-            with open(legal_dir + file, 'r') as f:
-                legal_text = legal_text + f.read() + '\n\n\n'
-
-        kdialog = KanoDialog("Terms and conditions", "",
-                             scrolled_text=legal_text,
-                             parent_window=self.win)
-        kdialog.run()
-
     def prev_page(self, widget):
+        self.data_screen.cache_emails()
         self.win.remove_main_widget()
         page = Page2(self.win)
         self.win.set_main_widget(page)
 
     def enable_next(self, widget):
+        logger.debug("hitting enable next")
         self.page_control.enable_next()
 
     def disable_next(self, widget):
         self.page_control.disable_next()
 
     def get_data(self):
-        self.win.data.update(self.data_screen.get_data())
+        self.win.data.update(self.data_screen.get_entry_data())
 
     def register_handler(self, widget=None, arg=None):
+        self.data_screen.cache_emails()
         self.page_control.disable_buttons()
         self.data_screen.disable_all()
         self.get_data()
@@ -214,6 +226,11 @@ class Page3(Gtk.Box):
         # Make cursor into a spinner
         watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
         self.win.get_window().set_cursor(watch_cursor)
+
+        if not is_internet():
+            # this will launch dialogs until either the user
+            # connects to internet or quits
+            self.try_to_connect_to_internet()
 
         def lengthy_process():
             (title, description, return_value) = self.register_user()
@@ -244,53 +261,107 @@ class Page3(Gtk.Box):
         thread = threading.Thread(target=lengthy_process)
         thread.start()
 
-    def register_user(self):
-        if not is_internet():
-            title = "You don't have internet!"
-            description = "Connect to WiFi and try again."
-            return_value = 0
+    # TODO: the following could be neatened up
+    ###################################################
+
+    def try_to_connect_to_internet(self):
+        title = "You don't have internet!"
+        description = "Connect to WiFi and try again."
+        rv = self.connect_dialog(title, description)
+
+        if rv == "connect":
+            # launch wifi setup
+            self.win.blur()
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+            os.system("sudo /usr/bin/kano-wifi-gui")
+
+            while not is_internet():
+                self.keep_trying_to_connect()
+
         else:
-            email = self.win.data["email"]
+            # exit app
+            logger.debug("Killing application")
+            Gtk.main_quit()
 
-            # use this in update of registration
-            guardian_email = self.win.data["guardian_email"]
-            username = self.win.data["username"]
-            password = self.win.data["password"]
-            date_year = self.win.data["year"]
-            date_month = self.win.data["month"]
-            date_day = self.win.data["day"]
+    def connect_dialog(self, title, description):
+        button_dict = [
+            {
+                "label": "LATER",
+                "color": "red",
+                "return_value": "later"
+            },
+            {
+                "label": "CONNECT TO WIFI",
+                "color": "green",
+                "return_value": "connect"
+            }
+        ]
+        kdialog = KanoDialog(title, description, button_dict,
+                             parent_window=self.win)
+        rv = kdialog.run()
+        return rv
 
-            logger.info('trying to register user')
+    def keep_trying_to_connect(self):
+        title = "Still not connected..."
+        description = (
+            "Seems like you're having trouble connecting.\n"
+            "Try again later at another point"
+        )
+        rv = self.connect_dialog(title, description)
 
-            success, text = register_(email, username, password,
-                                      date_year, date_month, date_day,
-                                      secondary_email=guardian_email)
+        if rv == "connect":
+            os.system("sudo /usr/bin/kano-wifi-gui")
+        else:
+            # exit app
+            logger.debug("Killing application")
+            Gtk.main_quit()
 
-            if not success:
-                logger.info('problem with registration: {}'.format(text))
-                title = "Houston, we have a problem"
-                description = str(text)
-                return_value = 0
+    ###################################################
 
-            else:
-                logger.info('registration successful')
+    def register_user(self):
 
-                bday_date = str(datetime.date(date_year, date_month, date_day))
-                save_profile_variable('birthdate', bday_date)
+        email = self.win.data["email"]
 
-                # saving hardware info and initial Kano version
-                save_hardware_info()
-                save_kano_version()
+        # use this in update of registration
+        guardian_email = self.win.data["guardian_email"]
+        username = self.win.data["username"]
+        password = self.win.data["password"]
+        date_year = self.win.data["year"]
+        date_month = self.win.data["month"]
+        date_day = self.win.data["day"]
 
-                # running kano-sync after registration
-                logger.info('running kano-sync after successful registration')
-                cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-                run_bg(cmd)
+        logger.info('trying to register user')
 
-                title = "Profile created!"
-                description = ("Now you can share stuff, build your character, "
-                               "and connect with friends.")
-                return_value = 1
+        success, text = register_(email, username, password,
+                                  date_year, date_month, date_day,
+                                  secondary_email=guardian_email)
+
+        if not success:
+            logger.info('problem with registration: {}'.format(text))
+            title = "Houston, we have a problem"
+            description = str(text)
+            return_value = 0
+
+        else:
+            logger.info('registration successful')
+
+            bday_date = str(datetime.date(date_year, date_month, date_day))
+            save_profile_variable('birthdate', bday_date)
+
+            # saving hardware info and initial Kano version
+            save_hardware_info()
+            save_kano_version()
+
+            # running kano-sync after registration
+            logger.info('running kano-sync after successful registration')
+            cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+            run_bg(cmd)
+
+            title = "Profile created!"
+            description = ("Now you can share stuff, build your character, "
+                           "and connect with friends.")
+            return_value = 1
 
         return (title, description, return_value)
 

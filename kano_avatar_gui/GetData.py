@@ -6,14 +6,19 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+import os
 import re
-import time
-import datetime
 from gi.repository import Gtk, GObject
-from kano.utils import is_number
-from kano.gtk3.buttons import OrangeButton
+from kano.gtk3.kano_dialog import KanoDialog
 from kano_profile.paths import legal_dir
+from kano_profile_gui.components.icons import get_ui_icon
+from kano_world.connection import request_wrapper
+from kano_avatar_gui.BirthdayWidget import BirthdayWidget
+from kano_avatar_gui.LabelledEntry import LabelledEntry
+from kano_avatar_gui.TermsAndConditions import TermsAndConditions
+
 from kano.logging import logger
+from kano_profile.apps import load_app_state_variable, save_app_state_variable
 
 
 def is_email(email):
@@ -24,10 +29,29 @@ def is_email(email):
         return False
 
 
+def does_user_exist(username):
+    '''username is the string of the username which we want to see
+    is registered.
+    If return True, exists,
+    If return False, does not exist
+    May return None, in which case not sure?
+    '''
+    user_request = "/users/username/{}".format(username)
+    success, text, data = request_wrapper('get', user_request)
+    if success:
+        return True
+    elif not success and text == "User not found":
+        return False
+
+    # Could have failed because of bad internet connection, or server timed
+    # out.  Inconclusive.
+    return None
+
+
 class DataTemplate(Gtk.EventBox):
     __gsignals__ = {
         'widgets-filled': (GObject.SIGNAL_RUN_FIRST, None, ()),
-        'widget-empty': (GObject.SIGNAL_RUN_FIRST, None, ())
+        'widgets-empty': (GObject.SIGNAL_RUN_FIRST, None, ())
     }
 
     def __init__(self):
@@ -38,8 +62,154 @@ class DataTemplate(Gtk.EventBox):
         self.set_size_request(self.width, self.height)
         self.get_style_context().add_class("data_screen")
 
+    def cache_data(self, category, value):
+        save_app_state_variable("kano-avatar-registration", category, value)
+
+    def get_cached_data(self, category):
+        return load_app_state_variable("kano-avatar-registration", category)
+
 
 class GetData2(DataTemplate):
+    '''This second class registration box is to get the email,
+    optional guardian's email and show the terms and conditions.
+    '''
+
+    def __init__(self):
+        DataTemplate.__init__(self)
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        (username, birthday_day, birthday_month, birthday_year) = self.get_cached_username_and_birthday()
+        self.username_entry = LabelledEntry("Username", username)
+        self.username_entry.connect('labelled-entry-key-release', self.widgets_full)
+        # Get data about whether to fill this in.
+
+        # This doesn't work because the parent window doesn't exist yet
+        # window = self.username_entry.get_parent_window()
+        # window.set_events(Gdk.EventType.FOCUS_CHANGE)
+        # self.username_entry.connect('key-release-event', self.widgets_full)
+
+        # If there is internet, link the focus out event to checking the
+        # username
+        logger.debug("Checking for internet")
+
+        '''
+        if is_internet():
+            logger.debug("Attaching check username wrapper to username entry")
+            # Check the username is valid when we focus out of the entry
+            self.username_entry.connect('focus-out-event', self.check_username_wrapper)
+        '''
+
+        # Do not fill this in
+        self.password_entry = LabelledEntry("Password - min. 6 letters")
+        self.password_entry.connect('labelled-entry-key-release', self.widgets_full)
+        self.password_entry.set_visibility(False)
+
+        self.entries = [
+            self.username_entry,
+            self.password_entry
+        ]
+
+        self.bday_widget = BirthdayWidget(birthday_day, birthday_month, birthday_year)
+        self.bday_widget.connect("bday-key-release-event", self.widgets_full)
+        # self.bday_widget.connect("bday-widgets-empty", )
+
+        box.pack_start(self.username_entry, False, False, 10)
+        box.pack_start(self.password_entry, False, False, 10)
+        box.pack_start(self.bday_widget, False, False, 0)
+
+        box.set_margin_top(20)
+
+        self.add(box)
+
+    ############################################
+    # Not used
+
+    def check_username_wrapper(self, widget, event):
+        logger.debug("Hitting username wrapper")
+        username = widget.get_text()
+        logger.debug("username = {}".format(username))
+        self.check_username(username)
+
+    def check_username(self, username):
+        '''Check if the username is valid.
+        If it is, add a tick icon, otherwise add a cross icon.
+        '''
+        logger.debug("Entered check_username")
+        user_exists = does_user_exist(username)
+
+        if user_exists:
+            # pack tick into the entry
+            tick_icon = get_ui_icon("tick")
+            self.username_entry.set_icon_from_pixbuf(tick_icon)
+
+        elif user_exists is False:
+            tick_icon = get_ui_icon("cross")
+            self.username_entry.set_icon_from_pixbuf(tick_icon)
+
+        else:
+            # show dialog?
+            print "Not sure if the user exists"
+
+    ################################################
+
+    def calculate_age(self):
+        return self.bday_widget.calculate_age()
+
+    def enable_all(self):
+        self.checkbutton.set_sensitive(True)
+        self.username_entry.set_sensitive(True)
+        self.password_entry.set_sensitive(True)
+        self.tc_button.set_sensitive(True)
+
+    def get_entry_data(self):
+        data = {}
+
+        data['username'] = self.username_entry.get_text()
+        data['password'] = self.password_entry.get_text()
+
+        bday_data = self.bday_widget.get_birthday_data()[1]
+        data.update(bday_data)
+
+        data['age'] = self.bday_widget.calculate_age()
+
+        logger.debug("data from data screen 1 {}".format(data))
+        return data
+
+    def save_username_and_birthday(self):
+        data = self.get_entry_data()
+        self.cache_data("username", data['username'])
+        self.cache_data("birthday_day", data['day'])
+        self.cache_data("birthday_month", data['month'])
+        self.cache_data("birthday_year", data['year'])
+
+    def get_cached_username_and_birthday(self):
+        username = self.get_cached_data("username")
+        birthday_day = self.get_cached_data("birthday_day")
+        birthday_month = self.get_cached_data("birthday_month")
+        birthday_year = self.get_cached_data("birthday_year")
+        return (username, birthday_day, birthday_month, birthday_year)
+
+    def widgets_full(self, widget=None, event=None):
+        logger.debug("widgets-full in GetData hit")
+
+        full = True
+
+        for entry in self.entries:
+            if not entry.get_text():
+                full = False
+
+        bday_filled = self.bday_widget.birthday_entries_filled()
+
+        if full and bday_filled:
+            logger.debug("emiting widgets-full")
+            self.emit('widgets-filled')
+        else:
+            logger.debug("emiting widgets-empty")
+            self.emit('widgets-empty')
+
+
+class GetData3(DataTemplate):
     '''This first class registration box is to get
     the username, password and birthday
     '''
@@ -48,90 +218,63 @@ class GetData2(DataTemplate):
         DataTemplate.__init__(self)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self.email_entry = LabelledEntry("Email")
-        self.email_entry.connect('key-release-event', self.widgets_full)
+        email, guardian_email = self.get_cached_emails()
 
-        self.guardian_email_entry = LabelledEntry("Guardian's Email (optional)")
+        self.email_entry = LabelledEntry("Email", email)
+        self.email_entry.connect('key-release-event', self.widgets_full)
+        self.guardian_email_entry = LabelledEntry(
+            "Guardian's Email (optional)", guardian_email
+        )
         self.guardian_email_entry.connect('key-release-event', self.widgets_full)
 
-        birthday_widget = self._create_birthday_widget()
+        self.t_and_cs = TermsAndConditions()
+        self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
+        self.t_and_cs.connect("t-and-cs-clicked", self.show_terms_and_conditions)
 
+        # This might need to change
         self.entries = [
-            self.email_entry,
-            self._day_entry,
-            self._month_entry,
-            self._year_entry
+            self.email_entry
         ]
 
         box.pack_start(self.email_entry, False, False, 5)
         box.pack_start(self.guardian_email_entry, False, False, 5)
-        box.pack_start(birthday_widget, False, False, 5)
+        box.pack_start(self.t_and_cs, False, False, 5)
         box.set_margin_top(20)
 
         self.add(box)
 
-    def _create_birthday_widget(self):
-        self._day_entry = Gtk.Entry()
-        self._day_entry.set_size_request(60, -1)
-        self._day_entry.set_width_chars(2)
-        self._day_entry.set_placeholder_text("DD")
-        self._day_entry.get_style_context().add_class("get_data_entry")
-        self._day_entry.connect('key-release-event', self.widgets_full)
+    def disable_all(self):
+        self.email_entry.set_sensitive(False)
+        self.guardian_email_entry.set_sensitive(False)
+        self.t_and_cs.disable_all()
 
-        self._month_entry = Gtk.Entry()
-        self._month_entry.set_size_request(60, -1)
-        self._month_entry.set_width_chars(2)
-        self._month_entry.set_placeholder_text("MM")
-        self._month_entry.get_style_context().add_class("get_data_entry")
-        self._month_entry.connect('key-release-event', self.widgets_full)
+    def enable_all(self):
+        self.email_entry.set_sensitive(True)
+        self.guardian_email_entry.set_sensitive(True)
+        self.t_and_cs.enable_all()
 
-        self._year_entry = Gtk.Entry()
-        self._year_entry.set_size_request(70, -1)
-        self._year_entry.set_width_chars(4)
-        self._year_entry.set_placeholder_text("YYYY")
-        self._year_entry.get_style_context().add_class("get_data_entry")
-        self._year_entry.connect('key-release-event', self.widgets_full)
+    def cache_emails(self):
+        email_address = self.email_entry.get_text()
+        self.cache_data("email", email_address)
 
-        hbox = Gtk.Box()
-        hbox.pack_start(self._day_entry, False, False, 0)
-        hbox.pack_start(self._month_entry, False, False, 10)
-        hbox.pack_start(self._year_entry, False, False, 0)
+        guardian_email_address = self.guardian_email_entry.get_text()
+        self.cache_data("gurdian_email", guardian_email_address)
 
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        birthday_label = Gtk.Label("Birthday", xalign=0)
-        birthday_label.get_style_context().add_class("get_data_label")
-        vbox.pack_start(birthday_label, False, False, 0)
-        vbox.pack_start(hbox, False, False, 10)
+    def get_cached_emails(self):
+        email = self.get_cached_data("email")
+        guardian_email = self.get_cached_data("guardian_email")
+        return (email, guardian_email)
 
-        vbox.set_margin_left(30)
-
-        return vbox
-
-    def _get_birthday_data(self):
-        bday_entries = [self._day_entry, self._month_entry, self._year_entry]
-        bday = []
-
-        for entry in bday_entries:
-            is_valid_number, text = self._check_entry_is_number(entry)
-            if not is_valid_number:
-                return (False, {})
-            else:
-                bday.append(text)
-
-        return (True, {'day': bday[0], 'month': bday[1], 'year': bday[2]})
-
-    def get_data(self):
+    def get_entry_data(self):
         data = {}
 
         data['email'] = self.email_entry.get_text()
         data['guardian_email'] = self.guardian_email_entry.get_text()
 
-        bday_data = self._get_birthday_data()[1]
-        data.update(bday_data)
-
         return data
 
-    def widgets_full(self, widget, event):
+    def widgets_full(self, widget=None, event=None):
+
         full = True
 
         for entry in self.entries:
@@ -141,189 +284,26 @@ class GetData2(DataTemplate):
             elif entry == self.email_entry:
                 full = is_email(text)
 
+        if not self.t_and_cs.is_checked():
+            full = False
+
         if full:
             self.emit('widgets-filled')
         else:
-            self.emit('widget-empty')
+            self.emit('widgets-empty')
 
-    def calculate_age(self):
-        # Error messages
-        default_error = "Oops!"
-        default_desc = "You haven't entered a valid birthday"
-        entry_not_valid = "You haven't entered a valid number"
+    def show_terms_and_conditions(self, widget):
+        '''This is the dialog containing the terms and conditions - same as
+        shown before creating an account
+        '''
+        window = widget.get_toplevel()
 
-        try:
-            # boolean, dictionary
-            valid_bday, bday = self._get_birthday_data()
-            if not valid_bday:
-                raise Exception(default_error, entry_not_valid)
+        legal_text = ''
+        for file in os.listdir(legal_dir):
+            with open(legal_dir + file, 'r') as f:
+                legal_text = legal_text + f.read() + '\n\n\n'
 
-            logger.debug("User birthday = {}".format(bday))
-
-            bday_date = str(datetime.date(bday["year"],
-                                          bday["month"],
-                                          bday["day"]))
-
-            # To allow people to enter their year as a two digit number
-            if bday["year"] < 15 and bday["year"] >= 0:
-                bday["year"] = bday["year"] + 2000
-            elif bday["year"] >= 15 and bday["year"] <= 99:
-                bday['year'] = bday['year'] + 1900
-
-            # Get current date
-            current_day = int(time.strftime("%d"))
-            current_month = int(time.strftime("%m"))
-            current_year = int(time.strftime("%Y"))
-
-            age = current_year - bday['year']
-            logger.debug("User age = {}".format(age))
-
-            if age < 0 or age > 114:
-                raise Exception(default_error, default_desc)
-
-            if current_month < bday['month']:
-                age = age - 1
-            elif current_month == bday['month']:
-                if current_day < bday['day']:
-                    age = age - 1
-                # TODO: if it's their birthday, do something special?
-                # elif current_day == bday_day:
-                #    print "IT'S YOUR BIIIIRTHDAY"
-            return age, bday_date, ()
-
-        except Exception as e:
-
-            if len(e.args) == 1:
-                error1 = default_error
-                error2 = "There's a problem - {0}".format(e)
-
-            elif len(e.args) == 2:
-                error1 = e[0]
-                error2 = e[1]
-
-            else:
-                error1 = default_error
-                error2 = default_desc
-
-            return -1, -1, (error1, error2)
-
-    def _check_entry_is_number(self, entry):
-        entry_text = entry.get_text()
-        if not is_number(entry_text):
-            return False, ''
-
-        return True, int(entry_text)
-
-
-class GetData3(DataTemplate):
-    '''This second class registration box is to get the email,
-    optional guardian's email and show the terms and conditions.
-    '''
-    __gsignals__ = {
-        'terms-and-conditions': (GObject.SIGNAL_RUN_FIRST, None, ())
-    }
-
-    def __init__(self):
-        DataTemplate.__init__(self)
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-
-        self.username_entry = LabelledEntry("Username")
-        self.username_entry.connect('key-release-event', self.widgets_full)
-
-        self.password_entry = LabelledEntry("Password - min. 6 letters")
-        self.password_entry.connect('key-release-event', self.widgets_full)
-        self.password_entry.set_visibility(False)
-
-        self.entries = [
-            self.username_entry,
-            self.password_entry
-        ]
-
-        self.checkbutton = Gtk.CheckButton()
-        self.checkbutton.get_style_context().add_class("get_data_checkbutton")
-        self.checkbutton.set_size_request(50, 50)
-        self.checkbutton.connect('toggled', self.widgets_full)
-        self.checkbutton.set_margin_left(30)
-
-        self.tc_button = OrangeButton("I agree to the terms and\nconditions")
-        self.tc_button.connect("clicked", self._emit_t_and_c_signal)
-
-        hbox = Gtk.Box()
-        hbox.pack_start(self.checkbutton, False, False, 0)
-        hbox.pack_start(self.tc_button, False, False, 0)
-
-        box.pack_start(self.username_entry, False, False, 10)
-        box.pack_start(self.password_entry, False, False, 10)
-        box.pack_start(hbox, False, False, 10)
-
-        box.set_margin_top(20)
-
-        self.add(box)
-
-    def disable_all(self):
-        self.checkbutton.set_sensitive(False)
-        self.username_entry.set_sensitive(False)
-        self.password_entry.set_sensitive(False)
-        self.tc_button.set_sensitive(False)
-
-    def enable_all(self):
-        self.checkbutton.set_sensitive(True)
-        self.username_entry.set_sensitive(True)
-        self.password_entry.set_sensitive(True)
-        self.tc_button.set_sensitive(True)
-
-    def _emit_t_and_c_signal(self, widget):
-        self.emit("terms-and-conditions")
-
-    def get_data(self):
-        data = {}
-
-        data['username'] = self.username_entry.get_text()
-        data['password'] = self.password_entry.get_text()
-
-        return data
-
-    def widgets_full(self, widget=None, event=None):
-        full = True
-
-        for entry in self.entries:
-            if not entry.get_text():
-                full = False
-
-        checked = self.checkbutton.get_active()
-
-        if checked and full:
-            self.emit('widgets-filled')
-        else:
-            self.emit('widget-empty')
-
-
-class LabelledEntry(Gtk.Box):
-    '''Produces a labelled entry, suitable for the registration screens
-    '''
-
-    def __init__(self, text):
-
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
-
-        self._label = Gtk.Label(text, xalign=0)
-        self._label.get_style_context().add_class("get_data_label")
-        self.pack_start(self._label, False, False, 0)
-
-        self._entry = Gtk.Entry()
-        self._entry.get_style_context().add_class("get_data_entry")
-        self._entry.set_size_request(200, -1)
-        self.pack_start(self._entry, False, False, 10)
-
-        self.set_margin_right(80)
-        self.set_margin_left(30)
-
-    def set_visibility(self, value):
-        return self._entry.set_visibility(value)
-
-    def get_text(self):
-        return self._entry.get_text()
-
-    def get_label_text(self):
-        return self._label.get_text()
+        kdialog = KanoDialog("Terms and conditions", "",
+                             scrolled_text=legal_text,
+                             parent_window=window)
+        kdialog.run()

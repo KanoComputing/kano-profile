@@ -58,3 +58,8 @@
 .random_button:hover {
     background: #dedede;
 }
+
+.birthday_separater {
+    color: #bbbbbb;
+    font: Bariol 30;
+}

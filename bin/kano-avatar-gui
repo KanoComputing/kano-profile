@@ -25,6 +25,8 @@ from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_profile.paths import bin_dir, legal_dir
 from kano_profile.profile import save_profile_variable
 
+from kano_world.connection import request_wrapper
+
 from kano_profile_gui.paths import media_dir
 from kano.utils import run_bg
 
@@ -45,6 +47,25 @@ except:
     pass
 
 GObject.threads_init()
+
+
+def does_user_exist(username):
+    '''username is the string of the username which we want to see
+    is registered.
+    If return True, exists,
+    If return False, does not exist
+    May return None, in which case not sure?
+    '''
+    user_request = "/users/username/{}".format(username)
+    success, text, data = request_wrapper('get', user_request)
+    if success:
+        return True
+    elif not success and text == "User not found":
+        return False
+
+    # Could have failed because of bad internet connection, or server timed
+    # out.  Inconclusive.
+    return None
 
 
 # Page 1 is the character personalisation
@@ -106,9 +127,9 @@ class Page2(Gtk.Box):
         filename = os.path.join(os.path.expanduser('~'),
                                 "avatar-content/avatar_inc_env_page2.png")
         image_viewer.set_image(filename)
-
         self.data_screen = GetData2()
         self.data_screen.connect("widgets-filled", self.enable_next)
+        self.data_screen.connect("widgets-empty", self.disable_next)
 
         # Put it with the same y coordinate as the menu
         image_viewer.put(self.data_screen, 400, 30)
@@ -126,9 +147,10 @@ class Page2(Gtk.Box):
             self._show_error_dialog(error[0], error[1])
             return
 
-        data = self.data_screen.get_data()
+        data = self.data_screen.get_entry_data()
 
         self.win.data = data
+        self.data_screen.save_username_and_birthday()
 
         self.win.remove_main_widget()
         Page3(self.win)
@@ -139,6 +161,9 @@ class Page2(Gtk.Box):
 
     def enable_next(self, widget):
         self.page_control.enable_next()
+
+    def disable_next(self, widget):
+        self.page_control.disable_next()
 
 
 # Get username and password
@@ -169,44 +194,31 @@ class Page3(Gtk.Box):
 
         self.data_screen = GetData3()
         self.data_screen.connect("widgets-filled", self.enable_next)
-        self.data_screen.connect("widget-empty", self.disable_next)
-        self.data_screen.connect("terms-and-conditions", self.show_terms_and_conditions)
+        self.data_screen.connect("widgets-empty", self.disable_next)
 
         # Put it with the same y coordinate as the menu
         image_viewer.put(self.data_screen, 400, 30)
 
         self.show_all()
 
-    def show_terms_and_conditions(self, widget):
-        '''This is the dialog containing the terms and conditions - same as
-        shown before creating an account
-        '''
-
-        legal_text = ''
-        for file in os.listdir(legal_dir):
-            with open(legal_dir + file, 'r') as f:
-                legal_text = legal_text + f.read() + '\n\n\n'
-
-        kdialog = KanoDialog("Terms and conditions", "",
-                             scrolled_text=legal_text,
-                             parent_window=self.win)
-        kdialog.run()
-
     def prev_page(self, widget):
+        self.data_screen.cache_emails()
         self.win.remove_main_widget()
         page = Page2(self.win)
         self.win.set_main_widget(page)
 
     def enable_next(self, widget):
+        logger.debug("hitting enable next")
         self.page_control.enable_next()
 
     def disable_next(self, widget):
         self.page_control.disable_next()
 
     def get_data(self):
-        self.win.data.update(self.data_screen.get_data())
+        self.win.data.update(self.data_screen.get_entry_data())
 
     def register_handler(self, widget=None, arg=None):
+        self.data_screen.cache_emails()
         self.page_control.disable_buttons()
         self.data_screen.disable_all()
         self.get_data()

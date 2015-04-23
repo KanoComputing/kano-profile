@@ -20,7 +20,7 @@
     "dir": "Pong-content",
     "ext": "xml",
     "cmd": "/usr/bin/make-pong {fullpath}",
-    "max_level": 15,
+    "max_level": 16,
     "icon": "pong.png"
   },
   "kano-draw": {

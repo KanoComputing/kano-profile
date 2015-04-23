@@ -19,7 +19,7 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_world.functions import sync, login_using_token, backup_content, \
-    restore_content, upload_tracking_data
+    restore_content, upload_tracking_data, mark_notification_read
 from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, \
     run_bg, is_gui, delete_dir
 from kano_profile.paths import app_profiles_file
@@ -78,16 +78,6 @@ def do_login():
                 display_msg('Login not possible, error: ' + value, 'error')
                 sys.exit(1)
 
-
-def _should_display_notifications(profile):
-    if 'last_notifications_prompt' not in profile:
-        return True
-
-    NOTIFY_INTERVAL = 60*60*12  # 12 hours in seconds
-    time_since_last_notification = (time.time() -
-                                    int(profile['last_notifications_prompt']))
-    return time_since_last_notification > NOTIFY_INTERVAL
-
 def _any_notifications_available(profile):
     return ('notifications' in profile and
             type(profile['notifications']) is list and
@@ -106,22 +96,21 @@ def do_sync():
     # Push notifications
     try:
         profile = load_profile()
-        if _should_display_notifications(profile):
-            if _any_notifications_available(profile):
-                for n in profile['notifications']:
-                    image = n["image"] if "image" in n else None
-                    command = n["command"] if "command" in n else None
-                    sound = n["sound"] if "sound" in n else None
-                    display_generic_notification(n["title"], n["byline"],
-                                                 image, command, sound,
-                                                 "world")
+        if _any_notifications_available(profile):
+            for n in profile['notifications']:
+                image = n["image"] if "image" in n else None
+                command = n["command"] if "command" in n else None
+                sound = n["sound"] if "sound" in n else None
+                display_generic_notification(n["title"], n["byline"],
+                                             image, command, sound,
+                                             "world")
 
-                profile['last_notifications_prompt'] = int(time.time())
-                save_profile(profile)
-            else:
-                logger.debug('No notifications to show')
+                mark_notification_read(n['id'])
+
+            profile['last_notifications_prompt'] = int(time.time())
+            save_profile(profile)
         else:
-            logger.debug('Too early to show notifications')
+            logger.debug('No notifications to show')
     except Exception as e:
         logger.warn("Unable to display notifications due to an exception "
                     "({}: {})".format(e.__class__.__name__, str(e)))

@@ -34,3 +34,11 @@ CONF = load_conf()
 
 API_URL = CONF['api_url']
 WORLD_URL = CONF['world_url']
+
+
+def get_world_url(path):
+    return "{}/{}".format(WORLD_URL, path)
+
+
+def get_api_url(path):
+    return "{}/{}".format(API_URL, path)

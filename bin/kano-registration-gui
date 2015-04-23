@@ -22,7 +22,7 @@ from kano.network import is_internet
 from kano.logging import logger
 from kano_world.functions import register as register_
 from kano_profile.tracker import save_hardware_info, save_kano_version
-from kano_profile.paths import bin_dir, legal_dir
+from kano_profile.paths import bin_dir
 from kano_profile.profile import save_profile_variable
 
 from kano_world.connection import request_wrapper
@@ -34,11 +34,14 @@ from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.heading import Heading
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano.gtk3.kano_dialog import KanoDialog
+from kano.gtk3.cursor import attach_cursor_events
 
 from kano_avatar_gui.PageControl import PageControl
 from kano_avatar_gui.CharacterCreator import CharacterCreator
 from kano_avatar_gui.ImageView import ImageView
 from kano_avatar_gui.GetData import GetData2, GetData3
+
+import kano_profile_gui.components.icons as icons
 
 try:
     from kano_profile.tracker import Tracker
@@ -387,6 +390,10 @@ class MainWindow(ApplicationWindow):
         # This is what we fill up as we get data
         self.data = {}
 
+        header_bar = HeaderBar()
+        self.set_decorated(True)
+        self.set_titlebar(header_bar)
+
         # Styling
         # take the function from kano-toolset
         css_path = os.path.join(media_dir, "CSS/register.css")
@@ -413,6 +420,20 @@ class MainWindow(ApplicationWindow):
         page_control.set_margin_bottom(35)
 
         return page_control
+
+
+class HeaderBar(Gtk.Box):
+    def __init__(self):
+        Gtk.Box.__init__(self)
+
+        close_button = Gtk.Button()
+        cross_icon = icons.get_ui_icon("cross")
+        close_button.set_image(cross_icon)
+        close_button.connect("clicked", Gtk.main_quit)
+        close_button.get_style_context().add_class("close_button")
+        attach_cursor_events(close_button)
+
+        self.pack_end(close_button, False, False, 0)
 
 
 def main():

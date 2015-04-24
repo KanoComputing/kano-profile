@@ -13,7 +13,6 @@ from kano.utils import (read_json, write_json, get_date_now, ensure_dir,
                         chown_path, get_user_unsudoed, run_bg, is_running,
                         list_dir)
 from .paths import profile_file, profile_dir, kanoprofile_dir, bin_dir
-from kano_avatar.logic import generate_random_character
 from kano_avatar.paths import AVATAR_DEFAULT_LOC
 
 
@@ -71,7 +70,8 @@ def get_avatar(sync=True):
                 sync_profile()
                 get_avatar(sync=False)
             else:
-                generate_random_character()
+# from kano_avatar.logic import generate_random_character
+                #generate_random_character()
         return subcat, item
     else:
         logger.error(
@@ -98,13 +98,13 @@ def get_avatar_circ_image_path():
             logger.error("Couldn't find a file with the appropriate suffix")
             return None
         elif len(circ) == 1:
-            return os.path.join(dirs, circ[0])
+            return os.path.join(direc, circ[0])
         elif len(circ) > 1:
             # Return the first one but inform about the existance of multiple
             logger.warn(
                 "There are more than one files with appropriate suffix"
             )
-            return os.path.join(dirs, circ[0])
+            return os.path.join(direc, circ[0])
     else:
         logger.error(
             'Unknown profile version: {}'.format(profile['version'])

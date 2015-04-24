@@ -5,7 +5,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 import os
-from kano_toolset.utils import get_home
+from kano.utils import get_home
 
 AVATAR_SCRATCH = '/tmp/avatar_gen_scratch/avatar.png'
 AVATAR_DEFAULT_LOC = os.path.join(get_home(), '.avatar-content')

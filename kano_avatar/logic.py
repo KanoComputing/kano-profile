@@ -174,6 +174,9 @@ class AvatarCharacter():
         """
         self._img = Image.open(self._asset_fname)
 
+    def name(self):
+        return self._name
+
     def get_img(self):
         """ Get the image class for the character.
         :returns: Image class (from PIL module)
@@ -1216,9 +1219,9 @@ class AvatarCreator(AvatarConfParser):
 
         if sync:
             items_no_env = self.selected_items_per_cat()
-            env_name = items_no_env.pop(self.env_label)
+            items_no_env.pop(self.env_label, None)
             set_avatar(self._sel_char.name(), items_no_env)
-            set_environment(env_name, sync=True)
+            set_environment(self._sel_env.name(), sync=True)
 
     def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background

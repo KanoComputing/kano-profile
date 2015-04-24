@@ -61,3 +61,8 @@ GtkCheckButton:active:insensitive {
     border-color: #bbbbbb;
     border-width: 2px;
 }
+
+.close_button {
+    background: #ffffff;
+}
+

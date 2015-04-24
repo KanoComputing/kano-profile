@@ -258,7 +258,7 @@ class GetData3(DataTemplate):
         self.cache_data("email", email_address)
 
         guardian_email_address = self.guardian_email_entry.get_text()
-        self.cache_data("gurdian_email", guardian_email_address)
+        self.cache_data("guardian_email", guardian_email_address)
 
     def get_cached_emails(self):
         email = self.get_cached_data("email")

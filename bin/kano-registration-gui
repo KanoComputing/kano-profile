@@ -86,9 +86,9 @@ class Page1(Gtk.Box):
         self.pack_start(self.win.char_creator, False, False, 0)
 
         # no back button on first page
-        page_control = self.win.create_page_control(1, "", "NEXT")
-        self.pack_end(page_control, False, False, 0)
-        page_control.connect("next-button-clicked", self.next_page)
+        self.page_control = self.win.create_page_control(1, "", "NEXT")
+        self.pack_end(self.page_control, False, False, 0)
+        self.page_control.connect("next-button-clicked", self.next_page)
 
         self.win.show_all()
 
@@ -96,14 +96,26 @@ class Page1(Gtk.Box):
         self.win.char_creator._hide_pop_ups()
 
     def next_page(self, widget):
+        watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+        self.win.get_window().set_cursor(watch_cursor)
+        self.page_control.disable_buttons()
+
+        t = threading.Thread(target=self.save_character_and_go_next)
+        t.start()
+
+    def save_character_and_go_next(self):
         self.win.char_creator.save()
 
-        # Go to page 2
-        self.win.remove_main_widget()
-        self.remove(self.win.char_creator)
+        def done():
+            self.win.remove_main_widget()
+            self.remove(self.win.char_creator)
 
-        page = Page2(self.win)
-        self.win.set_main_widget(page)
+            page = Page2(self.win)
+            self.win.set_main_widget(page)
+
+            self.win.get_window().set_cursor(None)
+
+        GObject.idle_add(done)
 
 
 # Get emails and birthday data from user
@@ -119,7 +131,7 @@ class Page2(Gtk.Box):
         self.page_control.connect("next-button-clicked", self.next_page)
         self.page_control.connect("back-button-clicked", self.prev_page)
 
-        title = Heading('Make your Avatar', 'Choose clothes and other swag')
+        title = Heading('Character creator', 'Choose a cool name and secure password')
         self.pack_start(title.container, False, False, 0)
 
         # This time we need the picture with the login screen to one side.
@@ -183,7 +195,7 @@ class Page3(Gtk.Box):
         self.page_control.connect("next-button-clicked", self.register_handler)
         self.page_control.connect("back-button-clicked", self.prev_page)
 
-        title = Heading('Make your Avatar', 'Choose clothes and other swag')
+        title = Heading('Character creator', 'Sign up with your email')
         self.pack_start(title.container, False, False, 0)
 
         # This time we need the picture with the login screen to one side.
@@ -261,8 +273,12 @@ class Page3(Gtk.Box):
 
             GObject.idle_add(done)
 
-        thread = threading.Thread(target=lengthy_process)
-        thread.start()
+        if is_internet():
+            # only register if there is internet
+            thread = threading.Thread(target=lengthy_process)
+            thread.start()
+        else:
+            Gtk.main_quit()
 
     # TODO: the following could be neatened up
     ###################################################
@@ -272,20 +288,61 @@ class Page3(Gtk.Box):
         description = "Connect to WiFi and try again."
         rv = self.connect_dialog(title, description)
 
+        # the dialog should close here
+        logger.debug("dialog should close here")
+
         if rv == "connect":
             # launch wifi setup
             self.win.blur()
             while Gtk.events_pending():
                 Gtk.main_iteration()
-            os.system("sudo /usr/bin/kano-wifi-gui")
 
-            while not is_internet():
-                self.keep_trying_to_connect()
+            logger.debug("Launching the wifi gui")
+            os.system("sudo /usr/bin/kano-wifi-gui")
+            logger.debug("Finished with the wifi gui")
+
+            keep_checking = True
+
+            if is_internet():
+                keep_checking = False
+
+            while keep_checking:
+                print "keep_checking before {}".format(keep_checking)
+                keep_checking = self.keep_trying_to_connect()
+                print "keep_checking after {}".format(keep_checking)
 
         else:
             # exit app
+            print "Exiting"
             logger.debug("Killing application")
             Gtk.main_quit()
+
+    def keep_trying_to_connect(self):
+        title = "Still not connected..."
+        description = (
+            "Seems like you're having trouble connecting.\n"
+            "Try again later at another point"
+        )
+        rv = self.connect_dialog(title, description)
+
+        if rv == "connect":
+            logger.debug("Second launching wifi gui")
+            self.win.blur()
+
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+
+            os.system("sudo /usr/bin/kano-wifi-gui")
+            logger.debug("Second finished launching wifi gui")
+
+            if is_internet():
+                return False
+
+            return True
+        else:
+            # exit app
+            logger.debug("Killing application")
+            return False
 
     def connect_dialog(self, title, description):
         button_dict = [
@@ -304,21 +361,6 @@ class Page3(Gtk.Box):
                              parent_window=self.win)
         rv = kdialog.run()
         return rv
-
-    def keep_trying_to_connect(self):
-        title = "Still not connected..."
-        description = (
-            "Seems like you're having trouble connecting.\n"
-            "Try again later at another point"
-        )
-        rv = self.connect_dialog(title, description)
-
-        if rv == "connect":
-            os.system("sudo /usr/bin/kano-wifi-gui")
-        else:
-            # exit app
-            logger.debug("Killing application")
-            Gtk.main_quit()
 
     ###################################################
 
@@ -417,7 +459,8 @@ class MainWindow(ApplicationWindow):
         screens
         '''
         page_control = PageControl(3, selected_page, back_text, next_text)
-        page_control.set_margin_bottom(35)
+        page_control.set_margin_bottom(25)
+        page_control.set_margin_top(25)
 
         return page_control
 

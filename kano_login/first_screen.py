@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 
 # first_screen.py
@@ -16,14 +15,16 @@ from gi.repository import Gtk
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.gtk3.heading import Heading
 from kano_login.login import Login
-from kano_login.about_you import AboutYou
-from kano_login.swag_screen import SwagScreen
 from kano_login.templates.template import Template
 from kano_login.data import get_data
+from kano_login.swag_screen import SwagScreen
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
+from kano_registration_gui.registration_screens import RegistrationScreen1
 
 
+# TODO: this is currently mimicking old code.  Please fix this, it's a bit
+# weird.
 def create_template(string):
     data = get_data(string)
     img_width = 590
@@ -78,42 +79,43 @@ class FirstScreen():
     def __init__(self, win, dummy=None):
 
         self.win = win
-        self.win.reset_allocation()
+        self.win.set_decorated(False)
+        # self.win.reset_allocation()
 
         self.template = FirstScreenTemplate()
         self.win.set_main_widget(self.template)
-        self.template.kano_button.connect("button_release_event", self.next_screen)
-        self.template.registered_button.connect("button_release_event", self.login_screen)
-        self.template.skip_button.connect("button_release_event", self.exit_registration)
-        self.template.kano_button.connect("key_release_event", self.next_screen)
+        self.template.kano_button.connect("button_release_event",
+                                          self.register_screen)
+        self.template.registered_button.connect("button_release_event",
+                                                self.login_screen)
+        self.template.skip_button.connect("button_release_event",
+                                          self.exit_registration)
+        self.template.kano_button.connect("key_release_event",
+                                          self.register_screen)
         self.template.button_box.set_margin_bottom(30)
         self.template.kano_button.grab_focus()
         self.win.show_all()
 
     def login_screen(self, widget, event):
-        self.win.clear_win()
+        self.win.remove_main_widget()
 
         if is_internet():
             Login(win=self.win, prev_screen=None, first_boot=True)
         else:
             NoInternet(self.win)
 
-    def next_screen(self, widget, event):
+    def register_screen(self, widget, event):
 
         if not hasattr(event, 'keyval') or event.keyval == 65293:
-            self.win.clear_win()
-
-            if is_internet():
-                AboutYou(self.win, self)
-            else:
-                NoInternet(self.win)
+            self.win.remove_main_widget()
+            RegistrationScreen1(self.win)
 
     def exit_registration(self, widget, event):
-        self.win.clear_win()
+        self.win.remove_main_widget()
         SwagScreen(self.win)
 
     def repack(self):
-        self.win.clear_win()
+        self.win.remove_main_widget()
         self.win.set_main_widget(self.template)
 
 
@@ -121,6 +123,7 @@ class NoInternet():
     def __init__(self, win):
 
         self.win = win
+        self.win.set_decorated(False)
         self.template = create_template("NO_INTERNET")
 
         self.win.set_main_widget(self.template)
@@ -130,7 +133,7 @@ class NoInternet():
         self.template.kano_button.set_can_focus(False)
 
         # For now, remove keyboard event listener as is interfering with kano-connect
-        #self.template.kano_button.connect("key_release_event", self.connect)
+        # self.template.kano_button.connect("key_release_event", self.connect)
 
         self.template.orange_button.connect("button_release_event", self.register_later)
         self.template.kano_button.grab_focus()
@@ -139,11 +142,11 @@ class NoInternet():
     def connect(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             # Launch kano-wifi
-            os.system('rxvt -title \'WiFi Setup\' -e sudo /usr/bin/kano-wifi')
+            os.system('sudo /usr/bin/kano-wifi-gui')
 
-            self.win.clear_win()
+            self.win.remove_main_widget()
             FirstScreen(self.win)
 
     def register_later(self, widget, event):
-        self.win.clear_win()
+        self.win.remove_main_widget()
         SwagScreen(self.win)

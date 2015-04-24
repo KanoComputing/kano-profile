@@ -23,34 +23,39 @@ from kano.gtk3.labelled_entries import LabelledEntries
 from kano_profile.paths import bin_dir
 from kano_profile.profile import load_profile, save_profile_variable
 from kano_profile.tracker import save_hardware_info, save_kano_version
-from kano_world.functions import (login as login_, is_registered, reset_password,
-                                  get_email, get_mixed_username)
+from kano_world.functions import (login as login_, is_registered,
+                                  reset_password, get_email,
+                                  get_mixed_username)
 
-from kano_login.templates.top_bar_template import TopBarTemplate
+# from kano_login.templates.top_bar_template import TopBarTemplate
 from kano_login.templates.kano_button_box import KanoButtonBox
-from kano_login.about_you import AboutYou
 from kano_login.swag_screen import SwagScreen
 from kano_login.data import get_data
+
+from kano_registration_gui.registration_screens import RegistrationScreen1
 
 profile = load_profile()
 force_login = is_registered() and 'kanoworld_username' in profile
 
 
-class Login(TopBarTemplate):
+class Login(Gtk.Box):
     data = get_data("LOGIN")
     data_success = get_data("LOGIN_SUCCESS")
     data_no_internet = get_data("LOGIN_NO_INTERNET")
+    width = 550
 
     def __init__(self, win, prev_screen=None, first_boot=False):
 
-        TopBarTemplate.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
         self.win.set_main_widget(self)
+        self.win.set_decorated(True)
+        self.win.set_size_request(self.width, -1)
 
         self.first_boot = first_boot
 
         self.heading = Heading(self.data["LABEL_1"], self.data["LABEL_2"])
-        self.box.pack_start(self.heading.container, False, False, 10)
+        self.pack_start(self.heading.container, False, False, 10)
 
         if force_login:
             self.add_username_as_label()
@@ -62,7 +67,7 @@ class Login(TopBarTemplate):
             self.labelled_entries.set_margin_right(20)
             self.username_entry = self.labelled_entries.get_entry(0)
             self.password_entry = self.labelled_entries.get_entry(1)
-            self.box.pack_start(self.labelled_entries, False, False, 15)
+            self.pack_start(self.labelled_entries, False, False, 15)
 
         self.password_entry.set_visibility(False)
 
@@ -79,7 +84,7 @@ class Login(TopBarTemplate):
         self.button_box.set_orange_button2_cb(self.reset_password_screen)
         self.kano_button.connect("button_release_event", self.activate)
         self.kano_button.connect("key-release-event", self.activate)
-        self.box.pack_start(self.button_box, False, False, 20)
+        self.pack_start(self.button_box, False, False, 20)
 
         self.kano_button.set_sensitive(False)
 
@@ -111,7 +116,7 @@ class Login(TopBarTemplate):
         # Needs adjustment
         align.set_padding(0, 0, 50, 0)
 
-        self.box.pack_start(align, False, False, 15)
+        self.pack_start(align, False, False, 15)
         self.labelled_entries = LabelledEntries([{"heading": "Password", "subheading": ""}])
         self.password_entry = self.labelled_entries.get_entry(0)
         vbox.pack_start(self.labelled_entries, False, False, 15)
@@ -137,8 +142,8 @@ class Login(TopBarTemplate):
 
     def create_new(self, widget, event, args=[]):
         # Should we stop the user progressing here if they don't have internet?
-        self.win.clear_win()
-        AboutYou(self.win, self)
+        self.win.remove_main_widget()
+        RegistrationScreen1(self.win)
 
     def activate(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
@@ -226,23 +231,24 @@ class Login(TopBarTemplate):
         GObject.idle_add(done, title, description, return_value)
 
     def reset_password_screen(self, button, event, args):
-        self.win.clear_win()
-        ResetPassword(self.win, self)
+        self.win.remove_main_widget()
+        ResetPassword(self.win)
 
 
-class ResetPassword(TopBarTemplate):
-    def __init__(self, win, login_screen):
-        TopBarTemplate.__init__(self, prev_screen=login_screen)
+class ResetPassword(Gtk.Box):
+
+    def __init__(self, win):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self.win = win
+        self.win.set_decorated(False)
         self.win.set_main_widget(self)
-        self.enable_prev()
 
         self.heading = Heading("Reset your password", "We'll send a new password to your email")
-        self.box.pack_start(self.heading.container, False, False, 10)
+        self.pack_start(self.heading.container, False, False, 10)
 
         self.labelled_entries = LabelledEntries([{"heading": "Email", "subheading": ""}])
-        self.box.pack_start(self.labelled_entries, False, False, 0)
+        self.pack_start(self.labelled_entries, False, False, 0)
 
         # Read email from file
         user_email = get_email()
@@ -257,7 +263,7 @@ class ResetPassword(TopBarTemplate):
         self.button.connect("key-release-event", self.activate)
         self.button.set_padding(30, 30, 0, 0)
 
-        self.box.pack_start(self.button.align, False, False, 0)
+        self.pack_start(self.button.align, False, False, 0)
         self.win.show_all()
 
     def activate(self, widget, event):
@@ -308,5 +314,5 @@ class ResetPassword(TopBarTemplate):
             self.go_to_login_screen()
 
     def go_to_login_screen(self):
-        self.win.clear_win()
+        self.win.remove_main_widget()
         Login(self.win)

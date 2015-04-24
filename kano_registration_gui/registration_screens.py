@@ -1,55 +1,32 @@
 #!/usr/bin/env python
 
-# kano-profile-gui
+# registration_screens.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
 import os
-import sys
 import threading
 import datetime
-
 from gi.repository import Gtk, Gdk, GObject
 
-if __name__ == '__main__' and __package__ is None:
-    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if dir_path != '/usr':
-        sys.path.insert(1, dir_path)
-
-from kano.network import is_internet
+from kano.gtk3.heading import Heading
+from kano.gtk3.kano_dialog import KanoDialog
 from kano.logging import logger
+from kano.network import is_internet
+from kano.utils import run_bg
+
+from kano_avatar_gui.ImageView import ImageView
+
 from kano_world.functions import register as register_
+from kano_world.connection import request_wrapper
+
 from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_profile.paths import bin_dir
 from kano_profile.profile import save_profile_variable
 
-from kano_world.connection import request_wrapper
-
-from kano_profile_gui.paths import media_dir
-from kano.utils import run_bg
-
-from kano.gtk3.application_window import ApplicationWindow
-from kano.gtk3.heading import Heading
-from kano.gtk3.apply_styles import apply_styling_to_screen
-from kano.gtk3.kano_dialog import KanoDialog
-from kano.gtk3.cursor import attach_cursor_events
-
-from kano_avatar_gui.PageControl import PageControl
-from kano_avatar_gui.CharacterCreator import CharacterCreator
-from kano_avatar_gui.ImageView import ImageView
-from kano_avatar_gui.GetData import GetData2, GetData3
-
-import kano_profile_gui.components.icons as icons
-
-try:
-    from kano_profile.tracker import Tracker
-    kanotracker = Tracker()
-except:
-    pass
-
-GObject.threads_init()
+from kano_registration_gui.GetData import GetData2, GetData3
 
 
 def does_user_exist(username):
@@ -71,12 +48,23 @@ def does_user_exist(username):
     return None
 
 
-# Page 1 is the character personalisation
-class Page1(Gtk.Box):
+class RegistrationBase(Gtk.Box):
+    height = 596
+    width = 734
 
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
+        self.win.set_size_request(self.width, self.height)
+
+
+# Page 1 is the character personalisation
+class RegistrationScreen1(Gtk.Box):
+
+    def __init__(self, win):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self.win = win
+        self.win.set_decorated(True)
         self.win.set_main_widget(self)
 
         title = Heading('Make your Character',
@@ -110,7 +98,7 @@ class Page1(Gtk.Box):
             self.win.remove_main_widget()
             self.remove(self.win.char_creator)
 
-            page = Page2(self.win)
+            page = RegistrationScreen2(self.win)
             self.win.set_main_widget(page)
 
             self.win.get_window().set_cursor(None)
@@ -119,7 +107,7 @@ class Page1(Gtk.Box):
 
 
 # Get emails and birthday data from user
-class Page2(Gtk.Box):
+class RegistrationScreen2(Gtk.Box):
 
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
@@ -168,11 +156,11 @@ class Page2(Gtk.Box):
         self.data_screen.save_username_and_birthday()
 
         self.win.remove_main_widget()
-        Page3(self.win)
+        RegistrationScreen3(self.win)
 
     def prev_page(self, widget):
         self.win.remove_main_widget()
-        Page1(self.win)
+        RegistrationScreen1(self.win)
 
     def enable_next(self, widget):
         self.page_control.enable_next()
@@ -182,7 +170,7 @@ class Page2(Gtk.Box):
 
 
 # Get username and password
-class Page3(Gtk.Box):
+class RegistrationScreen3(Gtk.Box):
 
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
@@ -219,7 +207,7 @@ class Page3(Gtk.Box):
     def prev_page(self, widget):
         self.data_screen.cache_emails()
         self.win.remove_main_widget()
-        page = Page2(self.win)
+        page = RegistrationScreen2(self.win)
         self.win.set_main_widget(page)
 
     def enable_next(self, widget):
@@ -409,80 +397,3 @@ class Page3(Gtk.Box):
             return_value = 1
 
         return (title, description, return_value)
-
-
-class MainWindow(ApplicationWindow):
-    _list_of_categories = []
-    _list_of_comboxes = []
-    _grid = None
-    _page_classes = {1: Page1, 2: Page2, 3: Page3}
-
-    # The start page argument is for debugging purposes, so we
-    # can quickly look at the other pages
-    def __init__(self, start_page=1):
-        self.height = 596
-        self.width = 734
-        ApplicationWindow.__init__(self,
-                                   'Kano-Avatar',
-                                   self.width,
-                                   self.height)
-
-        self.connect("delete-event", Gtk.main_quit)
-
-        # This is what we fill up as we get data
-        self.data = {}
-
-        header_bar = HeaderBar()
-        self.set_decorated(True)
-        self.set_titlebar(header_bar)
-
-        # Styling
-        # take the function from kano-toolset
-        css_path = os.path.join(media_dir, "CSS/register.css")
-        apply_styling_to_screen(css_path)
-
-        # Load up the character creator at the start
-        self.char_creator = CharacterCreator()
-
-        self._show_page(start_page)
-        self.char_creator._hide_pop_ups()
-
-    def _show_page(self, page_number):
-        self._page_classes[page_number](self)
-        self.char_creator._hide_pop_ups()
-
-    def set_data(self, data_label, data):
-        self._data[data_label] = data
-
-    def create_page_control(self, selected_page, back_text, next_text):
-        '''This returns a widget suitable for controlling the flow between
-        screens
-        '''
-        page_control = PageControl(3, selected_page, back_text, next_text)
-        page_control.set_margin_bottom(25)
-        page_control.set_margin_top(25)
-
-        return page_control
-
-
-class HeaderBar(Gtk.Box):
-    def __init__(self):
-        Gtk.Box.__init__(self)
-
-        close_button = Gtk.Button()
-        cross_icon = icons.get_ui_icon("cross")
-        close_button.set_image(cross_icon)
-        close_button.connect("clicked", Gtk.main_quit)
-        close_button.get_style_context().add_class("close_button")
-        attach_cursor_events(close_button)
-
-        self.pack_end(close_button, False, False, 0)
-
-
-def main():
-    MainWindow(1)
-    Gtk.main()
-
-
-if __name__ == '__main__':
-    main()

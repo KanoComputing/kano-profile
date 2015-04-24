@@ -20,6 +20,7 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
 from kano.logging import logger
 
 from kano_profile.badges import calculate_badges
+from kano_profile.profile import set_avatar, set_environment
 
 # TODO Check which types of names are case sensitive
 # TODO Add support to save multiple circular assets, atm only 1 is supported
@@ -919,7 +920,6 @@ class AvatarConfParser():
             return self._environments[item_name].is_unlocked()
 
 
-
 class AvatarCreator(AvatarConfParser):
     """ The aim of this class is to help generate avatars for the kano world
     profile. It includes many accessor methods to get the attributes so that
@@ -1202,7 +1202,7 @@ class AvatarCreator(AvatarConfParser):
 
         return True
 
-    def save_final_assets(self, dir_name):
+    def save_final_assets(self, dir_name, sync=True):
         dn = os.path.abspath(os.path.expanduser(dir_name))
 
         direc = os.path.dirname(dn)
@@ -1213,6 +1213,12 @@ class AvatarCreator(AvatarConfParser):
         self.create_avatar(dn)
         logger.debug("Created {}".format(dn))
         self.create_auxiliary_assets(dn)
+
+        if sync:
+            items_no_env = self.selected_items_per_cat()
+            env_name = items_no_env.pop(self.env_label)
+            set_avatar(self._sel_char.name(), items_no_env)
+            set_environment(env_name, sync=True)
 
     def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background
@@ -1300,3 +1306,20 @@ def get_avatar_conf():
         logger.error('Conf file {} not found'.format(AVATAR_CONF_FILE))
 
     return conf
+
+
+def generate_random_character():
+    """ Generates a random character and returns the directory in
+    which it exists
+    :returns: path as a string
+    """
+    av_cr = AvatarCreator(get_avatar_conf)
+    av_cr.char_select('judoka_base')
+    av_cr.randomise_all_items()
+    save_path = os.path.abspath(
+        os.path.expanduser(
+            os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
+        )
+    )
+    av_cr.save_final_assets(save_path)
+    return True

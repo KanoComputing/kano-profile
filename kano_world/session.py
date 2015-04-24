@@ -54,6 +54,12 @@ class KanoWorldSession(object):
         # xp
         data['xp'] = calculate_xp()
 
+        # version
+        try:
+            data['version'] = profile['version']
+        except KeyError:
+            logger.debug("Version field not in the data to be synced")
+
         # age
         try:
             data['birthdate'] = profile['birthdate']

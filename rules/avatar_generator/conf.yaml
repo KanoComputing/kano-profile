@@ -562,16 +562,6 @@ objects:
       display_order: 6
       date_created: 2015-04-14T10:54:14Z
 
-    - display_name: Face_Ouh
-      img_name: faces/face-ouh.png
-      preview_img: faces/Kano-CharacterApp_07-09.png
-      position_x: 0
-      position_y: 0
-      category: Faces
-      item_id: 48293703bd2446b1976f6f1ab5771794
-      display_order: 7
-      date_created: 2015-04-14T10:54:14Z
-
     - display_name: Face_Happy
       img_name: faces/face-happy.png
       preview_img: faces/Kano-CharacterApp_07.png
@@ -579,7 +569,7 @@ objects:
       position_y: 0
       category: Faces
       item_id: 002a634f16da4386b16b7c3e7c3cbed2
-      display_order: 8
+      display_order: 7
       date_created: 2015-04-14T10:54:14Z
 
 # Belt

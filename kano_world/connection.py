@@ -77,11 +77,13 @@ def request_wrapper(method, endpoint, data=None, headers=None,
             else:
                 error_msg = r.text
             return r.ok, error_msg, None
+
+    except requests.exceptions.ReadTimeout as e:
+        logger.error('timeout in response: {}'.format(e))
+        logger.debug(pformat(_remove_sensitive_data(request_debug)))
+        return False, 'Timeout waiting for server response, please check your internet connection and try again later.', None
+
     except requests.exceptions.ConnectionError as e:
         logger.error('connection error: {}'.format(e))
         logger.debug(pformat(_remove_sensitive_data(request_debug)))
-
         return False, 'Error connecting to servers, please check your internet connection and try again later.', None
-
-
-

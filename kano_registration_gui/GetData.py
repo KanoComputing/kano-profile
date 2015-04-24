@@ -13,9 +13,9 @@ from kano.gtk3.kano_dialog import KanoDialog
 from kano_profile.paths import legal_dir
 from kano_profile_gui.components.icons import get_ui_icon
 from kano_world.connection import request_wrapper
-from kano_avatar_gui.BirthdayWidget import BirthdayWidget
-from kano_avatar_gui.LabelledEntry import LabelledEntry
-from kano_avatar_gui.TermsAndConditions import TermsAndConditions
+from kano_registration_gui.BirthdayWidget import BirthdayWidget
+from kano_registration_gui.LabelledEntry import LabelledEntry
+from kano_registration_gui.TermsAndConditions import TermsAndConditions
 
 from kano.logging import logger
 from kano_profile.apps import load_app_state_variable, save_app_state_variable

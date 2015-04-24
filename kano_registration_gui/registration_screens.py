@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+# registration_screens.py
+#
+# Copyright (C) 2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
 
 import os
 import threading
@@ -20,7 +27,6 @@ from kano_profile.paths import bin_dir
 from kano_profile.profile import save_profile_variable
 
 from kano_registration_gui.GetData import GetData2, GetData3
-##########################
 
 
 def does_user_exist(username):

@@ -20,7 +20,8 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
 from kano.logging import logger
 
 from kano_profile.badges import calculate_badges
-from kano_profile.profile import set_avatar, set_environment
+from kano_profile.profile import (set_avatar, set_environment,
+                                  save_profile_variable)
 
 # TODO Check which types of names are case sensitive
 # TODO Add support to save multiple circular assets, atm only 1 is supported
@@ -1220,6 +1221,9 @@ class AvatarCreator(AvatarConfParser):
         if sync:
             items_no_env = self.selected_items_per_cat()
             items_no_env.pop(self.env_label, None)
+            # When saving a new character in the profile, ensure that
+            # the right version is used to sync with the API
+            save_profile_variable('version', 2)
             set_avatar(self._sel_char.name(), items_no_env)
             set_environment(self._sel_env.name(), sync=True)
 

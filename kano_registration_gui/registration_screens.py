@@ -142,6 +142,15 @@ class RegistrationScreen2(Gtk.Box):
 
         data = self.data_screen.get_entry_data()
 
+        password = data["password"]
+        # If the password entry has less than 6 characters,
+        if len(password) < 6:
+            self._show_error_dialog(
+                "Your password isn't long enough!",
+                "It needs to be at least 6 characters long."
+            )
+            return
+
         self.win.data = data
         self.data_screen.save_username_and_birthday()
 
@@ -348,7 +357,7 @@ class RegistrationScreen3(Gtk.Box):
         email = self.win.data["email"]
 
         # use this in update of registration
-        guardian_email = self.win.data["guardian_email"]
+        secondary_email = self.win.data["secondary_email"]
         username = self.win.data["username"]
         password = self.win.data["password"]
         date_year = self.win.data["year"]
@@ -359,7 +368,7 @@ class RegistrationScreen3(Gtk.Box):
 
         success, text = register_(email, username, password,
                                   date_year, date_month, date_day,
-                                  secondary_email=guardian_email)
+                                  secondary_email=secondary_email)
 
         if not success:
             logger.info('problem with registration: {}'.format(text))

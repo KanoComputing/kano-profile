@@ -132,15 +132,19 @@ class PopUpItemMenu(SelectMenu):
         button = Gtk.Button()
         button.get_style_context().add_class('pop_up_menu_item')
         button.add(fixed)
-        button.connect('clicked', self._on_clicking_item, obj_name)
-        button.connect('enter-notify-event',
-                       self._add_selected_appearence_wrapper,
-                       obj_name)
-        button.connect('leave-notify-event',
-                       self._remove_selected_appearence_wrapper,
-                       obj_name)
+
+        # only attach the event listeners if the asset is unlocked
+        if self._parser.is_unlocked(obj_name):
+            button.connect('clicked', self._on_clicking_item, obj_name)
+            button.connect('enter-notify-event',
+                           self._add_selected_appearence_wrapper,
+                           obj_name)
+            button.connect('leave-notify-event',
+                           self._remove_selected_appearence_wrapper,
+                           obj_name)
+            attach_cursor_events(button)
+
         button.set_size_request(self.button_width, self.button_height)
-        attach_cursor_events(button)
 
         # set a margin all the way around it
         button.set_margin_right(3)

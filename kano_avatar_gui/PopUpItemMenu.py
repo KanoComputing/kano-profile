@@ -80,8 +80,8 @@ class PopUpItemMenu(SelectMenu):
         # Assume the list of buttons are in self._buttons
         # Pack buttons into a grid
 
-        # There are 2 columns and 5 rows.
-        total_rows = 5
+        # There are 2 columns
+        total_columns = 2
 
         # These are the counters to keep track of where we are
         # in the grid.
@@ -96,11 +96,11 @@ class PopUpItemMenu(SelectMenu):
             self._add_option_to_items(name, 'button', button)
 
             self._grid.attach(button, column, row, 1, 1)
-            row += 1
+            column += 1
 
-            if row % total_rows == 0:
-                row = 0
-                column += 1
+            if column % total_columns == 0:
+                row += 1
+                column = 0
 
             # For now, we assume that none of the menus with
             # need more than 2 columns

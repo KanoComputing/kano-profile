@@ -20,6 +20,9 @@ from kano_profile.paths import app_profiles_file, online_badges_dir, \
     online_badges_file, profile_dir
 from kano_profile.tracker import get_tracker_events, clear_tracker_events
 from kano_profile_gui.paths import media_dir
+from kano_avatar.paths import (AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME,
+                               AVATAR_ENV_DEFAULT,
+                               AVATAR_CIRC_PLAIN_DEFAULT)
 
 from .connection import request_wrapper, content_type_json
 
@@ -80,15 +83,7 @@ class KanoWorldSession(object):
             pass
 
         # avatar_generator
-        try:
-            avatar_generator = {
-                'character': profile['avatar'],
-                'environment': ['all', profile['environment']]
-            }
-            data['avatar_generator'] = avatar_generator
-        except Exception:
-            pass
-
+        profile, files = self._prepare_avatar_gen(profile)
         # app states
         stats = dict()
         for app in get_app_list():
@@ -98,11 +93,83 @@ class KanoWorldSession(object):
         # append stats
         data['stats'] = stats
 
-        success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(data), headers=content_type_json, session=self.session)
+        success, text, response_data = request_wrapper(
+            'put',
+            '/users/profile',
+            data=json.dumps(data),
+            headers=content_type_json,
+            session=self.session,
+            files=files)
+
+        # requests doesn't close the file objects after sending them, so
+        # we need to tidy up
+        self._tidy_up_avatar_files(files)
+
         if not success:
             return False, text
 
         return self.download_profile_stats(response_data)
+
+    def _prepare_avatar_gen(self, profile_data):
+        files = {}
+        if ('version' not in profile_data or
+                profile_data['version'] == 1):
+            try:
+                avatar_generator = {
+                    'character': profile_data['avatar'],
+                    'environment': ['all', profile_data['environment']]
+                }
+                profile_data['avatar_generator'] = avatar_generator
+            except Exception:
+                pass
+        elif profile_data['version' == 2]:
+            # In this version we need to add a field that indicates
+            # that this is version 2. Furthermore we need to uplodad
+            # the new assets to the server
+            try:
+                avatar_generator = {
+                    'version': 2,
+                    'character': profile_data['avatar'],
+                    'environment': ['all', profile_data['environment']]
+                }
+                profile_data['avatar_generator'] = avatar_generator
+                path_circ = os.path.join(
+                    AVATAR_DEFAULT_LOC,
+                    AVATAR_CIRC_PLAIN_DEFAULT)
+                path_env = os.path.join(
+                    AVATAR_DEFAULT_LOC,
+                    AVATAR_ENV_DEFAULT)
+                path_char = os.path.join(
+                    AVATAR_DEFAULT_LOC,
+                    AVATAR_DEFAULT_NAME)
+                files = {
+                    'avatar_circle': open(path_circ, 'rb'),
+                    'avatar_landscape': open(path_env, 'rb'),
+                    'avatar_character': open(path_char, 'rb')
+                }
+            except KeyError as e:
+                logger.debug('Attribute {} not found in profile'.format(e))
+            except IOError as e:
+                # There was an error somewhere, do not upload files
+                files = {}
+                logger.info(
+                    'Error opening 1 of the files to upload {}'.format(str(e))
+                )
+            except Exception:
+                pass
+        else:
+            logger.debug(
+                "Unknown profile ver: {}, can't upload data".format(
+                    profile_data['version'])
+                )
+        return profile_data, files
+
+    def _tidy_up_avatar_files(self, files):
+        try:
+            for f in files.itervalues():
+                f.close()
+        except Exception:
+            logger.debug("Error closing avatar files")
 
     def download_profile_stats(self, data=None):
         if not data:

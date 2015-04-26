@@ -10,6 +10,8 @@ from kano.utils import get_home
 AVATAR_SCRATCH = '/tmp/avatar_gen_scratch/avatar.png'
 AVATAR_DEFAULT_LOC = os.path.join(get_home(), '.avatar-content')
 AVATAR_DEFAULT_NAME = 'avatar.png'
+AVATAR_ENV_DEFAULT = 'avatar_inc_env.png'
+AVATAR_CIRC_PLAIN_DEFAULT = 'avatar_circ_plain.png'
 
 AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
 AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'

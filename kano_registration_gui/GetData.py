@@ -103,7 +103,8 @@ class GetData2(DataTemplate):
         # Do not fill this in
         self.password_entry = LabelledEntry("Password - min. 6 letters")
         self.password_entry.connect('labelled-entry-key-release', self.widgets_full)
-        self.password_entry.set_visibility(False)
+        # Keeping the password box invisible is debatable.
+        # self.password_entry.set_visibility(False)
 
         self.entries = [
             self.username_entry,
@@ -112,7 +113,6 @@ class GetData2(DataTemplate):
 
         self.bday_widget = BirthdayWidget(birthday_day, birthday_month, birthday_year)
         self.bday_widget.connect("bday-key-release-event", self.widgets_full)
-        # self.bday_widget.connect("bday-widgets-empty", )
 
         box.pack_start(self.username_entry, False, False, 10)
         box.pack_start(self.password_entry, False, False, 10)
@@ -214,30 +214,41 @@ class GetData3(DataTemplate):
     the username, password and birthday
     '''
 
-    def __init__(self):
+    def __init__(self, age):
         DataTemplate.__init__(self)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         email, guardian_email = self.get_cached_emails()
 
-        self.email_entry = LabelledEntry("Email", email)
-        self.email_entry.connect('key-release-event', self.widgets_full)
-        self.guardian_email_entry = LabelledEntry(
-            "Guardian's Email (optional)", guardian_email
-        )
-        self.guardian_email_entry.connect('key-release-event', self.widgets_full)
-
         self.t_and_cs = TermsAndConditions()
         self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
-        self.t_and_cs.connect("t-and-cs-clicked", self.show_terms_and_conditions)
+        self.t_and_cs.connect("t-and-cs-clicked",
+                              self.show_terms_and_conditions)
 
-        # This might need to change
-        self.entries = [
-            self.email_entry
-        ]
+        # If the user is younger than 14, ask for both Guardian and
+        # user email, but the guardian email is compulsory
+        if age < 14:
+            self.guardian_email_entry = LabelledEntry(
+                "Guardian's Email (required)", guardian_email
+            )
+            self.guardian_email_entry.connect('key-release-event',
+                                              self.widgets_full)
 
-        box.pack_start(self.email_entry, False, False, 5)
-        box.pack_start(self.guardian_email_entry, False, False, 5)
+            self.email_entry = LabelledEntry("Email (optional)", email)
+            self.email_entry.connect('key-release-event', self.widgets_full)
+
+            box.pack_start(self.guardian_email_entry, False, False, 5)
+            box.pack_start(self.email_entry, False, False, 5)
+
+            self.entries = [self.guardian_email_entry]
+
+        # Otherwise, there is only one compulsory email
+        else:
+            self.email_entry = LabelledEntry("Email", email)
+            self.email_entry.connect('key-release-event', self.widgets_full)
+            box.pack_start(self.email_entry, False, False, 5)
+            self.entries = [self.email_entry]
+
         box.pack_start(self.t_and_cs, False, False, 5)
         box.set_margin_top(20)
 
@@ -281,7 +292,8 @@ class GetData3(DataTemplate):
             text = entry.get_text()
             if not text:
                 full = False
-            elif entry == self.email_entry:
+            elif entry == self.email_entry or \
+                    entry == self.guardian_email_entry:
                 full = is_email(text)
 
         if not self.t_and_cs.is_checked():

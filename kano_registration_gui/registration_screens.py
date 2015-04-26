@@ -48,16 +48,6 @@ def does_user_exist(username):
     return None
 
 
-class RegistrationBase(Gtk.Box):
-    height = 596
-    width = 734
-
-    def __init__(self, win):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
-        self.win = win
-        self.win.set_size_request(self.width, self.height)
-
-
 # Page 1 is the character personalisation
 class RegistrationScreen1(Gtk.Box):
 
@@ -156,7 +146,7 @@ class RegistrationScreen2(Gtk.Box):
         self.data_screen.save_username_and_birthday()
 
         self.win.remove_main_widget()
-        RegistrationScreen3(self.win)
+        RegistrationScreen3(self.win, age)
 
     def prev_page(self, widget):
         self.win.remove_main_widget()
@@ -172,7 +162,7 @@ class RegistrationScreen2(Gtk.Box):
 # Get username and password
 class RegistrationScreen3(Gtk.Box):
 
-    def __init__(self, win):
+    def __init__(self, win, age):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
         self.win.set_main_widget(self)
@@ -195,7 +185,9 @@ class RegistrationScreen3(Gtk.Box):
                                 "avatar-content/avatar_inc_env_page2.png")
         image_viewer.set_image(filename)
 
-        self.data_screen = GetData3()
+        # Pass age into the Data screen - decide whether to ask for Guardian or
+        # user email
+        self.data_screen = GetData3(age)
         self.data_screen.connect("widgets-filled", self.enable_next)
         self.data_screen.connect("widgets-empty", self.disable_next)
 
@@ -211,7 +203,6 @@ class RegistrationScreen3(Gtk.Box):
         self.win.set_main_widget(page)
 
     def enable_next(self, widget):
-        logger.debug("hitting enable next")
         self.page_control.enable_next()
 
     def disable_next(self, widget):

@@ -97,6 +97,7 @@ class CharacterEdit(Gtk.EventBox):
         # self.char_creator = self._win.get_char_creator()
         self.char_creator = char_creator
         self._win.pack_in_main_content(self.char_creator)
+        self.char_creator.reset_selected_menu_items()
 
         save_changes_button = KanoButton("SAVE CHANGES")
         save_changes_button.connect("clicked", self.save_changes)

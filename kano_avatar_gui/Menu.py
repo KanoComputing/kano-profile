@@ -51,17 +51,6 @@ class Menu(Gtk.Fixed):
 
         self.show_all()
 
-    def select_pop_up_items(self, selected_items):
-        '''selected_items are of the form
-        {category: {name: item_name}}
-        '''
-        logger.debug("select_pop_up_items entered")
-
-        for category, item_dict in selected_items.iteritems():
-            pop_up = self.menus[category]["pop_up"]
-            identifier = selected_items[category]
-            pop_up._only_style_selected(identifier)
-
     def unselect_categories(self):
         self._cat_menu.remove_selected_on_all()
 
@@ -105,6 +94,9 @@ class Menu(Gtk.Fixed):
         '''
         logger.debug("Creating start up image")
 
+        # This is a dictionary so we can eaily reset the menus
+        self.saved_selected_list = {}
+
         # TODO: fix this. This is only here to make this work.
         self._parser.char_select('Judoka_Base')
 
@@ -119,11 +111,7 @@ class Menu(Gtk.Fixed):
         }
 
         for category in self.categories:
-            available_objects = self._parser.get_avail_objs(category)
-            logger.debug("available_objects = {}".format(available_objects))
-
             obj_name = load_app_state_variable("kano-avatar", category)
-            logger.debug("loading obj_name = {}".format(obj_name))
 
             if obj_name and obj_name in self._parser.get_avail_objs(category):
                 logger.debug("Loading saved object {} for category {}".format(obj_name, category))
@@ -133,10 +121,30 @@ class Menu(Gtk.Fixed):
                 save_app_state_variable("kano-avatar", category, obj_name)
 
             # object_list.append(obj_name)
-            self.menus[category]["pop_up"]._set_selected(obj_name)
-            self.menus[category]["pop_up"]._only_style_selected(obj_name)
+            self.select_pop_up_in_category(category, obj_name)
             self.menus[category]["pop_up"].hide()
             logger.debug("Hid menu for category {}".format(category))
+            self.saved_selected_list[category] = obj_name
+
+    def select_pop_up_in_category(self, category, obj_name):
+        self.menus[category]["pop_up"]._set_selected(obj_name)
+        self.menus[category]["pop_up"]._only_style_selected(obj_name)
+
+    def select_pop_up_items(self, selected_items):
+        '''selected_items are of the form
+        {category: {name: item_name}}
+        '''
+        logger.debug("select_pop_up_items entered")
+
+        for category, item_dict in selected_items.iteritems():
+            pop_up = self.menus[category]["pop_up"]
+            identifier = selected_items[category]
+            pop_up._only_style_selected(identifier)
+
+    def reset_selected_menu_items(self):
+        logger.debug("Hit reset_selected_menu_items")
+        for category, item in self.saved_selected_list.iteritems():
+            self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):
 

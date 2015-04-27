@@ -5,39 +5,20 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 import os
+from kano.utils import get_home
 
-# Find the local directory which would store the rules and media directory
-dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+AVATAR_SCRATCH = os.path.join('/tmp/',
+                              get_home(),
+                              'char_gen_scratch',
+                              'character.png')
+AVATAR_DEFAULT_LOC = os.path.join(get_home(), '.character-content')
+AVATAR_DEFAULT_NAME = 'character.png'
+AVATAR_ENV_DEFAULT = 'character_inc_env.png'
+AVATAR_CIRC_PLAIN_DEFAULT = 'character_circ_plain.png'
 
-# Set up the media directory
-media_local = os.path.join(dir_path, 'media')
-media_usr = '/usr/share/kano-profile/media/'
-
-if os.path.exists(media_local):
-    media_dir = media_local
-elif os.path.exists(media_usr):
-    media_dir = media_usr
-else:
-    raise Exception('Neither local nor usr media dir found!')
-
-# Set up the rules directory
-rules_local = os.path.join(dir_path, 'rules')
-rules_usr = '/usr/share/kano-profile/rules/'
-
-if os.path.exists(rules_local):
-    rules_dir = rules_local
-elif os.path.exists(rules_usr):
-    rules_dir = rules_usr
-else:
-    raise Exception('Neither local nor usr rules dir found!')
-
-AVATAR_SCRATCH = '/tmp/avatar_gen_scratch/avatar.png'
-AVATAR_DEFAULT_LOC = '~/avatar-content/'
-AVATAR_DEFAULT_NAME = 'avatar.png'
-
-AVATAR_CONF_FILE = os.path.join(rules_dir, 'avatar_generator/conf.yaml')
-AVATAR_ASSET_FOLDER = os.path.join(media_dir, 'images/avatar_generator')
-CSS_PATH = os.path.join(media_dir, 'CSS/avatar_generator.css')
+AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
+AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'
+CSS_PATH = '/usr/share/kano-profile/media/CSS/avatar_generator.css'
 
 CHARACTER_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'characters')
 ENVIRONMENT_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'environments')

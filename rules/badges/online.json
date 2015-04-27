@@ -1,8 +1,8 @@
 {
-  "super_sharer": {
-    "bg_color": "ffea8c",
-    "desc_locked": "Share your creations - get the badge!",
-    "desc_unlocked": "You put your work online for the world to see. Keep it up, super sharer...",
+  "sharing_apprentice": {
+    "bg_color": "324f82",
+    "desc_locked": "You’ve made something awesome now share it with the world!",
+    "desc_unlocked": "You put your work where the world can see! Keep it up.",
     "operation": "sum_greater",
     "targets": [
       [
@@ -26,8 +26,68 @@
         "shared"
       ]
     ],
-    "title": "Super Sharer",
+    "title": "Sharing Apprentice",
     "value": 1
+  },
+  "sharing_master": {
+    "bg_color": "324f82",
+    "desc_locked": "Already made your first share? Keep going to show the world what you can do!",
+    "desc_unlocked": "You’re rocking it! Showing your work off to inspire the world!",
+    "operation": "sum_greater",
+    "targets": [
+      [
+        "make-pong",
+        "shared"
+      ],
+      [
+        "make-minecraft",
+        "shared"
+      ],
+      [
+        "make-music",
+        "shared"
+      ],
+      [
+        "kano-draw",
+        "shared"
+      ],
+      [
+        "make-snake",
+        "shared"
+      ]
+    ],
+    "title": "Sharing Master",
+    "value": 5
+  },
+  "sharing_sensei": {
+    "bg_color": "324f82",
+    "desc_locked": "Share enough of your work to fill a gallery and become a true Sharing Sensei.",
+    "desc_unlocked": "Wowzer! We’ll have to open a new wing in the Kano Gallery for all of your work!",
+    "operation": "sum_greater",
+    "targets": [
+      [
+        "make-pong",
+        "shared"
+      ],
+      [
+        "make-minecraft",
+        "shared"
+      ],
+      [
+        "make-music",
+        "shared"
+      ],
+      [
+        "kano-draw",
+        "shared"
+      ],
+      [
+        "make-snake",
+        "shared"
+      ]
+    ],
+    "title": "Sharing Sensei",
+    "value": 10
   },
   "community_champion": {
     "bg_color": "ffea8c",

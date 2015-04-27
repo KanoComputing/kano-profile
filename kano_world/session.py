@@ -12,8 +12,8 @@ import os
 
 from kano.logging import logger
 from kano.utils import download_url, read_json, ensure_dir
-from kano_profile.profile import load_profile, set_avatar, set_environment, \
-    save_profile
+from kano_profile.profile import (load_profile, set_avatar, set_environment,
+                                  save_profile, save_profile_variable)
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file, online_badges_dir, \
@@ -197,6 +197,12 @@ class KanoWorldSession(object):
                                                   session=self.session)
             if not success:
                 return False, text
+
+        try:
+            vesion_no = data['user']['avatar']['generator']['version']
+            save_profile_variable('version', version_no)
+        except Exception:
+            pass
 
         try:
             avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']

@@ -35,6 +35,7 @@ class PopUpItemMenu(SelectMenu):
         self._parser = avatar_parser
         self._signal_name = 'pop_up_item_selected'
         self._border_path = self._parser.get_selected_border(self._category)
+        self._hover_path = self._parser.get_hover_border(self._category)
 
         obj_names = self._parser.get_avail_objs(self._category)
         SelectMenu.__init__(self, obj_names, self._signal_name)
@@ -137,10 +138,10 @@ class PopUpItemMenu(SelectMenu):
         if self._parser.is_unlocked(obj_name):
             button.connect('clicked', self._on_clicking_item, obj_name)
             button.connect('enter-notify-event',
-                           self._add_selected_appearence_wrapper,
+                           self._add_hover_appearence_wrapper,
                            obj_name)
             button.connect('leave-notify-event',
-                           self._remove_selected_appearence_wrapper,
+                           self._remove_hover_appearence_wrapper,
                            obj_name)
             attach_cursor_events(button)
 
@@ -156,7 +157,7 @@ class PopUpItemMenu(SelectMenu):
 
     ################################################################
 
-    def _add_selected_border(self, identifier):
+    def _add_border(self, identifier, selected=True):
         '''Add the border image on top of the image
         It needs to be "above" as some of the border images also
         have a white tick.
@@ -169,45 +170,61 @@ class PopUpItemMenu(SelectMenu):
             # Get the fixed containing the image
             fixed = button.get_child()
 
-            # The border_path depends on the image.
-            selected_border = Gtk.Image.new_from_file(self._border_path)
+            if selected:
+                # The border_path depends on the image.
+                border = Gtk.Image.new_from_file(self._border_path)
+                self._add_option_to_items(identifier, "selected_border",
+                                          border)
+                self._add_option_to_items(identifier, "selected_border_set",
+                                          True)
+            else:
+                border = Gtk.Image.new_from_file(self._hover_path)
+                self._add_option_to_items(identifier, "hover_border",
+                                          border)
+                self._add_option_to_items(identifier, "hover_border_set",
+                                          True)
 
             # Put the selected border on the button
-            fixed.put(selected_border, 0, 0)
-
-            self._add_option_to_items(identifier, "selected_border",
-                                      selected_border)
-            self._add_option_to_items(identifier, "selected_border_set",
-                                      True)
+            fixed.put(border, 0, 0)
             fixed.show_all()
 
-    def _remove_selected_border(self, identifier):
+    def _remove_border(self, identifier, selected=True):
         '''If the icon in the menu has a selected border, this will remove
         the border.
         If identifier is None, all items will have the border removed
         '''
-        logger.debug("_remove_selected_border")
+        logger.debug("_remove_border")
 
-        if identifier in self._items and \
-                'selected_border' in self._items[identifier]:
+        if identifier in self._items:
 
             button = self._items[identifier]['button']
             fixed = button.get_children()[0]
 
-            # TODO: stop exposing self._items
-            selected_border = self._items[identifier]["selected_border"]
-            self._add_option_to_items(identifier, "selected_border_set",
-                                      False)
-            fixed.remove(selected_border)
+            if selected and 'selected_border' in self._items[identifier]:
+
+                # TODO: stop exposing self._items
+                border = self._items[identifier]["selected_border"]
+                self._add_option_to_items(identifier, "selected_border_set",
+                                          False)
+            elif not selected and 'hover_border' in self._items[identifier]:
+                # TODO: stop exposing self._items
+                border = self._items[identifier]["hover_border"]
+                self._add_option_to_items(identifier, "hover_border_set",
+                                          False)
+            else:
+                # Neither borders could be found
+                return
+
+            fixed.remove(border)
             button.show_all()
 
-    def add_selected_border_if_not_added(self, identifier):
+    def add_border_if_not_added(self, identifier, selected=True):
         '''Adds the selected styling if it is not already present
         '''
         logger.debug("add_selected_border_if_not_added")
 
-        if not self.get_if_selected_styling_set(identifier):
-            self._add_selected_border(identifier)
+        if not self.get_if_styling_set(identifier, selected):
+            self._add_border(identifier, selected)
 
     def remove_selected_border_if_not_selected(self, identifier):
         '''Adds the selected styling if the item is not selected
@@ -215,18 +232,20 @@ class PopUpItemMenu(SelectMenu):
         logger.debug("remove_selected_border_if_not_selected")
 
         if not (self.get_selected() == identifier) and \
-                self.get_if_selected_styling_set(identifier):
-            self._remove_selected_border(identifier)
+                self.get_if_styling_set(identifier, selected=True):
+            self._remove_border(identifier, selected=True)
 
-    def get_if_selected_styling_set(self, identifier):
+    def get_if_styling_set(self, identifier, selected):
         '''Get if the styling has been applied to the item
         '''
-        return (self.get_option(identifier, "selected_border_set") is True)
+        if selected:
+            return (self.get_option(identifier, "selected_border_set") is True)
+        else:
+            return (self.get_option(identifier, "hover_border_set") is True)
 
     def _only_style_selected(self, identifier):
-        '''Adds the CSS class that shows the image that has been selected,
-        even when the mouse is moved away.
-        If identifier is None, will remove all styling.
+        '''Adds the CSS class that shows the image that has been selected.
+        If identifier is None, will remove selected styling.
         '''
         logger.debug("Entered the pop up _only_style_selected")
         old_selected_id = self.get_selected()
@@ -237,22 +256,32 @@ class PopUpItemMenu(SelectMenu):
 
         # Since the item should already have the selected apearence from the
         # mouse hovering over it, should not bee needed to add the border again
-        self.add_selected_border_if_not_added(identifier)
+        self.add_border_if_not_added(identifier, selected=True)
 
     #########################################################################
     # Wrapper functions, for callbacks
+
+    def _add_hover_appearence_wrapper(self, button, event, identifier):
+        logger.debug("_add_hover_appearence_wrapper")
+        self._add_border(identifier, selected=False)
+
+    def _remove_hover_appearence_wrapper(self, button, event, identifier):
+        '''For connecting to a button release event
+        '''
+        logger.debug("_remove_selected_appearence_wrapper")
+        self._remove_border(identifier, selected=False)
 
     def _add_selected_appearence_wrapper(self, button, event, identifier):
         '''For connecting to a button release event
         '''
         logger.debug("_add_selected_appearence_wrapper")
-        self.add_selected_border_if_not_added(identifier)
+        self.add_border_if_not_added(identifier, selected=True)
 
     def _remove_selected_appearence_wrapper(self, button, event, identifier):
         '''For connecting to a button release event
         '''
         logger.debug("_remove_selected_appearence_wrapper")
-        self.remove_selected_border_if_not_selected(identifier)
+        self.remove_selected_border_if_not_selected(identifier, selected=True)
 
     def _on_clicking_item(self, button, identifier):
         logger.debug("_on_clicking_item")

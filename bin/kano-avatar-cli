@@ -16,42 +16,56 @@ if __name__ == '__main__' and __package__ is None:
         sys.path.insert(1, dir_path)
 
 from kano_avatar.logic import AvatarConfParser, AvatarCreator, get_avatar_conf
+from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano.logging import logger
 
-program_desc = "This program handles the creation of an avatar for a user of Kano World"
+program_desc = "This program handles the avatar creation for Kano World users"
 
 configuration = get_avatar_conf()
 
 if configuration is None:
-    logger.error('Error configuration was not loaded, check configuration file')
+    logger.error('Configuration was not loaded, check configuration file')
     sys.exit(1)
 
 
 def main():
     parser = argparse.ArgumentParser(description=program_desc)
-    group_view = parser.add_argument_group('View', 'View available choices')
-    group_view.add_argument('-l', '--list',
-                            choices=['char', 'obj', 'env', 'cat', 'spec_cat', 'all'],
-                            help='List available choices for characters (char),objects (obj), categories(cat) or all (all).')
+    group_view = parser.add_argument_group('View', 'View available choices and exit')
+    group_view.add_argument(
+        '-l',
+        '--list',
+        choices=['char', 'obj', 'env', 'cat', 'spec_cat', 'all'],
+        help='List available choices for characters (char),objects (obj), categories(cat) or all (all)')
     group_create = parser.add_argument_group('Create', 'Create a new avatar')
-    group_create.add_argument('-c', '--create',
-                              type=str,
-                              nargs='+',
-                              help='Create a new character, specify the character name followed by the objects')
-    group_create.add_argument('-a', '--circular',
-                              action='store_true',
-                              help='Generate circular assets as well')
-    group_create.add_argument('-e', '--environment',
-                              type=str,
-                              default='',
-                              help='Set environment (background) for the avatar')
-    group_create.add_argument('-o', '--output',
-                              type=str,
-                              default='new_avatar.png',
-                              help='Name of output file')
-    group_create.add_argument('-r', '--randomise',
-                              action='store_true',
-                              help='Randomise rest of the items')
+    group_create.add_argument(
+        '-c',
+        '--create',
+        type=str,
+        nargs='+',
+        help='Create a new character, specify the character name followed by the objects')
+    group_create.add_argument(
+        '-e',
+        '--environment',
+        type=str,
+        default='',
+        help='Set environment (background) for the avatar')
+    group_create.add_argument(
+        '-r',
+        '--randomise',
+        action='store_true',
+        help='Randomise rest of the items')
+    save_or_sync = group_create.add_mutually_exclusive_group()
+    save_or_sync.add_argument(
+        '-s',
+        '--sync',
+        action='store_true',
+        help='Put the resulting avatar in the default location and save it to profile')
+    save_or_sync.add_argument(
+        '-o',
+        '--output',
+        type=str,
+        default='new_avatar.png',
+        help='Name (optionally with path) of output file')
     args = parser.parse_args()
 
     if args.list:
@@ -98,7 +112,13 @@ def main():
         if not rc:
             logger.error('Error processing the list, please double check it')
             return 1
-        avatar_creator.create_avatar(save_to=args.output, circ_assets=args.circular)
+
+        if args.sync:
+            out_path = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
+        else:
+            out_path = args.output
+
+        avatar_creator.save_final_assets(out_path, sync=args.sync)
 
 
 if __name__ == '__main__':

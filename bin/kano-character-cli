@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# kano-avatar-cli
+# kano-character-cli
 #
 # Copyright (C) 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -19,7 +19,7 @@ from kano_avatar.logic import AvatarConfParser, AvatarCreator, get_avatar_conf
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano.logging import logger
 
-program_desc = "This program handles the avatar creation for Kano World users"
+program_desc = "This program handles the Character creation for Kano World users"
 
 configuration = get_avatar_conf()
 
@@ -36,7 +36,7 @@ def main():
         '--list',
         choices=['char', 'obj', 'env', 'cat', 'spec_cat', 'all'],
         help='List available choices for characters (char),objects (obj), categories(cat) or all (all)')
-    group_create = parser.add_argument_group('Create', 'Create a new avatar')
+    group_create = parser.add_argument_group('Create', 'Create a new Character')
     group_create.add_argument(
         '-c',
         '--create',
@@ -48,7 +48,7 @@ def main():
         '--environment',
         type=str,
         default='',
-        help='Set environment (background) for the avatar')
+        help='Set environment (background) for the Character')
     group_create.add_argument(
         '-r',
         '--randomise',
@@ -59,12 +59,12 @@ def main():
         '-s',
         '--sync',
         action='store_true',
-        help='Put the resulting avatar in the default location and save it to profile')
+        help='Put the resulting Character in the default location and save it to profile')
     save_or_sync.add_argument(
         '-o',
         '--output',
         type=str,
-        default='new_avatar.png',
+        default='new_character.png',
         help='Name (optionally with path) of output file')
     args = parser.parse_args()
 
@@ -100,15 +100,15 @@ def main():
         return 0
 
     if args.create:
-        avatar_creator = AvatarCreator(configuration)
-        avatar_creator.char_select(args.create.pop(0))
+        char_creator = AvatarCreator(configuration)
+        char_creator.char_select(args.create.pop(0))
         if args.environment:
-            avatar_creator.env_select(args.environment)
+            char_creator.env_select(args.environment)
 
         if not args.randomise:
-            rc = avatar_creator.obj_select(args.create)
+            rc = char_creator.obj_select(args.create)
         else:
-            rc = avatar_creator.randomise_rest(args.create)
+            rc = char_creator.randomise_rest(args.create)
         if not rc:
             logger.error('Error processing the list, please double check it')
             return 1
@@ -118,7 +118,7 @@ def main():
         else:
             out_path = args.output
 
-        avatar_creator.save_final_assets(out_path, sync=args.sync)
+        char_creator.save_final_assets(out_path, sync=args.sync)
 
 
 if __name__ == '__main__':

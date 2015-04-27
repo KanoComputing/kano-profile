@@ -56,7 +56,7 @@ class MainWindow(ApplicationWindow):
 
     def __init__(self, screen="login"):
         ApplicationWindow.__init__(self,
-                                   'Kano-Avatar',
+                                   'Kano-Login',
                                    self.width,
                                    self.height)
 
@@ -69,6 +69,7 @@ class MainWindow(ApplicationWindow):
         header_bar = HeaderBar()
         self.set_decorated(True)
         self.set_titlebar(header_bar)
+        self.set_icon_name("kano-world")
 
         css_path = os.path.join(media_dir, "CSS/register.css")
         apply_styling_to_screen(css_path)

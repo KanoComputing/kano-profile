@@ -23,6 +23,7 @@ class SwagScreen():
     def __init__(self, win):
         # Set window
         self.win = win
+        self.win.set_decorated(False)
         self.win.set_resizable(True)
         # Set text depending on login
         login = is_registered()

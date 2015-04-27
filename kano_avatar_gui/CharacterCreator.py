@@ -110,6 +110,9 @@ class CharacterCreator(Gtk.EventBox):
         self._imgbox.set_image(filepath)
         self._menu.select_pop_up_items(selected_item_dict)
 
+    def reset_selected_menu_items(self):
+        self._menu.reset_selected_menu_items()
+
     def _hide_pop_ups(self, widget=None, event=None):
         self._menu.hide_pop_ups()
         self._menu.unselect_categories()
@@ -149,9 +152,12 @@ class CharacterCreator(Gtk.EventBox):
         logger.debug("Saving all kano assets")
         # and also lists which assets in kano-profile
 
+        self._menu.saved_selected_list = {}
+
         # for all categories, check the item that was selected
         categories = self.avatar_cr.list_available_categories()
 
         for category in categories:
             obj_name = self._menu.get_selected_obj(category)
             save_app_state_variable('kano-avatar', category, obj_name)
+            self._menu.saved_selected_list[category] = obj_name

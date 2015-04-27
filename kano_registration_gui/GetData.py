@@ -97,22 +97,23 @@ class GetData2(DataTemplate):
         if is_internet():
             logger.debug("Attaching check username wrapper to username entry")
             # Check the username is valid when we focus out of the entry
-            self.username_entry.connect('focus-out-event', self.check_username_wrapper)
+            self.username_entry.connect('focus-out-event',
+                                        self.check_username_wrapper)
         '''
 
         # Do not fill this in
         self.password_entry = LabelledEntry("Password - min. 6 letters")
-        self.password_entry.connect('labelled-entry-key-release', self.widgets_full)
-        self.password_entry.set_visibility(False)
+        self.password_entry.connect('labelled-entry-key-release',
+                                    self.widgets_full)
 
         self.entries = [
             self.username_entry,
             self.password_entry
         ]
 
-        self.bday_widget = BirthdayWidget(birthday_day, birthday_month, birthday_year)
+        self.bday_widget = BirthdayWidget(birthday_day, birthday_month,
+                                          birthday_year)
         self.bday_widget.connect("bday-key-release-event", self.widgets_full)
-        # self.bday_widget.connect("bday-widgets-empty", )
 
         box.pack_start(self.username_entry, False, False, 10)
         box.pack_start(self.password_entry, False, False, 10)
@@ -191,8 +192,6 @@ class GetData2(DataTemplate):
         return (username, birthday_day, birthday_month, birthday_year)
 
     def widgets_full(self, widget=None, event=None):
-        logger.debug("widgets-full in GetData hit")
-
         full = True
 
         for entry in self.entries:
@@ -214,30 +213,41 @@ class GetData3(DataTemplate):
     the username, password and birthday
     '''
 
-    def __init__(self):
+    def __init__(self, age):
         DataTemplate.__init__(self)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        email, guardian_email = self.get_cached_emails()
-
-        self.email_entry = LabelledEntry("Email", email)
-        self.email_entry.connect('key-release-event', self.widgets_full)
-        self.guardian_email_entry = LabelledEntry(
-            "Guardian's Email (optional)", guardian_email
-        )
-        self.guardian_email_entry.connect('key-release-event', self.widgets_full)
+        email, secondary_email = self.get_cached_emails()
 
         self.t_and_cs = TermsAndConditions()
         self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
-        self.t_and_cs.connect("t-and-cs-clicked", self.show_terms_and_conditions)
+        self.t_and_cs.connect("t-and-cs-clicked",
+                              self.show_terms_and_conditions)
 
-        # This might need to change
-        self.entries = [
-            self.email_entry
-        ]
+        # If the user is younger than 14, ask for both Guardian and
+        # user email, but the guardian email is compulsory
+        if age < 14:
+            self.email_entry = LabelledEntry(
+                "Guardian's Email (required)", email
+            )
+            self.email_entry.connect('key-release-event',
+                                     self.widgets_full)
 
-        box.pack_start(self.email_entry, False, False, 5)
-        box.pack_start(self.guardian_email_entry, False, False, 5)
+            self.secondary_email_entry = LabelledEntry("Email (optional)", secondary_email)
+            self.secondary_email_entry.connect('key-release-event', self.widgets_full)
+
+            box.pack_start(self.email_entry, False, False, 5)
+            box.pack_start(self.secondary_email_entry, False, False, 5)
+
+        # Otherwise, there is only one compulsory email
+        else:
+            self.email_entry = LabelledEntry("Email", email)
+            self.email_entry.connect('key-release-event', self.widgets_full)
+            self.secondary_email_entry = None
+            box.pack_start(self.email_entry, False, False, 5)
+
+        self.entries = [self.email_entry]
+
         box.pack_start(self.t_and_cs, False, False, 5)
         box.set_margin_top(20)
 
@@ -245,31 +255,39 @@ class GetData3(DataTemplate):
 
     def disable_all(self):
         self.email_entry.set_sensitive(False)
-        self.guardian_email_entry.set_sensitive(False)
+
+        if self.secondary_email_entry:
+            self.secondary_email_entry.set_sensitive(False)
         self.t_and_cs.disable_all()
 
     def enable_all(self):
         self.email_entry.set_sensitive(True)
-        self.guardian_email_entry.set_sensitive(True)
+
+        if self.secondary_email_entry:
+            self.secondary_email_entry.set_sensitive(True)
         self.t_and_cs.enable_all()
 
     def cache_emails(self):
         email_address = self.email_entry.get_text()
         self.cache_data("email", email_address)
 
-        guardian_email_address = self.guardian_email_entry.get_text()
-        self.cache_data("guardian_email", guardian_email_address)
+        if self.secondary_email_entry:
+            secondary_email_address = self.secondary_email_entry.get_text()
+            self.cache_data("secondary_email", secondary_email_address)
 
     def get_cached_emails(self):
         email = self.get_cached_data("email")
-        guardian_email = self.get_cached_data("guardian_email")
-        return (email, guardian_email)
+        secondary_email = self.get_cached_data("secondary_email")
+        return (email, secondary_email)
 
     def get_entry_data(self):
         data = {}
 
         data['email'] = self.email_entry.get_text()
-        data['guardian_email'] = self.guardian_email_entry.get_text()
+        if self.secondary_email_entry:
+            data['secondary_email'] = self.secondary_email_entry.get_text()
+        else:
+            data['secondary_email'] = ""
 
         return data
 
@@ -281,7 +299,8 @@ class GetData3(DataTemplate):
             text = entry.get_text()
             if not text:
                 full = False
-            elif entry == self.email_entry:
+            elif entry == self.email_entry or \
+                    entry == self.guardian_email_entry:
                 full = is_email(text)
 
         if not self.t_and_cs.is_checked():

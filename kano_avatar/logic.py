@@ -1313,20 +1313,3 @@ def get_avatar_conf():
         logger.error('Conf file {} not found'.format(AVATAR_CONF_FILE))
 
     return conf
-
-
-def generate_random_character():
-    """ Generates a random character and returns the directory in
-    which it exists
-    :returns: path as a string
-    """
-    av_cr = AvatarCreator(get_avatar_conf)
-    av_cr.char_select('judoka_base')
-    av_cr.randomise_all_items()
-    save_path = os.path.abspath(
-        os.path.expanduser(
-            os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
-        )
-    )
-    av_cr.save_final_assets(save_path)
-    return True

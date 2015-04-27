@@ -69,10 +69,6 @@ def get_avatar(sync=True):
             if sync:
                 sync_profile()
                 get_avatar(sync=False)
-            else:
-                pass
-# from kano_avatar.logic import generate_random_character
-                #generate_random_character()
         return subcat, item
     else:
         logger.error(

@@ -66,3 +66,16 @@ GtkCheckButton:active:insensitive {
     background: #ffffff;
 }
 
+/* Make the default font colour blend in with the background */
+.validation_label {
+    color: #ffffff;
+    font: Bariol Bold 15;
+}
+
+.validation_label.success {
+    color: @kano_green;
+}
+
+.validation_label.fail {
+    color: @kano_red;
+}

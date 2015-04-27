@@ -96,7 +96,7 @@ class RegistrationScreen1(Gtk.Box):
         GObject.idle_add(done)
 
 
-# Get emails and birthday data from user
+# Get username, password and birthday data from user.
 class RegistrationScreen2(Gtk.Box):
 
     def __init__(self, win):
@@ -168,7 +168,7 @@ class RegistrationScreen2(Gtk.Box):
         self.page_control.disable_next()
 
 
-# Get username and password
+# Get emails and show the terms and conditions
 class RegistrationScreen3(Gtk.Box):
 
     def __init__(self, win, age):

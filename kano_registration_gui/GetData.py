@@ -11,7 +11,7 @@ import re
 from gi.repository import Gtk, GObject
 from kano.gtk3.kano_dialog import KanoDialog
 from kano_profile.paths import legal_dir
-from kano_profile_gui.components.icons import get_ui_icon
+# from kano_profile_gui.components.icons import get_ui_icon
 from kano_world.connection import request_wrapper
 from kano_registration_gui.BirthdayWidget import BirthdayWidget
 from kano_registration_gui.LabelledEntry import LabelledEntry
@@ -19,33 +19,27 @@ from kano_registration_gui.TermsAndConditions import TermsAndConditions
 
 from kano.logging import logger
 from kano_profile.apps import load_app_state_variable, save_app_state_variable
+from email.utils import parseaddr
 
 
 def is_email(email):
-    pattern = '[\.\w]{1,}[@]\w+[.]\w+'
-    if re.match(pattern, email):
+    if '@' in parseaddr(email)[1]:
         return True
     else:
         return False
 
 
-def does_user_exist(username):
-    '''username is the string of the username which we want to see
-    is registered.
-    If return True, exists,
-    If return False, does not exist
-    May return None, in which case not sure?
+def check_username(username):
+    '''Check username only has letters, numbers, - and _
     '''
-    user_request = "/users/username/{}".format(username)
-    success, text, data = request_wrapper('get', user_request)
-    if success:
+    pattern = '[a-zA-Z0-9_\-.]'
+    num_matches = len(re.split(pattern, username))
+    if num_matches == len(username) + 1 and \
+            len(username) >= 3 and \
+            len(username) <= 25:
         return True
-    elif not success and text == "User not found":
+    else:
         return False
-
-    # Could have failed because of bad internet connection, or server timed
-    # out.  Inconclusive.
-    return None
 
 
 class DataTemplate(Gtk.EventBox):
@@ -70,8 +64,8 @@ class DataTemplate(Gtk.EventBox):
 
 
 class GetData2(DataTemplate):
-    '''This second class registration box is to get the email,
-    optional guardian's email and show the terms and conditions.
+    '''This second class registration box is to get the username,
+    password and birthday of the user.
     '''
 
     def __init__(self):
@@ -81,40 +75,18 @@ class GetData2(DataTemplate):
 
         (username, birthday_day, birthday_month, birthday_year) = self.get_cached_username_and_birthday()
         self.username_entry = LabelledEntry("Username", username)
-        self.username_entry.connect('labelled-entry-key-release', self.widgets_full)
-        # Get data about whether to fill this in.
-
-        # This doesn't work because the parent window doesn't exist yet
-        # window = self.username_entry.get_parent_window()
-        # window.set_events(Gdk.EventType.FOCUS_CHANGE)
-        # self.username_entry.connect('key-release-event', self.widgets_full)
-
-        # If there is internet, link the focus out event to checking the
-        # username
+        self.username_entry.connect("key-release-event", self.validate_username)
         logger.debug("Checking for internet")
 
-        '''
-        if is_internet():
-            logger.debug("Attaching check username wrapper to username entry")
-            # Check the username is valid when we focus out of the entry
-            self.username_entry.connect('focus-out-event',
-                                        self.check_username_wrapper)
-        '''
-
         # Do not fill this in
-        self.password_entry = LabelledEntry("Password - min. 6 letters")
-        self.password_entry.connect('labelled-entry-key-release',
-                                    self.widgets_full)
-
-        self.entries = [
-            self.username_entry,
-            self.password_entry
-        ]
-
+        self.password_entry = LabelledEntry("Password")
+        self.password_entry.connect("key-release-event", self.validate_password)
         self.bday_widget = BirthdayWidget(birthday_day, birthday_month,
                                           birthday_year)
-        self.bday_widget.connect("bday-key-release-event", self.widgets_full)
 
+        self.validate_username()
+
+        self.bday_widget.connect("bday-key-release-event", self.widgets_full)
         box.pack_start(self.username_entry, False, False, 10)
         box.pack_start(self.password_entry, False, False, 10)
         box.pack_start(self.bday_widget, False, False, 0)
@@ -123,36 +95,28 @@ class GetData2(DataTemplate):
 
         self.add(box)
 
-    ############################################
-    # Not used
-
-    def check_username_wrapper(self, widget, event):
-        logger.debug("Hitting username wrapper")
-        username = widget.get_text()
-        logger.debug("username = {}".format(username))
-        self.check_username(username)
-
-    def check_username(self, username):
-        '''Check if the username is valid.
-        If it is, add a tick icon, otherwise add a cross icon.
+    def validate_password(self, widget=None, event=None):
+        '''widget is the password entry
         '''
-        logger.debug("Entered check_username")
-        user_exists = does_user_exist(username)
-
-        if user_exists:
-            # pack tick into the entry
-            tick_icon = get_ui_icon("tick")
-            self.username_entry.set_icon_from_pixbuf(tick_icon)
-
-        elif user_exists is False:
-            tick_icon = get_ui_icon("cross")
-            self.username_entry.set_icon_from_pixbuf(tick_icon)
-
+        password = self.password_entry.get_text()
+        if len(password) < 6:
+            self.password_entry.label_success("is too short", "fail")
         else:
-            # show dialog?
-            print "Not sure if the user exists"
+            self.password_entry.label_success("looks good!", "success")
 
-    ################################################
+        self.widgets_full()
+
+    def validate_username(self, widget=None, event=None):
+        '''widget is the username entry as is conencted to the key-release-event
+        '''
+
+        username = self.username_entry.get_text()
+        if check_username(username):
+            self.username_entry.label_success("is valid", "success")
+        else:
+            self.username_entry.label_success("is invalid", "fail")
+
+        self.widgets_full()
 
     def calculate_age(self):
         return self.bday_widget.calculate_age()
@@ -194,11 +158,16 @@ class GetData2(DataTemplate):
     def widgets_full(self, widget=None, event=None):
         full = True
 
-        for entry in self.entries:
-            if not entry.get_text():
-                full = False
+        if not self.username_entry.validated:
+            full = False
+
+        if not self.password_entry.validated:
+            full = False
+
+        print "full = {}".format(full)
 
         bday_filled = self.bday_widget.birthday_entries_filled()
+        print "bday_filled = {}".format(bday_filled)
 
         if full and bday_filled:
             logger.debug("emiting widgets-full")

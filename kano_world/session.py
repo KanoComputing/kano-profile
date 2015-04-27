@@ -83,7 +83,7 @@ class KanoWorldSession(object):
             pass
 
         # avatar_generator
-        profile, files = self._prepare_avatar_gen(profile)
+        data, files = self._prepare_avatar_gen(profile, data)
         # app states
         stats = dict()
         for app in get_app_list():
@@ -123,7 +123,7 @@ class KanoWorldSession(object):
 
         return self.download_profile_stats(response_data)
 
-    def _prepare_avatar_gen(self, profile_data):
+    def _prepare_avatar_gen(self, profile_data, data_to_send):
         files = {}
         if ('version' not in profile_data or
                 profile_data['version'] == 1):
@@ -132,7 +132,7 @@ class KanoWorldSession(object):
                     'character': profile_data['avatar'],
                     'environment': ['all', profile_data['environment']]
                 }
-                profile_data['avatar_generator'] = avatar_generator
+                data_to_send['avatar_generator'] = avatar_generator
             except Exception:
                 pass
         elif profile_data['version'] == 2:
@@ -145,7 +145,7 @@ class KanoWorldSession(object):
                     'character': profile_data['avatar'],
                     'environment': ['all', profile_data['environment']]
                 }
-                profile_data['avatar_generator'] = avatar_generator
+                data_to_send['avatar_generator'] = avatar_generator
                 path_circ = os.path.join(
                     AVATAR_DEFAULT_LOC,
                     AVATAR_CIRC_PLAIN_DEFAULT)
@@ -175,7 +175,7 @@ class KanoWorldSession(object):
                 "Unknown profile ver: {}, can't upload data".format(
                     profile_data['version'])
                 )
-        return profile_data, files
+        return data_to_send, files
 
     def _tidy_up_avatar_files(self, files):
         try:

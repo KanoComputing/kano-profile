@@ -61,8 +61,10 @@ class Login(Gtk.Box):
             self.add_username_as_label()
 
         else:
-            self.labelled_entries = LabelledEntries([{"heading": "Username", "subheading": ""},
-                                                     {"heading": "Password", "subheading": ""}])
+            self.labelled_entries = LabelledEntries(
+                [{"heading": "Username", "subheading": ""},
+                 {"heading": "Password", "subheading": ""}]
+            )
             self.labelled_entries.set_spacing(15)
             self.labelled_entries.set_margin_right(20)
             self.username_entry = self.labelled_entries.get_entry(0)
@@ -75,7 +77,11 @@ class Login(Gtk.Box):
             entry.connect("key_release_event", self.enable_kano_button)
             entry.connect("key-release-event", self.activate)
 
-        self.button_box = KanoButtonBox("LOGIN", "Create New", "Forgotten password?")
+        self.button_box = KanoButtonBox(
+            "LOGIN",
+            "Create New",
+            "Forgotten password?"
+        )
         self.button_box.set_spacing(40)
         self.button_box.set_margin_left(80)
         self.button_box.set_margin_bottom(30)
@@ -117,7 +123,9 @@ class Login(Gtk.Box):
         align.set_padding(0, 0, 50, 0)
 
         self.pack_start(align, False, False, 15)
-        self.labelled_entries = LabelledEntries([{"heading": "Password", "subheading": ""}])
+        self.labelled_entries = LabelledEntries(
+            [{"heading": "Password", "subheading": ""}]
+        )
         self.password_entry = self.labelled_entries.get_entry(0)
         vbox.pack_start(self.labelled_entries, False, False, 15)
 
@@ -137,7 +145,7 @@ class Login(Gtk.Box):
         return text
 
     def repack(self):
-        self.win.clear_win()
+        self.win.remove_main_widget()
         self.win.set_main_widget(self)
 
     def create_new(self, widget, event, args=[]):
@@ -216,7 +224,7 @@ class Login(Gtk.Box):
 
             if response == 1:
                 if self.first_boot:
-                    self.win.clear_win()
+                    self.win.remove_main_widget()
                     SwagScreen(self.win)
                 else:
                     sys.exit(0)
@@ -244,10 +252,15 @@ class ResetPassword(Gtk.Box):
         self.win.set_decorated(False)
         self.win.set_main_widget(self)
 
-        self.heading = Heading("Reset your password", "We'll send a new password to your email")
+        self.heading = Heading(
+            "Reset your password",
+            "We'll send a new password to your email"
+        )
         self.pack_start(self.heading.container, False, False, 10)
 
-        self.labelled_entries = LabelledEntries([{"heading": "Email", "subheading": ""}])
+        self.labelled_entries = LabelledEntries(
+            [{"heading": "Email", "subheading": ""}]
+        )
         self.pack_start(self.labelled_entries, False, False, 0)
 
         # Read email from file
@@ -295,10 +308,20 @@ class ResetPassword(Gtk.Box):
                 "TRY AGAIN": {"return_value": 11}
             }
 
-        GObject.idle_add(self.finished_thread_cb, title, description, button_dict)
+        GObject.idle_add(
+            self.finished_thread_cb,
+            title,
+            description,
+            button_dict
+        )
 
     def finished_thread_cb(self, title, description, button_dict):
-        kdialog = KanoDialog(title, description, button_dict=button_dict, parent_window=self.win)
+        kdialog = KanoDialog(
+            title,
+            description,
+            button_dict=button_dict,
+            parent_window=self.win
+        )
         response = kdialog.run()
 
         self.win.get_window().set_cursor(None)

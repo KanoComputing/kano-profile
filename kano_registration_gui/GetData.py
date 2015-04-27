@@ -217,7 +217,7 @@ class GetData3(DataTemplate):
         DataTemplate.__init__(self)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        email, guardian_email = self.get_cached_emails()
+        email, secondary_email = self.get_cached_emails()
 
         self.t_and_cs = TermsAndConditions()
         self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
@@ -228,12 +228,12 @@ class GetData3(DataTemplate):
         # user email, but the guardian email is compulsory
         if age < 14:
             self.email_entry = LabelledEntry(
-                "Guardian's Email (required)", guardian_email
+                "Guardian's Email (required)", email
             )
             self.email_entry.connect('key-release-event',
                                      self.widgets_full)
 
-            self.secondary_email_entry = LabelledEntry("Email (optional)", email)
+            self.secondary_email_entry = LabelledEntry("Email (optional)", secondary_email)
             self.secondary_email_entry.connect('key-release-event', self.widgets_full)
 
             box.pack_start(self.email_entry, False, False, 5)
@@ -256,14 +256,14 @@ class GetData3(DataTemplate):
     def disable_all(self):
         self.email_entry.set_sensitive(False)
 
-        if self.secondary_email:
+        if self.secondary_email_entry:
             self.secondary_email_entry.set_sensitive(False)
         self.t_and_cs.disable_all()
 
     def enable_all(self):
         self.email_entry.set_sensitive(True)
 
-        if self.secondary_email:
+        if self.secondary_email_entry:
             self.secondary_email_entry.set_sensitive(True)
         self.t_and_cs.enable_all()
 

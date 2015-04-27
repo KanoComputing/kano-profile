@@ -222,7 +222,7 @@ class KanoWorldSession(object):
         ]
 
         for attachment in attachment_files:
-            ext, key = attachment
+            key, ext = attachment
             attachment_path = "{}.{}".format(extensionless_path, ext)
 
             if os.path.exists(attachment_path):

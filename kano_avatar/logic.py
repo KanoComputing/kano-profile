@@ -24,7 +24,6 @@ from kano_profile.profile import (set_avatar, set_environment,
                                   save_profile_variable)
 
 # TODO Check which types of names are case sensitive
-# TODO Add support to save multiple circular assets, atm only 1 is supported
 
 
 class AvatarAccessory():

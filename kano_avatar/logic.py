@@ -20,9 +20,10 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
 from kano.logging import logger
 
 from kano_profile.badges import calculate_badges
+from kano_profile.profile import (set_avatar, set_environment,
+                                  save_profile_variable)
 
 # TODO Check which types of names are case sensitive
-# TODO Add support to save multiple circular assets, atm only 1 is supported
 
 
 class AvatarAccessory():
@@ -172,6 +173,9 @@ class AvatarCharacter():
         pasting the item over a character.
         """
         self._img = Image.open(self._asset_fname)
+
+    def name(self):
+        return self._name
 
     def get_img(self):
         """ Get the image class for the character.
@@ -919,7 +923,6 @@ class AvatarConfParser():
             return self._environments[item_name].is_unlocked()
 
 
-
 class AvatarCreator(AvatarConfParser):
     """ The aim of this class is to help generate avatars for the kano world
     profile. It includes many accessor methods to get the attributes so that
@@ -1202,7 +1205,7 @@ class AvatarCreator(AvatarConfParser):
 
         return True
 
-    def save_final_assets(self, dir_name):
+    def save_final_assets(self, dir_name, sync=True):
         dn = os.path.abspath(os.path.expanduser(dir_name))
 
         direc = os.path.dirname(dn)
@@ -1213,6 +1216,15 @@ class AvatarCreator(AvatarConfParser):
         self.create_avatar(dn)
         logger.debug("Created {}".format(dn))
         self.create_auxiliary_assets(dn)
+
+        if sync:
+            items_no_env = self.selected_items_per_cat()
+            items_no_env.pop(self.env_label, None)
+            # When saving a new character in the profile, ensure that
+            # the right version is used to sync with the API
+            save_profile_variable('version', 2)
+            set_avatar(self._sel_char.name(), items_no_env)
+            set_environment(self._sel_env.name(), sync=True)
 
     def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background

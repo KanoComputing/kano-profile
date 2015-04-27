@@ -67,8 +67,21 @@ def get_avatar(sync=True):
         else:
             # Attempt to sync to retrieve the avatar from world
             if sync:
-                sync_profile()
-                get_avatar(sync=False)
+                block_and_sync()
+                subcat, item = get_avatar(sync=False)
+            else:
+                # Provide a default set
+                logger.info('Avatar not found in profile, returning default')
+                subcat = 'Judoka_Base'
+                item = {
+                    'Belts': 'Belt_Orange',
+                    'Suits': 'Suit_White',
+                    'Faces': 'Face_Happy',
+                    'Hair': 'Hair_Black',
+                    'Stickers': 'Sticker_Code',
+                    'Skins': 'Skin_Orange',
+                }
+
         return subcat, item
     else:
         logger.error(
@@ -144,3 +157,9 @@ def sync_profile():
     logger.info('sync_profile')
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)
+
+def block_and_sync():
+    logger.info('block and sync profile')
+    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    pr = run_bg(cmd)
+    pr.wait()

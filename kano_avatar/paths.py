@@ -7,7 +7,10 @@
 import os
 from kano.utils import get_home
 
-AVATAR_SCRATCH = '/tmp/char_gen_scratch/character.png'
+AVATAR_SCRATCH = os.path.join('/tmp/',
+                              get_home(),
+                              'char_gen_scratch',
+                              'character.png')
 AVATAR_DEFAULT_LOC = os.path.join(get_home(), '.character-content')
 AVATAR_DEFAULT_NAME = 'character.png'
 AVATAR_ENV_DEFAULT = 'character_inc_env.png'

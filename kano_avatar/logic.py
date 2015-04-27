@@ -472,9 +472,11 @@ class AvatarConfParser():
     _inactive_category_icons = {}
     _active_category_icons = {}
     _selected_borders = {}
+    _hover_borders = {}
     _inactive_special_category_icons = {}
     _active_special_category_icons = {}
     _border_special_cat = {}
+    _hover_border_special_cat = {}
     categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
@@ -526,6 +528,9 @@ class AvatarConfParser():
             selected_border_file = os.path.join(PREVIEW_ICONS,
                                                 cat['selected_border'])
             self._selected_borders[cat['cat_name']] = selected_border_file
+            hover_border_file = os.path.join(PREVIEW_ICONS,
+                                             cat['hover_border'])
+            self._hover_borders[cat['cat_name']] = hover_border_file
             self._cat_to_disp_order[cat['cat_name']] = cat['display_order']
 
         # Save both the unique set of z-indexes and categories
@@ -644,9 +649,15 @@ class AvatarConfParser():
                 border_icon_file = os.path.join(PREVIEW_ICONS,
                                                 border_icon_file)
 
+            hover_icon_file = special_cat_data[special_cat]['hover_border']
+            if not os.path.isabs(hover_icon_file):
+                hover_icon_file = os.path.join(PREVIEW_ICONS,
+                                               hover_icon_file)
+
             self._active_special_category_icons[special_cat] = active_icon_file
             self._inactive_special_category_icons[special_cat] = inactive_icon_file
             self._border_special_cat[special_cat] = border_icon_file
+            self._hover_border_special_cat[special_cat] = hover_icon_file
             self._special_cat_to_disp_order[special_cat] = \
                 special_cat_data[special_cat]['display_order']
 
@@ -816,6 +827,25 @@ class AvatarConfParser():
         else:
             return self._selected_borders[category_name]
 
+    def get_hover_border(self, category_name):
+        """ Provides the filename of the selected border of the preview icon
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        return self._get_hover_border_regular(category_name) or \
+            self._get_hover_border_special(category_name)
+
+    def _get_hover_border_regular(self, category_name):
+        """ Provides the filename of the selected border of the preview icon
+        :param category_name: Regular category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if category_name not in self._hover_borders:
+            logger.warn("Cat {} was not found, can't provide hover border path".format(category_name))
+            return None
+        else:
+            return self._hover_borders[category_name]
+
     def _get_inactive_special_category_icon(self, special_category_name):
         """ Provides the filename of the active icons of the provided category
         :param special_category_name: Category name as a string
@@ -846,6 +876,17 @@ class AvatarConfParser():
         self._border_special_cat
         if special_category_name not in self._border_special_cat:
             logger.warn("Special Cat {} not found, can't provide selected border path".format(special_category_name))
+            return None
+        else:
+            return self._border_special_cat[special_category_name]
+
+    def _get_hover_border_special(self, special_category_name):
+        """ Provides the filename of the selected border of the preview icon
+        :param special_category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if special_category_name not in self._hover_border_special_cat:
+            logger.warn("Special Cat {} not found, can't provide hover border path".format(special_category_name))
             return None
         else:
             return self._border_special_cat[special_category_name]

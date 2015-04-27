@@ -5,6 +5,7 @@ categories:
       z_index: 2
       disp_icon: face.png
       selected_border: active-itemBorder.png
+      hover_border: active-itemBorder.png
       category_id: c8922230bfaf40da94bdcceaae0e7821
       display_order: 1
       date_created: 2015-04-14T10:54:14Z
@@ -13,6 +14,7 @@ categories:
       z_index: 1
       disp_icon: skintone.png
       selected_border: active-item.png
+      hover_border: active-itemBorder.png
       category_id: ca46bd4cb983449eab4ab43eec13db84
       display_order: 2
       date_created: 2015-04-14T10:54:14Z
@@ -21,6 +23,7 @@ categories:
       z_index: 3
       disp_icon: belt.png
       selected_border: active-item.png
+      hover_border: active-itemBorder.png
       category_id : 07fcf015755b46ba9cf0223d4b3864d1
       display_order: 3
       date_created: 2015-04-14T10:54:14Z
@@ -29,6 +32,7 @@ categories:
       z_index: 3
       disp_icon: hair.png
       selected_border: active-itemBorder.png
+      hover_border: active-itemBorder.png
       category_id : 3494acec8bcf43c7846a5c76e8226f0a
       display_order: 4
       date_created: 2015-04-14T10:54:14Z
@@ -37,6 +41,7 @@ categories:
       z_index: 2
       disp_icon: suit.png
       selected_border: active-item.png
+      hover_border: active-itemBorder.png
       category_id : f1e3cb13f40243f0aeac2c11bf6df6aa
       display_order: 5
       date_created: 2015-04-14T10:54:14Z
@@ -45,6 +50,7 @@ categories:
       z_index: 3
       disp_icon: stickers.png
       selected_border: active-itemBorder.png
+      hover_border: active-itemBorder.png
       category_id : 80f6071b781f42e696d6030d4067eaff
       display_order: 6
       date_created: 2015-04-14T10:54:14Z
@@ -54,6 +60,7 @@ special_categories:
         active_icon: environment.png
         inactive_icon: environment.png
         selected_border: active-environment.png
+        hover_border: active-environment.png
         category_id : a867e7f833a546b1b1efe485bf1e11e6
         display_order: 7
         date_created: 2015-04-14T10:54:14Z
@@ -62,6 +69,7 @@ special_categories:
         active_icon: character.png
         inactive_icon: character.png
         selected_border: active-character.png
+        hover_border: active-character.png
         category_id : d1f12f322c1a41ca9fd35519f56ef6cc
         display_order: 1000
         date_created: 2015-04-14T10:54:14Z

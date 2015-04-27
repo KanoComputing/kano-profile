@@ -93,20 +93,33 @@ class KanoWorldSession(object):
         # append stats
         data['stats'] = stats
 
+        # Uploading profile stats
         success, text, response_data = request_wrapper(
             'put',
             '/users/profile',
             data=json.dumps(data),
             headers=content_type_json,
-            session=self.session,
-            files=files)
-
-        # requests doesn't close the file objects after sending them, so
-        # we need to tidy up
-        self._tidy_up_avatar_files(files)
+            session=self.session)
 
         if not success:
+            logger.error('Uploading of the profile data failed')
             return False, text
+
+        if files:
+            # Uploading avatar assets
+            success, text, response_data = request_wrapper(
+                'put',
+                '/users/profile',
+                session=self.session,
+                files=files)
+
+            # requests doesn't close the file objects after sending them, so
+            # we need to tidy up
+            self._tidy_up_avatar_files(files)
+
+            if not success:
+                logger.error('Uploading of the avatar assets failed')
+                return False, text
 
         return self.download_profile_stats(response_data)
 
@@ -122,7 +135,7 @@ class KanoWorldSession(object):
                 profile_data['avatar_generator'] = avatar_generator
             except Exception:
                 pass
-        elif profile_data['version' == 2]:
+        elif profile_data['version'] == 2:
             # In this version we need to add a field that indicates
             # that this is version 2. Furthermore we need to uplodad
             # the new assets to the server

@@ -832,7 +832,7 @@ class AvatarConfParser():
             return self._selected_borders[category_name]
 
     def get_hover_border(self, category_name):
-        """ Provides the filename of the selected border of the preview icon
+        """ Provides the filename of the hover over border of the preview icon
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
@@ -840,7 +840,7 @@ class AvatarConfParser():
             self._get_hover_border_special(category_name)
 
     def _get_hover_border_regular(self, category_name):
-        """ Provides the filename of the selected border of the preview icon
+        """ Provides the filename of the hover border of the preview icon
         :param category_name: Regular category name as a string
         :returns: path to icon as string or None if category is not found
         """
@@ -885,7 +885,7 @@ class AvatarConfParser():
             return self._border_special_cat[special_category_name]
 
     def _get_hover_border_special(self, special_category_name):
-        """ Provides the filename of the selected border of the preview icon
+        """ Provides the filename of the hover border of the preview icon
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """

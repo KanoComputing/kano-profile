@@ -20,9 +20,10 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
 from kano.logging import logger
 
 from kano_profile.badges import calculate_badges
+from kano_profile.profile import (set_avatar, set_environment,
+                                  save_profile_variable)
 
 # TODO Check which types of names are case sensitive
-# TODO Add support to save multiple circular assets, atm only 1 is supported
 
 
 class AvatarAccessory():
@@ -172,6 +173,9 @@ class AvatarCharacter():
         pasting the item over a character.
         """
         self._img = Image.open(self._asset_fname)
+
+    def name(self):
+        return self._name
 
     def get_img(self):
         """ Get the image class for the character.
@@ -472,9 +476,11 @@ class AvatarConfParser():
     _inactive_category_icons = {}
     _active_category_icons = {}
     _selected_borders = {}
+    _hover_borders = {}
     _inactive_special_category_icons = {}
     _active_special_category_icons = {}
     _border_special_cat = {}
+    _hover_border_special_cat = {}
     categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
@@ -526,6 +532,9 @@ class AvatarConfParser():
             selected_border_file = os.path.join(PREVIEW_ICONS,
                                                 cat['selected_border'])
             self._selected_borders[cat['cat_name']] = selected_border_file
+            hover_border_file = os.path.join(PREVIEW_ICONS,
+                                             cat['hover_border'])
+            self._hover_borders[cat['cat_name']] = hover_border_file
             self._cat_to_disp_order[cat['cat_name']] = cat['display_order']
 
         # Save both the unique set of z-indexes and categories
@@ -644,9 +653,15 @@ class AvatarConfParser():
                 border_icon_file = os.path.join(PREVIEW_ICONS,
                                                 border_icon_file)
 
+            hover_icon_file = special_cat_data[special_cat]['hover_border']
+            if not os.path.isabs(hover_icon_file):
+                hover_icon_file = os.path.join(PREVIEW_ICONS,
+                                               hover_icon_file)
+
             self._active_special_category_icons[special_cat] = active_icon_file
             self._inactive_special_category_icons[special_cat] = inactive_icon_file
             self._border_special_cat[special_cat] = border_icon_file
+            self._hover_border_special_cat[special_cat] = hover_icon_file
             self._special_cat_to_disp_order[special_cat] = \
                 special_cat_data[special_cat]['display_order']
 
@@ -816,6 +831,25 @@ class AvatarConfParser():
         else:
             return self._selected_borders[category_name]
 
+    def get_hover_border(self, category_name):
+        """ Provides the filename of the hover over border of the preview icon
+        :param category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        return self._get_hover_border_regular(category_name) or \
+            self._get_hover_border_special(category_name)
+
+    def _get_hover_border_regular(self, category_name):
+        """ Provides the filename of the hover border of the preview icon
+        :param category_name: Regular category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if category_name not in self._hover_borders:
+            logger.warn("Cat {} was not found, can't provide hover border path".format(category_name))
+            return None
+        else:
+            return self._hover_borders[category_name]
+
     def _get_inactive_special_category_icon(self, special_category_name):
         """ Provides the filename of the active icons of the provided category
         :param special_category_name: Category name as a string
@@ -846,6 +880,17 @@ class AvatarConfParser():
         self._border_special_cat
         if special_category_name not in self._border_special_cat:
             logger.warn("Special Cat {} not found, can't provide selected border path".format(special_category_name))
+            return None
+        else:
+            return self._border_special_cat[special_category_name]
+
+    def _get_hover_border_special(self, special_category_name):
+        """ Provides the filename of the hover border of the preview icon
+        :param special_category_name: Category name as a string
+        :returns: path to icon as string or None if category is not found
+        """
+        if special_category_name not in self._hover_border_special_cat:
+            logger.warn("Special Cat {} not found, can't provide hover border path".format(special_category_name))
             return None
         else:
             return self._border_special_cat[special_category_name]
@@ -917,7 +962,6 @@ class AvatarConfParser():
             return None
         else:
             return self._environments[item_name].is_unlocked()
-
 
 
 class AvatarCreator(AvatarConfParser):
@@ -1202,7 +1246,7 @@ class AvatarCreator(AvatarConfParser):
 
         return True
 
-    def save_final_assets(self, dir_name):
+    def save_final_assets(self, dir_name, sync=True):
         dn = os.path.abspath(os.path.expanduser(dir_name))
 
         direc = os.path.dirname(dn)
@@ -1213,6 +1257,15 @@ class AvatarCreator(AvatarConfParser):
         self.create_avatar(dn)
         logger.debug("Created {}".format(dn))
         self.create_auxiliary_assets(dn)
+
+        if sync:
+            items_no_env = self.selected_items_per_cat()
+            items_no_env.pop(self.env_label, None)
+            # When saving a new character in the profile, ensure that
+            # the right version is used to sync with the API
+            save_profile_variable('version', 2)
+            set_avatar(self._sel_char.name(), items_no_env)
+            set_environment(self._sel_env.name(), sync=True)
 
     def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background

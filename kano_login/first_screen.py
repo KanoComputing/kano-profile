@@ -20,7 +20,7 @@ from kano_login.data import get_data
 from kano_login.swag_screen import SwagScreen
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
-from kano_registration_gui.registration_screens import RegistrationScreen1
+from kano_registration_gui.RegistrationScreen1 import RegistrationScreen1
 
 
 # TODO: this is currently mimicking old code.  Please fix this, it's a bit

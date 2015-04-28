@@ -18,7 +18,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_avatar_gui.PopUpItemMenu import PopUpItemMenu
 from kano_avatar_gui.CategoryMenu import CategoryMenu
 from kano.logging import logger
-from kano_profile.apps import load_app_state_variable, save_app_state_variable
+from kano_profile.profile import get_avatar, get_environment
 
 
 class Menu(Gtk.Fixed):
@@ -97,28 +97,29 @@ class Menu(Gtk.Fixed):
         # This is a dictionary so we can eaily reset the menus
         self.saved_selected_list = {}
 
-        # TODO: fix this. This is only here to make this work.
-        self._parser.char_select('Judoka_Base')
+        char, item = get_avatar()
+        env = get_environment()
 
-        defaults = {
-            "Belts": 'Belt_Orange',
-            'Suits': 'Suit_White',
-            'Faces': 'Face_Happy',
-            'Hair': 'Hair_Black',
-            'Stickers': 'Sticker_Code',
-            'Skins': 'Skin_Orange',
-            'environments': 'Dojo'
-        }
+        item['environments'] = env
+
+        self._parser.char_select(char)
 
         for category in self.categories:
-            obj_name = load_app_state_variable("kano-avatar", category)
+            obj_name = item[category]
+            logger.debug("loading obj_name = {}".format(obj_name))
 
             if obj_name and obj_name in self._parser.get_avail_objs(category):
-                logger.debug("Loading saved object {} for category {}".format(obj_name, category))
+                logger.debug(
+                    "Loading saved object {} for category {}".format(
+                        obj_name,
+                        category)
+                )
             else:
-                obj_name = defaults[category]
-                logger.debug("Loading default object {} for category {}".format(obj_name, category))
-                save_app_state_variable("kano-avatar", category, obj_name)
+                logger.debug(
+                    "Object {} for category {} not available".format(
+                        obj_name,
+                        category)
+                )
 
             # object_list.append(obj_name)
             self.select_pop_up_in_category(category, obj_name)

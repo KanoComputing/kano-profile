@@ -14,6 +14,7 @@ AVATAR_SCRATCH = os.path.join('/tmp/',
 AVATAR_DEFAULT_LOC = os.path.join(get_home(), '.character-content')
 AVATAR_DEFAULT_NAME = 'character.png'
 AVATAR_ENV_DEFAULT = 'character_inc_env.png'
+AVATAR_ENV_SHIFTED = 'character_inc_env_page2.png'
 AVATAR_CIRC_PLAIN_DEFAULT = 'character_circ_plain.png'
 
 AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'

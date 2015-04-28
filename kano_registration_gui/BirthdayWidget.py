@@ -39,7 +39,7 @@ class BirthdayWidget(Gtk.Box):
         hbox.pack_start(label2, False, False, 0)
         hbox.pack_start(self._day_entry, False, False, 0)
 
-        birthday_label = Gtk.Label("Birthday (YYYY/MM/DD)", xalign=0)
+        birthday_label = Gtk.Label("Birthday", xalign=0)
         birthday_label.get_style_context().add_class("get_data_label")
         self.pack_start(birthday_label, False, False, 0)
         self.pack_start(hbox, False, False, 10)

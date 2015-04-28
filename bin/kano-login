@@ -87,7 +87,7 @@ class MainWindow(ApplicationWindow):
 
     def create_char_creator(self):
         # This is very very slow
-        self.char_creator = CharacterCreator()
+        self.char_creator = CharacterCreator(randomise=True)
 
     def set_data(self, data_label, data):
         self._data[data_label] = data

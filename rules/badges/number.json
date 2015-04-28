@@ -46,10 +46,6 @@
         "level"
       ],
       [
-        "kano-video",
-        "level"
-      ],
-      [
         "make-pong",
         "level"
       ],
@@ -77,10 +73,6 @@
     "targets": [
       [
         "make-snake",
-        "level"
-      ],
-      [
-        "kano-video",
         "level"
       ],
       [
@@ -114,10 +106,6 @@
         "level"
       ],
       [
-        "kano-video",
-        "level"
-      ],
-      [
         "make-pong",
         "level"
       ],
@@ -148,10 +136,6 @@
         "level"
       ],
       [
-        "kano-video",
-        "level"
-      ],
-      [
         "make-pong",
         "level"
       ],
@@ -179,10 +163,6 @@
     "targets": [
       [
         "make-snake",
-        "level"
-      ],
-      [
-        "kano-video",
         "level"
       ],
       [

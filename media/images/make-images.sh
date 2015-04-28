@@ -4,10 +4,6 @@
 
 level=2
 
-cd avatars
-./generate-images.sh $level
-cd ..
-
 cd badges
 ./generate-images.sh $level
 cd ..

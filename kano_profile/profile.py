@@ -93,13 +93,8 @@ def get_avatar(sync=True):
 def get_avatar_circ_image_path():
     profile = load_profile()
     if 'version' not in profile or profile['version'] == 1:
-        avatar_cat, avatar_item = get_avatar()
-        avatar_image_path = os.path.join(
-            '/usr/share/kano-profile/media/images/avatars/54x54/',
-            avatar_cat,
-            '{}_white_circular.png'.format(avatar_item)
-        )
-        return avatar_image_path
+        logger.error("Version field not existent or is less than 2")
+        return ''
     elif profile['version'] == 2:
         direc = AVATAR_DEFAULT_LOC
         dirs = list_dir(direc)

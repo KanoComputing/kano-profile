@@ -118,7 +118,12 @@ def main():
         else:
             out_path = args.output
 
-        char_creator.save_final_assets(out_path, sync=args.sync)
+        rc = char_creator.save_final_assets(out_path, sync=args.sync)
+
+        if not rc:
+            logger.error("Couldn't generate assets")
+            return 2
+        return 0
 
 
 if __name__ == '__main__':

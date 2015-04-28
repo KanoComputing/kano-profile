@@ -106,7 +106,7 @@ def get_avatar_circ_image_path():
         circ = [fl for fl in dirs if fl.endswith('_circ_ring.png')]
         if len(circ) == 0:
             logger.error("Couldn't find a file with the appropriate suffix")
-            return None
+            return ''
         elif len(circ) == 1:
             return os.path.join(direc, circ[0])
         elif len(circ) > 1:
@@ -119,7 +119,7 @@ def get_avatar_circ_image_path():
         logger.error(
             'Unknown profile version: {}'.format(profile['version'])
         )
-        return None
+        return ''
 
 
 def set_avatar(subcat, item, sync=False):

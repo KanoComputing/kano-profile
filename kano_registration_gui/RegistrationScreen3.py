@@ -13,7 +13,7 @@ from gi.repository import Gtk, Gdk
 from kano_avatar_gui.ImageView import ImageView
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
-from kano_registration_gui.GetData import GetData3, cache_data, get_cached_data
+from kano_registration_gui.GetData import GetData3, cache_data
 from kano_world.functions import register as register_
 from kano_profile.profile import save_profile_variable
 from kano_profile.tracker import save_hardware_info, save_kano_version
@@ -21,6 +21,7 @@ from kano_profile.paths import bin_dir
 from kano.network import is_internet
 from kano.logging import logger
 from kano.utils import run_bg
+from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED
 
 
 # Get emails and show the terms and conditions
@@ -44,8 +45,7 @@ class RegistrationScreen3(Gtk.Box):
         self.pack_start(image_viewer, False, False, 0)
 
         # Get character image
-        filename = os.path.join(os.path.expanduser('~'),
-                                "avatar-content/avatar_inc_env_page2.png")
+        filename = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED)
         image_viewer.set_image(filename)
 
         # Pass age into the Data screen - decide whether to ask for

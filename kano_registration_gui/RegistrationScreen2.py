@@ -12,6 +12,7 @@ from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
 from kano_registration_gui.GetData import GetData2
 from kano_avatar_gui.ImageView import ImageView
+from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED
 
 
 # Get username, password and birthday data from user.
@@ -38,9 +39,7 @@ class RegistrationScreen2(Gtk.Box):
         image_viewer = ImageView(self)
         self.pack_start(image_viewer, False, False, 0)
 
-        # Get character image.  This hardcoding needs to be removed
-        filename = os.path.join(os.path.expanduser('~'),
-                                "avatar-content/avatar_inc_env_page2.png")
+        filename = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED)
         image_viewer.set_image(filename)
         self.data_screen = GetData2()
         self.data_screen.connect("widgets-filled", self.enable_next)

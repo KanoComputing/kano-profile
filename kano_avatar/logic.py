@@ -1247,6 +1247,16 @@ class AvatarCreator(AvatarConfParser):
         return True
 
     def save_final_assets(self, dir_name, sync=True):
+        """ Generates all types of assets and saves them to the directory and
+        specified
+        :param dir_name: The path to the base file, including the filename.
+                         Other files are created from this filename and in
+                         this directory (ex. '~/my_dir/my_new_char.png')
+        :param sync: (Optional) Set to true to sync the avatar details with
+                     the profile structure and if possible upload them to Kano
+                     World
+        :returns: True iff all operations necessary were successful
+        """
         dn = os.path.abspath(os.path.expanduser(dir_name))
 
         direc = os.path.dirname(dn)
@@ -1254,9 +1264,18 @@ class AvatarCreator(AvatarConfParser):
         if not os.path.isdir(direc):
             os.makedirs(direc)
 
-        self.create_avatar(dn)
+        rc = self.create_avatar(dn)
+        if not rc:
+            logger.error(
+                'Encountered issue, stopping the creation of final assets'
+            )
+            return False
+
         logger.debug("Created {}".format(dn))
-        self.create_auxiliary_assets(dn)
+        rc = self.create_auxiliary_assets(dn)
+        if not rc:
+            logger.error("Encountered issue while creating aux assets")
+            return False
 
         if sync:
             items_no_env = self.selected_items_per_cat()
@@ -1266,6 +1285,8 @@ class AvatarCreator(AvatarConfParser):
             save_profile_variable('version', 2)
             set_avatar(self._sel_char.name(), items_no_env)
             set_environment(self._sel_env.name(), sync=True)
+
+        return True
 
     def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background

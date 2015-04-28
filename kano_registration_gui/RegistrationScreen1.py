@@ -15,7 +15,6 @@ from kano.gtk3.heading import Heading
 class RegistrationScreen1(Gtk.Box):
 
     def __init__(self, win):
-        print "entered registration screen 1"
 
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win

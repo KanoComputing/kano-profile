@@ -27,6 +27,7 @@ from kano_profile.paths import bin_dir
 from kano_profile.profile import save_profile_variable
 
 from kano_registration_gui.GetData import GetData2, GetData3
+from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED
 
 
 def does_user_exist(username):
@@ -117,8 +118,7 @@ class RegistrationScreen2(Gtk.Box):
         self.pack_start(image_viewer, False, False, 0)
 
         # Get character image.  This hardcoding needs to be removed
-        filename = os.path.join(os.path.expanduser('~'),
-                                "avatar-content/avatar_inc_env_page2.png")
+        filename = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED)
         image_viewer.set_image(filename)
         self.data_screen = GetData2()
         self.data_screen.connect("widgets-filled", self.enable_next)
@@ -190,8 +190,7 @@ class RegistrationScreen3(Gtk.Box):
         self.pack_start(image_viewer, False, False, 0)
 
         # Get character image
-        filename = os.path.join(os.path.expanduser('~'),
-                                "avatar-content/avatar_inc_env_page2.png")
+        filename = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED)
         image_viewer.set_image(filename)
 
         # Pass age into the Data screen - decide whether to ask for Guardian or

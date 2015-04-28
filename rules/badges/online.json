@@ -89,24 +89,6 @@
     "title": "Sharing Sensei",
     "value": 10
   },
-  "community_champion": {
-    "bg_color": "ffea8c",
-    "desc_locked": "Share five challenges to unlock this badge!",
-    "desc_unlocked": "You clicked that big blue button, and shared your creations five times with a world of thousands. You're gaining a following! Connect with other Community Champions on Kano World.",
-    "operation": "sum_greater",
-    "targets": [
-      [
-        "make-pong",
-        "shared"
-      ],
-      [
-        "make-minecraft",
-        "shared"
-      ]
-    ],
-    "title": "Community Champion",
-    "value": 5
-  },
   "staff_pick": {
     "bg_color": "ffe591",
     "desc_locked": "Share challenges in Pong, Minecraft, and Music to unlock this badge. We'll feature your creation on Kano World for thousands to see!",

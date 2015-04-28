@@ -11,14 +11,14 @@ import re
 from gi.repository import Gtk, GObject
 from kano.gtk3.kano_dialog import KanoDialog
 from kano_profile.paths import legal_dir
-# from kano_profile_gui.components.icons import get_ui_icon
-from kano_world.connection import request_wrapper
+from kano_registration_gui.data_functions import (
+    get_cached_data, cache_data, cache_emails
+)
 from kano_registration_gui.BirthdayWidget import BirthdayWidget
 from kano_registration_gui.LabelledEntry import LabelledEntry
 from kano_registration_gui.TermsAndConditions import TermsAndConditions
 
 from kano.logging import logger
-from kano_profile.apps import load_app_state_variable, save_app_state_variable
 from email.utils import parseaddr
 
 
@@ -56,12 +56,6 @@ class DataTemplate(Gtk.EventBox):
         self.set_size_request(self.width, self.height)
         self.get_style_context().add_class("data_screen")
 
-    def cache_data(self, category, value):
-        save_app_state_variable("kano-avatar-registration", category, value)
-
-    def get_cached_data(self, category):
-        return load_app_state_variable("kano-avatar-registration", category)
-
 
 class GetData2(DataTemplate):
     '''This second class registration box is to get the username,
@@ -73,16 +67,21 @@ class GetData2(DataTemplate):
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        (username, birthday_day, birthday_month, birthday_year) = self.get_cached_username_and_birthday()
-        self.username_entry = LabelledEntry("Username", username)
+        # This data contains the saved username and birthday
+        data = self.get_cached_username_and_birthday()
+
+        self.username_entry = LabelledEntry("Username", data["username"])
         self.username_entry.connect("key-release-event", self.validate_username)
         logger.debug("Checking for internet")
 
         # Do not fill this in
         self.password_entry = LabelledEntry("Password")
         self.password_entry.connect("key-release-event", self.validate_password)
-        self.bday_widget = BirthdayWidget(birthday_day, birthday_month,
-                                          birthday_year)
+        self.bday_widget = BirthdayWidget(
+            data['birthday_day'],
+            data['birthday_month'],
+            data['birthday_year']
+        )
 
         self.validate_username()
 
@@ -141,19 +140,25 @@ class GetData2(DataTemplate):
         logger.debug("data from data screen 1 {}".format(data))
         return data
 
+    # To be passed to the registration screen
     def save_username_and_birthday(self):
         data = self.get_entry_data()
-        self.cache_data("username", data['username'])
-        self.cache_data("birthday_day", data['day'])
-        self.cache_data("birthday_month", data['month'])
-        self.cache_data("birthday_year", data['year'])
+        cache_data("username", data['username'])
+        cache_data("birthday_day", data['day'])
+        cache_data("birthday_month", data['month'])
+        cache_data("birthday_year", data['year'])
 
     def get_cached_username_and_birthday(self):
-        username = self.get_cached_data("username")
-        birthday_day = self.get_cached_data("birthday_day")
-        birthday_month = self.get_cached_data("birthday_month")
-        birthday_year = self.get_cached_data("birthday_year")
-        return (username, birthday_day, birthday_month, birthday_year)
+        username = get_cached_data("username")
+        birthday_day = get_cached_data("birthday_day")
+        birthday_month = get_cached_data("birthday_month")
+        birthday_year = get_cached_data("birthday_year")
+        return {
+            "username": username,
+            "birthday_day": birthday_day,
+            "birthday_month": birthday_month,
+            "birthday_year": birthday_year
+        }
 
     def widgets_full(self, widget=None, event=None):
         full = True
@@ -164,10 +169,7 @@ class GetData2(DataTemplate):
         if not self.password_entry.validated:
             full = False
 
-        print "full = {}".format(full)
-
         bday_filled = self.bday_widget.birthday_entries_filled()
-        print "bday_filled = {}".format(bday_filled)
 
         if full and bday_filled:
             logger.debug("emiting widgets-full")
@@ -186,7 +188,8 @@ class GetData3(DataTemplate):
         DataTemplate.__init__(self)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        email, secondary_email = self.get_cached_emails()
+        email = get_cached_data("email")
+        secondary_email = get_cached_data("secondary_data")
 
         self.t_and_cs = TermsAndConditions()
         self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
@@ -202,8 +205,12 @@ class GetData3(DataTemplate):
             self.email_entry.connect('key-release-event',
                                      self.widgets_full)
 
-            self.secondary_email_entry = LabelledEntry("Email (optional)", secondary_email)
-            self.secondary_email_entry.connect('key-release-event', self.widgets_full)
+            self.secondary_email_entry = LabelledEntry(
+                "Email (optional)", secondary_email
+            )
+            self.secondary_email_entry.connect(
+                'key-release-event', self.widgets_full
+            )
 
             box.pack_start(self.email_entry, False, False, 5)
             box.pack_start(self.secondary_email_entry, False, False, 5)
@@ -236,20 +243,7 @@ class GetData3(DataTemplate):
             self.secondary_email_entry.set_sensitive(True)
         self.t_and_cs.enable_all()
 
-    def cache_emails(self):
-        email_address = self.email_entry.get_text()
-        self.cache_data("email", email_address)
-
-        if self.secondary_email_entry:
-            secondary_email_address = self.secondary_email_entry.get_text()
-            self.cache_data("secondary_email", secondary_email_address)
-
-    def get_cached_emails(self):
-        email = self.get_cached_data("email")
-        secondary_email = self.get_cached_data("secondary_email")
-        return (email, secondary_email)
-
-    def get_entry_data(self):
+    def get_email_entry_data(self):
         data = {}
 
         data['email'] = self.email_entry.get_text()
@@ -258,7 +252,14 @@ class GetData3(DataTemplate):
         else:
             data['secondary_email'] = ""
 
+        # Cache emails if they are retrieved
+        cache_emails(data["email"], data["secondary_email"])
+
         return data
+
+    def cache_emails(self):
+        data = self.get_email_entry_data()
+        cache_emails(data["email"], data["secondary_email"])
 
     def widgets_full(self, widget=None, event=None):
 

@@ -56,6 +56,9 @@ class CharacterCreator(Gtk.EventBox):
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
 
+    def show_pop_up_menu_for_category(self, category):
+        self._menu.launch_pop_up_menu(None, category)
+
     def get_image_path(self):
         img_path = self.avatar_cr.get_default_final_image_path()
         containing_dir = os.path.dirname(img_path)

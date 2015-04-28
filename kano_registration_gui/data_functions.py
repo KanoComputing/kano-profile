@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+
+# data_functions.py
+#
+# Copyright (C) 2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
+from kano_profile.apps import load_app_state_variable, save_app_state_variable
+
+
+def cache_data(category, value):
+    if category in [
+        "username",
+        "email",
+        "secondary_email",
+        "birthday_day",
+        "birthday_month",
+        "birthday_year"
+    ]:
+        save_app_state_variable("kano-avatar-registration", category, value)
+
+
+def get_cached_data(category):
+    return load_app_state_variable("kano-avatar-registration", category)
+
+
+def cache_birthday(day, month, year):
+    cache_data("birthday_day", day)
+    cache_data("birthday_month", month)
+    cache_data("birthday_year", year)
+
+
+def cache_emails(email, secondary_email=""):
+    cache_data("email", email)
+    cache_data("secondary_email", secondary_email)
+
+
+def cache_all(email, secondary_email, username,
+              birthday_day, birthday_month, birthday_year):
+    cache_birthday(birthday_day, birthday_month, birthday_year)
+    cache_data("email", email)
+    cache_data("secondary_email", secondary_email)
+    cache_data("username", username)
+
+
+def get_all_cached_data():
+    secondary_email = get_cached_data("secondary_email")
+    email = get_cached_data("email")
+    username = get_cached_data("username")
+    birthday_day = get_cached_data("birthday_day")
+    birthday_month = get_cached_data("birthday_month")
+    birthday_year = get_cached_data("birthday_year")
+
+    return {
+        "username": username,
+        "birthday_day": birthday_day,
+        "birthday_month": birthday_month,
+        "birthday_year": birthday_year,
+        "email": email,
+        "secondary_email": secondary_email
+    }

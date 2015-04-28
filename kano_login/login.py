@@ -32,7 +32,7 @@ from kano_login.templates.kano_button_box import KanoButtonBox
 from kano_login.swag_screen import SwagScreen
 from kano_login.data import get_data
 
-from kano_registration_gui.registration_screens import RegistrationScreen1
+from kano_registration_gui.RegistrationScreen1 import RegistrationScreen1
 
 profile = load_profile()
 force_login = is_registered() and 'kanoworld_username' in profile

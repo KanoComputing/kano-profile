@@ -1247,6 +1247,13 @@ class AvatarCreator(AvatarConfParser):
         return True
 
     def save_final_assets(self, dir_name, sync=True):
+        """ Generates all types of assets and saves them to the directory and
+        specified
+        :dir_name: The path to the base file, including the filename. Other
+                   files are created from this filename and in this directory
+                   (ex. '~/my_dir/my_new_char.png')
+        :returns: True iff all operations necessary were successful
+        """
         dn = os.path.abspath(os.path.expanduser(dir_name))
 
         direc = os.path.dirname(dn)

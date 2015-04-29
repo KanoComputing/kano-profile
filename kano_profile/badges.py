@@ -283,7 +283,7 @@ def load_badge_rules():
         return
 
     merged_rules = dict()
-    subfolders = ['avatars', 'badges', 'environments']
+    subfolders = ['badges', 'environments']
     for folder in subfolders:
         folder_fullpath = os.path.join(rules_dir, folder)
         if not os.path.exists(folder_fullpath):
@@ -332,13 +332,11 @@ def count_badges():
     locked = {
         'badges': 0,
         'environments': 0,
-        'avatars': 0,
     }
 
     unlocked = {
         'badges': 0,
         'environments': 0,
-        'avatars': 0,
     }
 
     for category, subcats in all_badges.iteritems():

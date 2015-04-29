@@ -155,6 +155,6 @@ def sync_profile():
 
 def block_and_sync():
     logger.info('block and sync profile')
-    cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
+    cmd = '{bin_dir}/kano-sync --sync -s --skip-kdesk'.format(bin_dir=bin_dir)
     pr = run_bg(cmd)
     pr.wait()

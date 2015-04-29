@@ -42,7 +42,7 @@ class BirthdayWidget(Gtk.Box):
         birthday_label = Gtk.Label("Birthday", xalign=0)
         birthday_label.get_style_context().add_class("get_data_label")
         self.pack_start(birthday_label, False, False, 0)
-        self.pack_start(hbox, False, False, 10)
+        self.pack_start(hbox, False, False, 0)
 
         self.set_margin_left(30)
 

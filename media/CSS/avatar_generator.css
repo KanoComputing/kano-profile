@@ -7,10 +7,6 @@
 
 */
 
-* {
-    -GtkCheckButton-indicator-size: 40
-}
-
 /* Pop up menu icons */
 /* This is an image that the user can choose */
 .category_item {

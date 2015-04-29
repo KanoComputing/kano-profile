@@ -85,14 +85,25 @@ class GetData2(DataTemplate):
 
         self.validate_username()
 
+        self.show_password = Gtk.CheckButton.new_with_label("Show password")
+        self.show_password.get_style_context().add_class("show_password")
+        self.show_password.connect("toggled", self.make_password_entry_visible)
+        self.show_password.set_active(True)
+        self.show_password.set_margin_left(30)
+
         self.bday_widget.connect("bday-key-release-event", self.widgets_full)
-        box.pack_start(self.username_entry, False, False, 10)
-        box.pack_start(self.password_entry, False, False, 10)
-        box.pack_start(self.bday_widget, False, False, 0)
+        box.pack_start(self.username_entry, False, False, 15)
+        box.pack_start(self.password_entry, False, False, 5)
+        box.pack_start(self.show_password, False, False, 0)
+        box.pack_start(self.bday_widget, False, False, 15)
 
         box.set_margin_top(20)
 
         self.add(box)
+
+    def make_password_entry_visible(self, widget):
+        visibility = self.show_password.get_active()
+        self.password_entry.set_visibility(visibility)
 
     def validate_password(self, widget=None, event=None):
         '''widget is the password entry

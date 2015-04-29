@@ -43,7 +43,7 @@ class LabelledEntry(Gtk.Box):
         if entry_contents:
             self._entry.set_text(entry_contents)
 
-        self.pack_start(self._entry, False, False, 10)
+        self.pack_start(self._entry, False, False, 0)
         self._entry.connect("key-release-event", self.emit_signal)
 
         self.set_margin_right(30)

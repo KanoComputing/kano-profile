@@ -60,6 +60,16 @@ GtkCheckButton:active:insensitive {
 .get_data_checkbutton {
     border-color: #bbbbbb;
     border-width: 2px;
+    -GtkCheckButton-indicator-size: 40;
+}
+
+.show_password {
+    -GtkCheckButton-indicator-size: 15;
+}
+
+.show_password GtkLabel {
+    color: #555555;
+    font: Bariol 13;
 }
 
 .close_button {

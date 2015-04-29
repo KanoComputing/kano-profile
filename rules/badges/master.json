@@ -30,13 +30,5 @@
     "operation": "each_greater",
     "targets": [["make-snake", "level", -1]],
     "title": "Snake Survivor"
-  },
-  "video_voyager": {
-    "bg_color": "fee8a4",
-    "desc_locked": "Check out Video to unlock this badge...",
-    "desc_unlocked": "You summoned a simple video player that can stream any movie or show in the world – in high-def! Keep watching, keep playing, you're a Video Voyager.",
-    "operation": "each_greater",
-    "targets": [["kano-video", "level", -1]],
-    "title": "Video Voyager"
   }
 }

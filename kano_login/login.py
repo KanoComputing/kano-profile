@@ -66,7 +66,7 @@ class Login(Gtk.Box):
                  {"heading": "Password", "subheading": ""}]
             )
             self.labelled_entries.set_spacing(15)
-            self.labelled_entries.set_margin_right(20)
+            self.labelled_entries.set_margin_right(40)
             self.username_entry = self.labelled_entries.get_entry(0)
             self.password_entry = self.labelled_entries.get_entry(1)
             self.pack_start(self.labelled_entries, False, False, 15)
@@ -120,7 +120,7 @@ class Login(Gtk.Box):
         align.add(vbox)
 
         # Needs adjustment
-        align.set_padding(0, 0, 50, 0)
+        align.set_padding(0, 0, 100, 0)
 
         self.pack_start(align, False, False, 15)
         self.labelled_entries = LabelledEntries(

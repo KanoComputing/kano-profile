@@ -67,15 +67,6 @@ def save_app_state(app_name, data):
         chown_path(get_app_dir(app_name))
         chown_path(app_state_file)
 
-    # Ask kdesk to refresh the Login/Register icon with new Kano Level
-    #
-    # TODO: Not every app_state change causes a levelup.
-    # There could be a better place for this.
-    if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
-        logger.info('refreshing kdesk from save_app_state')
-        run_bg('kdesk -a profile')
-
-
 def save_app_state_variable(app_name, variable, value):
     """ Save a state variable to the user's Kano profile.
 

@@ -229,6 +229,12 @@ def save_app_state_with_dialog(app_name, data):
     if old_level != new_level:
         new_level_str = 'level:{}'.format(new_level)
 
+        # A new level has been reached, update the desktop profile icon
+        if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
+            logger.info('refreshing kdesk from save_app_state')
+            run_bg('kdesk -a profile')
+
+
     # new items
     new_items_str = ''
     badge_changes = compare_badges_dict(old_badges, new_badges)

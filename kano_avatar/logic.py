@@ -16,12 +16,14 @@ from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
                                CIRC_ASSET_MASK, RING_ASSET, PREVIEW_ICONS,
                                ENVIRONMENT_DIR, AVATAR_SCRATCH,
                                AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME,
-                               PLAIN_MASK)
+                               PLAIN_MASK, AVATAR_SELECTED_ITEMS)
 from kano.logging import logger
 
 from kano_profile.badges import calculate_badges
 from kano_profile.profile import (set_avatar, set_environment,
                                   save_profile_variable)
+from kano.utils import get_date_now
+from json import dump, load
 
 # TODO Check which types of names are case sensitive
 
@@ -1264,18 +1266,24 @@ class AvatarCreator(AvatarConfParser):
         if not os.path.isdir(direc):
             os.makedirs(direc)
 
-        rc = self.create_avatar(dn)
-        if not rc:
-            logger.error(
-                'Encountered issue, stopping the creation of final assets'
-            )
-            return False
+        if not self._compare_existing_to_new(AVATAR_SELECTED_ITEMS):
+            self._write_char_log_file(AVATAR_SELECTED_ITEMS)
 
-        logger.debug("Created {}".format(dn))
-        rc = self.create_auxiliary_assets(dn)
-        if not rc:
-            logger.error("Encountered issue while creating aux assets")
-            return False
+            rc = self.create_avatar(dn)
+            if not rc:
+                logger.error(
+                    'Encountered issue, stopping the creation of final assets'
+                )
+                return False
+
+            logger.debug("Created {}".format(dn))
+            rc = self.create_auxiliary_assets(dn)
+            if not rc:
+                logger.error("Encountered issue while creating aux assets")
+                return False
+        else:
+            logger.info(
+                'Assets for avatar already exist, will skip creating them')
 
         if sync:
             items_no_env = self.selected_items_per_cat()
@@ -1287,6 +1295,77 @@ class AvatarCreator(AvatarConfParser):
             set_environment(self._sel_env.name(), sync=True)
 
         return True
+
+    def _write_char_log_file(self, fname):
+        """ Creates a file that includes the avatar configuration used when
+        the rest of the assets where created as a label. The purpose of this
+        file is to avoid the time consuming process of recreating assets that
+        are already present and updated.
+        :param fname: filename for the configuration file to be created
+        :returns: False iff some error occurs
+        """
+        if self._sel_char is None:
+            logger.warn(
+                'Character not selected, will abandon writing log file')
+            return False
+
+        if self._sel_env is None:
+            logger.warn(
+                'Environment not selected, will abandon writing log file')
+            return False
+
+        created_file = False
+        with open(fname, 'w') as fp:
+            obj_av = {}
+            obj_av['avatar'] = [self._sel_char.name(), self.selected_items_per_cat()]
+            obj_av['environment'] = self._sel_env.name()
+            obj_av['date_created'] = get_date_now()
+            dump(obj_av, fp)
+            created_file = True
+
+        return created_file
+
+    def _compare_existing_to_new(self, dirname):
+        """ Compares the currently selected set of items, character,
+        environment to the ones that are listed in the file that is provided.
+        If it they match, it returns True, else False. This may be used to
+        check whether assets already exist to as to avoid recreating them (a
+        process that takes significant time)
+        :param dirname: File where character log is stored
+        :returns: True iff what is in the file correspond to what is currently
+                  selected
+        """
+        already_exists = False
+
+        if not os.path.isfile(dirname):
+            logger.debug("Character log file doesn't exist")
+            return False
+
+        with open(dirname, 'r') as fp:
+            fp = open(dirname, 'r')
+            log_ex = load(fp)
+            try:
+                char_ex, items_ex = log_ex['avatar']
+                env_ex = log_ex['environment']
+                # First check if environment and character match
+                if char_ex == self._sel_char.name() and env_ex == self._sel_env.name():
+                    items_now = self.selected_items_per_cat()
+                    # Check if the no of catefories match
+                    if len(items_now) == len(items_ex):
+                        aligned_count = 0
+                        # Check if all category -> selection pairs match
+                        for key_ex, value_ex in items_ex.iteritems():
+                            if items_now[key_ex] != value_ex:
+                                break
+                            else:
+                                aligned_count += 1
+                        if aligned_count == len(items_ex):
+                            already_exists = True
+            except KeyError as e:
+                logger.info(
+                    "Cats or fields don't match, problematic key {}".format(e))
+
+        return already_exists
 
     def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background

@@ -231,7 +231,7 @@ def save_app_state_with_dialog(app_name, data):
 
         # A new level has been reached, update the desktop profile icon
         if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
-            logger.info('refreshing kdesk from save_app_state')
+            logger.info('refreshing kdesk due to new experience level')
             run_bg('kdesk -a profile')
 
 

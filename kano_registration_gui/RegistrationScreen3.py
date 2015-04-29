@@ -86,8 +86,6 @@ class RegistrationScreen3(Gtk.Box):
 
         if is_internet():
             self.register_user_with_gui()
-        else:
-            Gtk.main_quit()
 
     def register_user_with_gui(self):
         self.data_screen.cache_emails()
@@ -240,10 +238,7 @@ class RegistrationScreen3(Gtk.Box):
             while keep_checking:
                 keep_checking = self.keep_trying_to_connect()
 
-        else:
-            # exit app
-            logger.debug("Killing application")
-            Gtk.main_quit()
+            return is_internet()
 
     def keep_trying_to_connect(self):
         title = "Still not connected..."
@@ -268,8 +263,6 @@ class RegistrationScreen3(Gtk.Box):
 
             return True
         else:
-            # exit app
-            logger.debug("Killing application")
             return False
 
     def connect_dialog(self, title, description):

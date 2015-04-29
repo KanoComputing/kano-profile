@@ -15,7 +15,7 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_profile.apps import get_app_data_dir, load_app_state_variable
 from kano_profile.profile import load_profile, get_avatar, get_environment, \
-    get_avatar_circ_image_path
+    get_avatar_circ_image_path, recreate_char
 from kano_profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
     calculate_kano_level, increment_app_state_variable_with_dialog
 from kano_world.functions import is_registered, get_mixed_username, has_token
@@ -118,6 +118,10 @@ elif sys.argv[1] == 'get_stats':
     print 'environment: {}'.format(environment)
 
     avatar_image_path = get_avatar_circ_image_path()
+    if not os.path.exists(avatar_image_path):
+        recreate_char(block=True)
+        avatar_image_path = get_avatar_circ_image_path()
+    # If it still doesn't exist leave it empty
     if not os.path.exists(avatar_image_path):
         avatar_image_path = 'image_missing'
     print 'avatar_image_path: {}'.format(avatar_image_path)

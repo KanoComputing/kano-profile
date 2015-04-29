@@ -13,6 +13,7 @@ from kano_profile.apps import get_app_list, get_app_data_dir, launch_project
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 import kano.gtk3.cursor as cursor
+from kano.gtk3.scrolled_window import ScrolledWindow
 import kano_profile_gui.components.icons as icons
 from .paths import image_dir
 from kdesk.hourglass import hourglass_start, hourglass_end
@@ -118,8 +119,8 @@ class ProjectItem():
 
     def load(self, _button, app, filename, data_dir):
         hourglass_start(app)
-        rc=launch_project(app, filename, data_dir)
-        if not rc==0:
+        rc = launch_project(app, filename, data_dir)
+        if not rc == 0:
             hourglass_end()
 
     def share(self, _button, app, filename):
@@ -129,7 +130,8 @@ class ProjectItem():
 def activate(_win):
     project_list = ProjectList()
 
-    scrolledwindow = Gtk.ScrolledWindow()
+    scrolledwindow = ScrolledWindow()
+    scrolledwindow.apply_styling_to_widget()
     scrolledwindow.add_with_viewport(project_list.background)
     scrolledwindow.set_size_request(734, 404)
 

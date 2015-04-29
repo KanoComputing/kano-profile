@@ -1,6 +1,6 @@
 {
   "sharing_apprentice": {
-    "bg_color": "95c9e1",
+    "bg_color": "afeafa",
     "desc_locked": "You’ve made something awesome now share it with the world!",
     "desc_unlocked": "You put your work where the world can see! Keep it up.",
     "operation": "sum_greater",
@@ -30,7 +30,7 @@
     "value": 1
   },
   "sharing_master": {
-    "bg_color": "516995",
+    "bg_color": "94b0d8",
     "desc_locked": "Already made your first share? Keep going to show the world what you can do!",
     "desc_unlocked": "You’re rocking it! Showing your work off to inspire the world!",
     "operation": "sum_greater",
@@ -60,7 +60,7 @@
     "value": 5
   },
   "sharing_sensei": {
-    "bg_color": "2a4577",
+    "bg_color": "f7e37a",
     "desc_locked": "Share enough of your work to fill a gallery and become a true Sharing Sensei.",
     "desc_unlocked": "Wowzer! We’ll have to open a new wing in the Kano Gallery for all of your work!",
     "operation": "sum_greater",

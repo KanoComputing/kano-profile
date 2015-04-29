@@ -81,6 +81,9 @@ def generate_tracker_token():
     with open_locked(tracker_token_file, "w") as f:
         f.write(token)
 
+    # Make sure that the events file exist
+    open(tracker_events_file, 'a').close()
+
     return token
 
 

@@ -97,14 +97,6 @@
     "targets": [["computed", "online_staff_picks", 1]],
     "title": "Staff Pick"
   },
-  "talent_tracker": {
-    "bg_color": "bde1a8",
-    "desc_locked": "Follow 10 people on Kano World to unlock this badge.",
-    "desc_unlocked": "Computers are about dreaming, doing, and making together. By following some friends in Kano World, you can help bring cool ideas to life faster -- and give people some love. You're a Talent Tracker.",
-    "operation": "each_greater",
-    "targets": [["computed", "online_you_follow", 10]],
-    "title": "Talent Tracker"
-  },
   "mixtape_master": {
     "bg_color": "eee85f",
     "desc_locked": "Check out Make Music to unlock this badge...",

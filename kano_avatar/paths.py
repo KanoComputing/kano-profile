@@ -16,6 +16,7 @@ AVATAR_DEFAULT_NAME = 'character.png'
 AVATAR_ENV_DEFAULT = 'character_inc_env.png'
 AVATAR_ENV_SHIFTED = 'character_inc_env_page2.png'
 AVATAR_CIRC_PLAIN_DEFAULT = 'character_circ_plain.png'
+AVATAR_SELECTED_ITEMS = os.path.join(AVATAR_DEFAULT_LOC, 'character_log.json')
 
 AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
 AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'

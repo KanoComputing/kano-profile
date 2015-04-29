@@ -68,6 +68,7 @@ def get_avatar(sync=True):
             # Attempt to sync to retrieve the avatar from world
             if sync:
                 block_and_sync()
+                recreate_char(block=False)
                 subcat, item = get_avatar(sync=False)
             else:
                 # Provide a default set
@@ -158,3 +159,10 @@ def block_and_sync():
     cmd = '{bin_dir}/kano-sync --sync -s --skip-kdesk'.format(bin_dir=bin_dir)
     pr = run_bg(cmd)
     pr.wait()
+
+def recreate_char(block=True):
+    logger.info('recreating character from profile')
+    cmd = '{bin_dir}/kano-character-cli -g'.format(bin_dir=bin_dir)
+    pr = run_bg(cmd)
+    if block:
+        pr.wait()

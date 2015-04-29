@@ -2,8 +2,8 @@
 
 # badges.py
 #
-# Copyright (C) 2014 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GPL v2
 #
 
 from __future__ import division
@@ -240,7 +240,7 @@ def save_app_state_with_dialog(app_name, data):
 
     # Check if XP has changed, if so play sound in the backgrond
     if old_xp != new_xp:
-        sound_cmd = 'aplay /usr/share/kano-media/sounds/kano_xp.wav 2>&1 >/dev/null &'
+        sound_cmd = 'aplay /usr/share/kano-media/sounds/kano_xp.wav > /dev/null 2>&1 &'
         run_bg(sound_cmd)
 
     if not new_level_str and not new_items_str:
@@ -283,7 +283,7 @@ def load_badge_rules():
         return
 
     merged_rules = dict()
-    subfolders = ['avatars', 'badges', 'environments']
+    subfolders = ['badges', 'environments']
     for folder in subfolders:
         folder_fullpath = os.path.join(rules_dir, folder)
         if not os.path.exists(folder_fullpath):
@@ -332,13 +332,11 @@ def count_badges():
     locked = {
         'badges': 0,
         'environments': 0,
-        'avatars': 0,
     }
 
     unlocked = {
         'badges': 0,
         'environments': 0,
-        'avatars': 0,
     }
 
     for category, subcats in all_badges.iteritems():

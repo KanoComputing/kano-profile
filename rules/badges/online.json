@@ -1,8 +1,8 @@
 {
-  "super_sharer": {
-    "bg_color": "ffea8c",
-    "desc_locked": "Share your creations - get the badge!",
-    "desc_unlocked": "You put your work online for the world to see. Keep it up, super sharer...",
+  "sharing_apprentice": {
+    "bg_color": "95c9e1",
+    "desc_locked": "You’ve made something awesome now share it with the world!",
+    "desc_unlocked": "You put your work where the world can see! Keep it up.",
     "operation": "sum_greater",
     "targets": [
       [
@@ -26,13 +26,13 @@
         "shared"
       ]
     ],
-    "title": "Super Sharer",
+    "title": "Sharing Apprentice",
     "value": 1
   },
-  "community_champion": {
-    "bg_color": "ffea8c",
-    "desc_locked": "Share five challenges to unlock this badge!",
-    "desc_unlocked": "You clicked that big blue button, and shared your creations five times with a world of thousands. You're gaining a following! Connect with other Community Champions on Kano World.",
+  "sharing_master": {
+    "bg_color": "516995",
+    "desc_locked": "Already made your first share? Keep going to show the world what you can do!",
+    "desc_unlocked": "You’re rocking it! Showing your work off to inspire the world!",
     "operation": "sum_greater",
     "targets": [
       [
@@ -42,10 +42,52 @@
       [
         "make-minecraft",
         "shared"
+      ],
+      [
+        "make-music",
+        "shared"
+      ],
+      [
+        "kano-draw",
+        "shared"
+      ],
+      [
+        "make-snake",
+        "shared"
       ]
     ],
-    "title": "Community Champion",
+    "title": "Sharing Master",
     "value": 5
+  },
+  "sharing_sensei": {
+    "bg_color": "2a4577",
+    "desc_locked": "Share enough of your work to fill a gallery and become a true Sharing Sensei.",
+    "desc_unlocked": "Wowzer! We’ll have to open a new wing in the Kano Gallery for all of your work!",
+    "operation": "sum_greater",
+    "targets": [
+      [
+        "make-pong",
+        "shared"
+      ],
+      [
+        "make-minecraft",
+        "shared"
+      ],
+      [
+        "make-music",
+        "shared"
+      ],
+      [
+        "kano-draw",
+        "shared"
+      ],
+      [
+        "make-snake",
+        "shared"
+      ]
+    ],
+    "title": "Sharing Sensei",
+    "value": 10
   },
   "staff_pick": {
     "bg_color": "ffe591",
@@ -54,14 +96,6 @@
     "operation": "each_greater",
     "targets": [["computed", "online_staff_picks", 1]],
     "title": "Staff Pick"
-  },
-  "talent_tracker": {
-    "bg_color": "bde1a8",
-    "desc_locked": "Follow 10 people on Kano World to unlock this badge.",
-    "desc_unlocked": "Computers are about dreaming, doing, and making together. By following some friends in Kano World, you can help bring cool ideas to life faster -- and give people some love. You're a Talent Tracker.",
-    "operation": "each_greater",
-    "targets": [["computed", "online_you_follow", 10]],
-    "title": "Talent Tracker"
   },
   "mixtape_master": {
     "bg_color": "eee85f",

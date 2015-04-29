@@ -15,14 +15,6 @@
     "targets": [["make-minecraft", "level", -1]],
     "title": "Minecraft Master"
   },
-  "music_marvel": {
-    "bg_color": "ade3ef",
-    "desc_locked": "Check out Make Music to unlock this badge...",
-    "desc_unlocked": "You wrote code that made sounds, then put them together in a beautiful melody. Keep grooving to the beat of life, you're a Music Marvel.",
-    "operation": "each_greater",
-    "targets": [["make-music", "level", -1]],
-    "title": "Music Marvel"
-  },
   "pong_pro": {
     "bg_color": "9f9f9f",
     "desc_locked": "Check out Make Pong to unlock this badge...",
@@ -38,13 +30,5 @@
     "operation": "each_greater",
     "targets": [["make-snake", "level", -1]],
     "title": "Snake Survivor"
-  },
-  "video_voyager": {
-    "bg_color": "fee8a4",
-    "desc_locked": "Check out Video to unlock this badge...",
-    "desc_unlocked": "You summoned a simple video player that can stream any movie or show in the world – in high-def! Keep watching, keep playing, you're a Video Voyager.",
-    "operation": "each_greater",
-    "targets": [["kano-video", "level", -1]],
-    "title": "Video Voyager"
   }
 }

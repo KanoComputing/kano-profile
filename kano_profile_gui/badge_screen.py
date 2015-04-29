@@ -13,7 +13,6 @@ from kano_profile_gui.backend import create_item_page_list
 from kano_profile_gui.paths import media_dir
 from kano_profile_gui.navigation_buttons import create_navigation_button
 from kano.gtk3.apply_styles import apply_styling_to_screen
-from kano.gtk3.cursor import attach_cursor_events
 
 
 class BadgeScreen(Gtk.EventBox):
@@ -257,19 +256,13 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.ButtonBox()
 
-        prev_pos = self._make_index_in_range(self.index - 1)
-        next_pos = self._make_index_in_range(self.index + 1)
-        prev_title = self.item_list[prev_pos]["title"].upper()
-        next_title = self.item_list[next_pos]["title"].upper()
-        grid_title = "BACK TO GRID"
-
-        self.prev_button = create_navigation_button(prev_title, "previous")
+        self.prev_button = create_navigation_button("PREVIOUS", "previous")
         self.prev_button.connect("clicked", self._go_to_other_badge, -1)
 
-        self.grid_button = create_navigation_button(grid_title, "middle")
+        self.grid_button = create_navigation_button("BACK TO GRID", "middle")
         self.grid_button.connect("clicked", self._go_to_grid)
 
-        self.next_button = create_navigation_button(next_title, "next")
+        self.next_button = create_navigation_button("NEXT", "next")
         self.next_button.connect("clicked", self._go_to_other_badge, 1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)

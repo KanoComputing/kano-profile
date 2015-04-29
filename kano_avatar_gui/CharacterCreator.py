@@ -13,7 +13,6 @@ from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano_avatar_gui.Menu import Menu
 from kano_avatar_gui.ImageView import ImageView
 from kano.logging import logger
-from kano_profile.apps import save_app_state_variable
 from kano_profile_gui.paths import media_dir
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano.gtk3.cursor import attach_cursor_events
@@ -55,6 +54,9 @@ class CharacterCreator(Gtk.EventBox):
 
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
+
+    def show_pop_up_menu_for_category(self, category):
+        self._menu.launch_pop_up_menu(None, category)
 
     def get_image_path(self):
         img_path = self.avatar_cr.get_default_final_image_path()
@@ -110,6 +112,9 @@ class CharacterCreator(Gtk.EventBox):
         self._imgbox.set_image(filepath)
         self._menu.select_pop_up_items(selected_item_dict)
 
+    def reset_selected_menu_items(self):
+        self._menu.reset_selected_menu_items()
+
     def _hide_pop_ups(self, widget=None, event=None):
         self._menu.hide_pop_ups()
         self._menu.unselect_categories()
@@ -145,13 +150,3 @@ class CharacterCreator(Gtk.EventBox):
         # Save the image as hard copy somewhere safe, store it,
         self.avatar_cr.save_final_assets(saved_path)
         logger.debug("Saving generated avatar image to {}".format(saved_path))
-
-        logger.debug("Saving all kano assets")
-        # and also lists which assets in kano-profile
-
-        # for all categories, check the item that was selected
-        categories = self.avatar_cr.list_available_categories()
-
-        for category in categories:
-            obj_name = self._menu.get_selected_obj(category)
-            save_app_state_variable('kano-avatar', category, obj_name)

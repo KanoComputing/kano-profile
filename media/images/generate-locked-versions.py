@@ -20,7 +20,7 @@ for root, dirs, filenames in os.walk(dirpath):
 
         dir_path_split = dir_path_rel.split('/')
 
-        if dir_path_split[0] not in ['environments', 'avatars', 'badges']:
+        if dir_path_split[0] not in ['environments', 'badges']:
             continue
         if len(dir_path_split) < 2 or dir_path_split[1] != 'originals':
             continue

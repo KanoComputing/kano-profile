@@ -12,14 +12,17 @@ import os
 
 from kano.logging import logger
 from kano.utils import download_url, read_json, ensure_dir
-from kano_profile.profile import load_profile, set_avatar, set_environment, \
-    save_profile
+from kano_profile.profile import (load_profile, set_avatar, set_environment,
+                                  save_profile, save_profile_variable)
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file, online_badges_dir, \
     online_badges_file, profile_dir
 from kano_profile.tracker import get_tracker_events, clear_tracker_events
 from kano_profile_gui.paths import media_dir
+from kano_avatar.paths import (AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME,
+                               AVATAR_ENV_DEFAULT,
+                               AVATAR_CIRC_PLAIN_DEFAULT)
 
 from .connection import request_wrapper, content_type_json
 
@@ -54,6 +57,12 @@ class KanoWorldSession(object):
         # xp
         data['xp'] = calculate_xp()
 
+        # version
+        try:
+            data['version'] = profile['version']
+        except KeyError:
+            logger.debug("Version field not in the data to be synced")
+
         # age
         try:
             data['birthdate'] = profile['birthdate']
@@ -74,15 +83,7 @@ class KanoWorldSession(object):
             pass
 
         # avatar_generator
-        try:
-            avatar_generator = {
-                'character': profile['avatar'],
-                'environment': ['all', profile['environment']]
-            }
-            data['avatar_generator'] = avatar_generator
-        except Exception:
-            pass
-
+        data, files = self._prepare_avatar_gen(profile, data)
         # app states
         stats = dict()
         for app in get_app_list():
@@ -92,11 +93,96 @@ class KanoWorldSession(object):
         # append stats
         data['stats'] = stats
 
-        success, text, response_data = request_wrapper('put', '/users/profile', data=json.dumps(data), headers=content_type_json, session=self.session)
+        # Uploading profile stats
+        success, text, response_data = request_wrapper(
+            'put',
+            '/users/profile',
+            data=json.dumps(data),
+            headers=content_type_json,
+            session=self.session)
+
         if not success:
+            logger.error('Uploading of the profile data failed')
             return False, text
 
+        if files:
+            # Uploading avatar assets
+            success, text, response_data = request_wrapper(
+                'put',
+                '/users/profile',
+                session=self.session,
+                files=files)
+
+            # requests doesn't close the file objects after sending them, so
+            # we need to tidy up
+            self._tidy_up_avatar_files(files)
+
+            if not success:
+                logger.error('Uploading of the avatar assets failed')
+                return False, text
+
         return self.download_profile_stats(response_data)
+
+    def _prepare_avatar_gen(self, profile_data, data_to_send):
+        files = {}
+        if ('version' not in profile_data or
+                profile_data['version'] == 1):
+            try:
+                avatar_generator = {
+                    'character': profile_data['avatar'],
+                    'environment': ['all', profile_data['environment']]
+                }
+                data_to_send['avatar_generator'] = avatar_generator
+            except Exception:
+                pass
+        elif profile_data['version'] == 2:
+            # In this version we need to add a field that indicates
+            # that this is version 2. Furthermore we need to uplodad
+            # the new assets to the server
+            try:
+                avatar_generator = {
+                    'version': 2,
+                    'character': profile_data['avatar'],
+                    'environment': ['all', profile_data['environment']]
+                }
+                data_to_send['avatar_generator'] = avatar_generator
+                path_circ = os.path.join(
+                    AVATAR_DEFAULT_LOC,
+                    AVATAR_CIRC_PLAIN_DEFAULT)
+                path_env = os.path.join(
+                    AVATAR_DEFAULT_LOC,
+                    AVATAR_ENV_DEFAULT)
+                path_char = os.path.join(
+                    AVATAR_DEFAULT_LOC,
+                    AVATAR_DEFAULT_NAME)
+                files = {
+                    'avatar_circle': open(path_circ, 'rb'),
+                    'avatar_landscape': open(path_env, 'rb'),
+                    'avatar_character': open(path_char, 'rb')
+                }
+            except KeyError as e:
+                logger.debug('Attribute {} not found in profile'.format(e))
+            except IOError as e:
+                # There was an error somewhere, do not upload files
+                files = {}
+                logger.info(
+                    'Error opening 1 of the files to upload {}'.format(str(e))
+                )
+            except Exception:
+                pass
+        else:
+            logger.debug(
+                "Unknown profile ver: {}, can't upload data".format(
+                    profile_data['version'])
+                )
+        return data_to_send, files
+
+    def _tidy_up_avatar_files(self, files):
+        try:
+            for f in files.itervalues():
+                f.close()
+        except Exception:
+            logger.debug("Error closing avatar files")
 
     def download_profile_stats(self, data=None):
         if not data:
@@ -111,6 +197,12 @@ class KanoWorldSession(object):
                                                   session=self.session)
             if not success:
                 return False, text
+
+        try:
+            vesion_no = data['user']['avatar']['generator']['version']
+            save_profile_variable('version', version_no)
+        except Exception:
+            pass
 
         try:
             avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
@@ -222,7 +314,7 @@ class KanoWorldSession(object):
         ]
 
         for attachment in attachment_files:
-            ext, key = attachment
+            key, ext = attachment
             attachment_path = "{}.{}".format(extensionless_path, ext)
 
             if os.path.exists(attachment_path):

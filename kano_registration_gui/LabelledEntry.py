@@ -65,11 +65,14 @@ class LabelledEntry(Gtk.Box):
         self._validation_label.get_style_context().remove_class("fail")
         self._validation_label.get_style_context().remove_class("success")
 
+        # Change the image - if successful is nothing, then icon
+        # is removed
+        self.set_image(successful)
+
         # If successful is not nothing, set the class appropriately
         if successful:
             self._validation_label.get_style_context().add_class(successful)
             self._validation_label.set_text(text)
-            self.set_image(successful)
             self._validated = (successful == "success")
 
         self._validation_label.show_all()

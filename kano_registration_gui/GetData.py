@@ -98,7 +98,9 @@ class GetData2(DataTemplate):
         '''widget is the password entry
         '''
         password = self.password_entry.get_text()
-        if len(password) < 6:
+        if len(password) == 0:
+            self.password_entry.label_success("")
+        elif len(password) < 6:
             self.password_entry.label_success("is too short", "fail")
         else:
             self.password_entry.label_success("looks good!", "success")
@@ -110,7 +112,9 @@ class GetData2(DataTemplate):
         '''
 
         username = self.username_entry.get_text()
-        if check_username(username):
+        if len(username) == 0:
+            self.username_entry.label_success("")
+        elif check_username(username):
             self.username_entry.label_success("is valid", "success")
         else:
             self.username_entry.label_success("is invalid", "fail")

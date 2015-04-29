@@ -188,7 +188,7 @@ class RegistrationScreen3(Gtk.Box):
                     "label": "OK"
                 },
                 {
-                    "label": "GO BACK TO WINDOW",
+                    "label": "CANCEL",
                     "return_value": "CANCEL",
                     "color": "red"
                 }

@@ -198,15 +198,15 @@ class GetData3(DataTemplate):
 
         # If the user is younger than 14, ask for both Guardian and
         # user email, but the guardian email is compulsory
-        if age < 14:
+        if age <= 13:
             self.email_entry = LabelledEntry(
-                "Guardian's Email (required)", email
+                "Parent's Email (required)", email
             )
             self.email_entry.connect('key-release-event',
                                      self.widgets_full)
 
             self.secondary_email_entry = LabelledEntry(
-                "Email (optional)", secondary_email
+                "Your Email (optional)", secondary_email
             )
             self.secondary_email_entry.connect(
                 'key-release-event', self.widgets_full
@@ -217,7 +217,7 @@ class GetData3(DataTemplate):
 
         # Otherwise, there is only one compulsory email
         else:
-            self.email_entry = LabelledEntry("Email", email)
+            self.email_entry = LabelledEntry("Your Email (required)", email)
             self.email_entry.connect('key-release-event', self.widgets_full)
             self.secondary_email_entry = None
             box.pack_start(self.email_entry, False, False, 5)

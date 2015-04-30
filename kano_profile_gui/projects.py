@@ -68,7 +68,7 @@ class ProjectList():
 
         if not self.projects_list:
             image_no_projects = icons.set_from_name("no_challenges")
-            image_no_projects.set_alignment(xalign=0.5, yalign=0.5)
+            image_no_projects.set_margin_top(70)
             self.container.pack_start(image_no_projects, False, False, 0)
             return
 

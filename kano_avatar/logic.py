@@ -983,7 +983,7 @@ class AvatarConfParser():
                     item_name)
             )
 
-            return lock_state
+        return lock_state
 
     def _is_unlocked_reg_item(self, item_name):
         if item_name not in self._objects:

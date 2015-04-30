@@ -35,7 +35,7 @@
     "img_name": "jungle.png",
     "preview_img": "environments/forest.png",
     "item_id": "7d03fd052c0f4093aa50ae06cdb11b58",
-    "display_order": 2,
+    "display_order": 3,
     "date_created": "2015-04-14T10:54:14Z"
   },
   "space": {
@@ -49,7 +49,7 @@
     "img_name": "space.png",
     "preview_img": "environments/space.png",
     "item_id": "7c35cae9155d4d1994efbd7e59d6607b",
-    "display_order": 3,
+    "display_order": 5,
     "date_created": "2015-04-14T10:54:14Z"
   },
   "dojo": {
@@ -64,6 +64,19 @@
     "item_id": "46fa7e1c0bdc43e18114b8e452776b07",
     "display_order": 1,
     "date_created": "2015-04-14T10:54:14Z"
+  },
+  "park": {
+    "bg_color": "ffffff",
+    "desc_locked": "",
+    "desc_unlocked": "",
+    "operation": "each_greater",
+    "targets": [["computed", "kano_level", 1]],
+    "title": "Park",
+    "img_name": "park.png",
+    "preview_img": "environments/park.png",
+    "item_id": "239f0734d7364856a88806494675f4c5",
+    "display_order": 2,
+    "date_created": "2015-04-30T09:10:14Z"
   },
   "video_set": {
     "bg_color": "ffffff",
@@ -88,7 +101,7 @@
     "img_name": "minecraft.png",
     "preview_img": "environments/minecraft.png",
     "item_id": "7c35cae9155d4d1994efbd7e59d6607b",
-    "display_order": 3,
+    "display_order": 8,
     "date_created": "2015-04-14T10:54:14Z"
   }
 }

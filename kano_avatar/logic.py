@@ -1194,7 +1194,9 @@ class AvatarCreator(AvatarConfParser):
         category.
         :returns: A dict with [categ_labels] -> item_selected
         """
-        return {cat: item.name() for cat, item in self._sel_obj_per_cat.iteritems()}
+        ret = {cat: item.name() for cat, item in self._sel_obj_per_cat.iteritems()}
+        ret[self.env_label] = self._sel_env.name()
+        return ret
 
     def create_avatar(self, file_name=''):
         """ Create the finished main image and save it to file.
@@ -1357,7 +1359,10 @@ class AvatarCreator(AvatarConfParser):
         created_file = False
         with open(fname, 'w') as fp:
             obj_av = {}
-            obj_av['avatar'] = [self._sel_char.name(), self.selected_items_per_cat()]
+            # ensure that environments is not present in this dict
+            items = self.selected_items_per_cat()
+            items.pop(self.env_label, None)
+            obj_av['avatar'] = [self._sel_char.name(), items]
             obj_av['environment'] = self._sel_env.name()
             obj_av['date_created'] = get_date_now()
             dump(obj_av, fp)

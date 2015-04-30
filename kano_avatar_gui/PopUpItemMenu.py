@@ -67,7 +67,7 @@ class PopUpItemMenu(SelectMenu):
     def _create_top_bar(self):
         top_bar = Gtk.EventBox()
         top_bar.get_style_context().add_class("pop_up_menu_top_bar")
-        label = Gtk.Label(self._category)
+        label = Gtk.Label(self._category.title())
         label.set_alignment(0, 0.5)
         label.set_margin_left(20)
         top_bar.add(label)

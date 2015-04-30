@@ -1203,6 +1203,10 @@ class AvatarCreator(AvatarConfParser):
         :returns: None if there was an issue while creating avatar, the location
                   of the created file otherwise
         """
+        logger.debug(
+            'About to create character with items: {}'.format(
+                str(self.selected_items()))
+        )
         ret = None
         rc = self._create_base_img()
 
@@ -1249,6 +1253,10 @@ class AvatarCreator(AvatarConfParser):
         :param file_name: To be used as the base for generating the filenames of the other assets
         :returns: False iff the generation of any of the assets fails
         """
+        logger.debug(
+            'About to create auxiliary assets with items: {}'.format(
+                str(self.selected_items()))
+        )
         # Avatar on its own
         rc = self.save_image(file_name)
         if not rc:

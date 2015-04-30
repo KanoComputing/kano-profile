@@ -109,17 +109,19 @@ class RegistrationScreen3(Gtk.Box):
         date_year = self.win.data["year"]
         date_month = self.win.data["month"]
         date_day = self.win.data["day"]
+        email_user = self.win.data["email_user"]
 
-        logger.info('trying to register user with data {} {} {} {} {} {} {}'
+        logger.info('trying to register user with data {} {} {} {} {} {} {} {}'
                     .format(
                         email, secondary_email, username, password, date_year,
-                        date_month, date_day
+                        date_month, date_day, email_user
                     )
                     )
 
         success, text = register_(email, username, password,
                                   date_year, date_month, date_day,
-                                  secondary_email=secondary_email)
+                                  secondary_email=secondary_email,
+                                  marketing_enabled=email_user)
 
         if not success:
             if text.strip() == "Cannot register, problem: Username already registered":

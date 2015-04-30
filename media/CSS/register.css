@@ -61,6 +61,18 @@ GtkCheckButton:active:insensitive {
     border-color: #bbbbbb;
     border-width: 2px;
     -GtkCheckButton-indicator-size: 40;
+    -GtkCheckButton-indicator-spacing: 3;
+}
+
+.get_data_checkbutton GtkLabel {
+    color: #555555;
+    font: Bariol 13;
+}
+
+.get_data_checkbutton GtkLabel:insensitive {
+    color: #555555;
+    font: Bariol 13;
+    background: #ffffff;
 }
 
 .show_password {
@@ -89,3 +101,5 @@ GtkCheckButton:active:insensitive {
 .validation_label.fail {
     color: @kano_red;
 }
+
+

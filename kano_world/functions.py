@@ -33,7 +33,8 @@ def login(login_name, password):
         return False, 'Cannot log in, problem: {}'.format(text)
 
 
-def register(email, username, password, date_year, date_month, date_day, secondary_email=''):
+def register(email, username, password, date_year, date_month, date_day,
+             secondary_email='', marketing_enabled=False):
     email = email.strip()
     username = username.strip()
     password = password.strip()
@@ -48,11 +49,14 @@ def register(email, username, password, date_year, date_month, date_day, seconda
         'username': username,
         'password': password,
         'birthdate': '{}-{}-{}'.format(date_year, date_month, date_day),
-        # 'gender': '',
     }
+
+    payload['marketing_enabled_primary'] = marketing_enabled
 
     if secondary_email:
         payload['secondary_email'] = secondary_email
+        if marketing_enabled:
+            payload['marketing_enabled_secondary'] = marketing_enabled
 
     success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)
     if success:

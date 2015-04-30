@@ -777,8 +777,15 @@ class AvatarConfParser():
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
-        return self._get_inactive_reg_category_icon(category_name) or \
+        icon_path = self._get_inactive_reg_category_icon(category_name) or \
             self._get_inactive_special_category_icon(category_name)
+
+        if not icon_path:
+            logger.warn(
+                "Cat {} not found, can't provide inactive icon path".format(
+                    category_name)
+            )
+        return icon_path
 
     def _get_inactive_reg_category_icon(self, category_name):
         """ Provides the filename of the active icons of the provided
@@ -787,8 +794,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._inactive_category_icons:
-            err_msg = "Cat {} not found, can't provide inactive icon path".format(category_name)
-            logger.warn(err_msg)
             return None
         else:
             return self._inactive_category_icons[category_name]
@@ -798,8 +803,16 @@ class AvatarConfParser():
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
-        return self._get_active_reg_category_icon(category_name) or \
+        icon_path = self._get_active_reg_category_icon(category_name) or \
             self._get_active_special_category_icon(category_name)
+
+        if not icon_path:
+            logger.warn(
+                "Cat {} not found, can't provide active icon path".format(
+                    category_name)
+            )
+
+        return icon_path
 
     def _get_active_reg_category_icon(self, category_name):
         """ Provides the filename of the active icons of the provided active
@@ -808,8 +821,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._active_category_icons:
-            logger.warn("Cat {} not found, can't provide active icon path"
-                        .format(category_name))
             return None
         else:
             return self._active_category_icons[category_name]
@@ -819,8 +830,15 @@ class AvatarConfParser():
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
-        return self._get_selected_border_regular(category_name) or \
+        icon_path = self._get_selected_border_regular(category_name) or \
             self._get_selected_border_special(category_name)
+        if not icon_path:
+            logger.warn(
+                "Cat {} not found, can't provide selected border path".format(
+                    category_name)
+            )
+
+        return icon_path
 
     def _get_selected_border_regular(self, category_name):
         """ Provides the filename of the selected border of the preview icon
@@ -828,7 +846,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._selected_borders:
-            logger.warn("Cat {} was not found, can't provide selected border path".format(category_name))
             return None
         else:
             return self._selected_borders[category_name]
@@ -838,8 +855,15 @@ class AvatarConfParser():
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         """
-        return self._get_hover_border_regular(category_name) or \
+        icon_path = self._get_hover_border_regular(category_name) or \
             self._get_hover_border_special(category_name)
+
+        if not icon_path:
+            logger.warn(
+                "Cat {} wasn't found, can't provide hover border path".format(
+                    category_name)
+            )
+        return icon_path
 
     def _get_hover_border_regular(self, category_name):
         """ Provides the filename of the hover border of the preview icon
@@ -847,7 +871,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if category_name not in self._hover_borders:
-            logger.warn("Cat {} was not found, can't provide hover border path".format(category_name))
             return None
         else:
             return self._hover_borders[category_name]
@@ -858,7 +881,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if special_category_name not in self._inactive_special_category_icons:
-            logger.warn("Special Cat {} not found, can't provide inactive icon path".format(special_category_name))
             return None
         else:
             return self._inactive_special_category_icons[special_category_name]
@@ -869,7 +891,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if special_category_name not in self._active_special_category_icons:
-            logger.warn("Special Cat {} not found, can't provide active icon path".format(special_category_name))
             return None
         else:
             return self._active_special_category_icons[special_category_name]
@@ -881,7 +902,6 @@ class AvatarConfParser():
         """
         self._border_special_cat
         if special_category_name not in self._border_special_cat:
-            logger.warn("Special Cat {} not found, can't provide selected border path".format(special_category_name))
             return None
         else:
             return self._border_special_cat[special_category_name]
@@ -892,7 +912,6 @@ class AvatarConfParser():
         :returns: path to icon as string or None if category is not found
         """
         if special_category_name not in self._hover_border_special_cat:
-            logger.warn("Special Cat {} not found, can't provide hover border path".format(special_category_name))
             return None
         else:
             return self._border_special_cat[special_category_name]
@@ -915,8 +934,15 @@ class AvatarConfParser():
         :returns: The absolute path to the preview image as a str or
                   None if the item is not available
         """
-        return self._get_reg_item_preview(item_name) or \
+        prev_img = self._get_reg_item_preview(item_name) or \
             self._get_environment_preview(item_name)
+
+        if not prev_img:
+            logger.warn(
+                "Item {} not in avail objects, can't return preview img".format(
+                    item_name)
+            )
+        return prev_img
 
     def _get_reg_item_preview(self, item_name):
         """ Provides the preview image for a given regular item
@@ -925,7 +951,6 @@ class AvatarConfParser():
                   None if the item is not available
         """
         if item_name not in self._objects:
-            logger.warn("Item {} not in avail obj list, can't return preview img".format(item_name))
             return None
         else:
             return self._objects[item_name].get_preview_img()
@@ -938,8 +963,6 @@ class AvatarConfParser():
                   None if the environment is not available
         """
         if environment_name not in self._environments:
-            err_msg = "Envir {} not in avail env list, can't return preview img".format(environment_name)
-            logger.warn(err_msg)
             return None
         else:
             return self._environments[environment_name].get_preview_img()
@@ -949,18 +972,27 @@ class AvatarConfParser():
         :param item_name: item whose lock status will be returned
         :returns: True iff it is unlocked
         """
-        return self._is_unlocked_reg_item(item_name) or self._is_unlocked_env(item_name)
+        lock_state = self._is_unlocked_reg_item(item_name)
+
+        if lock_state is None:
+            lock_state = self._is_unlocked_env(item_name)
+
+        if lock_state is None:
+            logger.warn(
+                "Item {} not in avail objs/envs, can't return lock state".format(
+                    item_name)
+            )
+
+            return lock_state
 
     def _is_unlocked_reg_item(self, item_name):
         if item_name not in self._objects:
-            logger.debug("Item {} not in avail obj list, can't return lock state".format(item_name))
             return None
         else:
             return self._objects[item_name].is_unlocked()
 
     def _is_unlocked_env(self, item_name):
         if item_name not in self._environments:
-            logger.debug("Item {} not in avail env list, can't return lock state".format(item_name))
             return None
         else:
             return self._environments[item_name].is_unlocked()

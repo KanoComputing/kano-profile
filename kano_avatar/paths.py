@@ -19,11 +19,15 @@ AVATAR_CIRC_PLAIN_DEFAULT = 'character_circ_plain.png'
 AVATAR_SELECTED_ITEMS = os.path.join(AVATAR_DEFAULT_LOC, 'character_log.json')
 
 AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
-AVATAR_ASSET_FOLDER = '/usr/share/kano-profile/media/images/avatar_generator'
+PROFILE_IMAGES_FOLDER = '/usr/share/kano-profile/media/images'
+AVATAR_ASSET_FOLDER = os.path.join(PROFILE_IMAGES_FOLDER,'avatar_generator')
 CSS_PATH = '/usr/share/kano-profile/media/CSS/avatar_generator.css'
 
 CHARACTER_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'characters')
-ENVIRONMENT_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'environments')
+ENVIRONMENT_DIR = os.path.join(PROFILE_IMAGES_FOLDER,
+                               'environments',
+                               '734x404',
+                               'all')
 ITEM_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'items')
 
 CATEGORY_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'category_icons')

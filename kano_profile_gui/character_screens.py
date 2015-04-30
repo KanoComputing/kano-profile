@@ -44,9 +44,9 @@ class CharacterDisplay(Gtk.EventBox):
         if not os.path.exists(path):
             # Usually we wouldn't be in this state, but just in case
             from kano_profile.profile import recreate_char, block_and_sync
+            logger.warn('Character assets not there, will sync and recreate')
             block_and_sync()
             recreate_char(block=True)
-            logger.warn('Character assets not there')
 
         image = Gtk.Image.new_from_file(path)
 

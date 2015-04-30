@@ -126,10 +126,21 @@ def set_avatar(subcat, item, sync=False):
                 "Incompatible form of item for this version of the API"
             )
             return None
-    profile['avatar'] = [subcat, item]
-    save_profile(profile)
-    if sync:
-        sync_profile()
+    # Check whether we are updating this value and if so, recreate the assets
+    needs_update = True
+    if 'avatar' in profile:
+        char_ex, items_ex = profile['avatar']
+        if char_ex == subcat:
+            if items_ex == item:
+                needs_update = False
+
+    if needs_update:
+        # Update the profile structure
+        profile['avatar'] = [subcat, item]
+        if sync:
+            sync_profile()
+        recreate_char(block=sync)
+        save_profile(profile)
 
 
 def get_environment():
@@ -143,10 +154,17 @@ def get_environment():
 
 def set_environment(environment, sync=False):
     profile = load_profile()
-    profile['environment'] = environment
-    save_profile(profile)
-    if sync:
-        sync_profile()
+    needs_update = True
+    if 'environment' in profile:
+        if profile['environment'] == environment:
+            needs_update = False
+
+    if needs_update:
+        profile['environment'] = environment
+        if sync:
+            sync_profile()
+        recreate_char(block=sync)
+        save_profile(profile)
 
 
 def sync_profile():
@@ -154,11 +172,13 @@ def sync_profile():
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)
 
+
 def block_and_sync():
     logger.info('block and sync profile')
     cmd = '{bin_dir}/kano-sync --sync -s --skip-kdesk'.format(bin_dir=bin_dir)
     pr = run_bg(cmd)
     pr.wait()
+
 
 def recreate_char(block=True):
     logger.info('recreating character from profile')

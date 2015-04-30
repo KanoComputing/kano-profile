@@ -24,7 +24,10 @@ AVATAR_ASSET_FOLDER = os.path.join(PROFILE_IMAGES_FOLDER,'avatar_generator')
 CSS_PATH = '/usr/share/kano-profile/media/CSS/avatar_generator.css'
 
 CHARACTER_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'characters')
-ENVIRONMENT_DIR = os.path.join(PROFILE_IMAGES_FOLDER, 'environments', '734x404')
+ENVIRONMENT_DIR = os.path.join(PROFILE_IMAGES_FOLDER,
+                               'environments',
+                               '734x404',
+                               'all')
 ITEM_DIR = os.path.join(AVATAR_ASSET_FOLDER, 'items')
 
 CATEGORY_ICONS = os.path.join(AVATAR_ASSET_FOLDER, 'category_icons')

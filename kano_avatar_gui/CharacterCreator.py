@@ -142,6 +142,7 @@ class CharacterCreator(Gtk.EventBox):
         '''
         logger.debug("Saving data")
 
+        self._menu.saved_selected_list = self.avatar_cr.selected_items_per_cat()
         saved_path = self.get_avatar_save_path()
         # Save the image as hard copy somewhere safe, store it,
         self.avatar_cr.save_final_assets(saved_path)

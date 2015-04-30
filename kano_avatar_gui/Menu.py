@@ -143,9 +143,7 @@ class Menu(Gtk.Fixed):
             pop_up._only_style_selected(identifier)
 
     def reset_selected_menu_items(self):
-        logger.debug("Hit reset_selected_menu_items")
-        for category, item in self.saved_selected_list.iteritems():
-            self.select_pop_up_items(self.saved_selected_list)
+        self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):
 

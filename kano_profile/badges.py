@@ -12,7 +12,7 @@ import os
 import json
 
 from kano.logging import logger
-from kano.utils import read_json, is_gui, run_bg
+from kano.utils import read_json, is_gui, is_running, run_bg
 from .paths import xp_file, levels_file, rules_dir, bin_dir, \
     app_profiles_file, online_badges_dir, online_badges_file
 from .apps import load_app_state, get_app_list, save_app_state
@@ -233,7 +233,6 @@ def save_app_state_with_dialog(app_name, data):
         if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
             logger.info('refreshing kdesk due to new experience level')
             run_bg('kdesk -a profile')
-
 
     # new items
     new_items_str = ''

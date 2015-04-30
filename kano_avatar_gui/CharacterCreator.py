@@ -60,10 +60,6 @@ class CharacterCreator(Gtk.EventBox):
 
     def get_image_path(self):
         img_path = self.avatar_cr.get_default_final_image_path()
-        containing_dir = os.path.dirname(img_path)
-
-        if not containing_dir:
-            os.makekdirs(containing_dir)
         return img_path
 
     def update_from_saved_image(self):

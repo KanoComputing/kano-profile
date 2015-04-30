@@ -983,7 +983,7 @@ class AvatarConfParser():
                     item_name)
             )
 
-            return lock_state
+        return lock_state
 
     def _is_unlocked_reg_item(self, item_name):
         if item_name not in self._objects:
@@ -1194,7 +1194,9 @@ class AvatarCreator(AvatarConfParser):
         category.
         :returns: A dict with [categ_labels] -> item_selected
         """
-        return {cat: item.name() for cat, item in self._sel_obj_per_cat.iteritems()}
+        ret = {cat: item.name() for cat, item in self._sel_obj_per_cat.iteritems()}
+        ret[self.env_label] = self._sel_env.name()
+        return ret
 
     def create_avatar(self, file_name=''):
         """ Create the finished main image and save it to file.
@@ -1203,6 +1205,10 @@ class AvatarCreator(AvatarConfParser):
         :returns: None if there was an issue while creating avatar, the location
                   of the created file otherwise
         """
+        logger.debug(
+            'About to create character with items: {}'.format(
+                str(self.selected_items()))
+        )
         ret = None
         rc = self._create_base_img()
 
@@ -1249,6 +1255,10 @@ class AvatarCreator(AvatarConfParser):
         :param file_name: To be used as the base for generating the filenames of the other assets
         :returns: False iff the generation of any of the assets fails
         """
+        logger.debug(
+            'About to create auxiliary assets with items: {}'.format(
+                str(self.selected_items()))
+        )
         # Avatar on its own
         rc = self.save_image(file_name)
         if not rc:
@@ -1349,7 +1359,10 @@ class AvatarCreator(AvatarConfParser):
         created_file = False
         with open(fname, 'w') as fp:
             obj_av = {}
-            obj_av['avatar'] = [self._sel_char.name(), self.selected_items_per_cat()]
+            # ensure that environments is not present in this dict
+            items = self.selected_items_per_cat()
+            items.pop(self.env_label, None)
+            obj_av['avatar'] = [self._sel_char.name(), items]
             obj_av['environment'] = self._sel_env.name()
             obj_av['date_created'] = get_date_now()
             dump(obj_av, fp)

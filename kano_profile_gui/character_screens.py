@@ -10,6 +10,7 @@ from gi.repository import Gtk
 from kano_profile_gui.progress_bar import ProgressBar
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano_profile_gui.paths import media_dir
+from kano.logging import logger
 
 
 class CharacterDisplay(Gtk.EventBox):
@@ -48,13 +49,12 @@ class CharacterDisplay(Gtk.EventBox):
         # Get picture of character creator and pack it into the window
         path = self._char_creator.get_image_path()
 
-        # TODO: this should only be a temporary fix until the init flow has been set up
-        # This puts a random collection of the assets together if an image doesn't
-        # currently exist
         if not os.path.exists(path):
-            self._char_creator.randomise_avatar()
-            self._char_creator.save()
-            path = self._char_creator.get_image_path()
+            # Usually we wouldn't be in this state, but just in case
+            from kano_profile.profile import recreate_char, block_and_sync
+            logger.warn('Character assets not there, will sync and recreate')
+            block_and_sync()
+            recreate_char(block=True)
 
         image = Gtk.Image.new_from_file(path)
 

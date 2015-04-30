@@ -26,13 +26,21 @@ class CharacterDisplay(Gtk.EventBox):
         self._win = win
 
         icon_filename = os.path.join(media_dir, "images/icons/edit.png")
-        icon = Gtk.Image.new_from_file(icon_filename)
+        self.cog_widget_icon = Gtk.Image.new_from_file(icon_filename)
+
         launch_char_creator_btn = Gtk.Button()
-        launch_char_creator_btn.set_image(icon)
+        hbox = Gtk.Box()
+        edit_label = Gtk.Label("EDIT")
+        edit_label.set_margin_right(7)
+
+        hbox.pack_start(self.cog_widget_icon, False, False, 0)
+        hbox.pack_end(edit_label, False, False, 0)
+
         launch_char_creator_btn.connect("clicked", self.go_to_edit_character_screen)
         launch_char_creator_btn.connect("enter-notify-event", self.set_orange_cog)
         launch_char_creator_btn.connect("leave-notify-event", self.set_grey_cog)
         launch_char_creator_btn.get_style_context().add_class("character_cog")
+        launch_char_creator_btn.add(hbox)
 
         # Pack this part of the screen into the window
         self._char_creator = self._win.char_creator
@@ -61,13 +69,11 @@ class CharacterDisplay(Gtk.EventBox):
 
     def set_orange_cog(self, widget, event):
         icon_filename = os.path.join(media_dir, "images/icons/edit-active.png")
-        icon = Gtk.Image.new_from_file(icon_filename)
-        widget.set_image(icon)
+        self.cog_widget_icon.set_from_file(icon_filename)
 
     def set_grey_cog(self, widget, event):
         icon_filename = os.path.join(media_dir, "images/icons/edit.png")
-        icon = Gtk.Image.new_from_file(icon_filename)
-        widget.set_image(icon)
+        self.cog_widget_icon.set_from_file(icon_filename)
 
     def _pack_progress_bar(self):
 

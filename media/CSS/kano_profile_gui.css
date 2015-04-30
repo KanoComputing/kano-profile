@@ -44,6 +44,19 @@
 .character_cog {
     background: #ffffff;
 }
+
+.character_cog GtkLabel {
+    background: transparent;
+    color: @kano_orange;
+    font: Bariol bold 15;
+}
+
+.character_cog GtkLabel:hover {
+    background: transparent;
+    color: @kano_orange;
+    font: Bariol bold 15;
+}
+
 .character_cog:hover {
     background: #dddddd;
 }

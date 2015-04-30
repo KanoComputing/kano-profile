@@ -13,7 +13,8 @@ import os
 from kano.logging import logger
 from kano.utils import download_url, read_json, ensure_dir
 from kano_profile.profile import (load_profile, set_avatar, set_environment,
-                                  save_profile, save_profile_variable)
+                                  save_profile, save_profile_variable,
+                                  recreate_char)
 from kano_profile.badges import calculate_xp
 from kano_profile.apps import get_app_list, load_app_state, save_app_state
 from kano_profile.paths import app_profiles_file, online_badges_dir, \
@@ -199,19 +200,24 @@ class KanoWorldSession(object):
                 return False, text
 
         try:
-            vesion_no = data['user']['avatar']['generator']['version']
+            version_no = data['user']['avatar']['generator']['version']
             save_profile_variable('version', version_no)
         except Exception:
             pass
 
+        updated_locally = False
         try:
             avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
-            set_avatar(avatar_subcat, avatar_item)
+            updated_locally = set_avatar(avatar_subcat, avatar_item)
 
             environment = data['user']['avatar']['generator']['environment'][1]
-            set_environment(environment)
+            updated_locally |= set_environment(environment)
+
         except Exception:
             pass
+
+        if updated_locally:
+            recreate_char(block=True)
 
         # app states
         try:

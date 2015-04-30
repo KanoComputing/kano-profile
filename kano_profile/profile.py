@@ -119,6 +119,13 @@ def get_avatar_circ_image_path():
 
 
 def set_avatar(subcat, item, sync=False):
+    """ Set the avatar in the local profile structure and optionally sync
+    :param subcat: first field to be used (usually character namespace)
+    :param item: Dict with the mapping from category to item
+    :param sync: (Optional) sync to World
+    :returns: True iff an update has happenned internally, False iff the
+              internal structures were up to date
+    """
     profile = load_profile()
     if 'version' in profile and profile['version'] == 2:
         if type(item) != dict:
@@ -139,8 +146,8 @@ def set_avatar(subcat, item, sync=False):
         profile['avatar'] = [subcat, item]
         if sync:
             sync_profile()
-        recreate_char(block=sync)
         save_profile(profile)
+    return needs_update
 
 
 def get_environment():
@@ -153,6 +160,12 @@ def get_environment():
 
 
 def set_environment(environment, sync=False):
+    """ Set the avatar in the local profile structure and optionally sync
+    :param environment: Environment name to be used
+    :param sync: (Optional) sync to World
+    :returns: True iff an update has happenned internally, False iff the
+              internal structures were up to date
+    """
     profile = load_profile()
     needs_update = True
     if 'environment' in profile:
@@ -163,8 +176,8 @@ def set_environment(environment, sync=False):
         profile['environment'] = environment
         if sync:
             sync_profile()
-        recreate_char(block=sync)
         save_profile(profile)
+    return needs_update
 
 
 def sync_profile():

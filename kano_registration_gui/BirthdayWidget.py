@@ -122,9 +122,6 @@ class BirthdayWidget(Gtk.Box):
             age = current_year - bday['year']
             logger.debug("User age = {}".format(age))
 
-            if age < 0 or age > 114:
-                raise Exception(default_error, default_desc)
-
             if current_month < bday['month']:
                 age = age - 1
             elif current_month == bday['month']:
@@ -133,6 +130,10 @@ class BirthdayWidget(Gtk.Box):
                 # TODO: if it's their birthday, do something special?
                 # elif current_day == bday_day:
                 #    print "IT'S YOUR BIIIIRTHDAY"
+
+            if age < 0 or age > 114:
+                raise Exception(default_error, default_desc)
+
             return age, bday_date, ()
 
         except Exception as e:

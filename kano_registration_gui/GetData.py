@@ -211,15 +211,15 @@ class GetData3(DataTemplate):
         self.t_and_cs.connect("t-and-cs-clicked",
                               self.show_terms_and_conditions)
 
-        self.email_user_checkbutton = Gtk.CheckButton.new_with_label("Email me cool stuff to\ndo with my Kano")
-        self.email_user_checkbutton.get_style_context().add_class("get_data_checkbutton")
-        self.email_user_checkbutton.set_margin_left(30)
-        email_user = get_cached_data("email_user")
+        self.marketing_checkbutton = Gtk.CheckButton.new_with_label("Email me cool stuff to\ndo with my Kano")
+        self.marketing_checkbutton.get_style_context().add_class("get_data_checkbutton")
+        self.marketing_checkbutton.set_margin_left(30)
+        marketing_enabled = get_cached_data("marketing_enabled")
 
-        if email_user:
-            self.email_user_checkbutton.set_active(email_user)
+        if marketing_enabled is not None:
+            self.marketing_checkbutton.set_active(marketing_enabled)
         else:
-            self.email_user_checkbutton.set_active(True)
+            self.marketing_checkbutton.set_active(True)
 
         # If the user is younger than 14, ask for both Guardian and
         # user email, but the guardian email is compulsory
@@ -250,7 +250,7 @@ class GetData3(DataTemplate):
         self.entries = [self.email_entry]
 
         box.pack_start(self.t_and_cs, False, False, 10)
-        box.pack_start(self.email_user_checkbutton, False, False, 0)
+        box.pack_start(self.marketing_checkbutton, False, False, 0)
         box.set_margin_top(20)
 
         self.add(box)
@@ -261,7 +261,7 @@ class GetData3(DataTemplate):
         if self.secondary_email_entry:
             self.secondary_email_entry.set_sensitive(False)
         self.t_and_cs.disable_all()
-        self.email_user_checkbutton.set_sensitive(False)
+        self.marketing_checkbutton.set_sensitive(False)
 
     def enable_all(self):
         self.email_entry.set_sensitive(True)
@@ -269,7 +269,7 @@ class GetData3(DataTemplate):
         if self.secondary_email_entry:
             self.secondary_email_entry.set_sensitive(True)
         self.t_and_cs.enable_all()
-        self.email_user_checkbutton.set_sensitive(True)
+        self.marketing_checkbutton.set_sensitive(True)
 
     def get_email_entry_data(self):
         '''This is the data that is sent to the main window and the
@@ -284,16 +284,20 @@ class GetData3(DataTemplate):
         else:
             data['secondary_email'] = ""
 
-        data["email_user"] = self.email_user_checkbutton.get_active()
+        data["marketing_enabled"] = self.marketing_checkbutton.get_active()
 
         # Cache emails if they are retrieved
-        cache_emails(data["email"], data["secondary_email"], data["email_user"])
+        cache_emails(data["email"], data["secondary_email"], data["marketing_enabled"])
 
         return data
 
     def cache_emails(self):
         data = self.get_email_entry_data()
         cache_emails(data["email"], data["secondary_email"])
+
+    def cache_marketing_choice(self):
+        data = self.marketing_checkbutton.get_active()
+        cache_data("marketing_enabled", data)
 
     def widgets_full(self, widget=None, event=None):
 

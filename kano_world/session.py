@@ -207,11 +207,14 @@ class KanoWorldSession(object):
 
         updated_locally = False
         try:
-            avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
-            updated_locally = set_avatar(avatar_subcat, avatar_item)
+            # Only update locally if version is 2. otherwise we will generate
+            # a default
+            if data['user']['avatar']['generator']['version'] == 2:
+                avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
+                updated_locally = set_avatar(avatar_subcat, avatar_item)
 
-            environment = data['user']['avatar']['generator']['environment'][1]
-            updated_locally |= set_environment(environment)
+                environment = data['user']['avatar']['generator']['environment'][1]
+                updated_locally |= set_environment(environment)
 
         except Exception:
             pass

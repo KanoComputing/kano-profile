@@ -51,12 +51,11 @@ def register(email, username, password, date_year, date_month, date_day,
         'birthdate': '{}-{}-{}'.format(date_year, date_month, date_day),
     }
 
-    payload['marketing_enabled_primary'] = marketing_enabled
+    payload['marketing_enabled_primary'] = str(marketing_enabled).lower()
 
     if secondary_email:
         payload['secondary_email'] = secondary_email
-        if marketing_enabled:
-            payload['marketing_enabled_secondary'] = marketing_enabled
+        payload['marketing_enabled_secondary'] = str(marketing_enabled).lower()
 
     success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)
     if success:

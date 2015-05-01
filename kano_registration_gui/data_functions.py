@@ -17,7 +17,7 @@ def cache_data(category, value):
         "birthday_day",
         "birthday_month",
         "birthday_year",
-        "email_user"
+        "marketing_enabled"
     ]:
         save_app_state_variable("kano-avatar-registration", category, value)
 
@@ -39,11 +39,13 @@ def cache_emails(email, secondary_email="", email_user=False):
 
 
 def cache_all(email, secondary_email, username,
-              birthday_day, birthday_month, birthday_year):
+              birthday_day, birthday_month, birthday_year,
+              marketing_enabled):
     cache_birthday(birthday_day, birthday_month, birthday_year)
     cache_data("email", email)
     cache_data("secondary_email", secondary_email)
     cache_data("username", username)
+    cache_data("marketing_enabled", marketing_enabled)
 
 
 def get_all_cached_data():
@@ -53,6 +55,7 @@ def get_all_cached_data():
     birthday_day = get_cached_data("birthday_day")
     birthday_month = get_cached_data("birthday_month")
     birthday_year = get_cached_data("birthday_year")
+    marketing_enabled = get_cached_data("marketing_enabled")
 
     return {
         "username": username,
@@ -60,5 +63,6 @@ def get_all_cached_data():
         "birthday_month": birthday_month,
         "birthday_year": birthday_year,
         "email": email,
-        "secondary_email": secondary_email
+        "secondary_email": secondary_email,
+        "marketing_enabled": marketing_enabled
     }

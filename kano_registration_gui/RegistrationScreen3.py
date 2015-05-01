@@ -63,6 +63,7 @@ class RegistrationScreen3(Gtk.Box):
         from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 
         self.data_screen.cache_emails()
+        self.data_screen.cache_marketing_choice()
         self.win.remove_main_widget()
         page = RegistrationScreen2(self.win)
         self.win.set_main_widget(page)
@@ -89,6 +90,8 @@ class RegistrationScreen3(Gtk.Box):
 
     def register_user_with_gui(self):
         self.data_screen.cache_emails()
+        self.data_screen.cache_marketing_choice()
+
         self.page_control.disable_buttons()
         self.data_screen.disable_all()
         self.get_email_data()
@@ -109,19 +112,19 @@ class RegistrationScreen3(Gtk.Box):
         date_year = self.win.data["year"]
         date_month = self.win.data["month"]
         date_day = self.win.data["day"]
-        email_user = self.win.data["email_user"]
+        marketing_enabled = self.win.data["marketing_enabled"]
 
         logger.info('trying to register user with data {} {} {} {} {} {} {} {}'
                     .format(
                         email, secondary_email, username, password, date_year,
-                        date_month, date_day, email_user
+                        date_month, date_day, marketing_enabled
                     )
                     )
 
         success, text = register_(email, username, password,
                                   date_year, date_month, date_day,
                                   secondary_email=secondary_email,
-                                  marketing_enabled=email_user)
+                                  marketing_enabled=marketing_enabled)
 
         if not success:
             if text.strip() == "Cannot register, problem: Username already registered":

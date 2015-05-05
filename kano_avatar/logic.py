@@ -70,6 +70,7 @@ class AvatarAccessory():
     def name(self):
         """ Provides the display name of the Item
         :returns: display name of character as a string
+        :rtype: string
         """
         return self._name
 
@@ -79,12 +80,14 @@ class AvatarAccessory():
     def category(self):
         """ Provides the category name to which the Item belongs to
         :returns: category name as a string
+        :rtype: string
         """
         return self._category
 
     def get_fname(self):
         """ Provides the item's asset filename
         :returns: filename as a string
+        :rtype: string
         """
         return self._asset_fname
 
@@ -100,7 +103,7 @@ class AvatarAccessory():
         position of where the image will be pasted is specified by the x,y
         coordinates given during the class' instantiation. (x,y are distances
         in pixels of the top left corner)
-        :param img: Image class on which the pasting will occur
+        :param img: PIL Image class on which the pasting will occur
         """
         if self._img is None:
             self.load_image()
@@ -116,24 +119,28 @@ class AvatarAccessory():
     def get_preview_img(self):
         """ Provides the item's preview image path
         :returns: absolute path to preview image as a string
+        :rtype: string
         """
         return self._img_preview
 
     def get_id(self):
         """ Provides the unique id for the item
         :returns: unique id as a string
+        :rtype: string
         """
         return self._item_id
 
     def get_date(self):
         """ Provides the creation date of the item
         :returns: creation date as a string
+        :rtype: string
         """
         return self._date_created
 
     def get_disp_order(self):
         """ Provides the display order of the item
         :returns: display index as an integer
+        :rtype: integer
         """
         return self._display_order
 
@@ -178,20 +185,30 @@ class AvatarCharacter():
         self._img = Image.open(self._asset_fname)
 
     def name(self):
+        """ Returns the Character's name as a string
+        :returns: Character name as a string
+        :rtype: string
+        """
         return self._name
 
     def get_img(self):
         """ Get the image class for the character.
         :returns: Image class (from PIL module)
+        :rtype: Image class (from PIL module)
         """
         return self._img
 
     def is_unlocked(self):
+        """ Returns whether the character is unlocked
+        :returns: Lock state of the character
+        :rtype: Boolean
+        """
         return self._is_unlocked
 
     def get_fname(self):
         """ Provides the item's asset filename
         :returns: filename as a string
+        :rtype: string
         """
         return self._asset_fname
 
@@ -210,7 +227,7 @@ class AvatarCharacter():
         """
         rc_plain = self._generate_plain_circular(file_name_plain)
 
-        # TODO remove the hardcoding of 54
+        # 54 is the size of the stamp icon we require
         rc_ring = self._generate_white_circular(file_name_ring, resize=54)
         return rc_plain and rc_ring
 
@@ -225,11 +242,19 @@ class AvatarCharacter():
     def _generate_ring_circular(self, file_name, ring, mask,
                                 invert_order=False, resize=0):
         """ Creates the circular asset to be used in the top left corner on the
-        desktop
+        desktop. The mask and ring assets need to have the same size.
         :param file_name: Path to where the completed (and resized if set so)
                           file will be saved as a string
+        :param ring: Path to the ring asset to be used
+        :param mask: Path to the mast asset to be used
+        :param invert_order: invert order of the ring and mask assets in the
+                             composite function
+        :type invert_order: Boolean
         :param resize: (Optional) The size of the side of the resulting resized
                        image (Will be a square)
+        :type resize: integer
+        :returns: True iff no errors have occurred
+        :rtype: Boolean
         """
         ring_img = Image.open(ring)
         mask_img = Image.open(mask)
@@ -262,11 +287,13 @@ class AvatarCharacter():
         return True
 
     def _get_image_cropped(self, size_x, size_y):
-        """ Get an instance of the base image centred at the coordinates held
-        by the internal variables and cropped to an exact size
+        """ Returns an instance of an image cropped to the specified
+        dimensions, centered at the coordinates detailed by the class
+        variables _crop_x and _crop_y.
         :param size_x: Size of the final image in the x dimension
         :param size_y: Size of the final image in the y dimension
         :returns: Instance of PIL Image
+        :rtype: Image class from PIL module
         """
         # Create a box of useful image data
         x_left = int(size_x / 2)
@@ -285,24 +312,28 @@ class AvatarCharacter():
     def get_preview_img(self):
         """ Provides the Character's preview image path
         :returns: absolute path to preview image as a string
+        :rtype: string
         """
         return self._img_preview
 
     def get_id(self):
         """ Provides the unique id for the character
         :returns: unique id as a string
+        :rtype: string
         """
         return self._character_id
 
     def get_date(self):
         """ Provides the creation date of the character
         :returns: creation date as a string
+        :rtype: string
         """
         return self._date_created
 
     def get_disp_order(self):
         """ Provides the display order of the character
         :returns: display index as an integer
+        :rtype: string
         """
         return self._display_order
 
@@ -341,16 +372,22 @@ class AvatarEnvironment():
     def name(self):
         """ Provides the display name of the Item
         :returns: display name of character as a string
+        :rtype: string
         """
         return self._name
 
     def get_preview_img(self):
         """ Provides the Background preview image path
         :returns: absolute path to preview image as a string
+        :rtype: string
         """
         return self._img_preview
 
     def is_unlocked(self):
+        """ Returns the locked state of the environment
+        :returns: lock state
+        :rtype: Boolean
+        """
         return self._is_unlocked
 
     def load_image(self):
@@ -374,6 +411,7 @@ class AvatarEnvironment():
                   image will be pasted
         :returns: False if the operation is not successful (with appropriate
                   logging)
+        :rtype: Boolean
         """
 
         if not char_img:
@@ -427,13 +465,15 @@ class AvatarEnvironment():
 
     def get_img(self):
         """ Get the image class for the character.
-        :returns: Image class (from PIL module)
+        :returns: the internally used Image class (from PIL module)
+        :rtype: Image class (from PIL module)
         """
         return self._img
 
     def get_fname(self):
         """ Provides the item's asset filename
         :returns: filename as a string
+        :rtype: string
         """
         return self._asset_fname
 
@@ -442,6 +482,7 @@ class AvatarEnvironment():
         it), to a file.
         :param file_name: filename to be saved to as a string
         :returns: Always True (for now, wink wink)
+        :rtype: Boolean
         """
         # TODO Error checking
         self._img.save(file_name)
@@ -450,18 +491,21 @@ class AvatarEnvironment():
     def get_id(self):
         """ Provides the unique id for the environment
         :returns: unique id as a string
+        :rtype: string
         """
         return self._environment_id
 
     def get_date(self):
         """ Provides the creation date of the environment
         :returns: creation date as a string
+        :rtype: string
         """
         return self._date_created
 
     def get_disp_order(self):
         """ Provides the display order of the environment
         :returns: display index as an integer
+        :rtype: integer
         """
         return self._display_order
 
@@ -567,7 +611,8 @@ class AvatarConfParser():
             new_disp_ord = obj['display_order']
             new_date = obj['date_created']
             new_id = obj['item_id']
-            # TODO hardcoded True for now
+            # TODO hardcoded all unlocked for items until we change them to
+            # use the same scheme as environments
             new_unlock = True
             new_obj = AvatarAccessory(new_name,
                                       new_cat,
@@ -597,7 +642,8 @@ class AvatarConfParser():
             new_disp_ord = obj['display_order']
             new_date = obj['date_created']
             new_id = obj['character_id']
-            # TODO This is hardcoded for now
+            # TODO hardcoded all unlocked for characters until we change them
+            # to use the same scheme as environments
             new_unlock = True
             new_obj = AvatarCharacter(new_name,
                                       new_fname,
@@ -614,6 +660,7 @@ class AvatarConfParser():
         """ Populates internal structures related to environments (backgrounds)
         :param conf_data: YAML format configuration structure read from file
         """
+        # TODO conf_data is not used any more in this function, maybe remove it
         envirs = calculate_badges()
 
         for _, env in envirs[self.env_label]['all'].iteritems():
@@ -675,18 +722,34 @@ class AvatarConfParser():
                 special_cat_data[special_cat]['display_order']
 
     def get_zindex(self, category):
+        """ Provides the z-index for a specific category
+        :param category: The category whose z-index will be returned
+        :returns: z-index as integer
+        :rtype: integer
+        """
         if category not in self._cat_to_z_index:
             logger.warn('Category {} not in available ones'.format(category))
         else:
             return self._cat_to_z_index[category]
 
     def _get_reg_item_cat(self, item_name):
+        """ Get the category of an item if that item belongs to a regular
+        category
+        :param item_name: Item whose category will be returned
+        :returns: category as a string
+        :rtype: string or None
+        """
         if item_name in self._objects:
             return self._objects[item_name].category()
         else:
             return None
 
     def get_item_category(self, item_name):
+        """ Get the category of an item/environment if that item/env exists
+        :param item_name: item/env name whose category will be returned
+        :returns: category as a string or None
+        :rtype: string or None
+        """
         cat_label = self._get_reg_item_cat(item_name)
         if not cat_label:
             if item_name not in self._environments:
@@ -700,18 +763,21 @@ class AvatarConfParser():
     def list_available_chars(self):
         """ Provides a list of available characters
         :returns: list of characters (list of strings)
+        :rtype: list of stings
         """
         return [k for k in self._characters.keys()]
 
     def _list_all_available_regular_objs(self):
         """ Provides a list of available regular objects
         :returns: list of objects (list of strings)
+        :rtype: list of strings
         """
         return [k for k in self._objects.keys()]
 
     def list_all_available_environments(self):
         """ Provides a list of available environments
         :returns: list of environments (list of strings)
+        :rtype: list of strings
         """
         env_inst_ord = sorted(self._environments.itervalues(),
                               key=lambda env: env.get_disp_order())
@@ -720,6 +786,7 @@ class AvatarConfParser():
     def list_all_available_objs(self):
         """ Provides a list of available objects
         :returns: list of objects (list of strings)
+        :rtype: list of strings
         """
         ret = self._list_all_available_regular_objs()
         ret.extend(self.list_all_available_environments())
@@ -729,6 +796,7 @@ class AvatarConfParser():
         """ Provides a list of available objects for the specific normal category
         :returns: [] of object names
                   None if category is not found
+        :rtype: list of strings or None
         """
         if category not in self._object_per_cat:
             err_msg = "cat {} not found, can't return objects".format(category)
@@ -744,6 +812,7 @@ class AvatarConfParser():
         """ Provides a list of available objects for the category provided
         :returns: [] of object names
                   None if category is not found
+        :rtype: list of strings or None
         """
         if category == self.env_label:
             return self.list_all_available_environments()
@@ -754,6 +823,7 @@ class AvatarConfParser():
         """ Provides a list of available regular categories (not case
         sensitive)
         :returns: list of categories (list of strings)
+        :rtype: list of strings
         """
         reg_cats_ord = sorted(self._cat_to_disp_order.iteritems(),
                               key=lambda k: k[1])
@@ -763,6 +833,7 @@ class AvatarConfParser():
         """ Provides a list of available special categories (not case
         sensitive)
         :returns: list of categories (list of strings)
+        :rtype: list of strings
         """
         # TODO Temporary hardcoding
         # return self.special_category_labels
@@ -772,6 +843,7 @@ class AvatarConfParser():
     def list_available_categories(self):
         """ Provides a list of available categories (not case sensitive)
         :returns: list of categories (list of strings)
+        :rtype: list of strings
         """
         cats = self._list_available_regular_categories()
         specs = self._list_available_special_categories()
@@ -784,6 +856,7 @@ class AvatarConfParser():
         category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string
         """
         icon_path = self._get_inactive_reg_category_icon(category_name) or \
             self._get_inactive_special_category_icon(category_name)
@@ -800,6 +873,7 @@ class AvatarConfParser():
         regular category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if category_name not in self._inactive_category_icons:
             return None
@@ -810,6 +884,7 @@ class AvatarConfParser():
         """ Provides the filename of the active icons of the provided category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         icon_path = self._get_active_reg_category_icon(category_name) or \
             self._get_active_special_category_icon(category_name)
@@ -827,6 +902,7 @@ class AvatarConfParser():
         category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if category_name not in self._active_category_icons:
             return None
@@ -837,6 +913,7 @@ class AvatarConfParser():
         """ Provides the filename of the selected border of the preview icon
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         icon_path = self._get_selected_border_regular(category_name) or \
             self._get_selected_border_special(category_name)
@@ -852,6 +929,7 @@ class AvatarConfParser():
         """ Provides the filename of the selected border of the preview icon
         :param category_name: Regular category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if category_name not in self._selected_borders:
             return None
@@ -862,6 +940,7 @@ class AvatarConfParser():
         """ Provides the filename of the hover over border of the preview icon
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         icon_path = self._get_hover_border_regular(category_name) or \
             self._get_hover_border_special(category_name)
@@ -877,6 +956,7 @@ class AvatarConfParser():
         """ Provides the filename of the hover border of the preview icon
         :param category_name: Regular category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if category_name not in self._hover_borders:
             return None
@@ -887,6 +967,7 @@ class AvatarConfParser():
         """ Provides the filename of the active icons of the provided category
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if special_category_name not in self._inactive_special_category_icons:
             return None
@@ -897,6 +978,7 @@ class AvatarConfParser():
         """ Provides the filename of the inactive icons of the provided category
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if special_category_name not in self._active_special_category_icons:
             return None
@@ -907,6 +989,7 @@ class AvatarConfParser():
         """ Provides the filename of the selected border of the preview icon
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         self._border_special_cat
         if special_category_name not in self._border_special_cat:
@@ -918,6 +1001,7 @@ class AvatarConfParser():
         """ Provides the filename of the hover border of the preview icon
         :param special_category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
+        :rtype: string or None
         """
         if special_category_name not in self._hover_border_special_cat:
             return None
@@ -929,6 +1013,7 @@ class AvatarConfParser():
         :param char_name: Character whose preview image will be returned
         :returns: The absolute path to the preview image as a str or
                   None if the character is not available
+        :rtype: string or None
         """
         if char_name not in self._characters:
             logger.warn(
@@ -943,6 +1028,7 @@ class AvatarConfParser():
         :param item_name: item whose preview image will be returned
         :returns: The absolute path to the preview image as a str or
                   None if the item is not available
+        :rtype: string or None
         """
         prev_img = self._get_reg_item_preview(item_name) or \
             self._get_environment_preview(item_name)
@@ -959,6 +1045,7 @@ class AvatarConfParser():
         :param item_name: item whose preview image will be returned
         :returns: The absolute path to the preview image as a str or
                   None if the item is not available
+        :rtype: string or None
         """
         if item_name not in self._objects:
             return None
@@ -971,6 +1058,7 @@ class AvatarConfParser():
                                  returned
         :returns: The absolute path to the preview image as a str or
                   None if the environment is not available
+        :rtype: string or None
         """
         if environment_name not in self._environments:
             return None
@@ -981,6 +1069,7 @@ class AvatarConfParser():
         """ Returns whether the item/environment is locked
         :param item_name: item whose lock status will be returned
         :returns: True iff it is unlocked
+        :rtype: Boolean or None
         """
         lock_state = self._is_unlocked_reg_item(item_name)
 
@@ -996,12 +1085,22 @@ class AvatarConfParser():
         return lock_state
 
     def _is_unlocked_reg_item(self, item_name):
+        """ Get lock state of an item which belongs to a regular category
+        :param item_name: Item whose lock state will be returned
+        :retuns: Lock state or None if item doesn't belong to a regular category
+        :rtype: Boolean or None
+        """
         if item_name not in self._objects:
             return None
         else:
             return self._objects[item_name].is_unlocked()
 
     def _is_unlocked_env(self, item_name):
+        """ Get lock state of an environment
+        :param item_name: env whose lock state will be returned
+        :retuns: Lock state or None if item isn't an environment
+        :rtype: Boolean or None
+        """
         if item_name not in self._environments:
             return None
         else:
@@ -1029,6 +1128,7 @@ class AvatarCreator(AvatarConfParser):
         """ Set a character as a base
         :param char_name: Character name
         :returns: True iff the character exists (is available)
+        :rtype: Boolean
         """
         # Get the instance of the character
         if char_name in self._characters:
@@ -1045,6 +1145,7 @@ class AvatarCreator(AvatarConfParser):
         not unlocked a different unlocked one is selected in random
         :param env_name: Environment name
         :returns: True iff the environment exists (is available)
+        :rtype: Boolean
         """
         if env_name in self._environments:
             if not self._environments[env_name].is_unlocked():
@@ -1076,6 +1177,7 @@ class AvatarCreator(AvatarConfParser):
         characted that has been selected
         :returns: the image path as a string, None if no character has been
                   selected
+        :rtype: string or None
         """
         if self._sel_char is None:
             logger.warn("Character not selected, can't return path to asset")
@@ -1097,6 +1199,7 @@ class AvatarCreator(AvatarConfParser):
         :param obj_names: list of item names
         :returns: False if any of the objects doesn't exist or if there are
                   multiple items from the same category are selected.
+        :rtype: Boolean
         """
         if clear_existing:
             self.clear_sel_objs()
@@ -1159,6 +1262,7 @@ class AvatarCreator(AvatarConfParser):
                            categories without any objects.
         :returns: False if any of the objects doesn't exist or if there are
                   multiple items from the same category are selected.
+        :rtype: Boolean
         """
         random_item_names = []
         # Select ones we definitely want
@@ -1199,6 +1303,7 @@ class AvatarCreator(AvatarConfParser):
     def randomise_all_items(self):
         """ Randomise all items for a character
         :returns: A list of the selected items
+        :rtype: List of strings
         """
         self.randomise_rest('')
 
@@ -1207,6 +1312,7 @@ class AvatarCreator(AvatarConfParser):
     def selected_items(self):
         """ Returns a list of the items that have been selected
         :returns: A list of the selected items
+        :rtype: list of strings
         """
         ret = self._sel_obj.keys()
         # if there is an env selected, append it to the list to be returned
@@ -1218,6 +1324,7 @@ class AvatarCreator(AvatarConfParser):
         """ Returns a dictionary of the selected items organised by their
         category.
         :returns: A dict with [categ_labels] -> item_selected
+        :rtype: dict
         """
         ret = {cat: item.name()
                for cat, item in self._sel_obj_per_cat.iteritems()}
@@ -1230,6 +1337,7 @@ class AvatarCreator(AvatarConfParser):
                           is generated
         :returns: None if there was an issue while creating avatar, the
                   location of the created file otherwise
+        :rtype: String or None
         """
         logger.debug(
             'About to create character with items: {}'.format(
@@ -1269,6 +1377,11 @@ class AvatarCreator(AvatarConfParser):
         return ret
 
     def get_default_final_image_path(self):
+        """ Provides the default full path and filename for the final image
+        that includes the environment
+        :returns: Full path and filename
+        :rtype: string
+        """
         dn = os.path.join(
                 os.path.abspath(os.path.expanduser(AVATAR_DEFAULT_LOC)),
                 AVATAR_DEFAULT_NAME)
@@ -1281,6 +1394,7 @@ class AvatarCreator(AvatarConfParser):
         :param file_name: To be used as the base for generating the filenames
                           of the other assets
         :returns: False iff the generation of any of the assets fails
+        :rtype: Boolean
         """
         logger.debug(
             'About to create auxiliary assets with items: {}'.format(
@@ -1331,6 +1445,7 @@ class AvatarCreator(AvatarConfParser):
                      the profile structure and if possible upload them to Kano
                      World
         :returns: True iff all operations necessary were successful
+        :rtype: Boolean
         """
         dn = os.path.abspath(os.path.expanduser(dir_name))
 
@@ -1376,6 +1491,7 @@ class AvatarCreator(AvatarConfParser):
         are already present and updated.
         :param fname: filename for the configuration file to be created
         :returns: False iff some error occurs
+        :rtype: Boolean
         """
         if self._sel_char is None:
             logger.warn(
@@ -1410,6 +1526,7 @@ class AvatarCreator(AvatarConfParser):
         :param dirname: File where character log is stored
         :returns: True iff what is in the file correspond to what is currently
                   selected
+        :rtype: Boolean
         """
         already_exists = False
 
@@ -1452,10 +1569,13 @@ class AvatarCreator(AvatarConfParser):
         :param y_offset: offset (as a percentage) of the avatar on the y axis
         :param reload_img: Set to True to reset the image with the selected
                            background
+        :returns: Always True for now
+        :rtype: Boolean
         """
         if reload_img:
             self._sel_env.load_image()
 
+        # TODO can perform error checking here
         self._sel_env.attach_char(self._sel_char.get_img(),
                                   x=x_offset,
                                   y=y_offset)
@@ -1468,7 +1588,9 @@ class AvatarCreator(AvatarConfParser):
         """ Save circular assets with the filename given
         :param file_name: filename to save the image to
         :returns: False if there was a problem, True otherwise
+        :rtype: None of Boolean
         """
+        # TODO Return False instead of None in case of error
         if not file_name_plain or not file_name_ring:
             logger.warn('No filenames given, will not save circular assets')
             return None
@@ -1482,9 +1604,14 @@ class AvatarCreator(AvatarConfParser):
         return True
 
     def _create_base_img(self):
+        """ Load the character and environment images
+        :returns: True iff the character exists
+        :rtype: Boolean
+        """
         if self._sel_char is None:
             logger.error("You haven't specified a character")
             return False
+        # TODO check if the environment has been selected as well
 
         self._sel_char.load_image()
         self._sel_env.load_image()
@@ -1495,6 +1622,7 @@ class AvatarCreator(AvatarConfParser):
         :param file_name: Filename of the new file
         :returns: False if the a character hasn't been selected
                   True otherwise
+        :rtype: Boolean
         """
         if self._sel_char is None:
             logger.error("You haven't specified a character")

@@ -45,7 +45,8 @@ class AvatarAccessory():
 
     _img = None
 
-    def __init__(self, name, category, file_name, preview_img, x, y, date_created, item_id, is_unlocked, display_order):
+    def __init__(self, name, category, file_name, preview_img, x, y,
+                 date_created, item_id, is_unlocked, display_order):
         self._category = category
         self._name = name
         self._img_position_x = x
@@ -214,12 +215,15 @@ class AvatarCharacter():
         return rc_plain and rc_ring
 
     def _generate_white_circular(self, file_name, resize=0):
-        return self._generate_ring_circular(file_name, RING_ASSET, CIRC_ASSET_MASK, resize=resize)
+        return self._generate_ring_circular(
+            file_name, RING_ASSET, CIRC_ASSET_MASK, resize=resize)
 
     def _generate_plain_circular(self, file_name):
-        return self._generate_ring_circular(file_name, PLAIN_MASK, PLAIN_MASK, invert_order=True)
+        return self._generate_ring_circular(
+            file_name, PLAIN_MASK, PLAIN_MASK, invert_order=True)
 
-    def _generate_ring_circular(self, file_name, ring, mask, invert_order=False, resize=0):
+    def _generate_ring_circular(self, file_name, ring, mask,
+                                invert_order=False, resize=0):
         """ Creates the circular asset to be used in the top left corner on the
         desktop
         :param file_name: Path to where the completed (and resized if set so)
@@ -234,7 +238,8 @@ class AvatarCharacter():
             logger.warn('Mask and ring asset do not have the same size')
             return False
 
-        cropped_img = self._get_image_cropped(mask_img.size[0], mask_img.size[1])
+        cropped_img = self._get_image_cropped(
+            mask_img.size[0], mask_img.size[1])
 
         if not invert_order:
             img_out = Image.composite(ring_img, cropped_img, mask_img)
@@ -316,7 +321,8 @@ class AvatarEnvironment():
     _display_order = 0
     _is_unlocked = False
 
-    def __init__(self, name, file_name, preview_img, date_created, env_id, is_unlocked, display_order):
+    def __init__(self, name, file_name, preview_img, date_created, env_id,
+                 is_unlocked, display_order):
         self._name = name
         self._date_created = date_created
         self._display_order = display_order
@@ -371,8 +377,8 @@ class AvatarEnvironment():
         """
 
         if not char_img:
-            err_msg = "Image to be attached to the environment doesn't is None, will exit"
-            logger.warn(err_msg)
+            logger.warn(
+                "Char image to be attached to the env is None, will exit")
             return False
 
         if x < 0 or x >= 1:
@@ -661,7 +667,8 @@ class AvatarConfParser():
                                                hover_icon_file)
 
             self._active_special_category_icons[special_cat] = active_icon_file
-            self._inactive_special_category_icons[special_cat] = inactive_icon_file
+            self._inactive_special_category_icons[special_cat] = \
+                inactive_icon_file
             self._border_special_cat[special_cat] = border_icon_file
             self._hover_border_special_cat[special_cat] = hover_icon_file
             self._special_cat_to_disp_order[special_cat] = \
@@ -683,7 +690,8 @@ class AvatarConfParser():
         cat_label = self._get_reg_item_cat(item_name)
         if not cat_label:
             if item_name not in self._environments:
-                logger.warn('Item {} neither in obj nor in env list'.format(item_name))
+                logger.warn('Item {} neither in obj nor in env list'.format(
+                    item_name))
                 return None
             else:
                 cat_label = self.env_label
@@ -923,7 +931,9 @@ class AvatarConfParser():
                   None if the character is not available
         """
         if char_name not in self._characters:
-            logger.warn("Char {} not in avail char list, can't return preview img".format(char_name))
+            logger.warn(
+                "Char {} not in avail chars, can't return preview img".format(
+                    char_name))
             return None
         else:
             return self._characters[char_name].get_preview_img()
@@ -939,7 +949,7 @@ class AvatarConfParser():
 
         if not prev_img:
             logger.warn(
-                "Item {} not in avail objects, can't return preview img".format(
+                "Item {} not in avail objs, can't return preview img".format(
                     item_name)
             )
         return prev_img
@@ -979,7 +989,7 @@ class AvatarConfParser():
 
         if lock_state is None:
             logger.warn(
-                "Item {} not in avail objs/envs, can't return lock state".format(
+                "Item {} not in avail objs/envs, can't ret lock state".format(
                     item_name)
             )
 
@@ -1025,8 +1035,9 @@ class AvatarCreator(AvatarConfParser):
             self._sel_char = self._characters[char_name]
             return True
         else:
-            error_msg = 'Character {} is not in the available char list'.format(char_name)
-            logger.error(error_msg)
+            logger.error(
+                'Character {} is not in the available char list'.format(
+                    char_name))
             return False
 
     def env_select(self, env_name):
@@ -1037,17 +1048,22 @@ class AvatarCreator(AvatarConfParser):
         """
         if env_name in self._environments:
             if not self._environments[env_name].is_unlocked():
-                warn_msg = "Environment {} is locked, replacing with random".format(env_name)
-                logger.warn(warn_msg)
+                logger.warn(
+                    "Environment {} is locked, replacing with random".format(
+                        env_name))
                 # Select randomly among the unlocked environments
-                self._sel_env = random.choice([env for env in self._environments.itervalues() if env.is_unlocked()])
+                self._sel_env = random.choice(
+                    [env for env in self._environments.itervalues()
+                        if env.is_unlocked()])
             else:
                 self._sel_env = self._environments[env_name]
-            logger.debug('Selected Environment: {}'.format(self._sel_env.name()))
+            logger.debug(
+                'Selected Environment: {}'.format(self._sel_env.name()))
             return True
         else:
-            error_msg = 'Environment {} is not in the available env list'.format(env_name)
-            logger.error(error_msg)
+            logger.error(
+                'Environment {} is not in the available env list'.format(
+                    env_name))
             return False
 
     def clear_env(self):
@@ -1092,16 +1108,22 @@ class AvatarCreator(AvatarConfParser):
             if obj_name in self._objects:
                 # Deal with the object if it is a regular item
                 obj_instance = self._objects[obj_name]
-                # Check whether we have selected multiple items from the same category
+                # Check whether we have selected multiple items from the same
+                # category
                 if obj_instance.category() in self._sel_obj_per_cat:
-                    error_msg = 'Multiple objects in category {}'.format(obj_instance.category())
-                    logger.error(error_msg)
+                    logger.error(
+                        'Multiple objects in category {}'.format(
+                            obj_instance.category()))
                     return False
                 # Check whether it is unlocked
                 if not obj_instance.is_unlocked():
-                    error_msg = 'Item {} is locked, replacing with random from category {}'.format(obj_name, obj_instance.category())
-                    logger.warn(error_msg)
-                    obj_instance = random.choice([obj for obj in self._object_per_cat[obj_instance.category()] if obj.is_unlocked()])
+                    logger.warn(
+                        'Item {} is locked, replacing with random from category {}'.format(
+                            obj_name, obj_instance.category()))
+                    obj_instance = random.choice(
+                        [obj
+                         for obj in self._object_per_cat[obj_instance.category()]
+                         if obj.is_unlocked()])
 
                 obj_cat = obj_instance.category()
                 self._sel_obj_per_cat[obj_cat] = obj_instance
@@ -1124,8 +1146,9 @@ class AvatarCreator(AvatarConfParser):
                     return False
             else:
                 # if it is neither show error message
-                error_msg = 'Object {} not in available obj or env list'.format(obj_name)
-                logger.error(error_msg)
+                logger.error(
+                    'Object {} not in available obj or env list'.format(
+                        obj_name))
                 return False
         return True
 
@@ -1161,7 +1184,9 @@ class AvatarCreator(AvatarConfParser):
                 continue
 
         if not self._sel_env:
-            available_envs = [env.name() for env in self._environments.itervalues() if env.is_unlocked()]
+            available_envs = [env.name()
+                              for env in self._environments.itervalues()
+                              if env.is_unlocked()]
             choice_env = random.choice(available_envs)
             random_item_names.append(choice_env)
 
@@ -1194,7 +1219,8 @@ class AvatarCreator(AvatarConfParser):
         category.
         :returns: A dict with [categ_labels] -> item_selected
         """
-        ret = {cat: item.name() for cat, item in self._sel_obj_per_cat.iteritems()}
+        ret = {cat: item.name()
+               for cat, item in self._sel_obj_per_cat.iteritems()}
         ret[self.env_label] = self._sel_env.name()
         return ret
 
@@ -1202,8 +1228,8 @@ class AvatarCreator(AvatarConfParser):
         """ Create the finished main image and save it to file.
         :param file_name: (Optional) A filename to be used for the asset that
                           is generated
-        :returns: None if there was an issue while creating avatar, the location
-                  of the created file otherwise
+        :returns: None if there was an issue while creating avatar, the
+                  location of the created file otherwise
         """
         logger.debug(
             'About to create character with items: {}'.format(
@@ -1252,7 +1278,8 @@ class AvatarCreator(AvatarConfParser):
         """ Creates all of the auxiliary assets. This is to be used after the
         user has finalised his choices and we are about to synchronise with
         Kano World
-        :param file_name: To be used as the base for generating the filenames of the other assets
+        :param file_name: To be used as the base for generating the filenames
+                          of the other assets
         :returns: False iff the generation of any of the assets fails
         """
         logger.debug(
@@ -1262,7 +1289,8 @@ class AvatarCreator(AvatarConfParser):
         # Avatar on its own
         rc = self.save_image(file_name)
         if not rc:
-            logger.error("Couldn't save character, aborting auxiliary asset generation")
+            logger.error(
+                "Couldn't save character, aborting auxiliary asset generation")
             return False
 
         # Circular assets
@@ -1270,14 +1298,16 @@ class AvatarCreator(AvatarConfParser):
         fname_plain = append_suffix_to_fname(file_name, '_circ_plain')
         rc_c = self.create_circular_assets(fname_plain, fname_circ)
         if not rc_c:
-            logger.error("Couldn't create circular assets, aborting auxiliary asset generation")
+            logger.error(
+                "Couldn't create circular assets, aborting auxiliary asset generation")
             return False
 
         # Environment + avatar
         fname_env = append_suffix_to_fname(file_name, '_inc_env_page2')
         rc_env = self._sel_env.save_image(fname_env)
         if not rc_env:
-            logger.error("Couldn't create environment asset, aborting auxiliary asset generation")
+            logger.error(
+                "Couldn't create environment asset, aborting auxiliary asset generation")
             return False
         # Shifted environment
         fname_env_23 = append_suffix_to_fname(file_name, '_inc_env_page2')
@@ -1285,7 +1315,8 @@ class AvatarCreator(AvatarConfParser):
                                                    x_offset=0.33,
                                                    reload_img=True)
         if not rc_23:
-            logger.error("Couldn't create shifted environment asset, aborting auxiliary asset generation")
+            logger.error(
+                "Couldn't create shifted environment asset, aborting auxiliary asset generation")
             return False
 
         return True
@@ -1393,7 +1424,8 @@ class AvatarCreator(AvatarConfParser):
                 char_ex, items_ex = log_ex['avatar']
                 env_ex = log_ex['environment']
                 # First check if environment and character match
-                if char_ex == self._sel_char.name() and env_ex == self._sel_env.name():
+                if char_ex == self._sel_char.name() and \
+                   env_ex == self._sel_env.name():
                     items_now = self.selected_items_per_cat()
                     # Check if the no of catefories match
                     if len(items_now) == len(items_ex):
@@ -1412,7 +1444,8 @@ class AvatarCreator(AvatarConfParser):
 
         return already_exists
 
-    def create_avatar_with_background(self, file_name, x_offset=0.5, y_offset=0.5, reload_img=False):
+    def create_avatar_with_background(self, file_name, x_offset=0.5,
+                                      y_offset=0.5, reload_img=False):
         """ Generates and saves the final image together with the background
         :param file_name: name of the file to save the image to
         :param x_offset: offset (as a percentage) of the avatar on the x axis

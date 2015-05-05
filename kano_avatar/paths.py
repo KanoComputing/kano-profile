@@ -1,9 +1,10 @@
-#
-# Path constants
+# paths.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+# Path constants for character creation
+
 import os
 from kano.utils import get_home, get_user
 

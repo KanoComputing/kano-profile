@@ -210,10 +210,11 @@ class KanoWorldSession(object):
             # Only update locally if version is 2. otherwise we will generate
             # a default
             if data['user']['avatar']['generator']['version'] == 2:
-                avatar_subcat, avatar_item = data['user']['avatar']['generator']['character']
+                gen = data['user']['avatar']['generator']
+                avatar_subcat, avatar_item = gen['character']
                 updated_locally = set_avatar(avatar_subcat, avatar_item)
 
-                environment = data['user']['avatar']['generator']['environment'][1]
+                environment = gen['environment'][1]
                 updated_locally |= set_environment(environment)
 
         except Exception:
@@ -229,7 +230,8 @@ class KanoWorldSession(object):
             return False, 'Data missing from payload!'
 
         for app, values in app_data.iteritems():
-            if not values or (len(values.keys()) == 1 and 'save_date' in values):
+            if not values or \
+                    (len(values.keys()) == 1 and 'save_date' in values):
                 continue
             if not is_private(app):
                 save_app_state(app, values)
@@ -486,18 +488,24 @@ class KanoWorldSession(object):
             :returns: A dict that can be passed to the notification widget
         """
 
-        MINECRAFT_SHARE_IMG = media_dir + '/images/notification/280x170/share-pong.png'
-        PONG_SHARE_IMG = media_dir + '/images/notification/280x170/share-minecraft.png'
-        SP_IMG = media_dir + '/images/notification/280x170/saturday-project.png'
-        FOLLOWER_IMG = media_dir + '/images/notification/280x170/follower.png'
-        GENERIC_ALERT_IMG = media_dir + '/images/notification/280x170/notification.png'
+        MINECRAFT_SHARE_IMG = media_dir + \
+            '/images/notification/280x170/share-pong.png'
+        PONG_SHARE_IMG = media_dir + \
+            '/images/notification/280x170/share-minecraft.png'
+        SP_IMG = media_dir + \
+            '/images/notification/280x170/saturday-project.png'
+        FOLLOWER_IMG = media_dir + \
+            '/images/notification/280x170/follower.png'
+        GENERIC_ALERT_IMG = media_dir + \
+            '/images/notification/280x170/notification.png'
 
         n = {
             'id': entry['id'],
             'title': 'Kano World',
             'byline': '',
             'image': GENERIC_ALERT_IMG,
-            'command': 'kano-world-launcher /notifications/open/{}'.format(entry['id'])
+            'command': 'kano-world-launcher /notifications/open/{}'.format(
+                       entry['id'])
         }
 
         # Customise settings for known types
@@ -523,7 +531,8 @@ class KanoWorldSession(object):
             # Link to the share
             share_id = self._get_dict_value(entry, ['meta', 'item', 'id'])
             if share_id:
-                n['command'] = "kano-world-launcher /shared/{}".format(share_id)
+                n['command'] = "kano-world-launcher /shared/{}".format(
+                    share_id)
 
         elif entry['category'] == 'comments':
             n['title'] = 'New comment!'
@@ -535,19 +544,21 @@ class KanoWorldSession(object):
                 if obj_type == "app":
                     n['command'] = "kano-world-launcher /apps/{}".format(slug)
                 elif obj_type == "share":
-                    n['command'] = "kano-world-launcher /shared/{}".format(slug)
+                    n['command'] = "kano-world-launcher /shared/{}".format(
+                        slug)
                 elif obj_type == "project":
-                    n['command'] = "kano-world-launcher /projects/{}".format(slug)
+                    n['command'] = "kano-world-launcher /projects/{}".format(
+                        slug)
 
-        # If a notification has both the title and text, override the default one
-        if entry.has_key('title') and entry['title'] and \
-           entry.has_key('text') and entry['text']:
+        # If a notification has both the title and text, override the default
+        if 'title' in entry and entry['title'] and \
+                'text' in entry and entry['text']:
             n['title'] = entry['title']
             n['byline'] = entry['text']
 
         # Some notifications may have images
         # If so, we need to download them and resize
-        if entry.has_key('image_url') and entry['image_url']:
+        if 'image_url' in entry and entry['image_url']:
             filename = os.path.basename(entry['image_url'])
 
             img_path = "{}/notifications/{}".format(profile_dir, filename)
@@ -560,7 +571,8 @@ class KanoWorldSession(object):
                 # bugger up anything else, but we should move it up to the top.
                 from gi.repository import GdkPixbuf
 
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(img_path, 280, 170)
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    img_path, 280, 170)
                 pixbuf.savev(img_path, 'png', [None], [None])
 
                 n['image'] = img_path
@@ -579,7 +591,7 @@ class KanoWorldSession(object):
     def _get_dict_value(self, root, elements):
         cur_root = root
         for el in elements:
-            if type(cur_root) == dict and cur_root.has_key(el):
+            if type(cur_root) == dict and el in cur_root:
                 cur_root = cur_root[el]
             else:
                 return None

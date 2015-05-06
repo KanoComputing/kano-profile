@@ -35,6 +35,3 @@ for key in variables_needed.iterkeys():
 
 
 write_json('variables_needed.json', variables_needed, False)
-
-
-

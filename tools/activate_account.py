@@ -25,10 +25,10 @@ else:
     code = sys.argv[1]
 
 # Provide 2 separate timeouts - for CONNECT and READ, to requests library
-connect_timeout=5
-read_timeout=20
+connect_timeout = 5
+read_timeout = 20
 
-r = requests.post(api_url + '/accounts/activate/' + code, \
-                      timeout=(connect_timeout, read_timeout))
+r = requests.post(api_url + '/accounts/activate/' + code,
+                  timeout=(connect_timeout, read_timeout))
 
 print r.text

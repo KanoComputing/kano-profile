@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 # upload-share.py
-# 
-# Copyright (C) 2014 Kano Computing Ltd.
+#
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 #
@@ -16,7 +16,6 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-# from kano_profile.badges import test_badge_rules, calculate_badges, load_badge_rules, create_images
 from kano.utils import run_cmd
 from kano_world.functions import login_using_token
 from kano_world.share import upload_share

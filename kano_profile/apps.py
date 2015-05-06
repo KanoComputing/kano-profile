@@ -67,6 +67,7 @@ def save_app_state(app_name, data):
         chown_path(get_app_dir(app_name))
         chown_path(app_state_file)
 
+
 def save_app_state_variable(app_name, variable, value):
     """ Save a state variable to the user's Kano profile.
 
@@ -88,7 +89,9 @@ def save_app_state_variable(app_name, variable, value):
 
 
 def increment_app_state_variable(app_name, variable, value):
-    logger.debug('increment_app_state_variable {} {} {}'.format(app_name, variable, value))
+    logger.debug(
+        'increment_app_state_variable {} {} {}'.format(
+            app_name, variable, value))
 
     data = load_app_state(app_name)
     if variable not in data:
@@ -102,7 +105,8 @@ def get_app_list():
     if not os.path.exists(apps_dir):
         return []
     else:
-        return [p for p in os.listdir(apps_dir) if os.path.isdir(os.path.join(apps_dir, p))]
+        return [p for p in os.listdir(apps_dir)
+                if os.path.isdir(os.path.join(apps_dir, p))]
 
 
 def get_gamestate_variables(app_name):
@@ -124,8 +128,9 @@ def launch_project(app, filename, data_dir):
 
     fullpath = os.path.join(data_dir, filename)
     cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
-    _,_,rc=run_print_output_error(cmd)
+    _, _, rc = run_print_output_error(cmd)
     return rc
+
 
 def get_app_xp_for_challenge(app, challenge_no):
     xp_file_json = read_json(xp_file)

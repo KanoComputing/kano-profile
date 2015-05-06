@@ -26,7 +26,8 @@ class LoggedIn(Gtk.Window):
         self.ok_button.set_padding(20, 20, 0, 0)
         self.ok_button.connect("clicked", Gtk.main_quit)
         self.title = Heading("Logged in!", "You're already logged in")
-        self.main_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.main_container = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(self.main_container)
         self.main_container.pack_start(self.title.container, False, False, 0)
         self.main_container.pack_start(self.ok_button.align, False, False, 0)
@@ -54,4 +55,3 @@ class LoggedIn(Gtk.Window):
         self.ok_button.disconnect_handlers()
         cursor.arrow_cursor(None, None, win)
         Gtk.main_quit()
-

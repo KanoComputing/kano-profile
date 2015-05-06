@@ -2,7 +2,7 @@
 
 # tracker.py
 #
-# Copyright (C) 2014 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
@@ -94,6 +94,7 @@ TOKEN = load_token()
 
 def get_session_file_path(name, pid):
     return "{}/{}-{}.json".format(tracker_dir, pid, name)
+
 
 def session_start(name, pid=None):
     if not pid:
@@ -236,6 +237,7 @@ def get_utc_offset():
 
     is_dst = time.daylight and time.localtime().tm_isdst > 0
     return -int(time.altzone if is_dst else time.timezone)
+
 
 class Tracker:
     """Tracker class, used for measuring program run-times,
@@ -445,4 +447,3 @@ def clear_tracker_events(old_only=True):
         with open(tracker_events_file, "w") as wf:
             for event_line in events:
                 wf.write(event_line)
-

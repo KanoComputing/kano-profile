@@ -2,7 +2,7 @@
 
 # kano-share
 #
-# Copyright (C) 2014 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # UI for share screen
@@ -48,7 +48,8 @@ def make_share_list():
         else:
             filter_app = sys.argv[1]
             if filter_app not in read_json(app_profiles_file):
-                sys.exit('Given app not in app profiles: {}'.format(filter_app))
+                sys.exit(
+                    'Given app not in app profiles: {}'.format(filter_app))
             featured = False
     else:
         filter_app = None
@@ -96,7 +97,7 @@ def load_share(button, entry):
     success, data = download_share(entry)
     if not success:
         logger.error('Could not download share, error: {}'.format(data))
-        window = button.get_toplevel() 
+        window = button.get_toplevel()
         print "window = {}".format(window)
         confirm = KanoDialog('Oops! Can\'t download.',
                              'Are you sure you\'re connected to the Internet?',
@@ -104,7 +105,7 @@ def load_share(button, entry):
                              parent_window=window)
         confirm.run()
         subprocess.Popen(['sudo', 'kano-settings', '12'])
-    
+
     else:
         (title, attachment_path, app, attachment_name, folder) = data
         print 'File Path: {}'.format(attachment_path)
@@ -118,7 +119,8 @@ class MainWindow(ApplicationWindow):
         self.width = 580
         self.height = 550
 
-        ApplicationWindow.__init__(self, title='Share', width=self.width, height=self.height)
+        ApplicationWindow.__init__(
+            self, title='Share', width=self.width, height=self.height)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_resizable(False)
         self.set_decorated(True)
@@ -126,30 +128,35 @@ class MainWindow(ApplicationWindow):
         top_bar = TopBar('Kano Share', self.width)
         top_bar.set_close_callback(Gtk.main_quit)
         self.set_titlebar(top_bar)
-        
+
         share_list = make_share_list()
         ScrolledWindow.apply_styling_to_screen(wide=True)
         scrolledwindow = ScrolledWindow()
         scrolledwindow.set_hexpand(False)
         scrolledwindow.set_vexpand(True)
-        scrolledwindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scrolledwindow.set_policy(
+            Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolledwindow.add_with_viewport(share_list)
-        scrolledwindow.set_size_request(self.width, self.height - top_bar.height)
+        scrolledwindow.set_size_request(
+            self.width, self.height - top_bar.height)
         self.set_main_widget(scrolledwindow)
 
 
 def main():
     if not is_internet():
-        kdialog = KanoDialog("You don't have internet!", "You need an internet connection use Kano Share")
+        kdialog = KanoDialog(
+            "You don't have internet!",
+            "You need an internet connection use Kano Share")
         kdialog.run()
         sys.exit('No internet')
 
-    if len(sys.argv) > 1 \
-        and sys.argv[1] == 'upload':
+    if len(sys.argv) > 1 and \
+            sys.argv[1] == 'upload':
 
         upload()
     else:
         show_shares()
+
 
 def upload():
     if len(sys.argv) != 5:
@@ -182,6 +189,7 @@ def upload():
         logger.error(error)
         exit(error)
     increment_app_state_variable_with_dialog(app_name, 'shared', 1)
+
 
 def show_shares():
     # Create style sheet

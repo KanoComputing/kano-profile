@@ -31,5 +31,3 @@ for category, subcats in all_rules.iteritems():
 
 if ok:
     print 'All names are OK'
-
-

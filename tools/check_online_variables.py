@@ -28,4 +28,3 @@ for category, subcats in all_rules.iteritems():
                 app = target[0]
                 if app == 'online':
                     print category, subcat, item
-

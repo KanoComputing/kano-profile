@@ -1078,7 +1078,7 @@ class AvatarConfParser():
 
         if lock_state is None:
             logger.warn(
-                "Item {} not in avail objs/envs, can't ret lock state".format(
+                "Item {} not in avail objs/envs, can't return lock state".format(
                     item_name)
             )
 
@@ -1588,7 +1588,7 @@ class AvatarCreator(AvatarConfParser):
         """ Save circular assets with the filename given
         :param file_name: filename to save the image to
         :returns: False if there was a problem, True otherwise
-        :rtype: None of Boolean
+        :rtype: None or Boolean
         """
         # TODO Return False instead of None in case of error
         if not file_name_plain or not file_name_ring:

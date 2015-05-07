@@ -2,7 +2,7 @@
 
 # kano-login
 #
-# Copyright (C) 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -107,17 +107,26 @@ class HeaderBar(Gtk.Box):
     def __init__(self):
         Gtk.Box.__init__(self)
 
+        self.back_button = Gtk.Button()
+        back_icon = icons.get_ui_icon("dark_left_arrow")
+        self.back_button.set_image(back_icon)
+        # TODO: generalise the styling class a bit more to make this cless
+        # confusing.
+        self.back_button.get_style_context().add_class("close_button")
+        attach_cursor_events(self.back_button)
+
+        # TODO: Undecided about this now.
+        # self.pack_start(self.back_button, False, False, 0)
+
         close_button = Gtk.Button()
         cross_icon = icons.get_ui_icon("cross")
         close_button.set_image(cross_icon)
         close_button.connect("clicked", self.close_window)
         close_button.get_style_context().add_class("close_button")
         attach_cursor_events(close_button)
-
         self.pack_end(close_button, False, False, 0)
 
     def close_window(self, widget=None):
-        # check for first boot
         kd = KanoDialog(
             "Are you sure?",
             "You'll miss out on the best features of your Kano",
@@ -139,6 +148,9 @@ class HeaderBar(Gtk.Box):
         response = kd.run()
         if response == "close":
             Gtk.main_quit()
+
+    def hide_back(self):
+        self.back_button.hide()
 
 
 def main():

@@ -89,7 +89,6 @@ class PopUpItemMenu(SelectMenu):
         column = 0
 
         obj_names = self._parser.get_avail_objs(self._category)
-        logger.debug("PopUpMenu packing items = {}".format(obj_names))
 
         for name in obj_names:
             button = self._create_button(name)
@@ -161,7 +160,6 @@ class PopUpItemMenu(SelectMenu):
         It needs to be "above" as some of the border images also
         have a white tick.
         '''
-        logger.debug("_add_selected_border")
 
         if identifier in self._items:
             button = self._items[identifier]['button']
@@ -192,8 +190,6 @@ class PopUpItemMenu(SelectMenu):
         the border.
         If identifier is None, all items will have the border removed
         '''
-        logger.debug("_remove_border")
-
         if identifier in self._items:
 
             button = self._items[identifier]['button']
@@ -220,16 +216,12 @@ class PopUpItemMenu(SelectMenu):
     def add_border_if_not_added(self, identifier, selected=True):
         '''Adds the selected styling if it is not already present
         '''
-        logger.debug("add_selected_border_if_not_added")
-
         if not self.get_if_styling_set(identifier, selected):
             self._add_border(identifier, selected)
 
     def remove_selected_border_if_not_selected(self, identifier):
         '''Adds the selected styling if the item is not selected
         '''
-        logger.debug("remove_selected_border_if_not_selected")
-
         if not (self.get_selected() == identifier) and \
                 self.get_if_styling_set(identifier, selected=True):
             self._remove_border(identifier, selected=True)
@@ -246,7 +238,6 @@ class PopUpItemMenu(SelectMenu):
         '''Adds the CSS class that shows the image that has been selected.
         If identifier is None, will remove selected styling.
         '''
-        logger.debug("Entered the pop up only_style_selected")
         old_selected_id = self.get_selected()
         self.set_selected(identifier)
 
@@ -261,28 +252,23 @@ class PopUpItemMenu(SelectMenu):
     # Wrapper functions, for callbacks
 
     def _add_hover_appearence_wrapper(self, button, event, identifier):
-        logger.debug("_add_hover_appearence_wrapper")
         self._add_border(identifier, selected=False)
 
     def _remove_hover_appearence_wrapper(self, button, event, identifier):
         '''For connecting to a button release event
         '''
-        logger.debug("_remove_selected_appearence_wrapper")
         self._remove_border(identifier, selected=False)
 
     def _add_selected_appearence_wrapper(self, button, event, identifier):
         '''For connecting to a button release event
         '''
-        logger.debug("_add_selected_appearence_wrapper")
         self.add_border_if_not_added(identifier, selected=True)
 
     def _remove_selected_appearence_wrapper(self, button, event, identifier):
         '''For connecting to a button release event
         '''
-        logger.debug("_remove_selected_appearence_wrapper")
         self.remove_selected_border_if_not_selected(identifier, selected=True)
 
     def _on_clicking_item(self, button, identifier):
-        logger.debug("_on_clicking_item")
         self.only_style_selected(identifier)
         self.emit(self._signal_name, identifier)

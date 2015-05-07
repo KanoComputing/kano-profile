@@ -1,3 +1,11 @@
 Files: *
 Copyright: 2014, 2015 Kano Computing Ltd.
 License: GPL-2+
+
+Files: icon/*
+Copyright: 2014, 2015 Kano Computing Ltd.
+License: All rights reserved
+
+Files: media/*
+Copyright: 2014, 2015 Kano Computing Ltd.
+License: All rights reserved

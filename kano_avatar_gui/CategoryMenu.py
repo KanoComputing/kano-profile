@@ -62,8 +62,8 @@ class CategoryMenu(SelectMenu):
         self._add_selected_appearence(identifier)
 
     def _remove_selected_appearence_wrapper(self, button, event, identifier):
-        '''Wrapper of the _remove_selected_appearence for the leave-notify-event
-        on buttons.
+        '''Wrapper of the _remove_selected_appearence for the
+        leave-notify-event on buttons.
         '''
         self._remove_selected_appearence(identifier)
 
@@ -84,7 +84,7 @@ class CategoryMenu(SelectMenu):
 
         for category in self.categories:
             button = self._create_button(category)
-            self._add_option_to_items(category, 'button', button)
+            self.set_button(category, button)
 
             inactive_icon_path = self._parser.get_inactive_category_icon(category)
             self._add_option_to_items(category, 'inactive_path', inactive_icon_path)
@@ -151,6 +151,22 @@ class CategoryMenu(SelectMenu):
 
         if identifier in self._items:
             if 'button' in self._items[identifier]:
-                button = self._items[identifier]['button']
+                button = self.get_button(identifier)
                 self._add_selected_css(button)
                 self._add_selected_image(button, identifier)
+
+    def disable_all_buttons(self):
+        '''Disable all the category buttons so when we're saving the
+        character, the user doesn't press any other buttons.
+        '''
+        for category in self.categories:
+            button = self.get_button(category)
+            button.set_sensitive(False)
+
+    def enable_all_buttons(self):
+        '''Disable all the category buttons so when we're saving the
+        character, the user doesn't press any other buttons.
+        '''
+        for category in self.categories:
+            button = self.get_button(category)
+            button.set_sensitive(True)

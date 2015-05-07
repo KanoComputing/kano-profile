@@ -2,7 +2,7 @@
 
 # kano-login
 #
-# Copyright (C) 2014-2015 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -64,12 +64,12 @@ class MainWindow(ApplicationWindow):
         self.connect("delete-event", Gtk.main_quit)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
 
-        # This is what we fill up as we get data
+        # This is where we store the user data for the registration.
         self.data = {}
 
-        header_bar = HeaderBar()
+        self.header_bar = HeaderBar()
         self.set_decorated(True)
-        self.set_titlebar(header_bar)
+        self.set_titlebar(self.header_bar)
         self.set_icon_name("kano-world")
 
         css_path = os.path.join(media_dir, "CSS/register.css")
@@ -101,6 +101,11 @@ class MainWindow(ApplicationWindow):
         page_control.set_margin_top(25)
 
         return page_control
+
+    def hide_back_button(self):
+        '''Hide the back button on the top bar.
+        '''
+        self.header_bar.hide_back_button()
 
 
 class HeaderBar(Gtk.Box):
@@ -149,7 +154,7 @@ class HeaderBar(Gtk.Box):
         if response == "close":
             Gtk.main_quit()
 
-    def hide_back(self):
+    def hide_back_button(self):
         self.back_button.hide()
 
 

@@ -13,6 +13,7 @@ from kano.gtk3.heading import Heading
 from kano_registration_gui.GetData import GetData2
 from kano_avatar_gui.ImageView import ImageView
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED
+from kano_registration_gui.RegistrationScreen3 import RegistrationScreen3
 
 
 # Get username, password and birthday data from user.
@@ -71,7 +72,6 @@ class RegistrationScreen2(Gtk.Box):
 
         self.win.remove_main_widget()
 
-        from kano_registration_gui.RegistrationScreen3 import RegistrationScreen3
         # pass the age to the third registration screen so we can show the
         # appropriate number of entries available
         RegistrationScreen3(self.win, age)

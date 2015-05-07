@@ -6,7 +6,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # These buttons are the ones along the bottom of the badge screens for
-# naviagting between the pages.
+# navigating between the pages.
 
 import os
 from gi.repository import Gtk

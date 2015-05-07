@@ -124,7 +124,6 @@ class Menu(Gtk.Fixed):
             # object_list.append(obj_name)
             self.select_pop_up_in_category(category, obj_name)
             self.menus[category]["pop_up"].hide()
-            logger.debug("Hid menu for category {}".format(category))
             self.saved_selected_list[category] = obj_name
 
     def select_pop_up_in_category(self, category, obj_name):
@@ -135,7 +134,6 @@ class Menu(Gtk.Fixed):
         '''selected_items are of the form
         {category: {name: item_name}}
         '''
-        logger.debug("select_pop_up_items entered")
 
         for category, item_dict in selected_items.iteritems():
             pop_up = self.menus[category]["pop_up"]
@@ -146,8 +144,6 @@ class Menu(Gtk.Fixed):
         self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):
-
-        logger.debug("Launching PopUpMenu for category {}".format(category))
         self.hide_pop_ups()
         self.menus[category]['pop_up'].show()
 
@@ -161,3 +157,14 @@ class Menu(Gtk.Fixed):
         '''This is to propagate the signal the signal up a widget
         '''
         self.emit('asset_selected', category)
+
+    def disable_all_buttons(self):
+        '''Disable all the category buttons so when we're saving the
+        character, the user doesn't press any other buttons.
+        '''
+        self._cat_menu.disable_all_buttons()
+
+    def enable_all_buttons(self):
+        '''Enable all the category buttons.
+        '''
+        self._cat_menu.enable_all_buttons()

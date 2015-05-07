@@ -174,9 +174,9 @@ class Login(Gtk.Box):
                          title, description, return_value)
 
     def log_user_in_with_internet(self):
-        username_email = self.get_username_input()
+        username_text = self.get_username_input()
         password_text = self.password_entry.get_text()
-        success, text = login_(username_email, password_text)
+        success, text = login_(username_text, password_text)
 
         if not success:
             logger.info('problem with login: {}'.format(text))

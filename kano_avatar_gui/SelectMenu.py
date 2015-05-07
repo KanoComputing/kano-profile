@@ -9,6 +9,7 @@
 from gi.repository import Gtk
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano_avatar.paths import CSS_PATH
+from kano.logging import logger
 
 
 # TODO: try and replace the current structure with the parser?
@@ -65,6 +66,20 @@ class SelectMenu(Gtk.EventBox):
             if option in self._items[identifier]:
                 return self._items[identifier][option]
 
+        return None
+
+    def set_button(self, identifier, button):
+        if identifier in self._items:
+            self._items[identifier]["button"] = button
+        else:
+            logger.error("Trying to set a button for an identifier that is not present")
+
+    def get_button(self, identifier):
+        if identifier in self._items:
+            if 'button' in self._items[identifier]:
+                return self._items[identifier]['button']
+
+        logger.error("Trying to get a button for an identifier that is not present")
         return None
 
     def _add_selected_css(self, button):

@@ -7,7 +7,6 @@
 #
 
 from gi.repository import Gtk, GObject
-from kano_profile.badges import calculate_badges
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.logging import logger
 from kano.gtk3.cursor import attach_cursor_events
@@ -243,13 +242,13 @@ class PopUpItemMenu(SelectMenu):
         else:
             return (self.get_option(identifier, "hover_border_set") is True)
 
-    def _only_style_selected(self, identifier):
+    def only_style_selected(self, identifier):
         '''Adds the CSS class that shows the image that has been selected.
         If identifier is None, will remove selected styling.
         '''
-        logger.debug("Entered the pop up _only_style_selected")
+        logger.debug("Entered the pop up only_style_selected")
         old_selected_id = self.get_selected()
-        self._set_selected(identifier)
+        self.set_selected(identifier)
 
         if old_selected_id:
             self.remove_selected_border_if_not_selected(old_selected_id)
@@ -285,23 +284,5 @@ class PopUpItemMenu(SelectMenu):
 
     def _on_clicking_item(self, button, identifier):
         logger.debug("_on_clicking_item")
-        self._only_style_selected(identifier)
+        self.only_style_selected(identifier)
         self.emit(self._signal_name, identifier)
-
-
-def get_environment_dict():
-    return calculate_badges()['environments']['all']
-
-
-def order_environments():
-    environments = get_environment_dict()
-    environment_list = []
-
-    # Put the unlocked items first
-    for name, item in environments.iteritems():
-        if item['achieved']:
-            environment_list.append(item)
-
-    for name, item in environments.iteritems():
-        if not item['achieved']:
-            environment_list.append(item)

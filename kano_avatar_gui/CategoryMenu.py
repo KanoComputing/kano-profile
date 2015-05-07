@@ -38,35 +38,39 @@ class CategoryMenu(SelectMenu):
         self.set_size_request(self.item_width, 7 * self.item_height)
         self._pack_buttons()
 
-    def _add_selected_appearence(self, identifier, button=None):
-        if not button:
-            button = self._items[identifier]['button']
-
+    def _add_selected_appearence(self, identifier):
+        '''Change the appearence to the button to one that appears to be
+        selected.
+        '''
+        button = self._items[identifier]['button']
         self._add_selected_css(button)
         self._add_selected_image(button, identifier)
 
-    def _remove_selected_appearence(self, identifier, button=None):
-        if not button:
-            button = self._items[identifier]['button']
+    def _remove_selected_appearence(self, identifier):
+        '''If the identifier is not selected, remove the styling on it.
+        '''
+        button = self._items[identifier]['button']
 
         if identifier != self.get_selected():
             self._remove_selected_css(button)
             self._remove_selected_image(button, identifier)
 
     def _add_selected_appearence_wrapper(self, button, event, identifier):
-        '''Wrapper of the _add_selected_appearence for buttons
+        '''Wrapper of the _add_selected_appearence for the enter-notify-event
+        on buttons.
         '''
-        self._add_selected_appearence(identifier, button)
+        self._add_selected_appearence(identifier)
 
     def _remove_selected_appearence_wrapper(self, button, event, identifier):
-        '''Wrapper of the _remove_selected_appearence for buttons
+        '''Wrapper of the _remove_selected_appearence for the leave-notify-event
+        on buttons.
         '''
-        self._remove_selected_appearence(identifier, button)
+        self._remove_selected_appearence(identifier)
 
     def remove_selected_on_all(self):
-        '''Remove the selected appearence on all the category buttons
+        '''Remove the selected appearence on all the category buttons.
         '''
-        self._set_selected(None)
+        self.set_selected(None)
         for cat in self.categories:
             self._remove_selected_appearence(cat)
 
@@ -96,7 +100,7 @@ class CategoryMenu(SelectMenu):
         and emit a signal that the parent window can use
         '''
 
-        self._set_selected(identifier)
+        self.set_selected(identifier)
 
         # When an image is selected, emit a signal giving the
         # idenitifer as information
@@ -120,7 +124,7 @@ class CategoryMenu(SelectMenu):
         button.get_style_context().add_class("category_item")
         button.connect("clicked", self._selected_image_cb,
                        identifier)
-        button.connect("clicked", self._only_style_selected, identifier)
+        button.connect("clicked", self.only_style_selected, identifier)
 
         # Replace the grey icon with an orange on when the pointer
         # hovers over the button
@@ -132,12 +136,12 @@ class CategoryMenu(SelectMenu):
                        identifier)
         return button
 
-    def _only_style_selected(self, button, identifier):
+    def only_style_selected(self, button, identifier):
         '''Adds the CSS class that shows the image that has been selected,
         even when the mouse is moved away.
         If identifier is None, will remove all styling
         '''
-        logger.debug("Hit CategoryMenu _only_style_selected")
+        logger.debug("Hit CategoryMenu only_style_selected")
 
         for name, img_dict in self._items.iteritems():
             if 'button' in img_dict:

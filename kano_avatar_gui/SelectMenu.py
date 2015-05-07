@@ -34,7 +34,7 @@ class SelectMenu(Gtk.EventBox):
         self._selected = None
         self.get_style_context().add_class("select_menu")
 
-    def _set_selected(self, identifier):
+    def set_selected(self, identifier):
         '''Sets the selected element in the dictionary to True,
         and sets all the others to False
         '''

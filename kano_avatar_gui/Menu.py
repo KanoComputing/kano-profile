@@ -128,8 +128,8 @@ class Menu(Gtk.Fixed):
             self.saved_selected_list[category] = obj_name
 
     def select_pop_up_in_category(self, category, obj_name):
-        self.menus[category]["pop_up"]._set_selected(obj_name)
-        self.menus[category]["pop_up"]._only_style_selected(obj_name)
+        self.menus[category]["pop_up"].set_selected(obj_name)
+        self.menus[category]["pop_up"].only_style_selected(obj_name)
 
     def select_pop_up_items(self, selected_items):
         '''selected_items are of the form
@@ -140,7 +140,7 @@ class Menu(Gtk.Fixed):
         for category, item_dict in selected_items.iteritems():
             pop_up = self.menus[category]["pop_up"]
             identifier = selected_items[category]
-            pop_up._only_style_selected(identifier)
+            pop_up.only_style_selected(identifier)
 
     def reset_selected_menu_items(self):
         self.select_pop_up_items(self.saved_selected_list)

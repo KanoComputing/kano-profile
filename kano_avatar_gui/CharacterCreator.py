@@ -99,7 +99,6 @@ class CharacterCreator(Gtk.EventBox):
         random_btn.set_image(icon)
 
     def _randomise_avatar_wrapper(self, button):
-        logger.debug("\n_randomise_avatar_wrapper")
         self.randomise_avatar()
 
     def randomise_avatar(self):

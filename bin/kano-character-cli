@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-#
+
 # kano-character-cli
 #
 # Copyright (C) 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+# Program that generates character assets to be used with a Kano World profile
 
 import sys
 import os
@@ -30,13 +31,15 @@ if configuration is None:
 
 def main():
     parser = argparse.ArgumentParser(description=program_desc)
-    group_view = parser.add_argument_group('View', 'View available choices and exit')
+    group_view = parser.add_argument_group(
+        'View', 'View available choices and exit')
     group_view.add_argument(
         '-l',
         '--list',
         choices=['char', 'obj', 'env', 'cat', 'spec_cat', 'all'],
         help='List available choices for characters (char),objects (obj), categories(cat) or all (all)')
-    group_create = parser.add_argument_group('Create', 'Create a new Character')
+    group_create = parser.add_argument_group(
+        'Create', 'Create a new Character')
     group_create.add_argument(
         '-c',
         '--create',
@@ -87,20 +90,24 @@ def main():
             chars = avail_conf.list_available_chars()
             print chars
             for char in chars:
-                prev = "Char: {} | Preview: {}".format(char, avail_conf.get_char_preview(char))
+                prev = "Char: {} | Preview: {}".format(
+                    char, avail_conf.get_char_preview(char))
                 print prev
             # Objs
             objs = avail_conf.list_all_available_objs()
             print objs
             for obj in objs:
-                prev = "Item: {} | Preview: {}".format(obj, avail_conf.get_item_preview(obj))
+                prev = "Item: {} | Preview: {}".format(
+                    obj, avail_conf.get_item_preview(obj))
                 print prev
             # Categories
             cats = avail_conf.list_available_categories()
             print cats
             for cat in cats:
-                icon_ac = "Cat: {} | Active Icon: {}".format(cat, avail_conf.get_active_category_icon(cat))
-                icon_inac = "Cat: {} | Inactive Icon: {}".format(cat, avail_conf.get_inactive_category_icon(cat))
+                icon_ac = "Cat: {} | Active Icon: {}".format(
+                    cat, avail_conf.get_active_category_icon(cat))
+                icon_inac = "Cat: {} | Inactive Icon: {}".format(
+                    cat, avail_conf.get_inactive_category_icon(cat))
                 print icon_ac
                 print icon_inac
         return 0

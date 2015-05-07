@@ -2,7 +2,7 @@
 
 # check_online_variables.py
 #
-# Copyright (C) 2014 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
@@ -28,4 +28,3 @@ for category, subcats in all_rules.iteritems():
                 app = target[0]
                 if app == 'online':
                     print category, subcat, item
-

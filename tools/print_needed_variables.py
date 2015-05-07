@@ -2,7 +2,7 @@
 
 # print_needed_variables.py
 #
-# Copyright (C) 2014 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
@@ -35,6 +35,3 @@ for key in variables_needed.iterkeys():
 
 
 write_json('variables_needed.json', variables_needed, False)
-
-
-

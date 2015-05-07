@@ -28,6 +28,9 @@ def load_profile():
         # if the profile file doesn't exist make sure that the new one
         # is created with the right version
         data['version'] = 2
+    if 'version' not in data:
+        data.pop('avatar', None)
+        data.pop('environment', None)
     data['username_linux'] = get_user_unsudoed()
     return data
 
@@ -80,41 +83,33 @@ def get_avatar(sync=True):
     :rtype: tuple with two items
     """
     profile = load_profile()
-    if 'version' not in profile or profile['version'] == 1:
-        if 'avatar' in profile:
-            subcat, item = profile['avatar']
-        else:
-            subcat = 'judoka'
-            item = 'judoka_1'
-        return subcat, item
-    elif profile['version'] == 2:
-        if 'avatar' in profile:
-            subcat, item = profile['avatar']
-        else:
-            # Attempt to sync to retrieve the avatar from world
-            if sync:
-                block_and_sync()
-                recreate_char(block=False)
-                subcat, item = get_avatar(sync=False)
-            else:
-                # Provide a default set
-                logger.info('Avatar not found in profile, returning default')
-                subcat = 'Judoka_Base'
-                item = {
-                    'Belts': 'Belt_Orange',
-                    'Suits': 'Suit_White',
-                    'Faces': 'Face_Happy',
-                    'Hair': 'Hair_Black',
-                    'Stickers': 'Sticker_Code',
-                    'Skins': 'Skin_Orange',
-                }
-
-        return subcat, item
+    if 'version' in profile and profile['version'] == 2 and \
+            'avatar' in profile:
+        subcat, item = profile['avatar']
     else:
-        logger.error(
-            'Unknown profile version: {}'.format(profile['version'])
-        )
-        return None
+        # Attempt to sync to retrieve the avatar from world
+        if sync:
+            block_and_sync()
+            recreate_char(block=True)
+            subcat, item = get_avatar(sync=False)
+        else:
+            # Provide a default set
+            logger.info('Avatar not found in profile, returning default')
+            subcat, item = get_default_avatar()
+    return subcat, item
+
+
+def get_default_avatar():
+    subcat = 'Judoka_Base'
+    item = {
+        'Belts': 'Belt_Orange',
+        'Suits': 'Suit_White',
+        'Faces': 'Face_Happy',
+        'Hair': 'Hair_Black',
+        'Stickers': 'Sticker_Code',
+        'Skins': 'Skin_Orange',
+    }
+    return subcat, item
 
 
 def get_avatar_circ_image_path():
@@ -192,7 +187,8 @@ def get_environment():
     :rtype: string
     """
     profile = load_profile()
-    if 'environment' in profile:
+    if 'version' in profile and profile['version'] == 2 and \
+            'environment' in profile:
         environment = profile['environment']
     else:
         environment = 'Dojo'

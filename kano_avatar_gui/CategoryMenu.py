@@ -9,7 +9,6 @@
 from gi.repository import Gtk, GObject
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.gtk3.cursor import attach_cursor_events
-from kano.logging import logger
 
 
 class CategoryMenu(SelectMenu):
@@ -149,7 +148,6 @@ class CategoryMenu(SelectMenu):
         even when the mouse is moved away.
         If identifier is None, will remove all styling
         '''
-        logger.debug("Hit CategoryMenu only_style_selected")
 
         for name, img_dict in self._items.iteritems():
             if 'button' in img_dict:

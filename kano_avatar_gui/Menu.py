@@ -24,9 +24,7 @@ from kano_profile.profile import get_avatar, get_environment
 class Menu(Gtk.Fixed):
 
     __gsignals__ = {
-        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
-        # Could add this if environment became a special case
-        'environment_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
     def __init__(self, parser):
@@ -42,13 +40,10 @@ class Menu(Gtk.Fixed):
         self.cat_position_y = 0
         self.pop_up_pos_x = self.cat_position_x + self._cat_menu.item_width + 5
         self.pop_up_pos_y = self.cat_position_y
-
         self.put(self._cat_menu, 0, 0)
 
-        # initialises self.menus
         self._initialise_pop_up_menus()
         self._create_start_up_image()
-
         self.show_all()
 
     def select_category_button(self, identifier):
@@ -76,9 +71,6 @@ class Menu(Gtk.Fixed):
         return objs
 
     def _initialise_pop_up_menus(self):
-        '''Initialise the pop up menus
-        '''
-        logger.debug("Initialising PopUpMenu for all categories")
         self.menus = {}
 
         for category in self._cat_menu.categories:
@@ -147,6 +139,10 @@ class Menu(Gtk.Fixed):
         self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):
+        '''Show the pop up menu for the correct category.
+        This involves hiding all the pop up menus and then displaying the
+        correct one.
+        '''
         self.hide_pop_ups()
         self.menus[category]['pop_up'].show()
 
@@ -157,7 +153,7 @@ class Menu(Gtk.Fixed):
                 self.menus[category]["pop_up"].hide()
 
     def _emit_signal(self, widget, category):
-        '''This is to propagate the signal the signal up a widget
+        '''This is to propagate the signal the signal up a widget.
         '''
         self.emit('asset_selected', category)
 

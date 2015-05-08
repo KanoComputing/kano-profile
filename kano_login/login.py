@@ -80,7 +80,7 @@ class Login(Gtk.Box):
         self.button_box.set_margin_left(80)
         self.button_box.set_margin_bottom(30)
         self.kano_button = self.button_box.kano_button
-        self.button_box.set_orange_button_cb(self.create_new)
+        self.button_box.set_orange_button_cb(self.go_to_registration)
         self.button_box.set_orange_button2_cb(self.reset_password_screen)
         self.kano_button.connect("button_release_event", self.activate)
         self.kano_button.connect("key-release-event", self.activate)
@@ -95,9 +95,10 @@ class Login(Gtk.Box):
 
         self.win.show_all()
 
-    # This is quite an ugly function
-    # Replaces username entry with label containing username
     def add_username_as_label(self):
+        '''This replaces the username entry with a label conatining the
+        username.
+        '''
         username = get_mixed_username()
         title_label = Gtk.Label(" Username:  ")
         self.username_label = Gtk.Label(username)
@@ -124,6 +125,11 @@ class Login(Gtk.Box):
         vbox.pack_start(self.labelled_entries, False, False, 15)
 
     def enable_kano_button(self, widget=None, event=None):
+        '''This enables the login button if both the username entry
+        and password entry are non empty.
+        This is linked to the key-release-event on the password and username
+        entries.
+        '''
         text0 = self.get_username_input()
         text1 = self.password_entry.get_text()
         if text0 != "" and text1 != "":
@@ -132,6 +138,8 @@ class Login(Gtk.Box):
             self.kano_button.set_sensitive(False)
 
     def get_username_input(self):
+        '''Get the username text from the username entry or label.
+        '''
         if force_login:
             text = self.username_label.get_text()
         else:
@@ -142,8 +150,9 @@ class Login(Gtk.Box):
         self.win.remove_main_widget()
         self.win.set_main_widget(self)
 
-    def create_new(self, widget, event, args=[]):
-        # Should we stop the user progressing here if they don't have internet?
+    def go_to_registration(self, widget, event, args=[]):
+        '''Go to the first registration screen.
+        '''
         self.win.remove_main_widget()
         RegistrationScreen1(self.win)
 
@@ -159,11 +168,9 @@ class Login(Gtk.Box):
 
     def log_user_in(self):
         if not is_internet():
-            title = "No online profile - for now"
+            title = "You don't have internet!"
             description = (
-                "Your profile stores your character, projects, and rewards. "
-                "But fear not - we'll save everything for when you have "
-                "Internet"
+                "Connect with wifi or ethernet and try again"
             )
             return_value = 0
 
@@ -174,6 +181,8 @@ class Login(Gtk.Box):
                          title, description, return_value)
 
     def log_user_in_with_internet(self):
+        '''If we know the user has internet, attempt to login.
+        '''
         username_text = self.get_username_input()
         password_text = self.password_entry.get_text()
         success, text = login_(username_text, password_text)
@@ -189,15 +198,10 @@ class Login(Gtk.Box):
 
         return (title, description, return_value)
 
-    def log_in_fail(self, text):
-        logger.info('problem with login: {}'.format(text))
-        title = "Houston, we have a problem"
-        description = text
-        return_value = "FAIL"
-
-        return (title, description, return_value)
-
     def log_in_success(self):
+        '''If the login process is successful, sync with kano world
+        and return success dialog text.
+        '''
         logger.info('login successful')
 
         # saving hardware info and initial Kano version
@@ -236,6 +240,11 @@ class Login(Gtk.Box):
         return (title, description, return_value)
 
     def show_login_status_dialog(self, title, description, return_value):
+        '''Show a dialog with the title, description and that returns the
+        return_value.
+        Since this is used at the end of the login process, we also reset
+        the cursor and kano button spinner.
+        '''
         kdialog = KanoDialog(title, description,
                              {"OK": {"return_value": return_value}},
                              parent_window=self.win)

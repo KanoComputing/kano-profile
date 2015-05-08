@@ -18,7 +18,8 @@ from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano.gtk3.cursor import attach_cursor_events
 
 
-# We make the inheritance from Gtk.EventBox so we can grab the events
+# We make the inheritance from Gtk.EventBox so we can grab the events on
+# this widget
 class CharacterCreator(Gtk.EventBox):
     configuration = get_avatar_conf()
     avatar_cr = AvatarCreator(configuration)

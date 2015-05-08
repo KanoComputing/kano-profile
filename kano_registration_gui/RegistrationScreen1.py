@@ -37,7 +37,6 @@ class RegistrationScreen1(Gtk.Box):
         self.win.char_creator._hide_pop_ups()
 
         # Show the Faces category
-        self.win.char_creator.show_pop_up_menu_for_category("Faces")
         self.win.char_creator.select_category_button("Faces")
 
     def next_page(self, widget):

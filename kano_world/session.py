@@ -220,9 +220,6 @@ class KanoWorldSession(object):
         except Exception:
             pass
 
-        if updated_locally:
-            recreate_char(block=True)
-
         # app states
         try:
             app_data = data['user']['profile']['stats']
@@ -235,6 +232,10 @@ class KanoWorldSession(object):
                 continue
             if not is_private(app):
                 save_app_state(app, values)
+
+        if updated_locally:
+            recreate_char(block=True)
+
         return True, None
 
     def upload_private_data(self):

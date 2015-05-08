@@ -66,10 +66,9 @@ class MainWindow(ApplicationWindow):
 
         # This is where we store the user data for the registration.
         self.data = {}
-
-        self.header_bar = HeaderBar(self)
         self.set_decorated(True)
-        self.set_titlebar(self.header_bar)
+        self.headerbar = HeaderBar(self)
+        self.set_titlebar(self.headerbar)
         self.set_icon_name("kano-world")
 
         css_path = os.path.join(media_dir, "CSS/register.css")
@@ -102,27 +101,11 @@ class MainWindow(ApplicationWindow):
 
         return page_control
 
-    def hide_back_button(self):
-        '''Hide the back button on the top bar.
-        '''
-        self.header_bar.hide_back_button()
-
 
 class HeaderBar(Gtk.Box):
     def __init__(self, win):
         Gtk.Box.__init__(self)
-
         self.win = win
-        self.back_button = Gtk.Button()
-        back_icon = icons.get_ui_icon("dark_left_arrow")
-        self.back_button.set_image(back_icon)
-        # TODO: generalise the styling class a bit more to make this cless
-        # confusing.
-        self.back_button.get_style_context().add_class("close_button")
-        attach_cursor_events(self.back_button)
-
-        # TODO: Undecided about this now.
-        # self.pack_start(self.back_button, False, False, 0)
 
         close_button = Gtk.Button()
         cross_icon = icons.get_ui_icon("cross")
@@ -133,29 +116,30 @@ class HeaderBar(Gtk.Box):
         self.pack_end(close_button, False, False, 0)
 
     def close_window(self, widget=None):
-        kd = KanoDialog(
-            "Are you sure?",
-            "You'll miss out on the best features of your Kano",
-            [
-                {
-                    "label": "DON'T CLOSE",
-                    "return_value": "dont-close",
-                    "color": "green"
-                },
-                {
-                    "label": "CLOSE",
-                    "return_value": "close",
-                    "color": "red"
-                }
-            ],
-            parent_window=self.win
-        )
-        response = kd.run()
-        if response == "close":
-            Gtk.main_quit()
+        close_window(self.win)
 
-    def hide_back_button(self):
-        self.back_button.hide()
+
+def close_window(window=None):
+    kd = KanoDialog(
+        "Are you sure?",
+        "You'll miss out on the best features of your Kano",
+        [
+            {
+                "label": "DON'T CLOSE",
+                "return_value": "dont-close",
+                "color": "green"
+            },
+            {
+                "label": "CLOSE",
+                "return_value": "close",
+                "color": "red"
+            }
+        ],
+        parent_window=window
+    )
+    response = kd.run()
+    if response == "close":
+        Gtk.main_quit()
 
 
 def main():

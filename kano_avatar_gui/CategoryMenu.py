@@ -93,14 +93,23 @@ class CategoryMenu(SelectMenu):
 
             vbox.pack_start(button, True, True, 0)
 
-    def _selected_image_cb(self, widget, identifier):
+    def _select_button_wrapper(self, widget, identifier):
         '''This is connected to the button-release-event when you click on a
         button in the table.
         If the image is unlocked, add the css selected class, select the image
         and emit a signal that the parent window can use
         '''
+        self.select_button(identifier)
 
+    def select_button(self, identifier):
+        '''This applies the selected appearence to the button associated with
+        the identifier, sets it as selected and emits the signal.
+        This is called outside the class on initialising the character
+        creator in the registration screen, hence why is not a private
+        function.
+        '''
         self.set_selected(identifier)
+        self.only_style_selected(identifier)
 
         # When an image is selected, emit a signal giving the
         # idenitifer as information
@@ -122,9 +131,8 @@ class CategoryMenu(SelectMenu):
         attach_cursor_events(button)
 
         button.get_style_context().add_class("category_item")
-        button.connect("clicked", self._selected_image_cb,
+        button.connect("clicked", self._select_button_wrapper,
                        identifier)
-        button.connect("clicked", self.only_style_selected, identifier)
 
         # Replace the grey icon with an orange on when the pointer
         # hovers over the button
@@ -136,7 +144,7 @@ class CategoryMenu(SelectMenu):
                        identifier)
         return button
 
-    def only_style_selected(self, button, identifier):
+    def only_style_selected(self, identifier):
         '''Adds the CSS class that shows the image that has been selected,
         even when the mouse is moved away.
         If identifier is None, will remove all styling

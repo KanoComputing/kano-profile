@@ -55,6 +55,9 @@ class CharacterCreator(Gtk.EventBox):
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
 
+    def select_category_button(self, identifier):
+        self._menu.select_category_button(identifier)
+
     def show_pop_up_menu_for_category(self, category):
         self._menu.launch_pop_up_menu(None, category)
 

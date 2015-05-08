@@ -51,6 +51,9 @@ class Menu(Gtk.Fixed):
 
         self.show_all()
 
+    def select_category_button(self, identifier):
+        self._cat_menu.select_button(identifier)
+
     def unselect_categories(self):
         self._cat_menu.remove_selected_on_all()
 

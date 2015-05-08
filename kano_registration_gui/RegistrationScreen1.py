@@ -6,10 +6,8 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-import threading
-from gi.repository import Gtk, GObject, Gdk
+from gi.repository import Gtk, Gdk
 from kano.gtk3.heading import Heading
-from kano.logging import logger
 from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 
 
@@ -40,6 +38,7 @@ class RegistrationScreen1(Gtk.Box):
 
         # Show the Faces category
         self.win.char_creator.show_pop_up_menu_for_category("Faces")
+        self.win.char_creator.select_category_button("Faces")
 
     def next_page(self, widget):
         watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)

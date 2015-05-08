@@ -168,7 +168,7 @@ class Login(Gtk.Box):
             return_value = 0
 
         else:
-            self.log_user_in_with_internet()
+            (title, description, return_value) = self.log_user_in_with_internet()
 
         GObject.idle_add(self.show_login_status_dialog,
                          title, description, return_value)

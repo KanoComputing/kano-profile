@@ -11,7 +11,7 @@ import re
 from gi.repository import Gtk, GObject
 from kano.gtk3.kano_dialog import KanoDialog
 from kano_profile.paths import legal_dir
-from kano_registration_gui.data_functions import (
+from kano_registration_gui.cache_functions import (
     get_cached_data, cache_data, cache_emails
 )
 from kano_registration_gui.BirthdayWidget import BirthdayWidget

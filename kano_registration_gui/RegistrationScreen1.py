@@ -9,12 +9,16 @@
 import threading
 from gi.repository import Gtk, GObject, Gdk
 from kano.gtk3.heading import Heading
+from kano.logging import logger
+from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 
 
 # Page 1 is the character personalisation
 class RegistrationScreen1(Gtk.Box):
 
     def __init__(self, win):
+
+        logger.debug("Registration screen 1")
 
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
@@ -49,11 +53,11 @@ class RegistrationScreen1(Gtk.Box):
         t.start()
 
     def save_character_and_go_next(self):
-        from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
-
         self.win.char_creator.save()
 
         def done():
+            logger.debug("Going into registration screen 2")
+
             self.win.remove_main_widget()
             self.remove(self.win.char_creator)
 

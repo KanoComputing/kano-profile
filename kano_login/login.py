@@ -96,7 +96,7 @@ class Login(Gtk.Box):
         self.win.show_all()
 
     def add_username_as_label(self):
-        '''This replaces the username entry with a label conatining the
+        '''This replaces the username entry with a label containing the
         username.
         '''
         username = get_mixed_username()

@@ -5,6 +5,8 @@
 # Copyright (C) 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+# These buttons are the ones along the bottom of the badge screens for
+# navigating between the pages.
 
 import os
 from gi.repository import Gtk
@@ -13,8 +15,9 @@ from kano.gtk3.cursor import attach_cursor_events
 
 
 def create_navigation_button(title, position='previous'):
-    '''position is either 'previous', 'middle' or 'end'
-    This is to determine the position of the icon on the button
+    '''Position is either 'previous', 'middle' or 'end'
+    This is to determine the position of the icon on the button.
+    Returns a button widget with the title and the icon in the right place.
     '''
     hbox = Gtk.Box()
     button = Gtk.Button()
@@ -38,14 +41,12 @@ def create_navigation_button(title, position='previous'):
             # icon_path is for backwards pointing arrow
             icon_path = os.path.join(media_dir, "images/icons/previous.png")
             label = Gtk.Label(title)
-            # button.connect("clicked", self._go_to_other_badge, -1)
             button.get_style_context().add_class("back")
 
         elif position == "middle":
             # icon_path is for the grid icon
             icon_path = os.path.join(media_dir, "images/icons/grid.png")
             label = Gtk.Label(title)
-            # button.connect("clicked", self._go_to_grid)
             button.get_style_context().add_class("middle")
 
         icon = Gtk.Image.new_from_file(icon_path)

@@ -18,7 +18,8 @@ from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano.gtk3.cursor import attach_cursor_events
 
 
-# We make the inheritance from Gtk.EventBox so we can grab the events
+# We make the inheritance from Gtk.EventBox so we can grab the events on
+# this widget
 class CharacterCreator(Gtk.EventBox):
     configuration = get_avatar_conf()
     avatar_cr = AvatarCreator(configuration)
@@ -49,11 +50,14 @@ class CharacterCreator(Gtk.EventBox):
 
         if randomise:
             # Create random button
-            random_button = self._create_random_button()
-            self.fixed.put(random_button, 645, self.meny_y_pos)
+            self.randomise_button = self._create_random_button()
+            self.fixed.put(self.randomise_button, 645, self.meny_y_pos)
 
         self.connect("button-release-event", self._hide_pop_ups)
         self._update_img(None, None)
+
+    def select_category_button(self, identifier):
+        self._menu.select_category_button(identifier)
 
     def show_pop_up_menu_for_category(self, category):
         self._menu.launch_pop_up_menu(None, category)
@@ -99,7 +103,6 @@ class CharacterCreator(Gtk.EventBox):
         random_btn.set_image(icon)
 
     def _randomise_avatar_wrapper(self, button):
-        logger.debug("\n_randomise_avatar_wrapper")
         self.randomise_avatar()
 
     def randomise_avatar(self):
@@ -135,6 +138,14 @@ class CharacterCreator(Gtk.EventBox):
             displ_img = self.avatar_cr.create_avatar()
             self._imgbox.set_image(displ_img)
 
+    def disable_buttons(self):
+        self._menu.disable_all_buttons()
+        self.randomise_button.set_sensitive(False)
+
+    def enable_buttons(self):
+        self._menu.enable_all_buttons()
+        self.randomise_button.set_sensitive(True)
+
     # Public function so external buttons can access it.
     def save(self):
         '''When saving character, we save all the images in kano-profile
@@ -142,8 +153,14 @@ class CharacterCreator(Gtk.EventBox):
         '''
         logger.debug("Saving data")
 
+        # Disable the buttons so when the user is saving, they don't accidently
+        # change the character as it's being saved.
+        self.disable_buttons()
+
         self._menu.saved_selected_list = self.avatar_cr.selected_items_per_cat()
         saved_path = self.get_avatar_save_path()
-        # Save the image as hard copy somewhere safe, store it,
         self.avatar_cr.save_final_assets(saved_path)
         logger.debug("Saving generated avatar image to {}".format(saved_path))
+
+        # Enable the buttons again so the user can change the character again.
+        self.enable_buttons()

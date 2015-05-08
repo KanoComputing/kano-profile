@@ -24,9 +24,7 @@ from kano_profile.profile import get_avatar, get_environment
 class Menu(Gtk.Fixed):
 
     __gsignals__ = {
-        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
-        # Could add this if environment became a special case
-        'environment_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
     def __init__(self, parser):
@@ -42,14 +40,14 @@ class Menu(Gtk.Fixed):
         self.cat_position_y = 0
         self.pop_up_pos_x = self.cat_position_x + self._cat_menu.item_width + 5
         self.pop_up_pos_y = self.cat_position_y
-
         self.put(self._cat_menu, 0, 0)
 
-        # initialises self.menus
         self._initialise_pop_up_menus()
         self._create_start_up_image()
-
         self.show_all()
+
+    def select_category_button(self, identifier):
+        self._cat_menu.select_button(identifier)
 
     def unselect_categories(self):
         self._cat_menu.remove_selected_on_all()
@@ -73,9 +71,6 @@ class Menu(Gtk.Fixed):
         return objs
 
     def _initialise_pop_up_menus(self):
-        '''Initialise the pop up menus
-        '''
-        logger.debug("Initialising PopUpMenu for all categories")
         self.menus = {}
 
         for category in self._cat_menu.categories:
@@ -124,30 +119,30 @@ class Menu(Gtk.Fixed):
             # object_list.append(obj_name)
             self.select_pop_up_in_category(category, obj_name)
             self.menus[category]["pop_up"].hide()
-            logger.debug("Hid menu for category {}".format(category))
             self.saved_selected_list[category] = obj_name
 
     def select_pop_up_in_category(self, category, obj_name):
-        self.menus[category]["pop_up"]._set_selected(obj_name)
-        self.menus[category]["pop_up"]._only_style_selected(obj_name)
+        self.menus[category]["pop_up"].set_selected(obj_name)
+        self.menus[category]["pop_up"].only_style_selected(obj_name)
 
     def select_pop_up_items(self, selected_items):
         '''selected_items are of the form
         {category: {name: item_name}}
         '''
-        logger.debug("select_pop_up_items entered")
 
         for category, item_dict in selected_items.iteritems():
             pop_up = self.menus[category]["pop_up"]
             identifier = selected_items[category]
-            pop_up._only_style_selected(identifier)
+            pop_up.only_style_selected(identifier)
 
     def reset_selected_menu_items(self):
         self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):
-
-        logger.debug("Launching PopUpMenu for category {}".format(category))
+        '''Show the pop up menu for the correct category.
+        This involves hiding all the pop up menus and then displaying the
+        correct one.
+        '''
         self.hide_pop_ups()
         self.menus[category]['pop_up'].show()
 
@@ -158,6 +153,17 @@ class Menu(Gtk.Fixed):
                 self.menus[category]["pop_up"].hide()
 
     def _emit_signal(self, widget, category):
-        '''This is to propagate the signal the signal up a widget
+        '''This is to propagate the signal the signal up a widget.
         '''
         self.emit('asset_selected', category)
+
+    def disable_all_buttons(self):
+        '''Disable all the category buttons so when we're saving the
+        character, the user doesn't press any other buttons.
+        '''
+        self._cat_menu.disable_all_buttons()
+
+    def enable_all_buttons(self):
+        '''Enable all the category buttons.
+        '''
+        self._cat_menu.enable_all_buttons()

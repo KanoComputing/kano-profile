@@ -9,7 +9,6 @@
 from gi.repository import Gtk, GObject
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.gtk3.cursor import attach_cursor_events
-from kano.logging import logger
 
 
 class CategoryMenu(SelectMenu):
@@ -38,35 +37,39 @@ class CategoryMenu(SelectMenu):
         self.set_size_request(self.item_width, 7 * self.item_height)
         self._pack_buttons()
 
-    def _add_selected_appearence(self, identifier, button=None):
-        if not button:
-            button = self._items[identifier]['button']
-
+    def _add_selected_appearence(self, identifier):
+        '''Change the appearence to the button to one that appears to be
+        selected.
+        '''
+        button = self._items[identifier]['button']
         self._add_selected_css(button)
         self._add_selected_image(button, identifier)
 
-    def _remove_selected_appearence(self, identifier, button=None):
-        if not button:
-            button = self._items[identifier]['button']
+    def _remove_selected_appearence(self, identifier):
+        '''If the identifier is not selected, remove the styling on it.
+        '''
+        button = self._items[identifier]['button']
 
         if identifier != self.get_selected():
             self._remove_selected_css(button)
             self._remove_selected_image(button, identifier)
 
     def _add_selected_appearence_wrapper(self, button, event, identifier):
-        '''Wrapper of the _add_selected_appearence for buttons
+        '''Wrapper of the _add_selected_appearence for the enter-notify-event
+        on buttons.
         '''
-        self._add_selected_appearence(identifier, button)
+        self._add_selected_appearence(identifier)
 
     def _remove_selected_appearence_wrapper(self, button, event, identifier):
-        '''Wrapper of the _remove_selected_appearence for buttons
+        '''Wrapper of the _remove_selected_appearence for the
+        leave-notify-event on buttons.
         '''
-        self._remove_selected_appearence(identifier, button)
+        self._remove_selected_appearence(identifier)
 
     def remove_selected_on_all(self):
-        '''Remove the selected appearence on all the category buttons
+        '''Remove the selected appearence on all the category buttons.
         '''
-        self._set_selected(None)
+        self.set_selected(None)
         for cat in self.categories:
             self._remove_selected_appearence(cat)
 
@@ -80,7 +83,7 @@ class CategoryMenu(SelectMenu):
 
         for category in self.categories:
             button = self._create_button(category)
-            self._add_option_to_items(category, 'button', button)
+            self.set_button(category, button)
 
             inactive_icon_path = self._parser.get_inactive_category_icon(category)
             self._add_option_to_items(category, 'inactive_path', inactive_icon_path)
@@ -89,14 +92,23 @@ class CategoryMenu(SelectMenu):
 
             vbox.pack_start(button, True, True, 0)
 
-    def _selected_image_cb(self, widget, identifier):
+    def _select_button_wrapper(self, widget, identifier):
         '''This is connected to the button-release-event when you click on a
         button in the table.
         If the image is unlocked, add the css selected class, select the image
         and emit a signal that the parent window can use
         '''
+        self.select_button(identifier)
 
-        self._set_selected(identifier)
+    def select_button(self, identifier):
+        '''This applies the selected appearence to the button associated with
+        the identifier, sets it as selected and emits the signal.
+        This is called outside the class on initialising the character
+        creator in the registration screen, hence why is not a private
+        function.
+        '''
+        self.set_selected(identifier)
+        self.only_style_selected(identifier)
 
         # When an image is selected, emit a signal giving the
         # idenitifer as information
@@ -118,9 +130,8 @@ class CategoryMenu(SelectMenu):
         attach_cursor_events(button)
 
         button.get_style_context().add_class("category_item")
-        button.connect("clicked", self._selected_image_cb,
+        button.connect("clicked", self._select_button_wrapper,
                        identifier)
-        button.connect("clicked", self._only_style_selected, identifier)
 
         # Replace the grey icon with an orange on when the pointer
         # hovers over the button
@@ -132,12 +143,11 @@ class CategoryMenu(SelectMenu):
                        identifier)
         return button
 
-    def _only_style_selected(self, button, identifier):
+    def only_style_selected(self, identifier):
         '''Adds the CSS class that shows the image that has been selected,
         even when the mouse is moved away.
         If identifier is None, will remove all styling
         '''
-        logger.debug("Hit CategoryMenu _only_style_selected")
 
         for name, img_dict in self._items.iteritems():
             if 'button' in img_dict:
@@ -147,6 +157,22 @@ class CategoryMenu(SelectMenu):
 
         if identifier in self._items:
             if 'button' in self._items[identifier]:
-                button = self._items[identifier]['button']
+                button = self.get_button(identifier)
                 self._add_selected_css(button)
                 self._add_selected_image(button, identifier)
+
+    def disable_all_buttons(self):
+        '''Disable all the category buttons so when we're saving the
+        character, the user doesn't press any other buttons.
+        '''
+        for category in self.categories:
+            button = self.get_button(category)
+            button.set_sensitive(False)
+
+    def enable_all_buttons(self):
+        '''Disable all the category buttons so when we're saving the
+        character, the user doesn't press any other buttons.
+        '''
+        for category in self.categories:
+            button = self.get_button(category)
+            button.set_sensitive(True)

@@ -2,7 +2,7 @@
 
 # kano-login
 #
-# Copyright (C) 2015 Kano Computing Ltd.
+# Copyright (C) 2014, 2015 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -64,12 +64,11 @@ class MainWindow(ApplicationWindow):
         self.connect("delete-event", Gtk.main_quit)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
 
-        # This is what we fill up as we get data
+        # This is where we store the user data for the registration.
         self.data = {}
-
-        header_bar = HeaderBar()
         self.set_decorated(True)
-        self.set_titlebar(header_bar)
+        self.headerbar = HeaderBar(self)
+        self.set_titlebar(self.headerbar)
         self.set_icon_name("kano-world")
 
         css_path = os.path.join(media_dir, "CSS/register.css")
@@ -104,8 +103,9 @@ class MainWindow(ApplicationWindow):
 
 
 class HeaderBar(Gtk.Box):
-    def __init__(self):
+    def __init__(self, win):
         Gtk.Box.__init__(self)
+        self.win = win
 
         close_button = Gtk.Button()
         cross_icon = icons.get_ui_icon("cross")
@@ -113,32 +113,33 @@ class HeaderBar(Gtk.Box):
         close_button.connect("clicked", self.close_window)
         close_button.get_style_context().add_class("close_button")
         attach_cursor_events(close_button)
-
         self.pack_end(close_button, False, False, 0)
 
     def close_window(self, widget=None):
-        # check for first boot
-        kd = KanoDialog(
-            "Are you sure?",
-            "You'll miss out on the best features of your Kano",
-            [
-                {
-                    "label": "DON'T CLOSE",
-                    "return_value": "dont-close",
-                    "color": "green"
-                },
-                {
-                    "label": "CLOSE",
-                    "return_value": "close",
-                    "color": "red"
-                }
-            ],
-            parent_window=widget.get_toplevel()
-        )
+        close_window(self.win)
 
-        response = kd.run()
-        if response == "close":
-            Gtk.main_quit()
+
+def close_window(window=None):
+    kd = KanoDialog(
+        "Are you sure?",
+        "You'll miss out on the best features of your Kano",
+        [
+            {
+                "label": "DON'T CLOSE",
+                "return_value": "dont-close",
+                "color": "green"
+            },
+            {
+                "label": "CLOSE",
+                "return_value": "close",
+                "color": "red"
+            }
+        ],
+        parent_window=window
+    )
+    response = kd.run()
+    if response == "close":
+        Gtk.main_quit()
 
 
 def main():

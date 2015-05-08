@@ -16,48 +16,31 @@ from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.gtk3.heading import Heading
 from kano_login.login import Login
 from kano_login.templates.template import Template
-from kano_login.data import get_data
 from kano_login.swag_screen import SwagScreen
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
 from kano_registration_gui.RegistrationScreen1 import RegistrationScreen1
 
 
-# TODO: this is currently mimicking old code.  Please fix this, it's a bit
-# weird.
-def create_template(string):
-    data = get_data(string)
-    img_width = 590
-    img_height = 270
-
-    header = data["LABEL_1"]
-    subheader = data["LABEL_2"]
-    image_filename = get_image("login", "", data["TOP_PIC"], str(img_width) + 'x' + str(img_height))
-    kano_button_label = data["KANO_BUTTON"]
-    orange_button_label = data["ORANGE_BUTTON"]
-    template = Template(image_filename, header, subheader, kano_button_label, orange_button_label)
-    return template
-
-
-# TODO: move this class into Template
 class FirstScreenTemplate(Gtk.Box):
 
     def __init__(self):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
-        data = get_data("FIRST_SCREEN")
-        kano_button_text = data["KANO_BUTTON"]
-        skip_button_text = data["SKIP_BUTTON"]
-        registered_button_text = data["REGISTERED_BUTTON"]
-        header = data["LABEL_1"]
-        subheader = data["LABEL_2"]
+        kano_button_text = "CREATE"
+        skip_button_text = "Skip"
+        login_button_text = "I have a profile"
+        header = "Now let's make a cool Profile"
+        subheader = "So you can save badges, games, and projects"
         img_width = 590
         img_height = 270
 
         self.skip_button = OrangeButton(skip_button_text)
-        self.registered_button = OrangeButton(registered_button_text)
+        self.login_button = OrangeButton(login_button_text)
 
-        image_filename = get_image("login", "", data["TOP_PIC"], str(img_width) + 'x' + str(img_height))
+        image_filename = get_image(
+            "login", "", "first-screen", str(img_width) + 'x' + str(img_height)
+        )
         self.image = Gtk.Image.new_from_file(image_filename)
         self.pack_start(self.image, False, False, 0)
 
@@ -70,30 +53,33 @@ class FirstScreenTemplate(Gtk.Box):
         self.button_box.set_layout(Gtk.ButtonBoxStyle.SPREAD)
         self.pack_start(self.button_box, False, False, 0)
 
-        self.button_box.pack_start(self.registered_button, False, False, 0)
+        self.button_box.pack_start(self.login_button, False, False, 0)
         self.button_box.pack_start(self.kano_button, False, False, 0)
         self.button_box.pack_start(self.skip_button, False, False, 0)
 
 
-class FirstScreen():
+class FirstScreen(FirstScreenTemplate):
     def __init__(self, win, dummy=None):
+
+        FirstScreenTemplate.__init__(self)
 
         self.win = win
         self.win.set_decorated(False)
-        # self.win.reset_allocation()
+        self.win.set_main_widget(self)
 
-        self.template = FirstScreenTemplate()
-        self.win.set_main_widget(self.template)
-        self.template.kano_button.connect("button_release_event",
-                                          self.register_screen)
-        self.template.registered_button.connect("button_release_event",
-                                                self.login_screen)
-        self.template.skip_button.connect("button_release_event",
-                                          self.exit_registration)
-        self.template.kano_button.connect("key_release_event",
-                                          self.register_screen)
-        self.template.button_box.set_margin_bottom(30)
-        self.template.kano_button.grab_focus()
+        self.kano_button.connect("button_release_event", self.register_screen)
+        self.login_button.connect(
+            "button_release_event", self.login_screen
+        )
+        self.skip_button.connect(
+            "button_release_event", self.exit_registration
+        )
+
+        self.kano_button.connect(
+            "key_release_event", self.register_screen
+        )
+        self.button_box.set_margin_bottom(30)
+        self.kano_button.grab_focus()
         self.win.show_all()
 
     def login_screen(self, widget, event):
@@ -119,24 +105,34 @@ class FirstScreen():
         self.win.set_main_widget(self.template)
 
 
-class NoInternet():
+class NoInternet(Template):
     def __init__(self, win):
 
         self.win = win
         self.win.set_decorated(False)
-        self.template = create_template("NO_INTERNET")
+
+        img_width = 590
+        img_height = 270
+
+        header = "Oops! You need Internet to make a profile"
+        subheader = "But you can skip this if you have no connection right now"
+        image_filename = get_image("login", "", "no-internet",
+                                   str(img_width) + 'x' + str(img_height))
+        kano_button_label = "CONNECT"
+        orange_button_label = "Register later"
+
+        Template.__init__(self, header, subheader, image_filename,
+                          kano_button_label, orange_button_label)
 
         self.win.set_main_widget(self.template)
-        self.template.kano_button.connect("button_release_event", self.connect)
+        self.kano_button.connect("button_release_event", self.connect)
 
-        # Since cannot pass with keyboard, set it so it cannot receive keyboard focus
-        self.template.kano_button.set_can_focus(False)
+        # Since cannot pass with keyboard, set it so it cannot receive
+        # keyboard focus
+        self.kano_button.set_can_focus(False)
 
-        # For now, remove keyboard event listener as is interfering with kano-connect
-        # self.template.kano_button.connect("key_release_event", self.connect)
-
-        self.template.orange_button.connect("button_release_event", self.register_later)
-        self.template.kano_button.grab_focus()
+        self.orange_button.connect("button_release_event", self.register_later)
+        self.kano_button.grab_focus()
         self.win.show_all()
 
     def connect(self, widget, event):

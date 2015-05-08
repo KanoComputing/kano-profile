@@ -13,6 +13,7 @@ from kano.gtk3.heading import Heading
 from kano_registration_gui.GetData import GetData2
 from kano_avatar_gui.ImageView import ImageView
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED
+from kano_registration_gui.RegistrationScreen3 import RegistrationScreen3
 
 
 # Get username, password and birthday data from user.
@@ -21,6 +22,7 @@ class RegistrationScreen2(Gtk.Box):
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
+        self.win.set_main_widget(self)
 
         self.page_control = self.win.create_page_control(2, "BACK", "NEXT")
         self.page_control.next_button.set_sensitive(False)
@@ -45,9 +47,9 @@ class RegistrationScreen2(Gtk.Box):
         self.data_screen.connect("widgets-filled", self.enable_next)
         self.data_screen.connect("widgets-empty", self.disable_next)
 
-        # Put it with the same y coordinate as the menu
+        # Put it with the same y-coordinate as the menu
         image_viewer.put(self.data_screen, 400, 30)
-        self.show_all()
+        self.win.show_all()
 
     def _show_error_dialog(self, title, description):
         kdialog = KanoDialog(title, description,
@@ -61,7 +63,7 @@ class RegistrationScreen2(Gtk.Box):
             self._show_error_dialog(error[0], error[1])
             return
 
-        # get the username, password and birthday
+        # Get the username, password and birthday
         data = self.data_screen.get_entry_data()
         self.win.data = data
 
@@ -71,8 +73,7 @@ class RegistrationScreen2(Gtk.Box):
 
         self.win.remove_main_widget()
 
-        from kano_registration_gui.RegistrationScreen3 import RegistrationScreen3
-        # pass the age to the third registration screen so we can show the
+        # Pass the age to the third registration screen so we can show the
         # appropriate number of entries available
         RegistrationScreen3(self.win, age)
 

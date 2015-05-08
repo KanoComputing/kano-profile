@@ -17,9 +17,6 @@ from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 class RegistrationScreen1(Gtk.Box):
 
     def __init__(self, win):
-
-        logger.debug("Registration screen 1")
-
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
         self.win.set_decorated(True)
@@ -31,7 +28,7 @@ class RegistrationScreen1(Gtk.Box):
         self.pack_start(title.container, False, False, 0)
         self.pack_start(self.win.char_creator, False, False, 0)
 
-        # no back button on first page
+        # No back button on first page
         self.page_control = self.win.create_page_control(1, "", "NEXT")
         self.pack_end(self.page_control, False, False, 0)
         self.page_control.connect("next-button-clicked", self.next_page)
@@ -49,21 +46,21 @@ class RegistrationScreen1(Gtk.Box):
         self.win.get_window().set_cursor(watch_cursor)
         self.page_control.disable_buttons()
 
-        t = threading.Thread(target=self.save_character_and_go_next)
-        t.start()
+        # Force the button UI to update
+        while Gtk.events_pending():
+            Gtk.main_iteration()
+
+        # This used to be in a separate thread.
+        self.save_character_and_go_next()
 
     def save_character_and_go_next(self):
         self.win.char_creator.save()
 
-        def done():
-            logger.debug("Going into registration screen 2")
+        self.win.remove_main_widget()
 
-            self.win.remove_main_widget()
-            self.remove(self.win.char_creator)
+        # This is here so when we repack in the above screen,
+        # we don't get an error.
+        self.remove(self.win.char_creator)
+        self.win.get_window().set_cursor(None)
 
-            page = RegistrationScreen2(self.win)
-            self.win.set_main_widget(page)
-
-            self.win.get_window().set_cursor(None)
-
-        GObject.idle_add(done)
+        RegistrationScreen2(self.win)

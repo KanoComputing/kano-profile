@@ -14,7 +14,6 @@ from kano_registration_gui.GetData import GetData2
 from kano_avatar_gui.ImageView import ImageView
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_ENV_SHIFTED
 from kano_registration_gui.RegistrationScreen3 import RegistrationScreen3
-from kano.logging import logger
 
 
 # Get username, password and birthday data from user.
@@ -23,7 +22,6 @@ class RegistrationScreen2(Gtk.Box):
     def __init__(self, win):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
-        logger.debug("setting main widget")
         self.win.set_main_widget(self)
 
         self.page_control = self.win.create_page_control(2, "BACK", "NEXT")

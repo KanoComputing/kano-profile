@@ -496,27 +496,16 @@ class KanoWorldSession(object):
 
         try:
             may_write = True
+            txt = None
             f = open(online_badges_file, "w")
         except IOError as e:
             may_write = False
             txt = 'Error opening badges file {}'.format(str(e))
-            # If it is a permission error try to deal with it
-            import errno
-            if e.errno == errno.EACCES:
-                try:
-                    chown_path(online_badges_file)
-                except OSError as e:
-                    pass
-                else:
-                    # Here the file should be ok
-                    may_write = True
-        if may_write:
+        else:
             with f:
                 f.write(json.dumps(online_badges_data))
-        else:
-            return False, txt
 
-        return True, None
+        return may_write, txt
 
     def _process_notification(self, entry):
         """ Cherry picks information from a Kano World notification

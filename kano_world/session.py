@@ -11,7 +11,7 @@ import json
 import os
 
 from kano.logging import logger
-from kano.utils import download_url, read_json, ensure_dir, chown_path
+from kano.utils import download_url, read_json, ensure_dir
 from kano_profile.profile import (load_profile, set_avatar, set_environment,
                                   save_profile, save_profile_variable,
                                   recreate_char)

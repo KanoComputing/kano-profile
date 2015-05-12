@@ -11,7 +11,7 @@ import json
 import os
 
 from kano.logging import logger
-from kano.utils import download_url, read_json, ensure_dir
+from kano.utils import download_url, read_json, ensure_dir, chown_path
 from kano_profile.profile import (load_profile, set_avatar, set_environment,
                                   save_profile, save_profile_variable,
                                   recreate_char)
@@ -166,7 +166,7 @@ class KanoWorldSession(object):
             except IOError as e:
                 # There was an error somewhere, do not upload files
                 files = {}
-                logger.info(
+                logger.error(
                     'Error opening 1 of the files to upload {}'.format(str(e))
                 )
             except Exception:
@@ -278,11 +278,19 @@ class KanoWorldSession(object):
         if not os.path.exists(file_path):
             return False, 'File path not found!'
 
-        files = {'file': open(file_path, 'rb')}
+        try:
 
-        success, text, data = request_wrapper('put', '/sync/backup',
-                                              session=self.session,
-                                              files=files)
+            files = {'file': open(file_path, 'rb')}
+
+            success, text, data = request_wrapper('put', '/sync/backup',
+                                                  session=self.session,
+                                                  files=files)
+        except IOError as e:
+            # There was an error somewhere, do not upload files
+            files = {}
+            text = 'Error opening 1 of the files to backup {}'.format(str(e))
+            success = False
+
         if not success:
             return False, text
 
@@ -314,24 +322,34 @@ class KanoWorldSession(object):
         extensionless_path = os.path.splitext(file_path)[0]
 
         # attachment
-        files = {
-            'attachment': open(file_path, 'rb'),
-        }
+        try:
+            files = {
+                'attachment': open(file_path, 'rb'),
+            }
 
-        # List of attachments to search for in (name, extension) format
-        attachment_files = [
-            ('cover', 'png'),
-            ('resource', 'tar.gz'),
-            ('sample', 'mp3')
-        ]
+            # List of attachments to search for in (name, extension) format
+            attachment_files = [
+                ('cover', 'png'),
+                ('resource', 'tar.gz'),
+                ('sample', 'mp3')
+            ]
 
-        for attachment in attachment_files:
-            key, ext = attachment
-            attachment_path = "{}.{}".format(extensionless_path, ext)
+            for attachment in attachment_files:
+                key, ext = attachment
+                attachment_path = "{}.{}".format(extensionless_path, ext)
 
-            if os.path.exists(attachment_path):
-                logger.debug('uploading {}: {}'.format(key, attachment_path))
-                files[key] = open(attachment_path, 'rb')
+                if os.path.exists(attachment_path):
+                    logger.debug(
+                        'uploading {}: {}'.format(key, attachment_path))
+                    files[key] = open(attachment_path, 'rb')
+
+        except IOError as e:
+            files = None
+            txt = 'Error opening the files to be shared {}'.format(str(e))
+
+        # Since we can't open the file, there is no need to continue
+        if not files:
+            return False, txt
 
         # data
         payload = {
@@ -476,8 +494,27 @@ class KanoWorldSession(object):
                 "title": badge["title"]
             }
 
-        with open(online_badges_file, "w") as f:
-            f.write(json.dumps(online_badges_data))
+        try:
+            may_write = True
+            f = open(online_badges_file, "w")
+        except IOError as e:
+            may_write = False
+            txt = 'Error opening badges file {}'.format(str(e))
+            # If it is a permission error try to deal with it
+            import errno
+            if e.errno == errno.EACCES:
+                try:
+                    chown_path(online_badges_file)
+                except OSError as e:
+                    pass
+                else:
+                    # Here the file should be ok
+                    may_write = True
+        if may_write:
+            with f:
+                f.write(json.dumps(online_badges_data))
+        else:
+            return False, txt
 
         return True, None
 

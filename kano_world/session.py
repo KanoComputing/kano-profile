@@ -170,7 +170,7 @@ class KanoWorldSession(object):
             except IOError as e:
                 # There was an error somewhere, do not upload files
                 files = {}
-                logger.info(
+                logger.error(
                     'Error opening 1 of the files to upload {}'.format(str(e))
                 )
             except Exception:
@@ -282,11 +282,19 @@ class KanoWorldSession(object):
         if not os.path.exists(file_path):
             return False, 'File path not found!'
 
-        files = {'file': open(file_path, 'rb')}
+        try:
 
-        success, text, data = request_wrapper('put', '/sync/backup',
-                                              session=self.session,
-                                              files=files)
+            files = {'file': open(file_path, 'rb')}
+
+            success, text, data = request_wrapper('put', '/sync/backup',
+                                                  session=self.session,
+                                                  files=files)
+        except IOError as e:
+            # There was an error somewhere, do not upload files
+            files = {}
+            text = 'Error opening 1 of the files to backup {}'.format(str(e))
+            success = False
+
         if not success:
             return False, text
 
@@ -318,24 +326,34 @@ class KanoWorldSession(object):
         extensionless_path = os.path.splitext(file_path)[0]
 
         # attachment
-        files = {
-            'attachment': open(file_path, 'rb'),
-        }
+        try:
+            files = {
+                'attachment': open(file_path, 'rb'),
+            }
 
-        # List of attachments to search for in (name, extension) format
-        attachment_files = [
-            ('cover', 'png'),
-            ('resource', 'tar.gz'),
-            ('sample', 'mp3')
-        ]
+            # List of attachments to search for in (name, extension) format
+            attachment_files = [
+                ('cover', 'png'),
+                ('resource', 'tar.gz'),
+                ('sample', 'mp3')
+            ]
 
-        for attachment in attachment_files:
-            key, ext = attachment
-            attachment_path = "{}.{}".format(extensionless_path, ext)
+            for attachment in attachment_files:
+                key, ext = attachment
+                attachment_path = "{}.{}".format(extensionless_path, ext)
 
-            if os.path.exists(attachment_path):
-                logger.debug('uploading {}: {}'.format(key, attachment_path))
-                files[key] = open(attachment_path, 'rb')
+                if os.path.exists(attachment_path):
+                    logger.debug(
+                        'uploading {}: {}'.format(key, attachment_path))
+                    files[key] = open(attachment_path, 'rb')
+
+        except IOError as e:
+            files = None
+            txt = 'Error opening the files to be shared {}'.format(str(e))
+
+        # Since we can't open the file, there is no need to continue
+        if not files:
+            return False, txt
 
         # data
         payload = {
@@ -480,10 +498,18 @@ class KanoWorldSession(object):
                 "title": badge["title"]
             }
 
-        with open(online_badges_file, "w") as f:
-            f.write(json.dumps(online_badges_data))
+        try:
+            may_write = True
+            txt = None
+            f = open(online_badges_file, "w")
+        except IOError as e:
+            may_write = False
+            txt = 'Error opening badges file {}'.format(str(e))
+        else:
+            with f:
+                f.write(json.dumps(online_badges_data))
 
-        return True, None
+        return may_write, txt
 
     def _process_notification(self, entry):
         """ Cherry picks information from a Kano World notification

@@ -11,6 +11,9 @@ import sys
 import os
 import requests
 
+# TODO: Remove this statement after upgrading to a friendly Python-requests match
+requests.packages.urllib3.disable_warnings()
+
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':

@@ -7,6 +7,10 @@
 #
 
 import requests
+
+# TODO: Remove this statement after upgrading to a friendly Python-requests match
+requests.packages.urllib3.disable_warnings()
+
 from kano.logging import logger
 from kano_world.config import API_URL
 from pprint import pformat

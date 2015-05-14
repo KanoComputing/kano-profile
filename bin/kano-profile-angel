@@ -1,0 +1,423 @@
+import threading
+import time
+import os
+import sys
+import tempfile
+
+from sys import platform as _platform
+
+from gi.repository import GObject
+import dbus
+import dbus.service
+from dbus.mainloop.glib import DBusGMainLoop
+
+from kano_profile.badges import (save_app_state_variable_with_dialog,
+								 calculate_xp, calculate_kano_level,
+								 increment_app_state_variable_with_dialog)
+from kano_profile.apps import get_app_data_dir, load_app_state_variable
+from kano_world.functions import (login_using_token, sync,
+							      is_registered, is_registered,
+							      get_mixed_username, has_token,
+							      backup_content, restore_content)
+from kano_profile.profile import (load_profile, get_avatar,
+                                  get_environment,
+                                  get_avatar_circ_image_path,
+                                  recreate_char)
+from kano_profile.paths import app_profiles_file
+from kano.utils import (run_bg, is_number, get_home, read_json,
+						delete_file, delete_dir, ensure_dir, run_cmd)
+from kano.logging import logger
+
+
+sync_lock = threading.Lock()
+
+def perform_login():
+	success, value = login_using_token()
+	return success, value
+
+def perform_kdesk_refresh():
+	logger.info('Performing KDesk refresh from daemon')
+	
+	if os.path.exists('/usr/bin/kdesk'):
+		run_bg('kdesk -a profile; kdesk -a world')
+
+def perform_sync_with_world():
+	global sync_lock
+	logger.debug('perform_sync_with_world')
+	success = False
+
+	
+	sync_lock.acquire()
+	try:
+		success, value = perform_login()
+		
+		if success:
+			success, value = sync()
+
+	except Exception as e:
+		success = False
+		value = 'While syncing, caught {}'.format(repr(e))
+		logger.error(value)
+	finally:
+		sync_lock.release()
+	
+	if not success:
+		logger.error(value)
+		return
+		
+	perform_kdesk_refresh()
+	
+	logger.info('Sync Ok :-)')
+	
+def perform_backup_to_world():
+	global sync_lock
+	logger.debug('performing backup to World')
+	success = False
+	
+	sync_lock.acquire()
+	try:
+		success, value = perform_login()
+		
+		if not success:
+			logger.error(value)
+			return
+
+		os.chdir(get_home())
+
+		folders = []
+		app_profiles_data = read_json(app_profiles_file)
+		for key, values in app_profiles_data.iteritems():
+			if 'dir' in values:
+				dir_path = values['dir']
+				if os.path.exists(dir_path):
+					folders.append(values['dir'])
+		if not folders:
+			logger.info('No folders available, no need to backup')
+			return
+
+		tmp_dir = tempfile.mkdtemp()
+		tmp_file = os.path.join(tmp_dir, 'backup.tar.gz')
+		delete_file(tmp_file)
+
+		tar_cmd = 'tar -czf {tmp_file} {folders} --exclude=webload'.format(
+			tmp_file=tmp_file, folders=' '.join(folders))
+		if _platform == 'darwin':
+			tar_cmd = 'g' + tar_cmd
+		_, e, _ = run_cmd(tar_cmd)
+		if e:
+			msg = 'Error with compressing backup data: {}'.format(e)
+			logger.error(msg)
+			delete_dir(tmp_dir)
+			return
+
+		success, error = backup_content(tmp_file)
+		if not success:
+			msg = 'Error with uploading backup data: {}'.format(e)
+			logger.error(msg)
+
+		delete_file(tmp_file)
+		delete_dir(tmp_dir)
+	except Exception as e:
+		value = 'While backing up, caught {}'.format(repr(e))
+		success = False
+		logger.error(value)
+	finally:
+		sync_lock.release()
+	
+	if not success:
+		logger.error(value)
+		return
+			
+	logger.info('Backup Ok :-)')
+	
+
+def perform_restore_from_world():
+	global sync_lock
+	logger.debug('performing backup to World')
+	success = False
+	
+	sync_lock.acquire()
+	try:
+		success, value = perform_login()
+		
+		if not success:
+			logger.error(value)
+			return
+
+		os.chdir(get_home())
+
+		tmp_dir = tempfile.mkdtemp()
+		tmp_file = os.path.join(tmp_dir, 'restore.tar.gz')
+		delete_file(tmp_file)
+
+		success, error = restore_content(tmp_file)
+		if not success:
+			msg = 'Error with downloading restore data: ' + error
+			logger.error(msg)
+			delete_dir(tmp_dir)
+			return
+
+		if _platform == 'darwin':
+			tar_cmd = 'gtar -xzf {} --skip-old-files'.format(tmp_file)
+		else:
+			tar_cmd = 'tar -kxzf {}'.format(tmp_file)
+
+		_, e, _ = run_cmd(tar_cmd)
+		if e:
+			msg = 'Error with uncompressing restore data: {}'.format(e)
+			logger.error(msg)
+
+		perform_kdesk_refresh()
+
+
+		delete_file(tmp_file)
+		delete_dir(tmp_dir)
+	except Exception as e:
+		value = 'While restoring up, caught {}'.format(repr(e))
+		success = False
+		logger.error(value)
+	finally:
+		sync_lock.release()
+	
+	if not success:
+		logger.error(value)
+		return
+			
+	logger.info('Restore Ok :-)')
+	
+	
+def get_email():
+	logger.debug('getting the email')
+	try:
+		email = load_profile()['email']
+	except Exception:
+		print 'Email not found'
+		email = ''
+	return email
+
+# This service should replace kano-sync
+class KanoProfileWorldService(dbus.service.Object):
+	def __init__(self):
+		bus_name = dbus.service.BusName('me.kano.profile', bus=dbus.SessionBus())
+		dbus.service.Object.__init__(self, bus_name, '/me/kano/profile/world')
+		
+	@dbus.service.method(dbus_interface='me.kano.profile.world',
+						 in_signature='b')
+	def sync(self, block):
+		logger.debug('Received instruction to sync')
+		if not block:
+			th = threading.Thread(target=perform_sync_with_world)
+			th.start()
+		else:
+			perform_sync_with_world()
+		logger.debug('Thread initiated')
+		
+	@dbus.service.method(dbus_interface='me.kano.profile.world')
+	def backup(self):
+		logger.debug('Received instruction to backup')
+		th = threading.Thread(target=perform_backup_to_world)
+		th.start()
+		logger.debug('Thread initiated')
+		
+	@dbus.service.method(dbus_interface='me.kano.profile.world')
+	def restore(self):
+		logger.debug('Received instruction to backup')
+		th = threading.Thread(target=perform_restore_from_world)
+		th.start()
+		logger.debug('Thread initiated')
+
+# This service should replace kano-profile-cli
+class KanoProfileService(dbus.service.Object):
+	def __init__(self):
+		bus_name = dbus.service.BusName('me.kano.profile', bus=dbus.SessionBus())
+		dbus.service.Object.__init__(self, bus_name, '/me/kano/profile')
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     out_signature='s')
+	def get_email(self):
+		logger.debug('Received instruction to provide email')
+		return get_email()
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     out_signature='b')
+	def is_registered(self):
+		logger.debug('Received instruction to tell if registered')
+		return is_registered()
+	
+	@dbus.service.method(dbus_interface='me.kano.profile',
+						 in_signature='s',
+	                     out_signature='s')
+	def get_app_data_dir(self, app_name ):
+		logger.debug(
+			'Received instruction to give data dir for {}'.format(
+				app_name)
+		)
+		return get_app_data_dir(app_name)
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+						 in_signature='ss',
+	                     out_signature='s')
+	def load_app_state_variable(self, app_name, variable ):
+		logger.debug(
+			'Load app {}, varname {}'.format(app_name, variable))
+		value = load_app_state_variable(app_name, variable)
+		if value:
+			value = str(value)
+		else:
+			value = ''
+		return value
+
+
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     in_signature='sss')
+	def save_app_state_variable(self, app_name, variable, value):
+		logger.debug(
+			'Save app {}, varname {}, value {}'.format(
+				app_name, variable, value)
+		)
+		if value.isdigit():
+			value = int(value)
+		elif is_number(value):
+			value = float(value)
+		save_app_state_variable_with_dialog(app_name, variable, value)
+		
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     in_signature='sss',
+	                     out_signature='i')
+	def save_app_state_variable_get_xp_diff(self, app_name, variable, value):
+		logger.debug(
+			'Save app (with XP) {}, varname {}, value {}'.format(
+				app_name, variable, value)
+		)		
+		if value.isdigit():
+			value = int(value)
+		elif is_number(value):
+			value = float(value)
+		old_xp = calculate_xp()
+		save_app_state_variable_with_dialog(app_name, variable, value)
+		new_xp = calculate_xp()
+		
+		return new_xp - old_xp
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     in_signature='sss')
+	def increment_app_state_variable(self, app_name, variable, value):
+		logger.debug(
+			'Increment app {}, varname {}, value {}'.format(
+				app_name, variable, value)
+		)
+		if value.isdigit():
+			value = int(value)
+		elif is_number(value):
+			value = float(value)
+		increment_app_state_variable_with_dialog(app_name, variable, value)
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     out_signature='a{sv}')
+	def get_notifications(self):
+		logger.debug('Received instruction to provide notifications')
+		try:
+			unread_notifications = load_profile()['notifications']
+		except Exception:
+			logger.debug('No notificationis found')
+			unread_notifications = {}
+		return unread_notifications
+
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     out_signature='i')
+	def get_notifications_count(self):
+		logger.debug('Received instruction to provide notification count')
+		try:
+			total_unread = len(load_profile()['notifications'])
+		except Exception:
+			total_unread = 0
+		return total_unread
+		
+	@dbus.service.method(dbus_interface='me.kano.profile',
+	                     out_signature='a{sv}')
+	def get_stats(self):
+		'''
+		stats= {
+			'mixed_username': 'Helloooo',
+			'is_registered': True,
+			'has_token': True,
+			'xp': 1,
+			'level': 2,
+			'progress': 12,
+			'avatar': 'This That',
+			'environment': 'this',
+			'avatar_image_path': 'image/is/here',
+			'progress_image_path': 'progress/image/is/here'
+		}
+		'''
+		logger.debug('Received instruction to provide stats')
+		stats['mixed_username'] = '{}'.format(get_mixed_username())
+		stats['is_registered'] = '{}'.format(int(is_registered()))
+		stats['has_token'] = '{}'.format(int(has_token()))
+		stats['xp'] =  '{}'.format(calculate_xp())
+
+		level, progress, _ = calculate_kano_level()
+		progress = int(progress * 100)
+		stats['level'] = '{}'.format(level)
+		stats['progress'] = '{}'.format(progress)
+
+		avatar_cat, avatar_item = get_avatar()
+		environment = get_environment()
+		stats['avatar'] = '{} {}'.format(avatar_cat, avatar_item)
+		stats['environment'] = '{}'.format(environment)
+
+		avatar_image_path = get_avatar_circ_image_path()
+		if not os.path.exists(avatar_image_path):
+			recreate_char(block=True)
+			avatar_image_path = get_avatar_circ_image_path()
+		# If it still doesn't exist leave it empty
+		if not os.path.exists(avatar_image_path):
+			avatar_image_path = 'image_missing'
+		stats['avatar_image_path'] = '{}'.format(avatar_image_path)
+
+		progress_value = progress / 5
+		progress_image_path = os.path.join('/usr/share/kano-profile/media/images/progress_icons/209x80/',
+										   '{}.png'.format(progress_value))
+		if not os.path.exists(progress_image_path):
+			progress_image_path = 'image_missing'
+		stats['progress_image_path'] = '{}'.format(progress_image_path)	
+		
+		return dbus.Dictionary(stats, signature='sv')
+
+def other_service_on_DBus():
+	''' Needs to be ran after setting the main loop for DBus
+	'''
+	try:
+		bus = dbus.SessionBus()
+		helloservice = bus.get_object('me.kano.profile', '/me/kano/profile')
+		
+		if helloservice:
+			logger.error('sync service already running, exiting...')
+			return False
+		else:
+			del helloservice
+			del bus
+	except dbus.exceptions.DBusException as e:
+		# We know this exception will be thrown
+		if not e.get_dbus_name() == 'org.freedesktop.DBus.Error.ServiceUnknown':
+			logger.error('Unexprected exception with DBus: {}'.format(e))
+	
+	return True
+	
+
+def main():
+	GObject.threads_init()
+	main_loop = DBusGMainLoop(set_as_default=True)
+
+	# Ensure only one instance is on D bus :-P
+	if not other_service_on_DBus():
+		return 1
+	
+	my_serv = KanoProfileWorldService()
+	my_serv2 = KanoProfileService()
+	GObject.MainLoop().run()
+
+
+if __name__ == '__main__':
+	sys.exit(main())

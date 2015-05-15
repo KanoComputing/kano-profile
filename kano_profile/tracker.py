@@ -59,8 +59,13 @@ def load_token():
     """
 
     if os.path.exists(tracker_token_file):
-        with open_locked(tracker_token_file, "r") as f:
-            return f.read().strip()
+        try:
+            f = open_locked(tracker_token_file, "r")
+        except IOError as e:
+            logger.error('Error opening tracker token file {}'.format(e))
+        else:
+            with f:
+                return f.read().strip()
     else:
         return generate_tracker_token()
 
@@ -78,11 +83,26 @@ def generate_tracker_token():
     token = hashlib.md5(str(time.time())).hexdigest()
 
     ensure_dir(tracker_dir)
-    with open_locked(tracker_token_file, "w") as f:
-        f.write(token)
+    try:
+        f = open_locked(tracker_token_file, "w")
+    except IOError as e:
+        logger.error(
+            'Error opening tracker token file (generate) {}'.format(e))
+    else:
+        with f:
+            f.write(token)
+        if 'SUDO_USER' in os.environ:
+            chown_path(tracker_token_file)
 
     # Make sure that the events file exist
-    open(tracker_events_file, 'a').close()
+    try:
+        f = open(tracker_events_file, 'a').close()
+    except IOError as e:
+        logger.error('Error opening tracker events file {}'.format(e))
+    else:
+        f.close()
+        if 'SUDO_USER' in os.environ:
+            chown_path(tracker_events_file)
 
     return token
 
@@ -111,9 +131,15 @@ def session_start(name, pid=None):
 
     path = get_session_file_path(data['name'], data['pid'])
 
-    with open_locked(path, "w") as f:
-        json.dump(data, f)
-    chown_path(path)
+    try:
+        f = open_locked(path, "w")
+    except IOError as e:
+        logger.error('Error opening tracker session file {}'.format(e))
+    else:
+        with f:
+            json.dump(data, f)
+        if 'SUDO_USER' in os.environ:
+            chown_path(path)
 
     return path
 
@@ -125,14 +151,27 @@ def session_end(session_file):
         logger.warn(msg)
         return
 
-    with open_locked(session_file, "r") as rf:
-        data = json.load(rf)
+    try:
+        rf = open_locked(session_file, "r")
+    except IOError as e:
+        logger.error('Error opening the tracker session file {}'.format(e))
+    else:
+        with rf:
+            data = json.load(rf)
 
-        data["elapsed"] = int(time.time()) - data["started"]
-        data["finished"] = True
+            data["elapsed"] = int(time.time()) - data["started"]
+            data["finished"] = True
 
-        with open(session_file, "w") as wf:
-            json.dump(data, wf)
+            try:
+                wf = open(session_file, "w")
+            except IOError as e:
+                logger.error(
+                    'Error opening the tracker session file {}'.format(e))
+            else:
+                with wf:
+                    json.dump(data, wf)
+                if 'SUDO_USER' in os.environ:
+                    chown_path(data)
 
 
 def session_log(name, started, length):
@@ -148,15 +187,22 @@ def session_log(name, started, length):
         :param started: int
     """
 
-    with open_locked(tracker_events_file, 'a') as af:
-        session = {
-            "name": name,
-            "started": int(started),
-            "elapsed": int(length)
-        }
+    try:
+        af = open_locked(tracker_events_file, 'a')
+    except IOError as e:
+        logger.error('Error while opening events file'.format(e))
+    else:
+        with af:
+            session = {
+                "name": name,
+                "started": int(started),
+                "elapsed": int(length)
+            }
 
-        event = get_session_event(session)
-        af.write(json.dumps(event) + "\n")
+            event = get_session_event(session)
+            af.write(json.dumps(event) + "\n")
+        if 'SUDO_USER' in os.environ:
+            chown_path(tracker_events_file)
 
 
 def track_data(name, data):
@@ -183,8 +229,15 @@ def track_data(name, data):
         "data": data
     }
 
-    with open_locked(tracker_events_file, "a") as af:
-        af.write(json.dumps(event) + "\n")
+    try:
+        af = open_locked(tracker_events_file, "a")
+    except IOError as e:
+        logger.error('Error opening tracker events file {}'.format(e))
+    else:
+        with af:
+            af.write(json.dumps(event) + "\n")
+        if 'SUDO_USER' in os.environ:
+            chown_path(tracker_events_file)
 
 
 def track_action(name):
@@ -194,9 +247,16 @@ def track_action(name):
         :type name: str
     """
 
-    with open_locked(tracker_events_file, 'a') as af:
-        event = get_action_event(name)
-        af.write(json.dumps(event) + "\n")
+    try:
+        af = open_locked(tracker_events_file, 'a')
+    except IOError as e:
+        logger.error('Error opening tracker events file {}'.format(e))
+    else:
+        with af:
+            event = get_action_event(name)
+            af.write(json.dumps(event) + "\n")
+        if 'SUDO_USER' in os.environ:
+            chown_path(tracker_events_file)
 
 
 def get_action_event(name):
@@ -296,40 +356,43 @@ def add_runtime_to_app(app, runtime):
 
     # Make sure no one else is accessing this file
     app_state_file = get_app_state_file('kano-tracker')
-    tracker_store = open(app_state_file, "r")
-    fcntl.flock(tracker_store, fcntl.LOCK_EX)
-
-    app_stats = load_app_state_variable('kano-tracker', 'app_stats')
-    if not app_stats:
-        app_stats = dict()
 
     try:
-        app_stats[app]['starts'] += 1
-        app_stats[app]['runtime'] += runtime
-    except Exception:
-        app_stats[app] = {
-            'starts': 1,
-            'runtime': runtime,
-        }
+        tracker_store = open_locked(app_state_file, "r")
+    except IOError as e:
+        logger.error('Error opening app state file {}'.format(e))
+    else:
+        app_stats = load_app_state_variable('kano-tracker', 'app_stats')
+        if not app_stats:
+            app_stats = dict()
 
-    # Record usage data on per-week basis
-    if 'weekly' not in app_stats[app]:
-        app_stats[app]['weekly'] = {}
+        try:
+            app_stats[app]['starts'] += 1
+            app_stats[app]['runtime'] += runtime
+        except Exception:
+            app_stats[app] = {
+                'starts': 1,
+                'runtime': runtime,
+            }
 
-    week = str(_get_nearest_previous_monday())
-    if week not in app_stats[app]['weekly']:
-        app_stats[app]['weekly'][week] = {
-            'starts': 0,
-            'runtime': 0
-        }
+        # Record usage data on per-week basis
+        if 'weekly' not in app_stats[app]:
+            app_stats[app]['weekly'] = {}
 
-    app_stats[app]['weekly'][week]['starts'] += 1
-    app_stats[app]['weekly'][week]['runtime'] += runtime
+        week = str(_get_nearest_previous_monday())
+        if week not in app_stats[app]['weekly']:
+            app_stats[app]['weekly'][week] = {
+                'starts': 0,
+                'runtime': 0
+            }
 
-    save_app_state_variable('kano-tracker', 'app_stats', app_stats)
+        app_stats[app]['weekly'][week]['starts'] += 1
+        app_stats[app]['weekly'][week]['runtime'] += runtime
 
-    # Close the lock
-    tracker_store.close()
+        save_app_state_variable('kano-tracker', 'app_stats', app_stats)
+
+        # Close the lock
+        tracker_store.close()
 
 
 def save_hardware_info():
@@ -379,15 +442,20 @@ def get_tracker_events(old_only=False):
 
     data = {'events': []}
 
-    with open_locked(tracker_events_file, "r") as rf:
-        for event_line in rf.readlines():
-            try:
-                event = json.loads(event_line)
-            except:
-                logger.warn("Found a corrupted event, skipping.")
+    try:
+        rf = open_locked(tracker_events_file, "r")
+    except IOError as e:
+        logger.error('Error opening the tracker events file {}'.format(e))
+    else:
+        with rf:
+            for event_line in rf.readlines():
+                try:
+                    event = json.loads(event_line)
+                except:
+                    logger.warn("Found a corrupted event, skipping.")
 
-            if _validate_event(event) and event['token'] != TOKEN:
-                data['events'].append(event)
+                if _validate_event(event) and event['token'] != TOKEN:
+                    data['events'].append(event)
 
     return data
 
@@ -433,17 +501,23 @@ def clear_tracker_events(old_only=True):
         :param old_only: Don't remove data from the current boot.
         :type old_only: boolean
     """
+    try:
+        rf = open_locked(tracker_events_file, "r")
+    except IOError as e:
+        logger.error('Error opening tracking events file {}'.format(e))
+    else:
+        with rf:
+            events = []
+            for event_line in rf.readlines():
+                try:
+                    event = json.loads(event_line)
+                    if 'token' in event and event['token'] == TOKEN:
+                        events.append(event_line)
+                except:
+                    logger.warn("Found a corrupted event, skipping.")
 
-    with open_locked(tracker_events_file, "r") as rf:
-        events = []
-        for event_line in rf.readlines():
-            try:
-                event = json.loads(event_line)
-                if 'token' in event and event['token'] == TOKEN:
-                    events.append(event_line)
-            except:
-                logger.warn("Found a corrupted event, skipping.")
-
-        with open(tracker_events_file, "w") as wf:
-            for event_line in events:
-                wf.write(event_line)
+            with open(tracker_events_file, "w") as wf:
+                for event_line in events:
+                    wf.write(event_line)
+            if 'SUDO_USER' in os.environ:
+                chown_path(tracker_events_file)

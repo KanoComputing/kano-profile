@@ -204,8 +204,14 @@ def load_online_badges():
         return {}
 
     online_badges = {}
-    with open(online_badges_file, "r") as f:
-        online_badges = json.load(f)
+    try:
+        f = open(online_badges_file, "r")
+    except IOError as e:
+        logger.error(
+            'Error opening badges file: {}'.format(e))
+    else:
+        with f:
+            online_badges = json.load(f)
 
     return online_badges
 

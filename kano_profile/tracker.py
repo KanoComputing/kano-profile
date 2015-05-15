@@ -29,20 +29,13 @@ from kano_profile.paths import tracker_dir, tracker_events_file, \
     tracker_token_file
 
 
-class open_locked:
+class open_locked(file):
     """ A version of open with an exclusive lock to be used within
         controlled execution statements.
     """
-
-    def __init__(self, path, mode):
-        self._fd = open(path, mode)
-        fcntl.flock(self._fd, fcntl.LOCK_EX)
-
-    def __enter__(self):
-        return self._fd
-
-    def __exit__(self, exit_type, value, traceback):
-        self._fd.close()
+    def __init__(self, *args, **kwargs):
+        super(open_locked, self).__init__(*args, **kwargs)
+        fcntl.flock(self, fcntl.LOCK_EX)
 
 
 def load_token():

@@ -60,11 +60,8 @@ def launch(data):
     msg = 'Downloaded share: {}'.format(title)
     logger.info(msg)
 
-    cmd = 'kano-dialog title="Download completed successfully" buttons=Launch:green:1,Return:grey:2'
-    _, _, rc = run_cmd(cmd)
-    if rc == 1:
-        launch_project(app, attachment_name, folder)
-        _report_share_opened(item_id)
+    launch_project(app, attachment_name, folder)
+    _report_share_opened(item_id)
 
 
 def _report_share_opened(item_id):

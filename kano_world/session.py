@@ -15,7 +15,7 @@ import json
 import os
 
 from kano.logging import logger
-from kano.utils import download_url, read_json, ensure_dir
+from kano.utils import download_url, read_json, ensure_dir, chown_path
 from kano_profile.profile import (load_profile, set_avatar, set_environment,
                                   save_profile, save_profile_variable,
                                   recreate_char)
@@ -508,6 +508,10 @@ class KanoWorldSession(object):
         else:
             with f:
                 f.write(json.dumps(online_badges_data))
+            if 'SUDO_USER' in os.environ:
+                chown_path(online_badges_dir)
+                chown_path(online_badges_file)
+
 
         return may_write, txt
 

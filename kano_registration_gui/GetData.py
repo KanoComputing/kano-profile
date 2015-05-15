@@ -32,14 +32,18 @@ def is_email(email):
 def check_username(username):
     '''Check username only has letters, numbers, - and _
     '''
-    pattern = '[a-zA-Z0-9_\-.]'
-    num_matches = len(re.split(pattern, username))
-    if num_matches == len(username) + 1 and \
-            len(username) >= 3 and \
-            len(username) <= 25:
-        return True
-    else:
-        return False
+    pattern = '^[a-zA-Z0-9_\-.]+$'
+    match = re.match(pattern, username)
+    return match and len(username) >= 3 and len(username) <= 25
+
+
+def check_password(password):
+    '''Check password contains no whitespace and is minimum
+
+    '''
+    pattern = '^\S+$'
+    match = re.match(pattern, password)
+    return match and len(password) > 5
 
 
 class DataTemplate(Gtk.EventBox):
@@ -111,10 +115,10 @@ class GetData2(DataTemplate):
         password = self.password_entry.get_text()
         if len(password) == 0:
             self.password_entry.label_success("")
-        elif len(password) < 6:
-            self.password_entry.label_success("is too short", "fail")
-        else:
+        elif check_password(password):
             self.password_entry.label_success("looks good!", "success")
+        else:
+            self.password_entry.label_success("is not valid", "fail")
 
         self.widgets_full()
 

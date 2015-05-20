@@ -89,7 +89,7 @@ def generate_tracker_token():
 
     # Make sure that the events file exist
     try:
-        f = open(tracker_events_file, 'a').close()
+        f = open(tracker_events_file, 'a')
     except IOError as e:
         logger.error('Error opening tracker events file {}'.format(e))
     else:

@@ -1,7 +1,11 @@
 # kano-profile
 
-**kano-profile** is a Python library and family of scripts which provides an API for Kano programs to communicate with the user's Kano profile.
+A Python library and family of scripts which provide an API for Kano programs to maintain the user's profile locally and synchronize it with Kano World.
 
 Visit the project's wiki to get the full description: https://github.com/KanoComputing/kano-profile/wiki
 
-[Collaborate!](https://github.com/KanoComputing/kano-profile/wiki/Collaboration)
+### [Installation](https://github.com/KanoComputing/kano-profile/wiki/Introduction)
+
+### [Development](https://github.com/KanoComputing/kano-profile/wiki/Development)
+
+### [Collaboration](https://github.com/KanoComputing/kano-profile/wiki/Collaboration)

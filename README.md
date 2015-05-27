@@ -4,8 +4,8 @@ A Python library and family of scripts which provide an API for Kano programs to
 
 Visit the project's wiki to get the full description: https://github.com/KanoComputing/kano-profile/wiki
 
-### [Installation](https://github.com/KanoComputing/kano-profile/wiki/Introduction)
+[Installation](https://github.com/KanoComputing/kano-profile/wiki/Introduction)
 
-### [Development](https://github.com/KanoComputing/kano-profile/wiki/Development)
+[Development](https://github.com/KanoComputing/kano-profile/wiki/Development)
 
-### [Collaboration](https://github.com/KanoComputing/kano-profile/wiki/Collaboration)
+[Collaboration](https://github.com/KanoComputing/kano-profile/wiki/Collaboration)

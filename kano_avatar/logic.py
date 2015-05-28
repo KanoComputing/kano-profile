@@ -1650,12 +1650,52 @@ def append_suffix_to_fname(filename, suffix):
     return fname + suffix + exten
 
 
-def get_avatar_conf():
+def get_avatar_conf(aux_files=[]):
     conf = None
     with open(AVATAR_CONF_FILE) as f:
         conf = yaml.load(f)
 
     if conf is None:
-        logger.error('Conf file {} not found'.format(AVATAR_CONF_FILE))
+        logger.error('Default Conf file {} not found'.format(AVATAR_CONF_FILE))
+    else:
+        if not is_valid_configuration(conf):
+            logger.error('Default configuration file is not in valid format')
+            return dict()
 
+    if aux_files:
+        logger.debug('Auxiliary configuration files to be used: {}'.format(aux_files))
+
+        for con_fname in aux_files:
+            if os.path.isfile(con_fname):
+                # Attempt to decode as JSON
+                try:
+                    f = open(con_fname)
+                except IOError as e:
+                    logger.error('Error opening the aux conf file {}'.format(e))
+                    continue
+                else:
+                    with f:
+                        try:
+                            aux_conf = load(f)
+                        except ValueError as e:
+                            logger.info('Conf file not a JSON {}'.format(e))
+                # Attempt to decode as a YAML
+            else:
+                logger.warn(
+                    "Auxiliary conf file {} doen't exist".format(con_fname))
     return conf
+
+
+def is_valid_configuration(conf_struct):
+    allowed_conf = set(
+        ('special_categories',
+         'objects',
+         'categories',
+         'characters')
+    )
+    if set(conf_struct.iterkeys()).issubset(allowed_conf):
+        pass
+    else:
+        logger.error('Conf structure contains invalid objects')
+        return False
+    return True

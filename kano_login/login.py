@@ -48,7 +48,8 @@ class Login(Gtk.Box):
         self.win.set_size_request(self.width, -1)
         self.first_boot = first_boot
 
-        self.heading = Heading("Login", "Enter your username and password")
+        self.heading = Heading(_("Login"),
+                               _("Enter your username and password"))
         self.pack_start(self.heading.container, False, False, 10)
 
         if force_login:
@@ -56,8 +57,8 @@ class Login(Gtk.Box):
 
         else:
             self.labelled_entries = LabelledEntries(
-                [{"heading": "Username", "subheading": ""},
-                 {"heading": "Password", "subheading": ""}]
+                [{"heading": _("Username"), "subheading": ""},
+                 {"heading": _("Password"), "subheading": ""}]
             )
             self.labelled_entries.set_spacing(15)
             self.labelled_entries.set_margin_right(40)
@@ -72,9 +73,9 @@ class Login(Gtk.Box):
             entry.connect("key-release-event", self.activate)
 
         self.button_box = KanoButtonBox(
-            "LOGIN",
-            "Create New",
-            "Forgotten password?"
+            _("Login").upper(),
+            _("Create New"),
+            _("Forgotten password?")
         )
         self.button_box.set_spacing(40)
         self.button_box.set_margin_left(80)
@@ -100,7 +101,7 @@ class Login(Gtk.Box):
         username.
         '''
         username = get_mixed_username()
-        title_label = Gtk.Label(" Username:  ")
+        title_label = Gtk.Label(_(" Username:  "))
         self.username_label = Gtk.Label(username)
         title_label.get_style_context().add_class("bold_label")
         self.username_label.get_style_context().add_class("desc_label")
@@ -119,7 +120,7 @@ class Login(Gtk.Box):
 
         self.pack_start(align, False, False, 15)
         self.labelled_entries = LabelledEntries(
-            [{"heading": "Password", "subheading": ""}]
+            [{"heading": _("Password"), "subheading": ""}]
         )
         self.password_entry = self.labelled_entries.get_entry(0)
         vbox.pack_start(self.labelled_entries, False, False, 15)
@@ -168,8 +169,8 @@ class Login(Gtk.Box):
 
     def log_user_in(self):
         if not is_internet():
-            title = "You don't have internet!"
-            description = (
+            title = _("You don't have internet!")
+            description = _(
                 "Connect with wifi or ethernet and try again"
             )
             return_value = 0
@@ -189,7 +190,7 @@ class Login(Gtk.Box):
 
         if not success:
             logger.info('problem with login: {}'.format(text))
-            title = "Houston, we have a problem"
+            title = _("Houston, we have a problem")
             description = text
             return_value = "FAIL"
 
@@ -233,8 +234,8 @@ class Login(Gtk.Box):
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-        title = "Success!"
-        description = "You're in - online features now enabled."
+        title = _("Success!")
+        description = _("You're in - online features now enabled.")
         return_value = "SUCCESS"
 
         return (title, description, return_value)
@@ -246,7 +247,7 @@ class Login(Gtk.Box):
         the cursor and kano button spinner.
         '''
         kdialog = KanoDialog(title, description,
-                             {"OK": {"return_value": return_value}},
+                             {_("OK"): {"return_value": return_value}},
                              parent_window=self.win)
         response = kdialog.run()
 
@@ -280,13 +281,13 @@ class ResetPassword(Gtk.Box):
         self.win.set_main_widget(self)
 
         self.heading = Heading(
-            "Reset your password",
-            "We'll send a new password to your email"
+            _("Reset your password"),
+            _("We'll send a new password to your email")
         )
         self.pack_start(self.heading.container, False, False, 10)
 
         self.labelled_entries = LabelledEntries(
-            [{"heading": "Email", "subheading": ""}]
+            [{"heading": _("Email"), "subheading": ""}]
         )
         self.pack_start(self.labelled_entries, False, False, 0)
 
@@ -297,7 +298,7 @@ class ResetPassword(Gtk.Box):
         self.email_entry.set_text(user_email)
         self.email_entry.connect("key-release-event", self.activate)
 
-        self.button = KanoButton("RESET PASSWORD")
+        self.button = KanoButton(_("Reset password").upper())
         self.button.pack_and_align()
         self.button.connect("button-release-event", self.activate)
         self.button.connect("key-release-event", self.activate)
@@ -321,18 +322,18 @@ class ResetPassword(Gtk.Box):
         email = self.labelled_entries.get_entry(0).get_text()
         success, text = reset_password(email)
         if success:
-            title = "Success!"
-            description = "Sent new password to your email"
+            title = _("Success!")
+            description = _("Sent new password to your email")
             button_dict = {
-                "GO TO LOGIN SCREEN": {"return_value": 12},
-                "QUIT": {"return_value": 10, "color": "red"}
+                _("Go to login screen").upper(): {"return_value": 12},
+                _("Quit").upper(): {"return_value": 10, "color": "red"}
             }
         else:
-            title = "Something went wrong!"
+            title = _("Something went wrong!")
             description = text
             button_dict = {
-                "QUIT": {"return_value": 10, "color": "red"},
-                "TRY AGAIN": {"return_value": 11}
+                _("Quit").upper(): {"return_value": 10, "color": "red"},
+                _("Try again").upper(): {"return_value": 11}
             }
 
         GObject.idle_add(

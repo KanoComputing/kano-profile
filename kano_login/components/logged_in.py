@@ -21,11 +21,11 @@ class LoggedIn(Gtk.Window):
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_resizable(False)
-        self.ok_button = KanoButton("OK")
+        self.ok_button = KanoButton(_("OK"))
         self.ok_button.pack_and_align()
         self.ok_button.set_padding(20, 20, 0, 0)
         self.ok_button.connect("clicked", Gtk.main_quit)
-        self.title = Heading("Logged in!", "You're already logged in")
+        self.title = Heading(_("Logged in!"), _("You're already logged in"))
         self.main_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(self.main_container)
@@ -33,7 +33,7 @@ class LoggedIn(Gtk.Window):
         self.main_container.pack_start(self.ok_button.align, False, False, 0)
 
         # To get a logout button, uncomment out the lines below
-        #self.logout_button = OrangeButton("Log out?")
+        #self.logout_button = OrangeButton(_("Log out?"))
         #self.logout_button.connect("clicked", self.logout)
         #self.main_container.pack_start(self.logout_button, False, False, 0)
 
@@ -43,7 +43,7 @@ class LoggedIn(Gtk.Window):
     def logged_out_screen(self):
         for child in self.main_container:
             self.main_container.remove(child)
-        self.title.set_text("Logged out!", "")
+        self.title.set_text(_("Logged out!"), "")
         self.main_container.pack_start(self.title.container, False, False, 0)
         self.main_container.pack_start(self.alignment, False, False, 0)
 

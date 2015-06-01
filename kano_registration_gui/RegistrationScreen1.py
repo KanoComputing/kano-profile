@@ -20,14 +20,14 @@ class RegistrationScreen1(Gtk.Box):
         self.win.set_decorated(True)
         self.win.set_main_widget(self)
 
-        title = Heading('Make your Character',
-                        'Change how the character looks')
+        title = Heading(_('Make your Character'),
+                        _('Change how the character looks'))
 
         self.pack_start(title.container, False, False, 0)
         self.pack_start(self.win.char_creator, False, False, 0)
 
         # No back button on first page
-        self.page_control = self.win.create_page_control(1, "", "NEXT")
+        self.page_control = self.win.create_page_control(1, "", _("NEXT"))
         self.pack_end(self.page_control, False, False, 0)
         self.page_control.connect("next-button-clicked", self.next_page)
 

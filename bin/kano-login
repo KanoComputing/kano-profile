@@ -23,13 +23,18 @@ Options:
 import os
 import sys
 import docopt
-
+import gettext
 from gi.repository import Gtk, GObject
 
 if __name__ == '__main__' and __package__ is None:
-    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if dir_path != '/usr':
-        sys.path.insert(1, dir_path)
+    DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if DIR_PATH != '/usr':
+        sys.path.insert(1, DIR_PATH)
+        LOCALE_PATH = os.path.join(DIR_PATH, 'locale')
+    else:
+        LOCALE_PATH = None
+
+gettext.install('kano-tutorial', LOCALE_PATH, unicode=1)
 
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.apply_styles import apply_styling_to_screen
@@ -121,16 +126,16 @@ class HeaderBar(Gtk.Box):
 
 def close_window(window=None):
     kd = KanoDialog(
-        "Are you sure?",
-        "You'll miss out on the best features of your Kano",
+        _("Are you sure?"),
+        _("You'll miss out on the best features of your Kano"),
         [
             {
-                "label": "DON'T CLOSE",
+                "label": _("Don't close").upper(),
                 "return_value": "dont-close",
                 "color": "green"
             },
             {
-                "label": "CLOSE",
+                "label": _("Close").upper(),
                 "return_value": "close",
                 "color": "red"
             }

@@ -24,15 +24,16 @@ class RegistrationScreen2(Gtk.Box):
         self.win = win
         self.win.set_main_widget(self)
 
-        self.page_control = self.win.create_page_control(2, "BACK", "NEXT")
+        self.page_control = self.win.create_page_control(2, _("Back").upper(),
+                                                         _("Next").upper())
         self.page_control.next_button.set_sensitive(False)
         self.pack_end(self.page_control, False, False, 0)
         self.page_control.connect("next-button-clicked", self.next_page)
         self.page_control.connect("back-button-clicked", self.prev_page)
 
         title = Heading(
-            'Character creator',
-            'Choose a cool name and secure password'
+            _('Character creator'),
+            _('Choose a cool name and secure password')
         )
 
         self.pack_start(title.container, False, False, 0)

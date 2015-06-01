@@ -31,7 +31,7 @@ class CharacterDisplay(Gtk.EventBox):
 
         launch_char_creator_btn = Gtk.Button()
         hbox = Gtk.Box()
-        edit_label = Gtk.Label("EDIT")
+        edit_label = Gtk.Label(_("Edit").upper())
         edit_label.set_margin_right(7)
 
         hbox.pack_start(self.cog_widget_icon, False, False, 0)
@@ -105,10 +105,10 @@ class CharacterEdit(Gtk.EventBox):
         self._win.pack_in_main_content(self.char_creator)
         self.char_creator.reset_selected_menu_items()
 
-        save_changes_button = KanoButton("SAVE CHANGES")
+        save_changes_button = KanoButton(_("Save changes").upper())
         save_changes_button.connect("clicked", self.save_changes)
 
-        discard_changes_button = OrangeButton("DISCARD")
+        discard_changes_button = OrangeButton(_("Discard").upper())
         discard_changes_button.connect("clicked", self.discard)
         discard_changes_button.set_margin_left(100)
         empty_label = Gtk.Label("")

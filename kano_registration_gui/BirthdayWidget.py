@@ -25,6 +25,7 @@ class BirthdayWidget(Gtk.Box):
 
     def _create_birthday_widget(self, day=None, month=None, year=None):
 
+        # TODO: Establish how DD, MM, YYYY should be translated
         self._day_entry = self._create_entry("DD", 60, 2, day)
         self._month_entry = self._create_entry("MM", 60, 2, month)
         self._year_entry = self._create_entry("YYYY", 70, 4, year)
@@ -39,7 +40,7 @@ class BirthdayWidget(Gtk.Box):
         hbox.pack_start(label2, False, False, 0)
         hbox.pack_start(self._day_entry, False, False, 0)
 
-        birthday_label = Gtk.Label("Birthday", xalign=0)
+        birthday_label = Gtk.Label(_("Birthday"), xalign=0)
         birthday_label.get_style_context().add_class("get_data_label")
         self.pack_start(birthday_label, False, False, 0)
         self.pack_start(hbox, False, False, 0)
@@ -92,9 +93,9 @@ class BirthdayWidget(Gtk.Box):
 
     def calculate_age(self):
         # Error messages
-        default_error = "Oops!"
-        default_desc = "You haven't entered a valid birthday"
-        entry_not_valid = "You haven't entered a valid number"
+        default_error = N_("Oops!")
+        default_desc = N_("You haven't entered a valid birthday")
+        entry_not_valid = N_("You haven't entered a valid number")
 
         try:
             # boolean, dictionary
@@ -140,8 +141,7 @@ class BirthdayWidget(Gtk.Box):
 
             if len(e.args) == 1:
                 error1 = default_error
-                error2 = "There's a problem - {0}".format(e)
-
+                error2 = N_("There's a problem - {0}").format(e)
             elif len(e.args) == 2:
                 error1 = e[0]
                 error2 = e[1]

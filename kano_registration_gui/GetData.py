@@ -79,7 +79,7 @@ class GetData2(DataTemplate):
         logger.debug("Checking for internet")
 
         # Do not fill this in
-        self.password_entry = LabelledEntry("Password")
+        self.password_entry = LabelledEntry(_("Password"))
         self.password_entry.connect("key-release-event", self.validate_password)
         self.bday_widget = BirthdayWidget(
             data['birthday_day'],
@@ -89,7 +89,7 @@ class GetData2(DataTemplate):
 
         self.validate_username()
 
-        self.show_password = Gtk.CheckButton.new_with_label("Show password")
+        self.show_password = Gtk.CheckButton.new_with_label(_("Show password"))
         self.show_password.get_style_context().add_class("show_password")
         self.show_password.connect("toggled", self.make_password_entry_visible)
         self.show_password.set_active(True)
@@ -116,9 +116,9 @@ class GetData2(DataTemplate):
         if len(password) == 0:
             self.password_entry.label_success("")
         elif check_password(password):
-            self.password_entry.label_success("looks good!", "success")
+            self.password_entry.label_success(_("looks good!"), "success")
         else:
-            self.password_entry.label_success("is not valid", "fail")
+            self.password_entry.label_success(_("is not valid"), "fail")
 
         self.widgets_full()
 
@@ -130,9 +130,9 @@ class GetData2(DataTemplate):
         if len(username) == 0:
             self.username_entry.label_success("")
         elif check_username(username):
-            self.username_entry.label_success("is valid", "success")
+            self.username_entry.label_success(_("is valid"), "success")
         else:
-            self.username_entry.label_success("is invalid", "fail")
+            self.username_entry.label_success(_("is invalid"), "fail")
 
         self.widgets_full()
 
@@ -215,7 +215,9 @@ class GetData3(DataTemplate):
         self.t_and_cs.connect("t-and-cs-clicked",
                               self.show_terms_and_conditions)
 
-        self.marketing_checkbutton = Gtk.CheckButton.new_with_label("Email me cool stuff to\ndo with my Kano")
+        self.marketing_checkbutton = Gtk.CheckButton.new_with_label(
+            _("Email me cool stuff to\ndo with my Kano")
+        )
         self.marketing_checkbutton.get_style_context().add_class("get_data_checkbutton")
         self.marketing_checkbutton.set_margin_left(30)
         marketing_enabled = get_cached_data("marketing_enabled")
@@ -229,13 +231,13 @@ class GetData3(DataTemplate):
         # user email, but the guardian email is compulsory
         if age <= 13:
             self.email_entry = LabelledEntry(
-                "Parent's Email (required)", email
+                _("Parent's Email (required)"), email
             )
             self.email_entry.connect('key-release-event',
                                      self.widgets_full)
 
             self.secondary_email_entry = LabelledEntry(
-                "Your Email (optional)", secondary_email
+                _("Your Email (optional)"), secondary_email
             )
             self.secondary_email_entry.connect(
                 'key-release-event', self.widgets_full
@@ -246,7 +248,7 @@ class GetData3(DataTemplate):
 
         # Otherwise, there is only one compulsory email
         else:
-            self.email_entry = LabelledEntry("Your Email (required)", email)
+            self.email_entry = LabelledEntry(_("Your Email (required)"), email)
             self.email_entry.connect('key-release-event', self.widgets_full)
             self.secondary_email_entry = None
             box.pack_start(self.email_entry, False, False, 5)
@@ -329,12 +331,13 @@ class GetData3(DataTemplate):
         '''
         window = widget.get_toplevel()
 
+        # TODO: Figure out how/whether the legal text will be translated
         legal_text = ''
         for file in os.listdir(legal_dir):
             with open(legal_dir + file, 'r') as f:
                 legal_text = legal_text + f.read() + '\n\n\n'
 
-        kdialog = KanoDialog("Terms and conditions", "",
+        kdialog = KanoDialog(_("Terms and conditions"), "",
                              scrolled_text=legal_text,
                              parent_window=window)
         kdialog.run()

@@ -16,7 +16,8 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_avatar.logic import AvatarConfParser, AvatarCreator, get_avatar_conf
+from kano_avatar.logic import AvatarCreator, get_avatar_conf
+from kano_avatar.conf_parser import AvatarConfParser
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano.logging import logger
 

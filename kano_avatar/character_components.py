@@ -13,6 +13,9 @@ from kano.logging import logger
 
 
 class AvatarBaseAccessory:
+    """ Base class containing attributes and common methods to be used in
+    classes that describe objects that are related to the profile avatar
+    """
     _name = ''
     _asset_fname = ''
     _img_preview = ''
@@ -23,49 +26,49 @@ class AvatarBaseAccessory:
     _unique_id = ''
 
     def name(self):
-        """ Provides the display name of the item
-        :returns: display name of item as a string
+        """ Provides the display name of the accessory
+        :returns: display name of accessory as a string
         :rtype: string
         """
         return self._name
 
     def is_unlocked(self):
-        """ Returns the locked state of the environment
+        """ Returns the locked state of the accessory
         :returns: lock state
         :rtype: Boolean
         """
         return self._is_unlocked
 
     def get_preview_img(self):
-        """ Provides the Background preview image path
+        """ Provides the accessory preview image path
         :returns: absolute path to preview image as a string
         :rtype: string
         """
         return self._img_preview
 
     def get_date(self):
-        """ Provides the creation date of the environment
+        """ Provides the creation date of the accessory
         :returns: creation date as a string
         :rtype: string
         """
         return self._date_created
 
     def get_disp_order(self):
-        """ Provides the display order of the environment
+        """ Provides the display order of the accessory
         :returns: display index as an integer
         :rtype: integer
         """
         return self._display_order
 
     def get_fname(self):
-        """ Provides the item's asset filename
+        """ Provides the accessory's asset filename
         :returns: filename as a string
         :rtype: string
         """
         return self._asset_fname
 
     def get_id(self):
-        """ Provides the unique id for the item
+        """ Provides the unique id for the accessory
         :returns: unique id as a string
         :rtype: string
         """

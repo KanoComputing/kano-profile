@@ -28,22 +28,73 @@ from json import dump, load
 # TODO Check which types of names are case sensitive
 
 
-class AvatarAccessory():
+class AvatarBaseAccessory:
+    _name = ''
+    _asset_fname = ''
+    _img_preview = ''
+    _date_created = ''
+    _display_order = 0
+    _is_unlocked = False
+    _img = None
+    _unique_id = ''
+
+    def name(self):
+        """ Provides the display name of the Item
+        :returns: display name of character as a string
+        :rtype: string
+        """
+        return self._name
+
+    def is_unlocked(self):
+        """ Returns the locked state of the environment
+        :returns: lock state
+        :rtype: Boolean
+        """
+        return self._is_unlocked
+
+    def get_preview_img(self):
+        """ Provides the Background preview image path
+        :returns: absolute path to preview image as a string
+        :rtype: string
+        """
+        return self._img_preview
+
+    def get_date(self):
+        """ Provides the creation date of the environment
+        :returns: creation date as a string
+        :rtype: string
+        """
+        return self._date_created
+
+    def get_disp_order(self):
+        """ Provides the display order of the environment
+        :returns: display index as an integer
+        :rtype: integer
+        """
+        return self._display_order
+
+    def get_fname(self):
+        """ Provides the item's asset filename
+        :returns: filename as a string
+        :rtype: string
+        """
+        return self._asset_fname
+
+    def get_id(self):
+        """ Provides the unique id for the item
+        :returns: unique id as a string
+        :rtype: string
+        """
+        return self._unique_id
+
+
+class AvatarAccessory(AvatarBaseAccessory):
     """ Class for handling items and applying them onto an Avatar Character
     class.
     """
     _category = ''
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
     _img_position_x = 0
     _img_position_y = 0
-    _date_created = ''
-    _item_id = ''
-    _display_order = 0
-    _is_unlocked = False
-
-    _img = None
 
     def __init__(self, name, category, file_name, preview_img, x, y,
                  date_created, item_id, is_unlocked, display_order):
@@ -52,7 +103,7 @@ class AvatarAccessory():
         self._img_position_x = x
         self._img_position_y = y
         self._date_created = date_created
-        self._item_id = item_id
+        self._unique_id = item_id
         self._display_order = display_order
         self._is_unlocked = is_unlocked
         # if an absolute path is given use it instead, so that we can
@@ -67,29 +118,12 @@ class AvatarAccessory():
         else:
             self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
 
-    def name(self):
-        """ Provides the display name of the Item
-        :returns: display name of character as a string
-        :rtype: string
-        """
-        return self._name
-
-    def is_unlocked(self):
-        return self._is_unlocked
-
     def category(self):
         """ Provides the category name to which the Item belongs to
         :returns: category name as a string
         :rtype: string
         """
         return self._category
-
-    def get_fname(self):
-        """ Provides the item's asset filename
-        :returns: filename as a string
-        :rtype: string
-        """
-        return self._asset_fname
 
     def load_image(self):
         """ Loads the asset's image internally. This is necessary before
@@ -116,51 +150,16 @@ class AvatarAccessory():
         transp_mask = Image.merge("L", (a,))
         img.paste(item, position, transp_mask)
 
-    def get_preview_img(self):
-        """ Provides the item's preview image path
-        :returns: absolute path to preview image as a string
-        :rtype: string
-        """
-        return self._img_preview
 
-    def get_id(self):
-        """ Provides the unique id for the item
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._item_id
-
-    def get_date(self):
-        """ Provides the creation date of the item
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the item
-        :returns: display index as an integer
-        :rtype: integer
-        """
-        return self._display_order
-
-
-class AvatarCharacter():
+class AvatarCharacter(AvatarBaseAccessory):
     """ Class for handling an Avatar character. It holds the image data for
     the character so as to serve as a base on which the items are pasted on.
     """
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
-    _img = None
     _crop_x = 0
     _crop_y = 0
-    _display_order = 0
-    _date_created = ''
-    _character_id = ''
-    _is_unlocked = False
 
-    def __init__(self, name, file_name, preview_img, x, y, date_created, char_id, is_unlocked, display_order):
+    def __init__(self, name, file_name, preview_img, x, y, date_created,
+                 char_id, is_unlocked, display_order):
         self._name = name
         if os.path.isabs(file_name):
             self._asset_fname = file_name
@@ -174,7 +173,7 @@ class AvatarCharacter():
         self._crop_x = x
         self._crop_y = y
         self._display_order = display_order
-        self._character_id = char_id
+        self._unique_id = char_id
         self._date_created = date_created
         self._is_unlocked = is_unlocked
 
@@ -184,33 +183,12 @@ class AvatarCharacter():
         """
         self._img = Image.open(self._asset_fname)
 
-    def name(self):
-        """ Returns the Character's name as a string
-        :returns: Character name as a string
-        :rtype: string
-        """
-        return self._name
-
     def get_img(self):
         """ Get the image class for the character.
         :returns: Image class (from PIL module)
         :rtype: Image class (from PIL module)
         """
         return self._img
-
-    def is_unlocked(self):
-        """ Returns whether the character is unlocked
-        :returns: Lock state of the character
-        :rtype: Boolean
-        """
-        return self._is_unlocked
-
-    def get_fname(self):
-        """ Provides the item's asset filename
-        :returns: filename as a string
-        :rtype: string
-        """
-        return self._asset_fname
 
     def save_image(self, file_name):
         """ Save character image (together with items that have been pasted on
@@ -309,55 +287,19 @@ class AvatarCharacter():
 
         return self._img.crop(box)
 
-    def get_preview_img(self):
-        """ Provides the Character's preview image path
-        :returns: absolute path to preview image as a string
-        :rtype: string
-        """
-        return self._img_preview
 
-    def get_id(self):
-        """ Provides the unique id for the character
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._character_id
-
-    def get_date(self):
-        """ Provides the creation date of the character
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the character
-        :returns: display index as an integer
-        :rtype: string
-        """
-        return self._display_order
-
-
-class AvatarEnvironment():
+class AvatarEnvironment(AvatarBaseAccessory):
     """ Class for handling the environment (background) for a character. As
     it contains the image that will work as the background (lowest z-index)
     but also the largest in terms of size, it deserves a class of its own.
     """
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
-    _img = None
-    _date_created = ''
-    _environment_id = ''
-    _display_order = 0
-    _is_unlocked = False
 
     def __init__(self, name, file_name, preview_img, date_created, env_id,
                  is_unlocked, display_order):
         self._name = name
         self._date_created = date_created
         self._display_order = display_order
-        self._environment_id = env_id
+        self._unique_id = env_id
         self._is_unlocked = is_unlocked
         if os.path.isabs(file_name):
             self._asset_fname = file_name
@@ -368,27 +310,6 @@ class AvatarEnvironment():
             self._img_preview = preview_img
         else:
             self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
-
-    def name(self):
-        """ Provides the display name of the Item
-        :returns: display name of character as a string
-        :rtype: string
-        """
-        return self._name
-
-    def get_preview_img(self):
-        """ Provides the Background preview image path
-        :returns: absolute path to preview image as a string
-        :rtype: string
-        """
-        return self._img_preview
-
-    def is_unlocked(self):
-        """ Returns the locked state of the environment
-        :returns: lock state
-        :rtype: Boolean
-        """
-        return self._is_unlocked
 
     def load_image(self):
         """ Loads the environment image internally.
@@ -470,13 +391,6 @@ class AvatarEnvironment():
         """
         return self._img
 
-    def get_fname(self):
-        """ Provides the item's asset filename
-        :returns: filename as a string
-        :rtype: string
-        """
-        return self._asset_fname
-
     def save_image(self, file_name):
         """ Save character image (together with items that have been pasted on
         it), to a file.
@@ -488,29 +402,8 @@ class AvatarEnvironment():
         self._img.save(file_name)
         return True
 
-    def get_id(self):
-        """ Provides the unique id for the environment
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._environment_id
 
-    def get_date(self):
-        """ Provides the creation date of the environment
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the environment
-        :returns: display index as an integer
-        :rtype: integer
-        """
-        return self._display_order
-
-
-class AvatarConfParser():
+class AvatarConfParser:
     """ A class to take on the important task of parsing the configuration
     file used for generating new Avatars.
     Please use this class only if you require only parsing of the
@@ -1663,7 +1556,8 @@ def get_avatar_conf(aux_files=[]):
             return dict()
 
     if aux_files:
-        logger.debug('Auxiliary configuration files to be used: {}'.format(aux_files))
+        logger.debug(
+            'Auxiliary configuration files to be used: {}'.format(aux_files))
 
         for con_fname in aux_files:
             if os.path.isfile(con_fname):
@@ -1671,7 +1565,8 @@ def get_avatar_conf(aux_files=[]):
                 try:
                     f = open(con_fname)
                 except IOError as e:
-                    logger.error('Error opening the aux conf file {}'.format(e))
+                    logger.error(
+                        'Error opening the aux conf file {}'.format(e))
                     continue
                 else:
                     with f:

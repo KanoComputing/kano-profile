@@ -6,7 +6,6 @@
 # Logic for parsing and creating avatars for a Kano World profile
 import os
 import random
-import yaml
 from PIL import Image
 
 from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
@@ -1546,7 +1545,7 @@ def append_suffix_to_fname(filename, suffix):
 def get_avatar_conf(aux_files=[]):
     conf = None
     with open(AVATAR_CONF_FILE) as f:
-        conf = yaml.load(f)
+        conf = load(f)
 
     if conf is None:
         logger.error('Default Conf file {} not found'.format(AVATAR_CONF_FILE))

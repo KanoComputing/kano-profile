@@ -74,6 +74,13 @@ class AvatarBaseAccessory:
         """
         return self._unique_id
 
+    def get_img(self):
+        """ Get the image instance for the accessory.
+        :returns: Image instance (from PIL module)
+        :rtype: Image class (from PIL module)
+        """
+        return self._img
+
 
 class AvatarAccessory(AvatarBaseAccessory):
     """ Class for handling items and applying them onto an Avatar Character
@@ -126,7 +133,7 @@ class AvatarAccessory(AvatarBaseAccessory):
         in pixels of the top left corner)
         :param img: PIL Image class on which the pasting will occur
         """
-        if self._img is None:
+        if self.get_img() is None:
             self.load_image()
         # position of upper left corner
         position = (self._img_position_x, self._img_position_y)
@@ -168,14 +175,7 @@ class AvatarCharacter(AvatarBaseAccessory):
         """ Loads the character's image internally. This is necessary before
         pasting the item over a character.
         """
-        self._img = Image.open(self._asset_fname)
-
-    def get_img(self):
-        """ Get the image class for the character.
-        :returns: Image class (from PIL module)
-        :rtype: Image class (from PIL module)
-        """
-        return self._img
+        self._img = Image.open(self.get_fname())
 
     def save_image(self, file_name):
         """ Save character image (together with items that have been pasted on
@@ -301,7 +301,7 @@ class AvatarEnvironment(AvatarBaseAccessory):
     def load_image(self):
         """ Loads the environment image internally.
         """
-        self._img = Image.open(self._asset_fname).convert('RGBA')
+        self._img = Image.open(self.get_fname()).convert('RGBA')
 
     def attach_char(self, char_img, x=0.5, y=0.5):
         """ Attach a character to the environment. This method will overwrite
@@ -370,13 +370,6 @@ class AvatarEnvironment(AvatarBaseAccessory):
         self._img = Image.composite(temp_img, self.get_img(), temp_img)
 
         return True
-
-    def get_img(self):
-        """ Get the image class for the character.
-        :returns: the internally used Image class (from PIL module)
-        :rtype: Image class (from PIL module)
-        """
-        return self._img
 
     def save_image(self, file_name):
         """ Save character image (together with items that have been pasted on

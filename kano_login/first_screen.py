@@ -102,7 +102,7 @@ class FirstScreen(FirstScreenTemplate):
 
     def repack(self):
         self.win.remove_main_widget()
-        self.win.set_main_widget(self.template)
+        self.win.set_main_widget(self)
 
 
 class NoInternet(Template):
@@ -121,10 +121,10 @@ class NoInternet(Template):
         kano_button_label = "CONNECT"
         orange_button_label = "Register later"
 
-        Template.__init__(self, header, subheader, image_filename,
+        Template.__init__(self, image_filename, header, subheader,
                           kano_button_label, orange_button_label)
 
-        self.win.set_main_widget(self.template)
+        self.win.set_main_widget(self)
         self.kano_button.connect("button_release_event", self.connect)
 
         # Since cannot pass with keyboard, set it so it cannot receive

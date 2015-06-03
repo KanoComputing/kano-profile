@@ -216,11 +216,15 @@ class GetData3(DataTemplate):
                               self.show_terms_and_conditions)
 
         self.marketing_checkbutton = Gtk.CheckButton.new_with_label(
-            _("Email me cool stuff to\ndo with my Kano")
+            _("Email me cool stuff to do with my Kano")
         )
         self.marketing_checkbutton.get_style_context().add_class("get_data_checkbutton")
         self.marketing_checkbutton.set_margin_left(30)
         marketing_enabled = get_cached_data("marketing_enabled")
+
+        chk_btn_label = self.marketing_checkbutton.get_child()
+        chk_btn_label.set_max_width_chars(20)
+        chk_btn_label.set_line_wrap(True)
 
         if marketing_enabled is not None:
             self.marketing_checkbutton.set_active(marketing_enabled)

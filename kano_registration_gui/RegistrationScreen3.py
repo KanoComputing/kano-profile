@@ -250,8 +250,8 @@ class RegistrationScreen3(Gtk.Box):
     def keep_trying_to_connect(self):
         rv = self.connect_dialog(
             title=_("Still not connected..."),
-            description=_("Seems like you're having trouble connecting.\n"
-                          "Try again later at another point")
+            description=_("Seems like you're having trouble connecting.") + \
+                "\n" + _("Try again later at another point")
         )
 
         if rv == "connect":

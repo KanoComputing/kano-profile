@@ -595,7 +595,14 @@ def get_avatar_conf(aux_files=[]):
                             aux_conf = load(f)
                         except ValueError as e:
                             logger.info('Conf file not a JSON {}'.format(e))
-                # Attempt to decode as a YAML
+
+                if is_valid_configuration(aux_conf):
+                    if not merge_conf_files(conf, aux_conf):
+                        logger.error(
+                            "Can't integrate conf file {}".format(con_fname))
+                else:
+                    logger.error(
+                        "Parsed auxiliary film doesn't contain valid conf")
             else:
                 logger.warn(
                     "Auxiliary conf file {} doen't exist".format(con_fname))
@@ -614,4 +621,31 @@ def is_valid_configuration(conf_struct):
     else:
         logger.error('Conf structure contains invalid objects')
         return False
+    return True
+
+
+def merge_conf_files(conf_base, conf_added):
+    """
+    """
+    if not is_valid_configuration(conf_base) or \
+            not is_valid_configuration(conf_added):
+        return None
+    else:
+        for cat in conf_added.iterkeys():
+            if cat in conf_base:
+                if type(conf_base[cat]) != type(conf_added[cat]):
+                    logger.error(
+                        'base and auxiliary configuration types mismatch')
+                    return None
+                else:
+                    if type(conf_base[cat]) == list:
+                        conf_base[cat] += conf_added[cat]
+                    elif type(conf_base[cat]) == dict:
+                        conf_base[cat].update(conf_added[cat])
+                    else:
+                        logger.warning(
+                            "Can't handle type {}".format(conf_base[cat]))
+                        return None
+            else:
+                conf_base[cat] = conf_added[cat]
     return True

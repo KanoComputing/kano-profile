@@ -8,12 +8,18 @@
 
 import os
 import sys
+import gettext
 from gi.repository import Gtk
 
 if __name__ == '__main__' and __package__ is None:
-    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if dir_path != '/usr':
-        sys.path.insert(1, dir_path)
+    DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if DIR_PATH != '/usr':
+        sys.path.insert(1, DIR_PATH)
+        LOCALE_PATH = os.path.join(DIR_PATH, 'locale')
+    else:
+        LOCALE_PATH = None
+
+gettext.install('kano-tutorial', LOCALE_PATH, unicode=1)
 
 from kano_profile_gui.character_screens import CharacterDisplay
 from kano_profile_gui.badge_screen import BadgeScreen

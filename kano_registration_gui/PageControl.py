@@ -23,8 +23,8 @@ class PageControl(Gtk.Alignment):
     def __init__(self,
                  num_of_pages=3,
                  selected_page=1,
-                 back_text="BACK",
-                 next_text="NEXT"):
+                 back_text=_("Back").upper(),
+                 next_text=_("Next").upper()):
 
         Gtk.Alignment.__init__(self, xalign=0.5, xscale=0)
         self.num_of_pages = num_of_pages

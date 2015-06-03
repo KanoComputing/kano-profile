@@ -25,22 +25,23 @@ class SwagScreen(Template):
         # Set text depending on login
         login = is_registered()
         if login:
-            header = "Profile created!"
-            subheader = (
-                "Now you can share stuff, build your character, "
-                "and connect with friends! You've earned some rewards..."
+            header = _("Profile created!")
+            subheader = _(
+                u"Now you can share stuff, build your character,"
+                u"and connect with friends! You've earned some "
+                u"rewards\N{HORIZONTAL ELLIPSIS}"
             )
             image_name = "profile-created"
-            button_label = "LET'S GO"
+            button_label = _("Let's go").upper()
         else:
-            header = "No online profile - for now."
-            subheader = (
+            header = _("No online profile - for now.")
+            subheader = _(
                 "Your profile stores all your rewards, projects, and "
                 "challenges. But fear not - we'll save everything for "
                 "when you have internet."
             )
             image_name = "no-profile"
-            button_label = "LET'S GO"
+            button_label = _("Let's go").upper()
 
         # Set image
         img_width = 590

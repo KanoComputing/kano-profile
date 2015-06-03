@@ -32,13 +32,14 @@ class RegistrationScreen3(Gtk.Box):
         self.win = win
         self.win.set_main_widget(self)
 
-        self.page_control = self.win.create_page_control(3, "BACK", "CONTINUE")
+        self.page_control = self.win.create_page_control(3, _("Back").upper(),
+                                                         _("Continue").upper())
         self.page_control.disable_next()
         self.pack_end(self.page_control, False, False, 0)
         self.page_control.connect("next-button-clicked", self.register_handler)
         self.page_control.connect("back-button-clicked", self.prev_page)
 
-        title = Heading('Character creator', 'Sign up with your email')
+        title = Heading(_('Character creator'), _('Sign up with your email'))
         self.pack_start(title.container, False, False, 0)
 
         image_viewer = ImageView(self)
@@ -135,10 +136,11 @@ class RegistrationScreen3(Gtk.Box):
 
             else:
                 logger.info('problem with registration: {}'.format(text))
-                title = "Houston, we have a problem"
-                description = str(text)
                 return_value = "FAIL"
-                self.create_dialog(title, description)
+                self.create_dialog(
+                    title=_("Houston, we have a problem"),
+                    description=str(text)
+                )
 
         else:
             logger.info('registration successful')
@@ -155,11 +157,12 @@ class RegistrationScreen3(Gtk.Box):
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-            title = "Profile created!"
-            description = ("Now you can share stuff, build your character, "
-                           "and connect with friends.")
             return_value = "SUCCEED"
-            self.create_dialog(title, description)
+            self.create_dialog(
+                title=_("Profile created!"),
+                description=_("Now you can share stuff, build your character, "
+                              "and connect with friends.")
+            )
 
         self.page_control.enable_buttons()
         self.data_screen.enable_all()
@@ -180,18 +183,16 @@ class RegistrationScreen3(Gtk.Box):
 
     def collect_new_username(self):
         username_entry = Gtk.Entry()
-        title = "Oops, that username has already been taken!"
-        description = "Try picking another one."
 
         kdialog = KanoDialog(
-            title,
-            description,
+            title_text=_("Oops, that username has already been taken!"),
+            description_text=_("Try picking another one."),
             button_dict=[
                 {
-                    "label": "OK"
+                    "label": _("OK").upper()
                 },
                 {
-                    "label": "CANCEL",
+                    "label": ("Cancel").upper(),
                     "return_value": "CANCEL",
                     "color": "red"
                 }
@@ -218,9 +219,10 @@ class RegistrationScreen3(Gtk.Box):
     ###################################################
 
     def try_to_connect_to_internet(self):
-        title = "You don't have internet!"
-        description = "Connect to WiFi and try again."
-        rv = self.connect_dialog(title, description)
+        rv = self.connect_dialog(
+            title=_("You don't have internet!"),
+            description=_("Connect to WiFi and try again.")
+        )
 
         # the dialog should close here
         logger.debug("dialog should close here")
@@ -246,12 +248,11 @@ class RegistrationScreen3(Gtk.Box):
             return is_internet()
 
     def keep_trying_to_connect(self):
-        title = "Still not connected..."
-        description = (
-            "Seems like you're having trouble connecting.\n"
-            "Try again later at another point"
+        rv = self.connect_dialog(
+            title=_("Still not connected..."),
+            description=_("Seems like you're having trouble connecting.") + \
+                "\n" + _("Try again later at another point")
         )
-        rv = self.connect_dialog(title, description)
 
         if rv == "connect":
             logger.debug("Second launching wifi gui")
@@ -273,12 +274,12 @@ class RegistrationScreen3(Gtk.Box):
     def connect_dialog(self, title, description):
         button_dict = [
             {
-                "label": "LATER",
+                "label": _("Later").upper(),
                 "color": "red",
                 "return_value": "later"
             },
             {
-                "label": "CONNECT TO WIFI",
+                "label": _("Connect to WiFi").upper(),
                 "color": "green",
                 "return_value": "connect"
             }

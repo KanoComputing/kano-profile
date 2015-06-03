@@ -125,14 +125,14 @@ class HomeButton(Gtk.Button):
         # Get username here
         username = get_mixed_username()
         if len(username) > 12:
-            username = username[:12] + '...'
+            username = username[:12] + u'\N{HORIZONTAL ELLIPSIS}'
 
         # Info about the different settings
         title_label = Gtk.Label(username, xalign=0)
         title_label.get_style_context().add_class("home_button_name")
 
         level, progress, _ = calculate_kano_level()
-        level_label = Gtk.Label("Level {}".format(level), xalign=0)
+        level_label = Gtk.Label(_("Level {}").format(level), xalign=0)
         level_label.get_style_context().add_class("home_button_level")
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

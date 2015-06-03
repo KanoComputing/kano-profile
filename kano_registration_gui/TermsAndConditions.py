@@ -23,8 +23,12 @@ class TermsAndConditions(Gtk.Box):
         self.checkbutton.set_size_request(50, 50)
         self.checkbutton.set_margin_left(30)
 
-        self.tc_button = OrangeButton("I agree to the terms and\nconditions")
+        self.tc_button = OrangeButton(_("I agree to the terms and conditions"))
         self.tc_button.connect("clicked", self._emit_t_and_c_signal)
+
+        tc_label = self.tc_button.get_child()
+        tc_label.set_max_width_chars(20)
+        tc_label.set_line_wrap(True)
 
         self.pack_start(self.checkbutton, False, False, 0)
         self.pack_start(self.tc_button, False, False, 0)

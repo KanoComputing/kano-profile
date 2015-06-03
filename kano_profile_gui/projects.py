@@ -83,7 +83,7 @@ class ProjectItem():
         self.background = Gtk.EventBox()
         self.background.get_style_context().add_class("white")
 
-        self.button = Gtk.Button("MAKE")
+        self.button = Gtk.Button(_("Make").upper())
         self.button.connect("clicked", self.load, project['app'], project['file'], project['data_dir'])
         self.button.get_style_context().add_class("project_make_button")
         cursor.attach_cursor_events(self.button)
@@ -94,7 +94,7 @@ class ProjectItem():
         # shorten project name to 20 characters long
         display_name = project["display_name"]
         if len(display_name) > 20:
-            display_name = display_name[:20] + '...'
+            display_name = display_name[:20] + u'\N{HORIZONTAL ELLIPSIS}'
 
         self.title = Gtk.Label(display_name)
         self.title.get_style_context().add_class("project_item_title")

@@ -38,10 +38,12 @@ class BadgeScreen(Gtk.EventBox):
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.Box()
 
-        self.next_button = create_navigation_button("NEXT PAGE", "next")
+        self.next_button = create_navigation_button(_("Next page").upper(),
+                                                    "next")
         self.next_button.connect("clicked", self._load_page_wrapper, 1)
 
-        self.prev_button = create_navigation_button("PREVIOUS", "previous")
+        self.prev_button = create_navigation_button(_("Previous").upper(),
+                                                    "previous")
         self.prev_button.connect("clicked", self._load_page_wrapper, -1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)
@@ -256,13 +258,15 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.ButtonBox()
 
-        self.prev_button = create_navigation_button("PREVIOUS", "previous")
+        self.prev_button = create_navigation_button(_("Previous").upper(),
+                                                    "previous")
         self.prev_button.connect("clicked", self._go_to_other_badge, -1)
 
-        self.grid_button = create_navigation_button("BACK TO GRID", "middle")
+        self.grid_button = create_navigation_button(_("Back to grid").upper(),
+                                                    "middle")
         self.grid_button.connect("clicked", self._go_to_grid)
 
-        self.next_button = create_navigation_button("NEXT", "next")
+        self.next_button = create_navigation_button(_("Next").upper(), "next")
         self.next_button.connect("clicked", self._go_to_other_badge, 1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)

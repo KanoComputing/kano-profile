@@ -27,11 +27,11 @@ class FirstScreenTemplate(Gtk.Box):
     def __init__(self):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
-        kano_button_text = "CREATE"
-        skip_button_text = "Skip"
-        login_button_text = "I have a profile"
-        header = "Now let's make a cool Profile"
-        subheader = "So you can save badges, games, and projects"
+        kano_button_text = _("Create").upper()
+        skip_button_text = _("Skip")
+        login_button_text = _("I have a profile")
+        header = _("Now let's make a cool Profile")
+        subheader = _("So you can save badges, games, and projects")
         img_width = 590
         img_height = 270
 
@@ -114,12 +114,14 @@ class NoInternet(Template):
         img_width = 590
         img_height = 270
 
-        header = "Oops! You need Internet to make a profile"
-        subheader = "But you can skip this if you have no connection right now"
+        header = _("Oops! You need Internet to make a profile")
+        subheader = _(
+            "But you can skip this if you have no connection right now"
+        )
         image_filename = get_image("login", "", "no-internet",
                                    str(img_width) + 'x' + str(img_height))
-        kano_button_label = "CONNECT"
-        orange_button_label = "Register later"
+        kano_button_label = _("Connect").upper()
+        orange_button_label = _("Register later")
 
         Template.__init__(self, image_filename, header, subheader,
                           kano_button_label, orange_button_label)

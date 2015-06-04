@@ -12,7 +12,7 @@ from kano_avatar.paths import (CHARACTER_DIR, ITEM_DIR, CIRC_ASSET_MASK,
 from kano.logging import logger
 
 
-class AvatarBaseAccessory:
+class AvatarBaseAccessory(object):
     """ Base class containing attributes and common methods to be used in
     classes that describe objects that are related to the profile avatar
     """

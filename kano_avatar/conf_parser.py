@@ -12,7 +12,7 @@ from .character_components import (AvatarAccessory, AvatarCharacter,
 from kano_content.extended_paths import content_dir
 
 
-class AvatarConfParser:
+class AvatarConfParser(object):
     """ A class to take on the important task of parsing the configuration
     file used for generating new Avatars.
     Please use this class only if you require only parsing of the

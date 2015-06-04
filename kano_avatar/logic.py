@@ -29,14 +29,14 @@ class AvatarCreator(AvatarConfParser):
     Please note that when referring to items or characters, you may use their
     display name. However matching names to class objects is case sensitive.
     """
-    _sel_char = None
-    _sel_obj = {}
-    _sel_obj_per_cat = {}
-    _sel_objs_per_zindex = {}
-    _sel_env = None
 
     def __init__(self, conf_data):
-        AvatarConfParser.__init__(self, conf_data)
+        super(AvatarCreator, self).__init__(conf_data)
+        self._sel_char = None
+        self._sel_obj = {}
+        self._sel_obj_per_cat = {}
+        self._sel_objs_per_zindex = {}
+        self._sel_env = None
 
     def char_select(self, char_name):
         """ Set a character as a base

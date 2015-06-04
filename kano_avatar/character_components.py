@@ -16,14 +16,16 @@ class AvatarBaseAccessory:
     """ Base class containing attributes and common methods to be used in
     classes that describe objects that are related to the profile avatar
     """
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
-    _date_created = ''
-    _display_order = 0
-    _is_unlocked = False
-    _img = None
-    _unique_id = ''
+
+    def __init__(self):
+        self._name = ''
+        self._asset_fname = ''
+        self._img_preview = ''
+        self._date_created = ''
+        self._display_order = 0
+        self._is_unlocked = False
+        self._img = None
+        self._unique_id = ''
 
     def name(self):
         """ Provides the display name of the accessory
@@ -86,12 +88,9 @@ class AvatarAccessory(AvatarBaseAccessory):
     """ Class for handling items and applying them onto an Avatar Character
     class.
     """
-    _category = ''
-    _img_position_x = 0
-    _img_position_y = 0
-
     def __init__(self, name, category, file_name, preview_img, x, y,
                  date_created, item_id, is_unlocked, display_order):
+        super(AvatarAccessory, self).__init__()
         self._category = category
         self._name = name
         self._img_position_x = x
@@ -149,11 +148,9 @@ class AvatarCharacter(AvatarBaseAccessory):
     """ Class for handling an Avatar character. It holds the image data for
     the character so as to serve as a base on which the items are pasted on.
     """
-    _crop_x = 0
-    _crop_y = 0
-
     def __init__(self, name, file_name, preview_img, x, y, date_created,
                  char_id, is_unlocked, display_order):
+        super(AvatarCharacter, self).__init__()
         self._name = name
         if os.path.isabs(file_name):
             self._asset_fname = file_name
@@ -280,9 +277,9 @@ class AvatarEnvironment(AvatarBaseAccessory):
     it contains the image that will work as the background (lowest z-index)
     but also the largest in terms of size, it deserves a class of its own.
     """
-
     def __init__(self, name, file_name, preview_img, date_created, env_id,
                  is_unlocked, display_order):
+        super(AvatarEnvironment, self).__init__()
         self._name = name
         self._date_created = date_created
         self._display_order = display_order

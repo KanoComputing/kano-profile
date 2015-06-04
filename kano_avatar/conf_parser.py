@@ -18,32 +18,33 @@ class AvatarConfParser:
     Please use this class only if you require only parsing of the
     conf file, otherwise please use the AvatarCreator() class
     """
-    _categories = set()
-    _zindex = set()
-    _cat_to_z_index = {}
-    _cat_to_disp_order = {}
-    _zindex_to_categories = {}
-    _objects = {}
-    _characters = {}
-    _environments = {}
-    _object_per_cat = {}
-    _inactive_category_icons = {}
-    _active_category_icons = {}
-    _selected_borders = {}
-    _hover_borders = {}
-    _inactive_special_category_icons = {}
-    _active_special_category_icons = {}
-    _border_special_cat = {}
-    _hover_border_special_cat = {}
     categories_label = 'categories'
     objects_label = 'objects'
     char_label = 'characters'
     env_label = 'environments'
     spec_cat_label = 'special_categories'
     special_category_labels = [char_label, env_label]
-    _special_cat_to_disp_order = {}
 
     def __init__(self, conf_data):
+        self._categories = set()
+        self._zindex = set()
+        self._cat_to_z_index = {}
+        self._cat_to_disp_order = {}
+        self._zindex_to_categories = {}
+        self._objects = {}
+        self._characters = {}
+        self._environments = {}
+        self._object_per_cat = {}
+        self._inactive_category_icons = {}
+        self._active_category_icons = {}
+        self._selected_borders = {}
+        self._hover_borders = {}
+        self._inactive_special_category_icons = {}
+        self._active_special_category_icons = {}
+        self._border_special_cat = {}
+        self._hover_border_special_cat = {}
+        self._special_cat_to_disp_order = {}
+
         if self.categories_label not in conf_data:
             logger.error('{} dict not found'.format(self.categories_label))
         else:

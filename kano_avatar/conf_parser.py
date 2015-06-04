@@ -9,7 +9,7 @@ from kano_profile.badges import calculate_badges
 
 from .character_components import (AvatarAccessory, AvatarCharacter,
                                    AvatarEnvironment)
-from kano_content import content_dir
+from kano_content.extended_paths import content_dir
 
 
 class AvatarConfParser:

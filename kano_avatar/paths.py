@@ -7,7 +7,7 @@
 
 import os
 from kano.utils import get_home, get_user
-from kano_content import content_dir
+from kano_content.extended_paths import content_dir
 
 AVATAR_SCRATCH = os.path.join(
     '/tmp/', get_user(), 'char_gen_scratch', 'character.png')

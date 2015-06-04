@@ -1,6 +1,6 @@
 # character_components.py
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Character, item and other avatar related classes for a Kano World profile
 from PIL import Image

@@ -7,6 +7,7 @@
 
 import os
 from kano.utils import get_home, get_user
+from kano_content import content_dir
 
 AVATAR_SCRATCH = os.path.join(
     '/tmp/', get_user(), 'char_gen_scratch', 'character.png')
@@ -44,3 +45,20 @@ RING_ASSET = os.path.join(
     AVATAR_ASSET_FOLDER, 'helper_assets', 'grey_ring.png')
 PLAIN_MASK = os.path.join(
     AVATAR_ASSET_FOLDER, 'helper_assets', 'plain_mask.png')
+
+# Register the paths that we will use
+content_dir.register_path('ACTIVE_CATEGORY_ICONS', ACTIVE_CATEGORY_ICONS)
+content_dir.register_path('INACTIVE_CATEGORY_ICONS', INACTIVE_CATEGORY_ICONS)
+content_dir.register_path('PREVIEW_ICONS', PREVIEW_ICONS)
+content_dir.register_path(
+    'ACTIVE_SPECIAL_CATEGORY_ICONS', ACTIVE_SPECIAL_CATEGORY_ICONS)
+content_dir.register_path(
+    'INACTIVE_SPECIAL_CATEGORY_ICONS', INACTIVE_SPECIAL_CATEGORY_ICONS)
+content_dir.register_path('CHARACTER_DIR', CHARACTER_DIR)
+content_dir.register_path('ITEM_DIR', ITEM_DIR)
+content_dir.register_path('ENVIRONMENT_DIR', ENVIRONMENT_DIR)
+# content_dir.register_path('', )
+# content_dir.register_path('', )
+# content_dir.register_path('', )
+# content_dir.register_path('', )
+# content_dir.register_path('', )

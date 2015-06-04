@@ -4,17 +4,12 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Logic for parsing and creating avatars for a Kano World profile
-import os
-
-from kano_avatar.paths import (ACTIVE_CATEGORY_ICONS,
-                               INACTIVE_CATEGORY_ICONS,
-                               ACTIVE_SPECIAL_CATEGORY_ICONS,
-                               INACTIVE_SPECIAL_CATEGORY_ICONS, PREVIEW_ICONS)
 from kano.logging import logger
 from kano_profile.badges import calculate_badges
 
 from .character_components import (AvatarAccessory, AvatarCharacter,
                                    AvatarEnvironment)
+from kano_content import content_dir
 
 
 class AvatarConfParser:
@@ -80,19 +75,18 @@ class AvatarConfParser:
             self._cat_to_z_index[cat['cat_name']] = cat['z_index']
             icon_file = cat['disp_icon']
             # TODO Fix the following if the icon_file is absolute
-            if not os.path.isabs(icon_file):
-                active_icon_file = os.path.join(ACTIVE_CATEGORY_ICONS,
-                                                icon_file)
-                inactive_icon_file = os.path.join(INACTIVE_CATEGORY_ICONS,
-                                                  icon_file)
+            active_icon_file = content_dir.get_file(
+                'ACTIVE_CATEGORY_ICONS', icon_file)
+            inactive_icon_file = content_dir.get_file(
+                'INACTIVE_CATEGORY_ICONS', icon_file)
+
+            selected_border_file = content_dir.get_file(
+                'PREVIEW_ICONS', cat['selected_border'])
+            hover_border_file = content_dir.get_file(
+                'PREVIEW_ICONS', cat['hover_border'])
             self._active_category_icons[cat['cat_name']] = active_icon_file
             self._inactive_category_icons[cat['cat_name']] = inactive_icon_file
-
-            selected_border_file = os.path.join(PREVIEW_ICONS,
-                                                cat['selected_border'])
             self._selected_borders[cat['cat_name']] = selected_border_file
-            hover_border_file = os.path.join(PREVIEW_ICONS,
-                                             cat['hover_border'])
             self._hover_borders[cat['cat_name']] = hover_border_file
             self._cat_to_disp_order[cat['cat_name']] = cat['display_order']
 
@@ -199,26 +193,21 @@ class AvatarConfParser:
         special_cat_data = conf_data[self.spec_cat_label]
 
         for special_cat in self.special_category_labels:
-            active_icon_file = special_cat_data[special_cat]['active_icon']
-            if not os.path.isabs(active_icon_file):
-                active_icon_file = os.path.join(ACTIVE_SPECIAL_CATEGORY_ICONS,
-                                                active_icon_file)
+            active_icon_file = content_dir.get_file(
+                'ACTIVE_SPECIAL_CATEGORY_ICONS',
+                special_cat_data[special_cat]['active_icon'])
 
-            inactive_icon_file = special_cat_data[special_cat]['inactive_icon']
-            if not os.path.isabs(inactive_icon_file):
-                inactive_icon_file = os.path.join(
-                    INACTIVE_SPECIAL_CATEGORY_ICONS,
-                    inactive_icon_file)
+            inactive_icon_file = content_dir.get_file(
+                'INACTIVE_SPECIAL_CATEGORY_ICONS',
+                special_cat_data[special_cat]['inactive_icon'])
 
-            border_icon_file = special_cat_data[special_cat]['selected_border']
-            if not os.path.isabs(border_icon_file):
-                border_icon_file = os.path.join(PREVIEW_ICONS,
-                                                border_icon_file)
+            border_icon_file = content_dir.get_file(
+                'PREVIEW_ICONS',
+                special_cat_data[special_cat]['selected_border'])
 
-            hover_icon_file = special_cat_data[special_cat]['hover_border']
-            if not os.path.isabs(hover_icon_file):
-                hover_icon_file = os.path.join(PREVIEW_ICONS,
-                                               hover_icon_file)
+            hover_icon_file = content_dir.get_file(
+                'PREVIEW_ICONS',
+                special_cat_data[special_cat]['hover_border'])
 
             self._active_special_category_icons[special_cat] = active_icon_file
             self._inactive_special_category_icons[special_cat] = \

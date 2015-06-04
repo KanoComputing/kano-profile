@@ -3,13 +3,11 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # Character, item and other avatar related classes for a Kano World profile
-import os
 from PIL import Image
 
-from kano_avatar.paths import (CHARACTER_DIR, ITEM_DIR, CIRC_ASSET_MASK,
-                               RING_ASSET, PREVIEW_ICONS, ENVIRONMENT_DIR,
-                               PLAIN_MASK)
+from kano_avatar.paths import CIRC_ASSET_MASK, RING_ASSET, PLAIN_MASK
 from kano.logging import logger
+from kano_content.extended_paths import content_dir
 
 
 class AvatarBaseAccessory(object):
@@ -101,15 +99,8 @@ class AvatarAccessory(AvatarBaseAccessory):
         self._is_unlocked = is_unlocked
         # if an absolute path is given use it instead, so that we can
         # override elements
-        if os.path.isabs(file_name):
-            self._asset_fname = file_name
-        else:
-            self._asset_fname = os.path.join(ITEM_DIR, file_name)
-
-        if os.path.isabs(preview_img):
-            self._img_preview = preview_img
-        else:
-            self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
+        self._asset_fname = content_dir.get_file('ITEM_DIR', file_name)
+        self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def category(self):
         """ Provides the category name to which the Item belongs to
@@ -152,15 +143,10 @@ class AvatarCharacter(AvatarBaseAccessory):
                  char_id, is_unlocked, display_order):
         super(AvatarCharacter, self).__init__()
         self._name = name
-        if os.path.isabs(file_name):
-            self._asset_fname = file_name
-        else:
-            self._asset_fname = os.path.join(CHARACTER_DIR, file_name)
 
-        if os.path.isabs(preview_img):
-            self._img_preview = preview_img
-        else:
-            self._img_preview = os.path.join(CHARACTER_DIR, preview_img)
+        self._asset_fname = content_dir.get_file('CHARACTER_DIR', file_name)
+        self._img_preview = content_dir.get_file('CHARACTER_DIR', preview_img)
+
         self._crop_x = x
         self._crop_y = y
         self._display_order = display_order
@@ -285,15 +271,9 @@ class AvatarEnvironment(AvatarBaseAccessory):
         self._display_order = display_order
         self._unique_id = env_id
         self._is_unlocked = is_unlocked
-        if os.path.isabs(file_name):
-            self._asset_fname = file_name
-        else:
-            self._asset_fname = os.path.join(ENVIRONMENT_DIR, file_name)
 
-        if os.path.isabs(preview_img):
-            self._img_preview = preview_img
-        else:
-            self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
+        self._asset_fname = content_dir.get_file('ENVIRONMENT_DIR', file_name)
+        self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def load_image(self):
         """ Loads the environment image internally.

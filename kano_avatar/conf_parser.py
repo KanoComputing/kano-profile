@@ -6,10 +6,10 @@
 # Logic for parsing and creating avatars for a Kano World profile
 from kano.logging import logger
 from kano_profile.badges import calculate_badges
+from kano_content.extended_paths import content_dir
 
 from .character_components import (AvatarAccessory, AvatarCharacter,
                                    AvatarEnvironment)
-from kano_content.extended_paths import content_dir
 
 
 class AvatarConfParser(object):

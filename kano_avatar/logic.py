@@ -578,7 +578,7 @@ def get_avatar_conf(aux_files=[]):
         content_dir.register_path(
             'PREVIEW_ICONS', k.get_data('previews').get_dir())
         content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
-        aux_files.append(k.get_data('').get_dir())
+        aux_files.append(k.get_data('').get_content()[0])
 
     with open(AVATAR_CONF_FILE) as f:
         conf = load(f)
@@ -609,6 +609,7 @@ def get_avatar_conf(aux_files=[]):
                             aux_conf = load(f)
                         except ValueError as e:
                             logger.info('Conf file not a JSON {}'.format(e))
+                            continue
 
                 if is_valid_configuration(aux_conf):
                     if not merge_conf_files(conf, aux_conf):

@@ -57,8 +57,3 @@ content_dir.register_path(
 content_dir.register_path('CHARACTER_DIR', CHARACTER_DIR)
 content_dir.register_path('ITEM_DIR', ITEM_DIR)
 content_dir.register_path('ENVIRONMENT_DIR', ENVIRONMENT_DIR)
-# content_dir.register_path('', )
-# content_dir.register_path('', )
-# content_dir.register_path('', )
-# content_dir.register_path('', )
-# content_dir.register_path('', )

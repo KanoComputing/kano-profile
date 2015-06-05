@@ -15,6 +15,8 @@ from kano.logging import logger
 from kano_profile.profile import (set_avatar, set_environment,
                                   save_profile_variable)
 from kano.utils import get_date_now
+from kano_content.api import list_local_content_objects
+from kano_content.extended_paths import content_dir
 from json import dump, load
 
 from .conf_parser import AvatarConfParser
@@ -566,6 +568,18 @@ def append_suffix_to_fname(filename, suffix):
 
 def get_avatar_conf(aux_files=[]):
     conf = None
+
+    for k in list_local_content_objects(spec='kano-content-category'):
+        content_dir.register_path(
+            'ACTIVE_CATEGORY_ICONS', k.get_data('active_cat_icon').get_dir())
+        content_dir.register_path(
+            'INACTIVE_CATEGORY_ICONS',
+            k.get_data('inactive_cat_icon').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('previews').get_dir())
+        content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        aux_files.append(k.get_data('').get_dir())
+
     with open(AVATAR_CONF_FILE) as f:
         conf = load(f)
 

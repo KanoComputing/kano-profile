@@ -131,7 +131,7 @@ class HomeButton(Gtk.Button):
         title_label = Gtk.Label(username, xalign=0)
         title_label.get_style_context().add_class("home_button_name")
 
-        level, progress, _ = calculate_kano_level()
+        level, dummy, dummy = calculate_kano_level()
         level_label = Gtk.Label(_("Level {}").format(level), xalign=0)
         level_label.get_style_context().add_class("home_button_level")
 

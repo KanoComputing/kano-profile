@@ -100,7 +100,11 @@ class Menu(Gtk.Fixed):
         self._parser.char_select(char)
 
         for category in self.categories:
-            obj_name = item[category]
+            # TODO this is temporary for the kano-content demo
+            if category not in item:
+                obj_name = None
+            else:
+                obj_name = item[category]
             logger.debug("loading obj_name = {}".format(obj_name))
 
             if obj_name and obj_name in self._parser.get_avail_objs(category):

@@ -10,20 +10,15 @@ from kano.logging import logger
 from kano_content.extended_paths import content_dir
 
 
-class AvatarBaseAccessory(object):
+class AvatarBase(object):
     """ Base class containing attributes and common methods to be used in
-    classes that describe objects that are related to the profile avatar
+    classes that describe objects and categories of the profile avatar
     """
-
-    def __init__(self):
-        self._name = ''
-        self._asset_fname = ''
-        self._img_preview = ''
-        self._date_created = ''
-        self._display_order = 0
-        self._is_unlocked = False
-        self._img = None
-        self._unique_id = ''
+    def __init__(self, name='', unique_id='', disp_order=0, date_created=''):
+        self._name = name
+        self._unique_id = unique_id
+        self._display_order = disp_order
+        self._date_created = date_created
 
     def name(self):
         """ Provides the display name of the accessory
@@ -31,6 +26,40 @@ class AvatarBaseAccessory(object):
         :rtype: string
         """
         return self._name
+
+    def get_id(self):
+        """ Provides the unique id for the accessory
+        :returns: unique id as a string
+        :rtype: string
+        """
+        return self._unique_id
+
+    def get_disp_order(self):
+        """ Provides the display order of the accessory
+        :returns: display index as an integer
+        :rtype: integer
+        """
+        return self._display_order
+
+    def get_date(self):
+        """ Provides the creation date of the accessory
+        :returns: creation date as a string
+        :rtype: string
+        """
+        return self._date_created
+
+
+class AvatarBaseAccessory(AvatarBase):
+    """ Base class containing attributes and common methods to be used in
+    classes that describe objects that are related to the profile avatar
+    """
+
+    def __init__(self, asset_fname='', img_prev='', unlocked='', **kw):
+        super(AvatarBaseAccessory, self).__init__(**kw)
+        self._asset_fname = asset_fname
+        self._img_preview = img_prev
+        self._is_unlocked = unlocked
+        self._img = None
 
     def is_unlocked(self):
         """ Returns the locked state of the accessory
@@ -46,33 +75,12 @@ class AvatarBaseAccessory(object):
         """
         return self._img_preview
 
-    def get_date(self):
-        """ Provides the creation date of the accessory
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the accessory
-        :returns: display index as an integer
-        :rtype: integer
-        """
-        return self._display_order
-
     def get_fname(self):
         """ Provides the accessory's asset filename
         :returns: filename as a string
         :rtype: string
         """
         return self._asset_fname
-
-    def get_id(self):
-        """ Provides the unique id for the accessory
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._unique_id
 
     def get_img(self):
         """ Get the image instance for the accessory.
@@ -88,19 +96,19 @@ class AvatarAccessory(AvatarBaseAccessory):
     """
     def __init__(self, name, category, file_name, preview_img, x, y,
                  date_created, item_id, is_unlocked, display_order):
-        super(AvatarAccessory, self).__init__()
+        super(AvatarAccessory, self).__init__(
+            name=name, unique_id=item_id, disp_order=display_order,
+            date_created=date_created, unlocked=is_unlocked)
         self._category = category
-        self._name = name
         self._img_position_x = x
         self._img_position_y = y
-        self._date_created = date_created
-        self._unique_id = item_id
-        self._display_order = display_order
-        self._is_unlocked = is_unlocked
         # if an absolute path is given use it instead, so that we can
         # override elements
         self._asset_fname = content_dir.get_file('ITEM_DIR', file_name)
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
+
+    def __repr__(self):
+        return 'Item {} of category {}'.format(self.name(), self.category())
 
     def category(self):
         """ Provides the category name to which the Item belongs to
@@ -141,18 +149,18 @@ class AvatarCharacter(AvatarBaseAccessory):
     """
     def __init__(self, name, file_name, preview_img, x, y, date_created,
                  char_id, is_unlocked, display_order):
-        super(AvatarCharacter, self).__init__()
-        self._name = name
+        super(AvatarCharacter, self).__init__(
+            name=name, unique_id=char_id, disp_order=display_order,
+            date_created=date_created, unlocked=is_unlocked)
 
         self._asset_fname = content_dir.get_file('CHARACTER_DIR', file_name)
         self._img_preview = content_dir.get_file('CHARACTER_DIR', preview_img)
 
         self._crop_x = x
         self._crop_y = y
-        self._display_order = display_order
-        self._unique_id = char_id
-        self._date_created = date_created
-        self._is_unlocked = is_unlocked
+
+    def __repr__(self):
+        return 'Character {}'.format(self.name())
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -275,6 +283,9 @@ class AvatarEnvironment(AvatarBaseAccessory):
         self._asset_fname = content_dir.get_file('ENVIRONMENT_DIR', file_name)
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
+    def __repr__(self):
+        return 'Environment {}'.format(self.name())
+
     def load_image(self):
         """ Loads the environment image internally.
         """
@@ -358,3 +369,40 @@ class AvatarEnvironment(AvatarBaseAccessory):
         # TODO Error checking
         self._img.save(file_name)
         return True
+
+
+class AvatarCategory(AvatarBase):
+    def __init__(self, name, date_created, cat_id, display_order, z_index,
+                 sel_border, hover_border, active_icon, inactive_icon):
+
+        super(AvatarCategory, self).__init__(
+            name=name, unique_id=cat_id, disp_order=display_order,
+            date_created=date_created)
+
+        self._z_index = z_index
+        self._selected_border = content_dir.get_file(
+            'PREVIEW_ICONS', sel_border)
+        self._hover_border = content_dir.get_file(
+            'PREVIEW_ICONS', hover_border)
+        self._active_category_icon = content_dir.get_file(
+            'ACTIVE_CATEGORY_ICONS', active_icon)
+        self._inactive_category_icon = content_dir.get_file(
+            'INACTIVE_CATEGORY_ICONS', inactive_icon)
+
+    def __repr__(self):
+        return 'Category {}'.format(self.name())
+
+    def get_zindex(self):
+        return self._z_index
+
+    def get_active_icon(self):
+        return self._active_category_icon
+
+    def get_inactive_icon(self):
+        return self._inactive_category_icon
+
+    def get_selected_border(self):
+        return self._selected_border
+
+    def get_hover_border(self):
+        return self._hover_border

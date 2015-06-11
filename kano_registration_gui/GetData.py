@@ -215,16 +215,9 @@ class GetData3(DataTemplate):
         self.t_and_cs.connect("t-and-cs-clicked",
                               self.show_terms_and_conditions)
 
-        self.marketing_checkbutton = Gtk.CheckButton.new_with_label(
-            _("Email me cool stuff to do with my Kano")
-        )
-        self.marketing_checkbutton.get_style_context().add_class("get_data_checkbutton")
-        self.marketing_checkbutton.set_margin_left(30)
-        marketing_enabled = get_cached_data("marketing_enabled")
 
-        chk_btn_label = self.marketing_checkbutton.get_child()
-        chk_btn_label.set_max_width_chars(20)
-        chk_btn_label.set_line_wrap(True)
+        marketing_container = self._create_marketing_checkbox()
+        marketing_enabled = get_cached_data("marketing_enabled")
 
         if marketing_enabled is not None:
             self.marketing_checkbutton.set_active(marketing_enabled)
@@ -260,10 +253,30 @@ class GetData3(DataTemplate):
         self.entries = [self.email_entry]
 
         box.pack_start(self.t_and_cs, False, False, 10)
-        box.pack_start(self.marketing_checkbutton, False, False, 0)
+        box.pack_start(marketing_container, False, False, 0)
         box.set_margin_top(20)
 
         self.add(box)
+
+
+    def _create_marketing_checkbox(self):
+        self.marketing_checkbutton = Gtk.CheckButton()
+        self.marketing_checkbutton.get_style_context().add_class(
+            "get_data_checkbutton")
+        self.marketing_checkbutton.set_margin_left(30)
+
+        marketing_label = Gtk.Label(_("Email me cool stuff to do with my Kano"))
+        marketing_label.set_max_width_chars(20)
+        marketing_label.set_line_wrap(True)
+
+        marketing_container = Gtk.Box()
+        marketing_container.pack_start(self.marketing_checkbutton,
+                                       False, False, 0)
+        marketing_container.get_style_context().add_class(
+            "get_data_checkbutton")
+        marketing_container.pack_start(marketing_label, False, False, 0)
+
+        return marketing_container
 
     def disable_all(self):
         self.email_entry.set_sensitive(False)

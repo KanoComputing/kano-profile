@@ -26,7 +26,7 @@ class TermsAndConditions(Gtk.Box):
         self.tc_button = OrangeButton(_("I agree to the terms and conditions"))
         self.tc_button.connect("clicked", self._emit_t_and_c_signal)
 
-        tc_label = self.tc_button.get_child()
+        tc_label = self.tc_button.label
         tc_label.set_max_width_chars(20)
         tc_label.set_line_wrap(True)
 

@@ -23,7 +23,6 @@ Options:
 import os
 import sys
 import docopt
-import gettext
 from gi.repository import Gtk, GObject
 
 if __name__ == '__main__' and __package__ is None:
@@ -34,7 +33,8 @@ if __name__ == '__main__' and __package__ is None:
     else:
         LOCALE_PATH = None
 
-gettext.install('kano-tutorial', LOCALE_PATH, unicode=1)
+import kano_i18n.init
+kano_i18n.init.install('kano-tutorial', LOCALE_PATH)
 
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.apply_styles import apply_styling_to_screen

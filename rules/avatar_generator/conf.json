@@ -115,7 +115,7 @@
             "preview_img": "skins/skin-1.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "86faf385cf3b4315a88d38aa2a473e77",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -127,7 +127,7 @@
             "preview_img": "skins/skin-2.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "d1f51cd83bc64743bd1de7d520096421",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -139,7 +139,7 @@
             "preview_img": "skins/skin-3.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "e352fef8efff451786eb3aeaec33dca0",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -151,7 +151,7 @@
             "preview_img": "skins/skin-4.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "6f51e55a563b45aeb95f0c0fc587bf56",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -163,7 +163,7 @@
             "preview_img": "skins/skin-5.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "f5eb1d295f5b490e89c31d77b32481fa",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -175,7 +175,7 @@
             "preview_img": "skins/skin-6.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "b2172424a7bc4f96889ae775355e7b95",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -187,7 +187,7 @@
             "preview_img": "skins/skin-7.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Skins",
+            "category": "judoka-skins",
             "item_id": "2e55ea9b9d334e2d83874899aea71c35",
             "display_order": 7,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -199,7 +199,7 @@
             "preview_img": "hair/Kano-CharacterApp_07-02.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "90043b2cc81f4998b4ffb4b857172dc9",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -211,7 +211,7 @@
             "preview_img": "hair/Kano-CharacterApp_07-03.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "86acd89c882647709ed30c483ae40c43",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -223,7 +223,7 @@
             "preview_img": "hair/Kano-CharacterApp_07-04.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "861aff8be4a64af7968eabb073dc5ce5",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -235,7 +235,7 @@
             "preview_img": "hair/Kano-CharacterApp_07-05.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "dbd71a0c9a854941bdc6f09e6a87f34f",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -247,7 +247,7 @@
             "preview_img": "hair/Kano-CharacterApp_07-06.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "7406583f7deb4b8694e20efcc7a0b59c",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -259,7 +259,7 @@
             "preview_img": "hair/Kano-CharacterApp_07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "948648f3c72c458a8826fb29be3f02b5",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -271,7 +271,7 @@
             "preview_img": "hair/hair-long-dark_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "7dad8937c7e745a88176c2ac58b89c31",
             "display_order": 7,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -283,7 +283,7 @@
             "preview_img": "hair/hair-long-darkblonde_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "228f4bfd10d4459d97870296aae290b0",
             "display_order": 8,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -295,7 +295,7 @@
             "preview_img": "hair/hair-long-darkbrown_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "1f07978121524264adb94a1a20f1b53b",
             "display_order": 9,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -307,7 +307,7 @@
             "preview_img": "hair/hair-long-ginger_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "1f07978121524264adb94a1a20f1b53b",
             "display_order": 10,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -319,7 +319,7 @@
             "preview_img": "hair/hair-long-lightblonde_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "d89d029556414d16b93433a9812b53cc",
             "display_order": 11,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -331,7 +331,7 @@
             "preview_img": "hair/hair-long-lightbrown_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "d89d029556414d16b93433a9812b53cc",
             "display_order": 12,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -343,7 +343,7 @@
             "preview_img": "hair/hair-short-dark_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "0279c7686e9743839d41754ee9484056",
             "display_order": 13,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -355,7 +355,7 @@
             "preview_img": "hair/hair-short-darkblonde_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "89cc2972462e44419fcc3318741d8a81",
             "display_order": 14,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -367,7 +367,7 @@
             "preview_img": "hair/hair-short-darkbrown_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "baad75d26e254b12acec62a33f33ebdf",
             "display_order": 15,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -379,7 +379,7 @@
             "preview_img": "hair/hair-short-ginger_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "13c8bcd32d524308ace1e77e15dd7709",
             "display_order": 16,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -391,7 +391,7 @@
             "preview_img": "hair/hair-short-lightblonde_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "f85fd30507a449bd80b6dbb92cf28706",
             "display_order": 17,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -403,7 +403,7 @@
             "preview_img": "hair/hair-short-lightbrown_prev.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Hair",
+            "category": "judoka-hair",
             "item_id": "c4533972a2224801b216133e03d27dc2",
             "display_order": 18,
             "date_created": "2015-04-17T12:27:14.000Z"
@@ -415,7 +415,7 @@
             "preview_img": "stickers/Kano-CharacterApp_07-02.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Stickers",
+            "category": "judoka-stickers",
             "item_id": "7987cabf9d704960a5d4270d80d5f012",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -427,7 +427,7 @@
             "preview_img": "stickers/Kano-CharacterApp_07-03.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Stickers",
+            "category": "judoka-stickers",
             "item_id": "e7752169b859436f8e620508f82c8229",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -439,7 +439,7 @@
             "preview_img": "stickers/Kano-CharacterApp_07-04.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Stickers",
+            "category": "judoka-stickers",
             "item_id": "a2694ba41aab41e9af19ff119edef87b",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -451,7 +451,7 @@
             "preview_img": "stickers/Kano-CharacterApp_07-05.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Stickers",
+            "category": "judoka-stickers",
             "item_id": "56d84ec944f54767ad0dd1eb3306148f",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -463,7 +463,7 @@
             "preview_img": "stickers/Kano-CharacterApp_07-06.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Stickers",
+            "category": "judoka-stickers",
             "item_id": "85e21471a08440db9e10e90ed212c6f2",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -475,7 +475,7 @@
             "preview_img": "stickers/Kano-CharacterApp_07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Stickers",
+            "category": "judoka-stickers",
             "item_id": "c92dc9022a704d6eac3ef60feabf7892",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -487,7 +487,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-02.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "28062f8ea13e45b792870ec7a7a3b935",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -499,7 +499,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-03.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "8bef71905f6b4de297658f4ad5b661b0",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -511,7 +511,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-04.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "94c8ab0aee14401da30457cd89ad6d99",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -523,7 +523,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-05.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "b7bce4689f054d218dc432f5d7676adb",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -535,7 +535,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-06.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "b7aaead231aa43c5a1109ad54d9cd14c",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -547,7 +547,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "6d8f31b729bd48ba91c820ccd2e6094a",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -559,7 +559,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-08.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "8089ea6ad17c42178a6ee6941a9c49fd",
             "display_order": 7,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -571,7 +571,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-09.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "e53413fb26b94918b9a52e88f2b13545",
             "display_order": 8,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -583,7 +583,7 @@
             "preview_img": "suits/Kano-CharacterApp_07-10.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "7ac5a7e7d3004ad485e2c6d33bbe4dd4",
             "display_order": 9,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -595,7 +595,7 @@
             "preview_img": "suits/Kano-CharacterApp_07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Suits",
+            "category": "judoka-suits",
             "item_id": "bdd87f53c97049f2a2f0ed880ff33623",
             "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -607,7 +607,7 @@
             "preview_img": "faces/Kano-CharacterApp_07-02.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "bc1fe4f26e91436d9be0ff4475e21ddc",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -619,7 +619,7 @@
             "preview_img": "faces/Kano-CharacterApp_07-03.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "8f2be4214e714b759cc9ebcfcc5d33a4",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -631,7 +631,7 @@
             "preview_img": "faces/Kano-CharacterApp_07-04.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "ea129d0762454efb8e0ec863d96b5464",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -643,7 +643,7 @@
             "preview_img": "faces/Kano-CharacterApp_07-05.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "8f5f7a34a2b545079ed57611bad07a7b",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -655,7 +655,7 @@
             "preview_img": "faces/Kano-CharacterApp_07-06.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "2266ee43395343f1a4b971334a585afd",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -667,7 +667,7 @@
             "preview_img": "faces/Kano-CharacterApp_07-07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "636a2bdebd2144b2aa29125006c4442a",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -679,7 +679,7 @@
             "preview_img": "faces/Kano-CharacterApp_07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Faces",
+            "category": "judoka-faces",
             "item_id": "002a634f16da4386b16b7c3e7c3cbed2",
             "display_order": 7,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -691,7 +691,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-02.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "f113ebf4f70e4601828ab575120a2996",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -703,7 +703,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-03.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "d567c06d281142629cbac08287a4c69b",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -715,7 +715,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-04.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "6f2cd5ceedba4012a412b50423e7ddb8",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -727,7 +727,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-05.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "b79cd94c116049f69ab0585f75a36b43",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -739,7 +739,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-06.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "c9615473592c45b08101e4d6cc1c64a5",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -751,7 +751,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "2f126a4fa90d446786169e9518eaba77",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -763,7 +763,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-08.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "a88082fd24984d9d8a72d0764b79e03e",
             "display_order": 7,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -775,7 +775,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-09.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "ecf1c105ee62484eb28e203085e88b24",
             "display_order": 8,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -787,7 +787,7 @@
             "preview_img": "belts/Kano-CharacterApp_07-10.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "794234818f424f449d157dc1fd01cb74",
             "display_order": 9,
             "date_created": "2015-04-14T10:54:14.000Z"
@@ -799,7 +799,7 @@
             "preview_img": "belts/Kano-CharacterApp_07.png",
             "position_x": 0,
             "position_y": 0,
-            "category": "Belts",
+            "category": "judoka-belts",
             "item_id": "0f7d7f6a2c764ccb96101a7d6f772f1d",
             "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"

@@ -565,7 +565,7 @@ class AvatarCharacterSet(object):
         inst = None
         char = AvatarCharacter.from_data(data)
         if char:
-            inst = AvatarCharacterSet(data)
+            inst = AvatarCharacterSet(char)
 
         return inst
 

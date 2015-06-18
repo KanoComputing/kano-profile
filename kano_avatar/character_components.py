@@ -461,7 +461,7 @@ class AvatarCategory(AvatarBase):
     def from_data(data):
         inst = None
 
-        new_name = data['cat_tag']
+        new_name = data['display_name']
         new_date = data['date_created']
         new_id = data['category_id']
         new_disp_ord = data['display_order']
@@ -577,7 +577,7 @@ class AvatarCharacterSet(object):
         return 'Character Set of "{}"'.format(self._character)
 
     def add_category(self, categ_obj):
-        self._categories.add(categ_obj)
+        self._categories[categ_obj.get_id()] = categ_obj
 
     def get_categories(self):
         return sorted(self._categories.itervalues(),

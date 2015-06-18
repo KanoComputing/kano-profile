@@ -205,12 +205,12 @@ class AvatarConfParser(object):
         special_cat_data = conf_data[self.spec_cat_label]
 
         for special_cat in special_cat_data:
-            if special_cat['cat_tag'] == self.char_label:
+            if special_cat['category_id'] == self.char_label:
                 char, unused = AvatarCategory.from_data(special_cat)
-            elif special_cat['cat_tag'] == self.env_label:
+            elif special_cat['category_id'] == self.env_label:
                 env, unused = AvatarCategory.from_data(special_cat)
             else:
-                logger.error("Unknown cat_tag in special categories")
+                logger.error("Unknown category_id in special categories")
 
         return char, env
 

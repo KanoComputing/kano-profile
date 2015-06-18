@@ -136,7 +136,7 @@ class AvatarAccessory(AvatarBaseAccessory):
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def __repr__(self):
-        return 'Item {} of category {}'.format(self.name(), self.category())
+        return 'Item {} of category {}'.format(self.get_id(), self.category())
 
     def set_category(self, cat_obj):
         if not self._category:
@@ -221,7 +221,7 @@ class AvatarCharacter(AvatarBaseAccessory):
         self._crop_y = y
 
     def __repr__(self):
-        return 'Character {}'.format(self.name())
+        return 'Character {}'.format(self.get_id())
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -368,7 +368,7 @@ class AvatarEnvironment(AvatarBaseAccessory):
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def __repr__(self):
-        return 'Environment {}'.format(self.name())
+        return 'Environment {}'.format(self.get_id())
 
     def load_image(self):
         """ Loads the environment image internally.
@@ -516,7 +516,7 @@ class AvatarCategory(AvatarBase):
 
     def __repr__(self):
         return 'Category {}, of Character {}'.format(
-            self.name(), self._character)
+            self.get_id(), self._character)
 
     def set_character(self, character):
         if not self._character:
@@ -545,7 +545,7 @@ class AvatarCategory(AvatarBase):
 
     def add_item(self, item):
         if item:
-            self._items[item.name()] = item
+            self._items[item.get_id()] = item
         else:
             logger.error("Item {} can't be added to Category {}".format(
                 item, self))

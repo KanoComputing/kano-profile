@@ -43,8 +43,8 @@ class AvatarLayer(object):
         else:
             logger.error("Character set provided is None, can't add to Layer")
 
-    def name(self):
-        return self.add_character_set.get_character().name()
+    def get_id(self):
+        return self._character_set.get_character().get_id()
 
     def add_character_cat(self, char_cat):
         if not self._character_cat:
@@ -74,7 +74,7 @@ class AvatarLayer(object):
     def category(self, cat):
         ret = None
         for c in self.get_categories():
-            if c.name == cat:
+            if c.get_id() == cat:
                 ret = c
                 break
         return ret
@@ -97,21 +97,21 @@ class AvatarLayer(object):
 
         return category_list
 
-    def get_object_names(self, cat_name):
+    def get_object_ids(self, cat_name):
         ret = []
         cat = self.category(cat_name)
         if not cat:
             logger.error(("Category '{}' not in layer '{}', can't return"
                           "hover border").format(cat_name, self))
         else:
-            ret = [k.name() for k in cat.item_list()]
+            ret = [k.get_id() for k in cat.item_list()]
         return ret
 
     def item(self, item_name):
         ret = None
         for k in self.get_categories():
             for it in k.item_list():
-                if it.name() == item_name:
+                if it.get_id() == item_name:
                     ret = it
                     break
             if ret:
@@ -165,7 +165,6 @@ class AvatarConfParser(object):
         :param categories: categories section of YAML format configuration
                            structure read from file
         """
-
         for cat in categories:
             cat_obj, char_name = AvatarCategory.from_data(cat)
             self.layer(char_name).add_category(cat_obj)
@@ -185,7 +184,7 @@ class AvatarConfParser(object):
         for obj in conf_data[self.char_label]:
             layer = AvatarLayer.from_data(obj, char, env)
             if layer:
-                self._layer[layer.name()] = layer
+                self._layers[layer.get_id()] = layer
 
     def _populate_environment_structures(self, conf_data, env_cat):
         """ Populates internal structures related to environments (backgrounds)
@@ -249,7 +248,7 @@ class AvatarConfParser(object):
         ret = []
         char = self.layer(char)
         if char:
-            ret = char.get_object_names(category)
+            ret = char.get_object_ids(category)
         return ret
 
     def list_available_categories(self, character):
@@ -264,7 +263,7 @@ class AvatarConfParser(object):
                           "return available categories").format(
                               character, self))
         else:
-            ret = [k.name() for k in char.get_categories()]
+            ret = [k.get_id() for k in char.get_categories()]
         return ret
 
     def get_inactive_category_icon(self, character, category_name):

@@ -1,7 +1,6 @@
 {
     "categories": [
         {
-            "cat_tag": "judoka-faces",
             "display_name": "Faces",
             "character": "judoka",
             "z_index": 2,
@@ -9,12 +8,11 @@
             "inactive_icon": "face.png",
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
-            "category_id": "c8922230bfaf40da94bdcceaae0e7821",
+            "category_id": "judoka-faces",
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_tag": "judoka-skins",
             "display_name": "Skins",
             "character": "judoka",
             "z_index": 1,
@@ -22,12 +20,11 @@
             "inactive_icon": "skintone.png",
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
-            "category_id": "ca46bd4cb983449eab4ab43eec13db84",
+            "category_id": "judoka-skins",
             "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_tag": "judoka-belts",
             "display_name": "Belts",
             "character": "judoka",
             "z_index": 3,
@@ -35,12 +32,11 @@
             "inactive_icon": "belt.png",
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
-            "category_id": "07fcf015755b46ba9cf0223d4b3864d1",
+            "category_id": "judoka-belts",
             "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_tag": "judoka-hair",
             "display_name": "Hair",
             "character": "judoka",
             "z_index": 3,
@@ -48,12 +44,11 @@
             "inactive_icon": "hair.png",
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
-            "category_id": "3494acec8bcf43c7846a5c76e8226f0a",
+            "category_id": "judoka-hair",
             "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_tag": "judoka-suits",
             "display_name": "Suits",
             "character": "judoka",
             "z_index": 2,
@@ -61,12 +56,11 @@
             "inactive_icon": "suit.png",
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
-            "category_id": "f1e3cb13f40243f0aeac2c11bf6df6aa",
+            "category_id": "judoka-suits",
             "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_tag": "judoka-stickers",
             "display_name": "Stickers",
             "character": "judoka",
             "z_index": 3,
@@ -74,38 +68,35 @@
             "inactive_icon": "stickers.png",
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
-            "category_id": "80f6071b781f42e696d6030d4067eaff",
+            "category_id": "judoka-stickers",
             "display_order": 6,
             "date_created": "2015-04-14T10:54:14.000Z"
         }
     ],
     "special_categories": [
         {
-            "cat_tag": "environments",
             "display_name": "Environments",
             "active_icon": "environment.png",
             "inactive_icon": "environment.png",
             "selected_border": "active-environment.png",
             "hover_border": "active-environment.png",
-            "category_id": "a867e7f833a546b1b1efe485bf1e11e6",
+            "category_id": "environments",
             "display_order": 1000,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_tag": "characters",
             "display_name": "Characters",
             "active_icon": "character.png",
             "inactive_icon": "character.png",
             "selected_border": "active-character.png",
             "hover_border": "active-character.png",
-            "category_id": "d1f12f322c1a41ca9fd35519f56ef6cc",
+            "category_id": "characters",
             "display_order": 0,
             "date_created": "2015-04-14T10:54:14.000Z"
         }
     ],
     "characters": [
         {
-            "character_tag": "judoka",
             "display_name": "Judoka",
             "img_name": "judoka_base.png",
             "preview_img": "judoka_base.png",
@@ -113,7 +104,7 @@
             "crop_y": 115,
             "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z",
-            "character_id": "6df0b2d7985b4381a28c4dd4e24818b7"
+            "character_id": "judoka"
         }
     ],
     "objects": [

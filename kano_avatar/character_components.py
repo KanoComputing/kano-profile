@@ -94,12 +94,40 @@ class AvatarAccessory(AvatarBaseAccessory):
     """ Class for handling items and applying them onto an Avatar Character
     class.
     """
-    def __init__(self, name, category, file_name, preview_img, x, y,
+
+    @staticmethod
+    def from_data(data):
+        inst = None
+        new_name = data['display_name']
+        cat = data['category']
+        char = data['character']
+        new_fname = data['img_name']
+        new_prev_img = data['preview_img']
+        new_x = data['position_x']
+        new_y = data['position_y']
+        new_disp_ord = data['display_order']
+        new_date = data['date_created']
+        new_id = data['item_id']
+        # TODO hardcoded all unlocked for items until we change them to
+        # use the same scheme as environments
+        new_unlock = True
+        inst = AvatarAccessory(new_name,
+                               new_fname,
+                               new_prev_img,
+                               new_x,
+                               new_y,
+                               new_date,
+                               new_id,
+                               new_unlock,
+                               new_disp_ord)
+        return inst, char, cat
+
+    def __init__(self, name, file_name, preview_img, x, y,
                  date_created, item_id, is_unlocked, display_order):
         super(AvatarAccessory, self).__init__(
             name=name, unique_id=item_id, disp_order=display_order,
             date_created=date_created, unlocked=is_unlocked)
-        self._category = category
+        self._category = None
         self._img_position_x = x
         self._img_position_y = y
         # if an absolute path is given use it instead, so that we can
@@ -109,6 +137,13 @@ class AvatarAccessory(AvatarBaseAccessory):
 
     def __repr__(self):
         return 'Item {} of category {}'.format(self.name(), self.category())
+
+    def set_category(self, cat_obj):
+        if not self._category:
+            self._category = cat_obj
+        else:
+            logger.error("Item '{}' already points to a category {}".format(
+                self, self._category))
 
     def category(self):
         """ Provides the category name to which the Item belongs to
@@ -147,6 +182,32 @@ class AvatarCharacter(AvatarBaseAccessory):
     """ Class for handling an Avatar character. It holds the image data for
     the character so as to serve as a base on which the items are pasted on.
     """
+    @staticmethod
+    def from_data(data):
+        inst = None
+
+        new_name = data['display_name']
+        new_fname = data['img_name']
+        new_prev_img = data['preview_img']
+        x = data['crop_x']
+        y = data['crop_y']
+        new_disp_ord = data['display_order']
+        new_date = data['date_created']
+        new_id = data['character_id']
+        # TODO hardcoded all unlocked for characters until we change them
+        # to use the same scheme as environments
+        new_unlock = True
+        inst = AvatarCharacter(new_name,
+                               new_fname,
+                               new_prev_img,
+                               x,
+                               y,
+                               new_date,
+                               new_id,
+                               new_unlock,
+                               new_disp_ord)
+        return inst
+
     def __init__(self, name, file_name, preview_img, x, y, date_created,
                  char_id, is_unlocked, display_order):
         super(AvatarCharacter, self).__init__(
@@ -271,6 +332,29 @@ class AvatarEnvironment(AvatarBaseAccessory):
     it contains the image that will work as the background (lowest z-index)
     but also the largest in terms of size, it deserves a class of its own.
     """
+    @staticmethod
+    def from_data(data):
+        inst = None
+        new_name = data['title']
+        new_fname = data['img_name']
+        new_id = data['item_id']
+        new_disp_ord = data['display_order']
+        new_date = data['date_created']
+        new_unlocked = data['achieved']
+        if new_unlocked:
+            new_prev_img = data['preview_img']
+        else:
+            # TODO Unhardcode this
+            new_prev_img = 'environments/locked.png'
+        inst = AvatarEnvironment(new_name,
+                                 new_fname,
+                                 new_prev_img,
+                                 new_date,
+                                 new_id,
+                                 new_unlocked,
+                                 new_disp_ord)
+        return inst
+
     def __init__(self, name, file_name, preview_img, date_created, env_id,
                  is_unlocked, display_order):
         super(AvatarEnvironment, self).__init__()
@@ -372,8 +456,45 @@ class AvatarEnvironment(AvatarBaseAccessory):
 
 
 class AvatarCategory(AvatarBase):
-    def __init__(self, name, date_created, cat_id, display_order, z_index,
-                 sel_border, hover_border, active_icon, inactive_icon):
+
+    @staticmethod
+    def from_data(data):
+        inst = None
+
+        new_name = data['cat_tag']
+        new_date = data['date_created']
+        new_id = data['category_id']
+        new_disp_ord = data['display_order']
+        if 'z_index' not in data:
+            new_z_ind = -1
+        else:
+            new_z_ind = data['z_index']
+        new_sel_border = data['selected_border']
+        new_hover_border = data['hover_border']
+        new_active_icon = data['active_icon']
+        new_inactive_icon = data['inactive_icon']
+
+        if 'character' not in data:
+            new_char = None
+        else:
+            new_char = data['character']
+
+        inst = AvatarCategory(
+            new_name,
+            new_date,
+            new_id,
+            new_disp_ord,
+            new_z_ind,
+            new_sel_border,
+            new_hover_border,
+            new_active_icon,
+            new_inactive_icon)
+
+        return inst, new_char
+
+    def __init__(self, name, date_created, cat_id, display_order,
+                 z_index, sel_border, hover_border, active_icon,
+                 inactive_icon):
 
         super(AvatarCategory, self).__init__(
             name=name, unique_id=cat_id, disp_order=display_order,
@@ -389,8 +510,20 @@ class AvatarCategory(AvatarBase):
         self._inactive_category_icon = content_dir.get_file(
             'INACTIVE_CATEGORY_ICONS', inactive_icon)
 
+        self._character = None
+
+        self._items = {}
+
     def __repr__(self):
-        return 'Category {}'.format(self.name())
+        return 'Category {}, of Character {}'.format(
+            self.name(), self._character)
+
+    def set_character(self, character):
+        if not self._character:
+            self._character = character
+        else:
+            logger.error(("Category '{}' is already bound to a character, "
+                          "can't add {}").format(self, character))
 
     def get_zindex(self):
         return self._z_index
@@ -406,3 +539,57 @@ class AvatarCategory(AvatarBase):
 
     def get_hover_border(self):
         return self._hover_border
+
+    def get_character(self):
+        return self._character
+
+    def add_item(self, item):
+        if item:
+            self._items[item.name()] = item
+        else:
+            logger.error("Item {} can't be added to Category {}".format(
+                item, self))
+
+    def item(self, item_name):
+        return self._items[item_name]
+
+    def items(self):
+        return [k for k in self._items.itervalues()]
+
+
+class AvatarCharacterSet(object):
+    """
+    """
+    @staticmethod
+    def from_data(data):
+        inst = None
+        char = AvatarCharacter.from_data(data)
+        if char:
+            inst = AvatarCharacterSet(data)
+
+        return inst
+
+    def __init__(self, character):
+        self._character = character
+        self._categories = {}
+
+    def __repr__(self):
+        return 'Character Set of "{}"'.format(self._character)
+
+    def add_category(self, categ_obj):
+        self._categories.add(categ_obj)
+
+    def get_categories(self):
+        return sorted(self._categories.itervalues(),
+                      key=lambda k: k.get_disp_order())
+
+    def get_category(self, cat_name):
+        if cat_name in self._categories:
+            ret_obj = self._categories[cat_name]
+        else:
+            ret_obj = None
+
+        return ret_obj
+
+    def get_character(self):
+        return self._character

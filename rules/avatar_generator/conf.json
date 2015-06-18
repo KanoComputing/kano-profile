@@ -1,9 +1,12 @@
 {
     "categories": [
         {
-            "cat_name": "Faces",
+            "cat_tag": "judoka-faces",
+            "display_name": "Faces",
+            "character": "judoka",
             "z_index": 2,
-            "disp_icon": "face.png",
+            "active_icon": "face.png",
+            "inactive_icon": "face.png",
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "c8922230bfaf40da94bdcceaae0e7821",
@@ -11,9 +14,12 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_name": "Skins",
+            "cat_tag": "judoka-skins",
+            "display_name": "Skins",
+            "character": "judoka",
             "z_index": 1,
-            "disp_icon": "skintone.png",
+            "active_icon": "skintone.png",
+            "inactive_icon": "skintone.png",
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "ca46bd4cb983449eab4ab43eec13db84",
@@ -21,9 +27,12 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_name": "Belts",
+            "cat_tag": "judoka-belts",
+            "display_name": "Belts",
+            "character": "judoka",
             "z_index": 3,
-            "disp_icon": "belt.png",
+            "active_icon": "belt.png",
+            "inactive_icon": "belt.png",
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "07fcf015755b46ba9cf0223d4b3864d1",
@@ -31,9 +40,12 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_name": "Hair",
+            "cat_tag": "judoka-hair",
+            "display_name": "Hair",
+            "character": "judoka",
             "z_index": 3,
-            "disp_icon": "hair.png",
+            "active_icon": "hair.png",
+            "inactive_icon": "hair.png",
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "3494acec8bcf43c7846a5c76e8226f0a",
@@ -41,9 +53,12 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_name": "Suits",
+            "cat_tag": "judoka-suits",
+            "display_name": "Suits",
+            "character": "judoka",
             "z_index": 2,
-            "disp_icon": "suit.png",
+            "active_icon": "suit.png",
+            "inactive_icon": "suit.png",
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "f1e3cb13f40243f0aeac2c11bf6df6aa",
@@ -51,9 +66,12 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
-            "cat_name": "Stickers",
+            "cat_tag": "judoka-stickers",
+            "display_name": "Stickers",
+            "character": "judoka",
             "z_index": 3,
-            "disp_icon": "stickers.png",
+            "active_icon": "stickers.png",
+            "inactive_icon": "stickers.png",
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "80f6071b781f42e696d6030d4067eaff",
@@ -61,29 +79,34 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         }
     ],
-    "special_categories": {
-        "environments": {
+    "special_categories": [
+        {
+            "cat_tag": "environments",
+            "display_name": "Environments",
             "active_icon": "environment.png",
             "inactive_icon": "environment.png",
             "selected_border": "active-environment.png",
             "hover_border": "active-environment.png",
             "category_id": "a867e7f833a546b1b1efe485bf1e11e6",
-            "display_order": 7,
+            "display_order": 1000,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
-        "characters": {
+        {
+            "cat_tag": "characters",
+            "display_name": "Characters",
             "active_icon": "character.png",
             "inactive_icon": "character.png",
             "selected_border": "active-character.png",
             "hover_border": "active-character.png",
             "category_id": "d1f12f322c1a41ca9fd35519f56ef6cc",
-            "display_order": 1000,
+            "display_order": 0,
             "date_created": "2015-04-14T10:54:14.000Z"
         }
-    },
+    ],
     "characters": [
         {
-            "display_name": "Judoka_Base",
+            "character_tag": "judoka",
+            "display_name": "Judoka",
             "img_name": "judoka_base.png",
             "preview_img": "judoka_base.png",
             "crop_x": 172,
@@ -96,6 +119,7 @@
     "objects": [
         {
             "display_name": "Skin_Pale",
+            "character": "judoka",
             "img_name": "skins/skin-1.png",
             "preview_img": "skins/skin-1.png",
             "position_x": 0,
@@ -107,6 +131,7 @@
         },
         {
             "display_name": "Skin_Warm",
+            "character": "judoka",
             "img_name": "skins/skin-2.png",
             "preview_img": "skins/skin-2.png",
             "position_x": 0,
@@ -118,6 +143,7 @@
         },
         {
             "display_name": "Skin_Sand",
+            "character": "judoka",
             "img_name": "skins/skin-3.png",
             "preview_img": "skins/skin-3.png",
             "position_x": 0,
@@ -129,6 +155,7 @@
         },
         {
             "display_name": "Skin_Orange",
+            "character": "judoka",
             "img_name": "skins/skin-4.png",
             "preview_img": "skins/skin-4.png",
             "position_x": 0,
@@ -140,6 +167,7 @@
         },
         {
             "display_name": "Skin_Chocolate",
+            "character": "judoka",
             "img_name": "skins/skin-5.png",
             "preview_img": "skins/skin-5.png",
             "position_x": 0,
@@ -151,6 +179,7 @@
         },
         {
             "display_name": "Skin_Brown",
+            "character": "judoka",
             "img_name": "skins/skin-6.png",
             "preview_img": "skins/skin-6.png",
             "position_x": 0,
@@ -162,6 +191,7 @@
         },
         {
             "display_name": "Skin_Dark_Brown",
+            "character": "judoka",
             "img_name": "skins/skin-7.png",
             "preview_img": "skins/skin-7.png",
             "position_x": 0,
@@ -173,6 +203,7 @@
         },
         {
             "display_name": "Hair_Dark_Blond",
+            "character": "judoka",
             "img_name": "hair/hair-darkblonde.png",
             "preview_img": "hair/Kano-CharacterApp_07-02.png",
             "position_x": 0,
@@ -184,6 +215,7 @@
         },
         {
             "display_name": "Hair_Light_Blond",
+            "character": "judoka",
             "img_name": "hair/hair-lightblonde.png",
             "preview_img": "hair/Kano-CharacterApp_07-03.png",
             "position_x": 0,
@@ -195,6 +227,7 @@
         },
         {
             "display_name": "Hair_Dark_Brown",
+            "character": "judoka",
             "img_name": "hair/hair-darkbrown.png",
             "preview_img": "hair/Kano-CharacterApp_07-04.png",
             "position_x": 0,
@@ -206,6 +239,7 @@
         },
         {
             "display_name": "Hair_Brown",
+            "character": "judoka",
             "img_name": "hair/hair-brown.png",
             "preview_img": "hair/Kano-CharacterApp_07-05.png",
             "position_x": 0,
@@ -217,6 +251,7 @@
         },
         {
             "display_name": "Hair_Ginger",
+            "character": "judoka",
             "img_name": "hair/hair-ginger.png",
             "preview_img": "hair/Kano-CharacterApp_07-06.png",
             "position_x": 0,
@@ -228,6 +263,7 @@
         },
         {
             "display_name": "Hair_Black",
+            "character": "judoka",
             "img_name": "hair/hair-dark.png",
             "preview_img": "hair/Kano-CharacterApp_07.png",
             "position_x": 0,
@@ -239,6 +275,7 @@
         },
         {
             "display_name": "Hair_Long_Black",
+            "character": "judoka",
             "img_name": "hair/hair-long-dark.png",
             "preview_img": "hair/hair-long-dark_prev.png",
             "position_x": 0,
@@ -250,6 +287,7 @@
         },
         {
             "display_name": "Hair_Long_Dark_Blonde",
+            "character": "judoka",
             "img_name": "hair/hair-long-darkblonde.png",
             "preview_img": "hair/hair-long-darkblonde_prev.png",
             "position_x": 0,
@@ -261,6 +299,7 @@
         },
         {
             "display_name": "Hair_Long_Dark_Brown",
+            "character": "judoka",
             "img_name": "hair/hair-long-darkbrown.png",
             "preview_img": "hair/hair-long-darkbrown_prev.png",
             "position_x": 0,
@@ -272,6 +311,7 @@
         },
         {
             "display_name": "Hair_Long_Ginger",
+            "character": "judoka",
             "img_name": "hair/hair-long-ginger.png",
             "preview_img": "hair/hair-long-ginger_prev.png",
             "position_x": 0,
@@ -283,6 +323,7 @@
         },
         {
             "display_name": "Hair_Long_Light_Blonde",
+            "character": "judoka",
             "img_name": "hair/hair-long-lightblonde.png",
             "preview_img": "hair/hair-long-lightblonde_prev.png",
             "position_x": 0,
@@ -294,6 +335,7 @@
         },
         {
             "display_name": "Hair_Long_Light_Brown",
+            "character": "judoka",
             "img_name": "hair/hair-long-lightbrown.png",
             "preview_img": "hair/hair-long-lightbrown_prev.png",
             "position_x": 0,
@@ -305,6 +347,7 @@
         },
         {
             "display_name": "Hair_Short_Dark",
+            "character": "judoka",
             "img_name": "hair/hair-short-dark.png",
             "preview_img": "hair/hair-short-dark_prev.png",
             "position_x": 0,
@@ -316,6 +359,7 @@
         },
         {
             "display_name": "Hair_Short_Dark_Blonde",
+            "character": "judoka",
             "img_name": "hair/hair-short-darkblonde.png",
             "preview_img": "hair/hair-short-darkblonde_prev.png",
             "position_x": 0,
@@ -327,6 +371,7 @@
         },
         {
             "display_name": "Hair_Short_Dark_Brown",
+            "character": "judoka",
             "img_name": "hair/hair-short-darkbrown.png",
             "preview_img": "hair/hair-short-darkbrown_prev.png",
             "position_x": 0,
@@ -338,6 +383,7 @@
         },
         {
             "display_name": "Hair_Short_Ginger",
+            "character": "judoka",
             "img_name": "hair/hair-short-ginger.png",
             "preview_img": "hair/hair-short-ginger_prev.png",
             "position_x": 0,
@@ -349,6 +395,7 @@
         },
         {
             "display_name": "Hair_Short_Light_Blonde",
+            "character": "judoka",
             "img_name": "hair/hair-short-lightblonde.png",
             "preview_img": "hair/hair-short-lightblonde_prev.png",
             "position_x": 0,
@@ -360,6 +407,7 @@
         },
         {
             "display_name": "Hair_Short_Light_Brown",
+            "character": "judoka",
             "img_name": "hair/hair-short-lightbrown.png",
             "preview_img": "hair/hair-short-lightbrown_prev.png",
             "position_x": 0,
@@ -371,6 +419,7 @@
         },
         {
             "display_name": "Sticker_Code",
+            "character": "judoka",
             "img_name": "stickers/sticker-code.png",
             "preview_img": "stickers/Kano-CharacterApp_07-02.png",
             "position_x": 0,
@@ -382,6 +431,7 @@
         },
         {
             "display_name": "Sticker_Atom",
+            "character": "judoka",
             "img_name": "stickers/sticker-atom.png",
             "preview_img": "stickers/Kano-CharacterApp_07-03.png",
             "position_x": 0,
@@ -393,6 +443,7 @@
         },
         {
             "display_name": "Sticker_Note",
+            "character": "judoka",
             "img_name": "stickers/sticker-note.png",
             "preview_img": "stickers/Kano-CharacterApp_07-04.png",
             "position_x": 0,
@@ -404,6 +455,7 @@
         },
         {
             "display_name": "Sticker_Bolt",
+            "character": "judoka",
             "img_name": "stickers/sticker-bolt.png",
             "preview_img": "stickers/Kano-CharacterApp_07-05.png",
             "position_x": 0,
@@ -415,6 +467,7 @@
         },
         {
             "display_name": "Sticker_Star",
+            "character": "judoka",
             "img_name": "stickers/sticker-star.png",
             "preview_img": "stickers/Kano-CharacterApp_07-06.png",
             "position_x": 0,
@@ -426,6 +479,7 @@
         },
         {
             "display_name": "Sticker_Heart",
+            "character": "judoka",
             "img_name": "stickers/sticker-heart.png",
             "preview_img": "stickers/Kano-CharacterApp_07.png",
             "position_x": 0,
@@ -437,6 +491,7 @@
         },
         {
             "display_name": "Suit_Pink",
+            "character": "judoka",
             "img_name": "suits/suit-pink.png",
             "preview_img": "suits/Kano-CharacterApp_07-02.png",
             "position_x": 0,
@@ -448,6 +503,7 @@
         },
         {
             "display_name": "Suit_Cyan",
+            "character": "judoka",
             "img_name": "suits/suit-cyan.png",
             "preview_img": "suits/Kano-CharacterApp_07-03.png",
             "position_x": 0,
@@ -459,6 +515,7 @@
         },
         {
             "display_name": "Suit_Green",
+            "character": "judoka",
             "img_name": "suits/suit-green.png",
             "preview_img": "suits/Kano-CharacterApp_07-04.png",
             "position_x": 0,
@@ -470,6 +527,7 @@
         },
         {
             "display_name": "Suit_Dark",
+            "character": "judoka",
             "img_name": "suits/suit-dark.png",
             "preview_img": "suits/Kano-CharacterApp_07-05.png",
             "position_x": 0,
@@ -481,6 +539,7 @@
         },
         {
             "display_name": "Suit_White",
+            "character": "judoka",
             "img_name": "suits/suit-white.png",
             "preview_img": "suits/Kano-CharacterApp_07-06.png",
             "position_x": 0,
@@ -492,6 +551,7 @@
         },
         {
             "display_name": "Suit_Yellow",
+            "character": "judoka",
             "img_name": "suits/suit-yellow.png",
             "preview_img": "suits/Kano-CharacterApp_07-07.png",
             "position_x": 0,
@@ -503,6 +563,7 @@
         },
         {
             "display_name": "Suit_Orange",
+            "character": "judoka",
             "img_name": "suits/suit-orange.png",
             "preview_img": "suits/Kano-CharacterApp_07-08.png",
             "position_x": 0,
@@ -514,6 +575,7 @@
         },
         {
             "display_name": "Suit_Purple",
+            "character": "judoka",
             "img_name": "suits/suit-purple.png",
             "preview_img": "suits/Kano-CharacterApp_07-09.png",
             "position_x": 0,
@@ -525,6 +587,7 @@
         },
         {
             "display_name": "Suit_Red",
+            "character": "judoka",
             "img_name": "suits/suit-red.png",
             "preview_img": "suits/Kano-CharacterApp_07-10.png",
             "position_x": 0,
@@ -536,6 +599,7 @@
         },
         {
             "display_name": "Suit_Blue",
+            "character": "judoka",
             "img_name": "suits/suit-blue.png",
             "preview_img": "suits/Kano-CharacterApp_07.png",
             "position_x": 0,
@@ -547,6 +611,7 @@
         },
         {
             "display_name": "Face_Grumpy",
+            "character": "judoka",
             "img_name": "faces/face-grumpy.png",
             "preview_img": "faces/Kano-CharacterApp_07-02.png",
             "position_x": 0,
@@ -558,6 +623,7 @@
         },
         {
             "display_name": "Face_SuperHappy",
+            "character": "judoka",
             "img_name": "faces/face-superhappy.png",
             "preview_img": "faces/Kano-CharacterApp_07-03.png",
             "position_x": 0,
@@ -569,6 +635,7 @@
         },
         {
             "display_name": "Face_Scared",
+            "character": "judoka",
             "img_name": "faces/face-scared.png",
             "preview_img": "faces/Kano-CharacterApp_07-04.png",
             "position_x": 0,
@@ -580,6 +647,7 @@
         },
         {
             "display_name": "Face_Cutey",
+            "character": "judoka",
             "img_name": "faces/face-cutey.png",
             "preview_img": "faces/Kano-CharacterApp_07-05.png",
             "position_x": 0,
@@ -591,6 +659,7 @@
         },
         {
             "display_name": "Face_Wiggly",
+            "character": "judoka",
             "img_name": "faces/face-wiggley.png",
             "preview_img": "faces/Kano-CharacterApp_07-06.png",
             "position_x": 0,
@@ -602,6 +671,7 @@
         },
         {
             "display_name": "Face_Cheeky",
+            "character": "judoka",
             "img_name": "faces/face-cheeky.png",
             "preview_img": "faces/Kano-CharacterApp_07-07.png",
             "position_x": 0,
@@ -613,6 +683,7 @@
         },
         {
             "display_name": "Face_Happy",
+            "character": "judoka",
             "img_name": "faces/face-happy.png",
             "preview_img": "faces/Kano-CharacterApp_07.png",
             "position_x": 0,
@@ -624,6 +695,7 @@
         },
         {
             "display_name": "Belt_Yellow",
+            "character": "judoka",
             "img_name": "belts/belt-yellow.png",
             "preview_img": "belts/Kano-CharacterApp_07-02.png",
             "position_x": 0,
@@ -635,6 +707,7 @@
         },
         {
             "display_name": "Belt_Black",
+            "character": "judoka",
             "img_name": "belts/belt-dark.png",
             "preview_img": "belts/Kano-CharacterApp_07-03.png",
             "position_x": 0,
@@ -646,6 +719,7 @@
         },
         {
             "display_name": "Belt_Orange",
+            "character": "judoka",
             "img_name": "belts/belt-orange.png",
             "preview_img": "belts/Kano-CharacterApp_07-04.png",
             "position_x": 0,
@@ -657,6 +731,7 @@
         },
         {
             "display_name": "Belt_Red",
+            "character": "judoka",
             "img_name": "belts/belt-red.png",
             "preview_img": "belts/Kano-CharacterApp_07-05.png",
             "position_x": 0,
@@ -668,6 +743,7 @@
         },
         {
             "display_name": "Belt_Belt_Purple",
+            "character": "judoka",
             "img_name": "belts/belt-purple.png",
             "preview_img": "belts/Kano-CharacterApp_07-06.png",
             "position_x": 0,
@@ -679,6 +755,7 @@
         },
         {
             "display_name": "Belt_Blue",
+            "character": "judoka",
             "img_name": "belts/belt-blue.png",
             "preview_img": "belts/Kano-CharacterApp_07-07.png",
             "position_x": 0,
@@ -690,6 +767,7 @@
         },
         {
             "display_name": "Belt_Green",
+            "character": "judoka",
             "img_name": "belts/belt-green.png",
             "preview_img": "belts/Kano-CharacterApp_07-08.png",
             "position_x": 0,
@@ -701,6 +779,7 @@
         },
         {
             "display_name": "Belt_Pink",
+            "character": "judoka",
             "img_name": "belts/belt-pinkish.png",
             "preview_img": "belts/Kano-CharacterApp_07-09.png",
             "position_x": 0,
@@ -712,6 +791,7 @@
         },
         {
             "display_name": "Belt_Cyan",
+            "character": "judoka",
             "img_name": "belts/belt-cyan.png",
             "preview_img": "belts/Kano-CharacterApp_07-10.png",
             "position_x": 0,
@@ -723,6 +803,7 @@
         },
         {
             "display_name": "Belt_Beige",
+            "character": "judoka",
             "img_name": "belts/belt-beige.png",
             "preview_img": "belts/Kano-CharacterApp_07.png",
             "position_x": 0,

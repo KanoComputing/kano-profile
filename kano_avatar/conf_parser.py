@@ -6,10 +6,117 @@
 # Logic for parsing and creating avatars for a Kano World profile
 from kano.logging import logger
 from kano_profile.badges import calculate_badges
-from kano_content.extended_paths import content_dir
 
-from .character_components import (AvatarAccessory, AvatarCharacter,
-                                   AvatarEnvironment, AvatarCategory)
+from .character_components import (AvatarAccessory, AvatarEnvironment,
+                                   AvatarCategory, AvatarCharacterSet)
+
+
+class AvatarLayer(object):
+    @staticmethod
+    def from_data(data, char, env):
+        inst = None
+
+        char_set = AvatarCharacterSet.from_data(data)
+        if char_set:
+            inst = AvatarLayer()
+            inst.add_character_set(char_set)
+            inst.add_character_cat(char)
+            inst.add_envir_cat(env)
+
+        return inst
+
+    def __init__(self):
+        self._character_set = None
+        self._character_cat = None
+        self._environment_cat = None
+
+    def __repr__(self):
+        return (('Layer; character set{}; character category{}; '
+                 'environment cat {}').format(self._character_set,
+                                              self._character_cat,
+                                              self._environment_cat)
+                )
+
+    def add_character_set(self, obj):
+        if obj:
+            self._character_set = obj
+        else:
+            logger.error("Character set provided is None, can't add to Layer")
+
+    def name(self):
+        return self.add_character_set.get_character().name()
+
+    def add_character_cat(self, char_cat):
+        if not self._character_cat:
+            if char_cat:
+                self._character_cat = char_cat
+            else:
+                logger.error(
+                    "Can't add character category '{}' to layer".format(
+                        char_cat))
+        else:
+            logger.error('Layer already has a character category')
+
+    def add_envir_cat(self, env_cat):
+        if not self._environment_cat:
+            if env_cat:
+                self._environment_cat = env_cat
+            else:
+                logger.error(
+                    "Can't add environment category '{}' to layer".format(
+                        env_cat))
+        else:
+            logger.error('Layer already has a environment category')
+
+    def add_category(self, cat):
+        self._character_set.add_category(cat)
+
+    def category(self, cat):
+        ret = None
+        for c in self.get_categories():
+            if c.name == cat:
+                ret = c
+                break
+        return ret
+
+    def add_item(self, cat, item_obj):
+        self.category(cat).add_item(item_obj)
+
+    def get_categories(self):
+        category_list = []
+        if not self._character_cat:
+            logger.error(
+                "Asked for categories, but don't have characters {}".format(
+                    self))
+            return category_list
+        else:
+            if not self._character_set:
+                category_list = [self._character_cat]
+                category_list.extend(self._character_set.get_categories())
+                category_list.append(self._environment_cat)
+
+        return category_list
+
+    def get_object_names(self, cat_name):
+        ret = []
+        cat = self.category(cat_name)
+        if not cat:
+            logger.error(("Category '{}' not in layer '{}', can't return"
+                          "hover border").format(cat_name, self))
+        else:
+            ret = [k.name() for k in cat.item_list()]
+        return ret
+
+    def item(self, item_name):
+        ret = None
+        for k in self.get_categories():
+            for it in k.item_list():
+                if it.name() == item_name:
+                    ret = it
+                    break
+            if ret:
+                break
+        return None
 
 
 class AvatarConfParser(object):
@@ -26,35 +133,32 @@ class AvatarConfParser(object):
     special_category_labels = [char_label, env_label]
 
     def __init__(self, conf_data):
-        self._categories = set()
-        self._zindex = set()
-        self._objects = {}
-        self._characters = {}
-        self._environments = {}
-        self._object_per_cat = {}
-        self._category_cont = {}
+        self._layers = {}
+        char_cat = None
+        env_cat = None
+
+        if self.spec_cat_label not in conf_data:
+            logger.error('{} dict not found'.format(self.spec_cat_label))
+        else:
+            char_cat, env_cat = \
+                self._populate_special_category_structures(conf_data)
+
+        if self.char_label not in conf_data:
+            logger.error('{} dict not found'.format(self.char_label))
+        else:
+            self._populate_layer_structures(conf_data, char_cat, env_cat)
 
         if self.categories_label not in conf_data:
             logger.error('{} dict not found'.format(self.categories_label))
         else:
             self._populate_cat_structures(conf_data[self.categories_label])
 
-        if self.char_label not in conf_data:
-            logger.error('{} dict not found'.format(self.char_label))
-        else:
-            self._populate_character_structures(conf_data)
-
         if self.objects_label not in conf_data:
             logger.error('{} dict not found'.format(self.objects_label))
         else:
             self._populate_object_structures(conf_data)
 
-        self._populate_environment_structures(conf_data)
-
-        if self.spec_cat_label not in conf_data:
-            logger.error('{} dict not found'.format(self.spec_cat_label))
-        else:
-            self._populate_special_category_structures(conf_data)
+        self._populate_environment_structures(conf_data, env_cat)
 
     def _populate_cat_structures(self, categories):
         """ Populates internal structures related to categories
@@ -63,91 +167,27 @@ class AvatarConfParser(object):
         """
 
         for cat in categories:
-            new_name = cat['cat_name']
-            new_date = cat['date_created']
-            new_id = cat['category_id']
-            new_disp_ord = cat['display_order']
-            new_z_ind = cat['z_index']
-            new_sel_border = cat['selected_border']
-            new_hover_border = cat['hover_border']
-            new_active_icon = cat['disp_icon']
-            new_inactive_icon = cat['disp_icon']
-
-            self._category_cont[new_name] = AvatarCategory(
-                new_name,
-                new_date,
-                new_id,
-                new_disp_ord,
-                new_z_ind,
-                new_sel_border,
-                new_hover_border,
-                new_active_icon,
-                new_inactive_icon)
-
-        # Save both the unique set of z-indexes and categories
-        self._categories.update(
-            (k.name() for k in self._category_cont.itervalues()))
+            cat_obj, char_name = AvatarCategory.from_data(cat)
+            self.layer(char_name).add_category(cat_obj)
 
     def _populate_object_structures(self, conf_data):
         """ Populates internal structures related to items
         :param conf_data: YAML format configuration structure read from file
         """
         for obj in conf_data[self.objects_label]:
-            new_name = obj['display_name']
-            new_cat = obj['category']
-            new_fname = obj['img_name']
-            new_prev_img = obj['preview_img']
-            new_x = obj['position_x']
-            new_y = obj['position_y']
-            new_disp_ord = obj['display_order']
-            new_date = obj['date_created']
-            new_id = obj['item_id']
-            # TODO hardcoded all unlocked for items until we change them to
-            # use the same scheme as environments
-            new_unlock = True
-            new_obj = AvatarAccessory(new_name,
-                                      new_cat,
-                                      new_fname,
-                                      new_prev_img,
-                                      new_x,
-                                      new_y,
-                                      new_date,
-                                      new_id,
-                                      new_unlock,
-                                      new_disp_ord)
-            self._objects[new_name] = new_obj
-            if new_cat not in self._object_per_cat:
-                self._object_per_cat[new_cat] = []
-            self._object_per_cat[new_cat].append(new_obj)
+            obj, char, cat = AvatarAccessory.from_data(obj)
+            self.layer(char).add_item(cat, obj)
 
-    def _populate_character_structures(self, conf_data):
+    def _populate_layer_structures(self, conf_data, char, env):
         """ Populates internal structures related to characters
         :param conf_data: YAML format configuration structure read from file
         """
         for obj in conf_data[self.char_label]:
-            new_name = obj['display_name']
-            new_fname = obj['img_name']
-            new_prev_img = obj['preview_img']
-            x = obj['crop_x']
-            y = obj['crop_y']
-            new_disp_ord = obj['display_order']
-            new_date = obj['date_created']
-            new_id = obj['character_id']
-            # TODO hardcoded all unlocked for characters until we change them
-            # to use the same scheme as environments
-            new_unlock = True
-            new_obj = AvatarCharacter(new_name,
-                                      new_fname,
-                                      new_prev_img,
-                                      x,
-                                      y,
-                                      new_date,
-                                      new_id,
-                                      new_unlock,
-                                      new_disp_ord)
-            self._characters[new_name] = new_obj
+            layer = AvatarLayer.from_data(obj, char, env)
+            if layer:
+                self._layer[layer.name()] = layer
 
-    def _populate_environment_structures(self, conf_data):
+    def _populate_environment_structures(self, conf_data, env_cat):
         """ Populates internal structures related to environments (backgrounds)
         :param conf_data: YAML format configuration structure read from file
         """
@@ -155,25 +195,8 @@ class AvatarConfParser(object):
         envirs = calculate_badges()
 
         for _, env in envirs[self.env_label]['all'].iteritems():
-            new_name = env['title']
-            new_fname = env['img_name']
-            new_id = env['item_id']
-            new_disp_ord = env['display_order']
-            new_date = env['date_created']
-            new_unlocked = env['achieved']
-            if new_unlocked:
-                new_prev_img = env['preview_img']
-            else:
-                # TODO Unhardcode this
-                new_prev_img = 'environments/locked.png'
-            new_env = AvatarEnvironment(new_name,
-                                        new_fname,
-                                        new_prev_img,
-                                        new_date,
-                                        new_id,
-                                        new_unlocked,
-                                        new_disp_ord)
-            self._environments[new_name] = new_env
+            env_obj = AvatarEnvironment.from_data(env)
+            env_cat.add_item(env_obj)
 
     def _populate_special_category_structures(self, conf_data):
         """ Populate internal structures related to the special categories
@@ -182,334 +205,158 @@ class AvatarConfParser(object):
         """
         special_cat_data = conf_data[self.spec_cat_label]
 
-        for special_cat in self.special_category_labels:
-            pass
+        for special_cat in special_cat_data:
+            if special_cat['cat_tag'] == self.char_label:
+                char, unused = AvatarCategory.from_data(special_cat)
+            elif special_cat['cat_tag'] == self.env_label:
+                env, unused = AvatarCategory.from_data(special_cat)
+            else:
+                logger.error("Unknown cat_tag in special categories")
 
-        # TODO Remove hard-coded environment parsing
-        cat = special_cat_data[self.env_label]
+        return char, env
 
-        new_name = special_cat
-        new_date = cat['date_created']
-        new_id = cat['category_id']
-        new_disp_ord = cat['display_order']
-        new_z_ind = -1
-        new_sel_border = content_dir.get_file(
-            'PREVIEW_ICONS', cat['selected_border'])
-        new_hover_border = content_dir.get_file(
-            'PREVIEW_ICONS', cat['hover_border'])
-        new_active_icon = content_dir.get_file(
-            'ACTIVE_SPECIAL_CATEGORY_ICONS',
-            cat['active_icon'])
-        new_inactive_icon = content_dir.get_file(
-            'INACTIVE_SPECIAL_CATEGORY_ICONS',
-            cat['inactive_icon'])
+    def layer(self, character_name):
+        if character_name not in self._layers:
+            logger.error("Character '{}' not in character layers".format(
+                character_name))
+            return None
+        else:
+            return self._layers[character_name]
 
-        self._category_cont[new_name] = AvatarCategory(
-            new_name,
-            new_date,
-            new_id,
-            new_disp_ord,
-            new_z_ind,
-            new_sel_border,
-            new_hover_border,
-            new_active_icon,
-            new_inactive_icon)
-
-    def get_zindex(self, category):
+    def get_zindex(self, character, category):
         """ Provides the z-index for a specific category
         :param category: The category whose z-index will be returned
         :returns: z-index as integer
         :rtype: integer
         """
-        if category not in self._category_cont:
-            logger.warn('Category {} not in available ones'.format(category))
-            return None
-        else:
-            return self._category_cont[category].get_zindex()
-
-    def _get_reg_item_cat(self, item_name):
-        """ Get the category of an item if that item belongs to a regular
-        category
-        :param item_name: Item whose category will be returned
-        :returns: category as a string
-        :rtype: string or None
-        """
-        if item_name in self._objects:
-            return self._objects[item_name].category()
-        else:
-            return None
-
-    def get_item_category(self, item_name):
-        """ Get the category of an item/environment if that item/env exists
-        :param item_name: item/env name whose category will be returned
-        :returns: category as a string or None
-        :rtype: string or None
-        """
-        cat_label = self._get_reg_item_cat(item_name)
-        if not cat_label:
-            if item_name not in self._environments:
-                logger.warn('Item {} neither in obj nor in env list'.format(
-                    item_name))
-                return None
-            else:
-                cat_label = self.env_label
-        return cat_label
+        layer = self.layer(character)
+        cat = layer.category(category)
+        return cat.get_zindex()
 
     def list_available_chars(self):
         """ Provides a list of available characters
         :returns: list of characters (list of strings)
         :rtype: list of stings
         """
-        return [k for k in self._characters.keys()]
+        return [c for c in self._layers.iterkeys()]
 
-    def _list_all_available_regular_objs(self):
-        """ Provides a list of available regular objects
-        :returns: list of objects (list of strings)
-        :rtype: list of strings
-        """
-        return [k for k in self._objects.keys()]
-
-    def list_all_available_environments(self):
-        """ Provides a list of available environments
-        :returns: list of environments (list of strings)
-        :rtype: list of strings
-        """
-        env_inst_ord = sorted(self._environments.itervalues(),
-                              key=lambda env: env.get_disp_order())
-        return [k.name() for k in env_inst_ord]
-
-    def list_all_available_objs(self):
-        """ Provides a list of available objects
-        :returns: list of objects (list of strings)
-        :rtype: list of strings
-        """
-        ret = self._list_all_available_regular_objs()
-        ret.extend(self.list_all_available_environments())
-        return ret
-
-    def _get_avail_objs_regular_cat(self, category):
-        """ Provides a list of available objects for the specific normal category
-        :returns: [] of object names
-                  None if category is not found
-        :rtype: list of strings or None
-        """
-        if category not in self._object_per_cat:
-            err_msg = "cat {} not found, can't return objects".format(category)
-            logger.warn(err_msg)
-            return None
-        else:
-
-            item_inst_sorted = sorted(self._object_per_cat[category],
-                                      key=lambda obj: obj.get_disp_order())
-            return [it.name() for it in item_inst_sorted]
-
-    def get_avail_objs(self, category):
+    def get_avail_objs(self, char, category):
         """ Provides a list of available objects for the category provided
         :returns: [] of object names
                   None if category is not found
         :rtype: list of strings or None
         """
-        if category == self.env_label:
-            return self.list_all_available_environments()
-        else:
-            return self._get_avail_objs_regular_cat(category)
+        ret = []
+        char = self.layer(char)
+        if char:
+            ret = char.get_object_names(category)
+        return ret
 
-    def _list_available_regular_categories(self):
-        """ Provides a list of available regular categories (not case
-        sensitive)
-        :returns: list of categories (list of strings)
-        :rtype: list of strings
-        """
-        reg_cats_ord = sorted(
-            ((k.name(), k.get_disp_order())
-             for k in self._category_cont.itervalues()),
-            key=lambda k: k[1])
-        return [k[0] for k in reg_cats_ord]
-
-    def _list_available_special_categories(self):
-        """ Provides a list of available special categories (not case
-        sensitive)
-        :returns: list of categories (list of strings)
-        :rtype: list of strings
-        """
-        # TODO Temporary hardcoding
-        # return self.special_category_labels
-        # At the time it is only one so it is sorted
-        return [self.env_label]
-
-    def list_available_categories(self):
+    def list_available_categories(self, character):
         """ Provides a list of available categories (not case sensitive)
         :returns: list of categories (list of strings)
         :rtype: list of strings
         """
-        cats = self._list_available_regular_categories()
-        # specs = self._list_available_special_categories()
+        ret = []
+        char = self.layer(character)
+        if not char:
+            logger.error(("Character '{}' isn't available in '{}', can't "
+                          "return available categories").format(
+                              character, self))
+        else:
+            ret = [k.name() for k in char.get_categories()]
+        return ret
 
-        # cats.extend(specs)
-        return cats
-
-    def get_inactive_category_icon(self, category_name):
+    def get_inactive_category_icon(self, character, category_name):
         """ Provides the filename of the inactive icons of the provided
         category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         :rtype: string
         """
-        if category_name in self._category_cont:
-            icon_path = self._category_cont[category_name].get_inactive_icon()
+        ret = None
+        char = self.layer(character)
+        if not char:
+            logger.error(("Character '{}' isn't available in '{}', can't "
+                          "return inactive cat icon").format(
+                              character, self))
         else:
-            icon_path = None
-            logger.warn(
-                "Cat {} not found, can't provide inactive icon path".format(
-                    category_name)
-            )
-        return icon_path
+            ret = char.category(category_name).get_inactive_icon()
+        return ret
 
-    def get_active_category_icon(self, category_name):
+    def get_active_category_icon(self, character, category_name):
         """ Provides the filename of the active icons of the provided category
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         :rtype: string or None
         """
-        if category_name in self._category_cont:
-            icon_path = self._category_cont[category_name].get_active_icon()
+        ret = None
+        char = self.layer(character)
+        if not char:
+            logger.error(("Character '{}' isn't available in '{}', can't "
+                          "return active cat icon").format(
+                              character, self))
         else:
-            icon_path = None
-            logger.warn(
-                "Cat {} not found, can't provide active icon path".format(
-                    category_name)
-            )
+            ret = char.category(category_name).get_active_icon()
+        return ret
 
-        return icon_path
-
-    def get_selected_border(self, category_name):
+    def get_selected_border(self, character, category_name):
         """ Provides the filename of the selected border of the preview icon
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         :rtype: string or None
         """
-        if category_name in self._category_cont:
-            icon_path = \
-                self._category_cont[category_name].get_selected_border()
+        ret = None
+        char = self.layer(character)
+        if not char:
+            logger.error(("Character '{}' isn't available in '{}', can't "
+                          "return selected_border").format(
+                              character, self))
         else:
-            icon_path = None
-            logger.warn(
-                "Cat {} not found, can't provide selected border path".format(
-                    category_name)
-            )
+            ret = char.category(category_name).get_selected_border()
+        return ret
 
-        return icon_path
-
-    def get_hover_border(self, category_name):
+    def get_hover_border(self, character, category_name):
         """ Provides the filename of the hover over border of the preview icon
         :param category_name: Category name as a string
         :returns: path to icon as string or None if category is not found
         :rtype: string or None
         """
-        if category_name in self._category_cont:
-            icon_path = self._category_cont[category_name].get_hover_border()
+        ret = None
+        char = self.layer(character)
+        if not char:
+            logger.error(("Character '{}' isn't available in '{}', can't "
+                          "return hover border").format(
+                              character, self))
         else:
-            icon_path = None
-            logger.warn(
-                "Cat {} wasn't found, can't provide hover border path".format(
-                    category_name)
-            )
-        return icon_path
+            ret = char.hover_border(category_name)
+        return ret
 
-    def get_char_preview(self, char_name):
-        """ Provides the preview image for a given character
-        :param char_name: Character whose preview image will be returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the character is not available
-        :rtype: string or None
-        """
-        if char_name not in self._characters:
-            logger.warn(
-                "Char {} not in avail chars, can't return preview img".format(
-                    char_name))
-            return None
-        else:
-            return self._characters[char_name].get_preview_img()
-
-    def get_item_preview(self, item_name):
+    def get_item_preview(self, character, item_name):
         """ Provides the preview image for a given item
         :param item_name: item whose preview image will be returned
         :returns: The absolute path to the preview image as a str or
                   None if the item is not available
         :rtype: string or None
         """
-        prev_img = self._get_reg_item_preview(item_name) or \
-            self._get_environment_preview(item_name)
-
-        if not prev_img:
-            logger.warn(
-                "Item {} not in avail objs, can't return preview img".format(
-                    item_name)
-            )
-        return prev_img
-
-    def _get_reg_item_preview(self, item_name):
-        """ Provides the preview image for a given regular item
-        :param item_name: item whose preview image will be returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the item is not available
-        :rtype: string or None
-        """
-        if item_name not in self._objects:
-            return None
+        # TODO error checking
+        ret = None
+        char = self.layer(character)
+        if not char:
+            logger.error("Character blah blah")
         else:
-            return self._objects[item_name].get_preview_img()
+            item = char.item(item_name)
+            ret = item.get_preview_img()
 
-    def _get_environment_preview(self, environment_name):
-        """ Provides the preview image for a given environment
-        :param environment_name: environment whose preview image will be
-                                 returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the environment is not available
-        :rtype: string or None
-        """
-        if environment_name not in self._environments:
-            return None
-        else:
-            return self._environments[environment_name].get_preview_img()
+        return ret
 
-    def is_unlocked(self, item_name):
+    def is_unlocked(self, character, item_name):
         """ Returns whether the item/environment is locked
         :param item_name: item whose lock status will be returned
         :returns: True iff it is unlocked
         :rtype: Boolean or None
         """
-        lock_state = self._is_unlocked_reg_item(item_name)
-
-        if lock_state is None:
-            lock_state = self._is_unlocked_env(item_name)
-
-        if lock_state is None:
-            logger.warn(
-                "Item {} not in avail objs/envs, can't return lock state".format(
-                    item_name)
-            )
-
-        return lock_state
-
-    def _is_unlocked_reg_item(self, item_name):
-        """ Get lock state of an item which belongs to a regular category
-        :param item_name: Item whose lock state will be returned
-        :retuns: Lock state or None if item doesn't belong to a regular category
-        :rtype: Boolean or None
-        """
-        if item_name not in self._objects:
-            return None
-        else:
-            return self._objects[item_name].is_unlocked()
-
-    def _is_unlocked_env(self, item_name):
-        """ Get lock state of an environment
-        :param item_name: env whose lock state will be returned
-        :retuns: Lock state or None if item isn't an environment
-        :rtype: Boolean or None
-        """
-        if item_name not in self._environments:
-            return None
-        else:
-            return self._environments[item_name].is_unlocked()
+        # TODO error checking
+        char = self.layer(character)
+        item = char.item(item_name)
+        return item.is_unlocked()

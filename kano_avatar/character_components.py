@@ -574,7 +574,9 @@ class AvatarCharacterSet(object):
         self._categories = {}
 
     def __repr__(self):
-        return 'Character Set of "{}"'.format(self._character)
+        return 'Character Set of "{}"; with categories "{}"'.format(
+            self._character,
+            self._categories.values())
 
     def add_category(self, categ_obj):
         self._categories[categ_obj.get_id()] = categ_obj

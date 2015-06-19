@@ -31,10 +31,10 @@ class AvatarLayer(object):
         self._environment_cat = None
 
     def __repr__(self):
-        return (('Layer; character set{}; character category{}; '
-                 'environment cat {}').format(self._character_set,
-                                              self._character_cat,
-                                              self._environment_cat)
+        return (('Layer; character set "{}"; character category "{}"; '
+                 'environment cat "{}"').format(self._character_set,
+                                                self._character_cat,
+                                                self._environment_cat)
                 )
 
     def add_character_set(self, obj):

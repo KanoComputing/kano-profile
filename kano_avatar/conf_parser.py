@@ -116,7 +116,7 @@ class AvatarLayer(object):
                     break
             if ret:
                 break
-        return None
+        return ret
 
 
 class AvatarConfParser(object):
@@ -328,7 +328,7 @@ class AvatarConfParser(object):
                           "return hover border").format(
                               character, self))
         else:
-            ret = char.category(character).hover_border(category_name)
+            ret = char.category(category_name).get_hover_border()
         return ret
 
     def get_item_preview(self, character, item_name):

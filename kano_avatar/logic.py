@@ -1,7 +1,7 @@
 # logic.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Logic for parsing and creating avatars for a Kano World profile
 import os
@@ -47,8 +47,8 @@ class AvatarCreator(AvatarConfParser):
         :rtype: Boolean
         """
         # Get the instance of the character
-        if char_name in self._characters:
-            self._sel_char = self._characters[char_name]
+        if char_name in self.list_available_chars():
+            self._sel_char = self.layer(char_name).character()
             return True
         else:
             logger.error(
@@ -75,7 +75,7 @@ class AvatarCreator(AvatarConfParser):
             else:
                 self._sel_env = self._environments[env_name]
             logger.debug(
-                'Selected Environment: {}'.format(self._sel_env.name()))
+                'Selected Environment: {}'.format(self._sel_env.get_id()))
             return True
         else:
             logger.error(
@@ -108,6 +108,18 @@ class AvatarCreator(AvatarConfParser):
         self._sel_obj_per_cat.clear()
         self._sel_objs_per_zindex.clear()
 
+    @staticmethod
+    def _replace_locked(item):
+        ret = item
+        if not item.is_unlocked():
+            logger.warn(
+                ('Item {} is locked, replacing with random from '
+                 'its category').format(item))
+            ret = random.choice(
+                [obj for obj in item.category().items() if obj.is_unlocked()]
+            )
+        return ret
+
     def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character. if any of the
         items are locked, replace with a different unlocked one from the
@@ -124,51 +136,49 @@ class AvatarCreator(AvatarConfParser):
         sel_env_flag = False
 
         for obj_name in obj_names:
-            if obj_name in self._objects:
-                # Deal with the object if it is a regular item
-                obj_instance = self._objects[obj_name]
-                # Check whether we have selected multiple items from the same
-                # category
-                if obj_instance.category() in self._sel_obj_per_cat:
-                    logger.error(
-                        'Multiple objects in category {}'.format(
-                            obj_instance.category()))
-                    return False
-                # Check whether it is unlocked
-                if not obj_instance.is_unlocked():
-                    logger.warn(
-                        'Item {} is locked, replacing with random from category {}'.format(
-                            obj_name, obj_instance.category()))
-                    obj_instance = random.choice(
-                        [obj
-                         for obj in self._object_per_cat[obj_instance.category()]
-                         if obj.is_unlocked()])
-
-                obj_cat = obj_instance.category()
-                self._sel_obj_per_cat[obj_cat] = obj_instance
-                self._sel_obj[obj_instance.name()] = obj_instance
-
-                # Create a dictionary with which objects belong to each z-index
-                obj_zindex = self.get_zindex(obj_cat)
-                if obj_zindex not in self._sel_objs_per_zindex:
-                    self._sel_objs_per_zindex[obj_zindex] = []
-
-                self._sel_objs_per_zindex[obj_zindex].append(obj_instance)
-            elif obj_name in self._environments:
-                # Deal with the object if it is an environment
-                if not sel_env_flag:
-                    self.env_select(obj_name)
-                    sel_env_flag = True
-                else:
-                    msg = "Provided multiple environments to select {}, {}".format(self._sel_env.name(), obj_name)
-                    logger.error(msg)
-                    return False
-            else:
-                # if it is neither show error message
+            if not self.layer(self._sel_char.get_id()).item(obj_name):
                 logger.error(
-                    'Object {} not in available obj or env list'.format(
-                        obj_name))
+                    'Object "{}" not available for character {}'.format(
+                        obj_name, self._sel_char))
                 return False
+            else:
+                obj_inst = self.layer(self._sel_char.get_id()).item(obj_name)
+                if obj_inst.get_id() != self.env_label and \
+                        obj_inst.get_id() != self.char_label:
+                    obj_inst = self._objects[obj_name]
+                    # Check whether we have selected multiple items from
+                    # the same category
+                    if obj_inst.category().get_id() in self._sel_obj_per_cat:
+                        logger.error(
+                            'Multiple objects in category {}'.format(
+                                obj_inst.category()))
+                        return False
+                    # Check whether it is unlocked
+                    obj_inst = self._replace_locked(obj_inst)
+
+                    obj_cat = obj_inst.category().get_id()
+                    self._sel_obj_per_cat[obj_cat] = obj_inst
+                    self._sel_obj[obj_inst.get_id()] = obj_inst
+
+                    # Create a dictionary with which objects belong to
+                    # each z-index
+                    obj_zindex = self.get_zindex(obj_cat)
+                    if obj_zindex not in self._sel_objs_per_zindex:
+                        self._sel_objs_per_zindex[obj_zindex] = []
+
+                    self._sel_objs_per_zindex[obj_zindex].append(obj_inst)
+
+                elif obj_inst.get_id() == self.env_label:
+                    # Deal with the object if it is an environment
+                    if not sel_env_flag:
+                        self.env_select(obj_name)
+                        sel_env_flag = True
+                    else:
+                        logger.error(
+                            ("Provided multiple environments to select "
+                             "{}, {}").format(
+                                self._sel_env.get_id(), obj_name))
+                        return False
         return True
 
     def randomise_rest(self, obj_names, empty_cats=False):
@@ -197,14 +207,14 @@ class AvatarCreator(AvatarConfParser):
                     available_objs.append(None)
                 choice = random.choice(available_objs)
                 if choice:
-                    random_item_names.append(choice.name())
+                    random_item_names.append(choice.get_id())
             except KeyError:
                 log_msg = "Category {} doesn't contain any items".format(cat)
                 logger.debug(log_msg)
                 continue
 
         if not self._sel_env:
-            available_envs = [env.name()
+            available_envs = [env.get_id()
                               for env in self._environments.itervalues()
                               if env.is_unlocked()]
             choice_env = random.choice(available_envs)
@@ -233,7 +243,7 @@ class AvatarCreator(AvatarConfParser):
         ret = self._sel_obj.keys()
         # if there is an env selected, append it to the list to be returned
         if self._sel_env:
-            ret.append(self._sel_env.name())
+            ret.append(self._sel_env.get_id())
         return ret
 
     def selected_items_per_cat(self):
@@ -242,9 +252,9 @@ class AvatarCreator(AvatarConfParser):
         :returns: A dict with [categ_labels] -> item_selected
         :rtype: dict
         """
-        ret = {cat: item.name()
+        ret = {cat: item.get_id()
                for cat, item in self._sel_obj_per_cat.iteritems()}
-        ret[self.env_label] = self._sel_env.name()
+        ret[self.env_label] = self._sel_env.get_id()
         return ret
 
     def create_avatar(self, file_name=''):
@@ -329,7 +339,8 @@ class AvatarCreator(AvatarConfParser):
         rc_c = self.create_circular_assets(fname_plain, fname_circ)
         if not rc_c:
             logger.error(
-                "Couldn't create circular assets, aborting auxiliary asset generation")
+                ("Couldn't create circular assets, aborting auxiliary "
+                 "asset generation"))
             return False
 
         # Environment + avatar
@@ -337,7 +348,8 @@ class AvatarCreator(AvatarConfParser):
         rc_env = self._sel_env.save_image(fname_env)
         if not rc_env:
             logger.error(
-                "Couldn't create environment asset, aborting auxiliary asset generation")
+                ("Couldn't create environment asset, aborting auxiliary "
+                 "asset generation"))
             return False
         # Shifted environment
         fname_env_23 = append_suffix_to_fname(file_name, '_inc_env_page2')
@@ -346,7 +358,8 @@ class AvatarCreator(AvatarConfParser):
                                                    reload_img=True)
         if not rc_23:
             logger.error(
-                "Couldn't create shifted environment asset, aborting auxiliary asset generation")
+                ("Couldn't create shifted environment asset, aborting "
+                 "auxiliary asset generation"))
             return False
 
         return True
@@ -395,8 +408,8 @@ class AvatarCreator(AvatarConfParser):
             # When saving a new character in the profile, ensure that
             # the right version is used to sync with the API
             save_profile_variable('version', 2)
-            set_avatar(self._sel_char.name(), items_no_env)
-            set_environment(self._sel_env.name(), sync=True)
+            set_avatar(self._sel_char.get_id(), items_no_env)
+            set_environment(self._sel_env.get_id(), sync=True)
 
         return True
 
@@ -425,8 +438,8 @@ class AvatarCreator(AvatarConfParser):
             # ensure that environments is not present in this dict
             items = self.selected_items_per_cat()
             items.pop(self.env_label, None)
-            obj_av['avatar'] = [self._sel_char.name(), items]
-            obj_av['environment'] = self._sel_env.name()
+            obj_av['avatar'] = [self._sel_char.get_id(), items]
+            obj_av['environment'] = self._sel_env.get_id()
             obj_av['date_created'] = get_date_now()
             dump(obj_av, fp)
             created_file = True
@@ -457,8 +470,8 @@ class AvatarCreator(AvatarConfParser):
                 char_ex, items_ex = log_ex['avatar']
                 env_ex = log_ex['environment']
                 # First check if environment and character match
-                if char_ex == self._sel_char.name() and \
-                   env_ex == self._sel_env.name():
+                if char_ex == self._sel_char.get_id() and \
+                   env_ex == self._sel_env.get_id():
                     items_now = self.selected_items_per_cat()
                     # Check if the no of catefories match
                     if len(items_now) == len(items_ex):

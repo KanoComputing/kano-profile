@@ -118,6 +118,9 @@ class AvatarLayer(object):
                 break
         return ret
 
+    def character(self):
+        self._character_set.get_character()
+
 
 class AvatarConfParser(object):
     """ A class to take on the important task of parsing the configuration

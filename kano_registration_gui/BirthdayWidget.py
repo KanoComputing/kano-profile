@@ -51,6 +51,7 @@ class BirthdayWidget(Gtk.Box):
         entry = Gtk.Entry()
         entry.set_size_request(width, -1)
         entry.set_width_chars(char_num)
+        entry.set_max_length(char_num)
         entry.set_placeholder_text(placeholder_text)
         entry.get_style_context().add_class("get_data_entry")
         entry.connect("key-release-event", self._emit_key_press)

@@ -90,7 +90,7 @@ class AvatarLayer(object):
                     self))
             return category_list
         else:
-            if not self._character_set:
+            if self._character_set:
                 category_list = [self._character_cat]
                 category_list.extend(self._character_set.get_categories())
                 category_list.append(self._environment_cat)

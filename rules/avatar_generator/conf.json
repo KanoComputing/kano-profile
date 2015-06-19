@@ -88,8 +88,8 @@
             "display_name": "Characters",
             "active_icon": "character.png",
             "inactive_icon": "character.png",
-            "selected_border": "active-character.png",
-            "hover_border": "active-character.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
             "category_id": "characters",
             "display_order": 0,
             "date_created": "2015-04-14T10:54:14.000Z"

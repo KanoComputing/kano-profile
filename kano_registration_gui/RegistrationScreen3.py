@@ -80,14 +80,25 @@ class RegistrationScreen3(Gtk.Box):
         self.win.data.update(self.data_screen.get_email_entry_data())
 
     def register_handler(self, widget=None, arg=None):
-
         if not is_internet():
-            # this will launch dialogs until either the user
-            # connects to internet or quits
-            self.try_to_connect_to_internet()
+            internet_present = self.try_to_connect_to_internet()
 
-        if is_internet():
-            self.register_user_with_gui()
+            if not internet_present:
+                quit_dialog = KanoDialog(
+                    _("The package was returned to sender"),
+                    _("I just tried to send your profile to Kano HQ, \n" \
+                      "but it looks like I don't have any Internet! ") + \
+                    "\n" + \
+                    _("You can keep playing and I'll keep your \n" \
+                      "profile safe in my brain until you connect.")
+                )
+                quit_dialog.run()
+
+                Gtk.main_quit()
+                return
+
+        self.register_user_with_gui()
+
 
     def register_user_with_gui(self):
         self.data_screen.cache_emails()
@@ -215,61 +226,44 @@ class RegistrationScreen3(Gtk.Box):
             cache_data("username", rv)
             self.register_handler()
 
-    # TODO: the following could be neatened up
-    ###################################################
 
-    def try_to_connect_to_internet(self):
-        rv = self.connect_dialog(
-            title=_("You don't have internet!"),
-            description=_("Connect to WiFi and try again.")
-        )
+    def try_to_connect_to_internet(self, attempt_no=1):
+        """
+        Attempt to connect to the internet
+        :param attempt_no: Number of connection attempts already tried
+        :returns: If the attempt resulted in an Internet connection
+        """
 
-        # the dialog should close here
-        logger.debug("dialog should close here")
-
-        if rv == "connect":
-            # launch wifi setup
-            self.win.blur()
-            while Gtk.events_pending():
-                Gtk.main_iteration()
-
-            logger.debug("Launching the wifi gui")
-            os.system("sudo /usr/bin/kano-wifi-gui")
-            logger.debug("Finished with the wifi gui")
-
-            keep_checking = True
-
-            if is_internet():
-                keep_checking = False
-
-            while keep_checking:
-                keep_checking = self.keep_trying_to_connect()
-
-            return is_internet()
-
-    def keep_trying_to_connect(self):
-        rv = self.connect_dialog(
-            title=_("Still not connected..."),
-            description=_("Seems like you're having trouble connecting.") + \
+        if attempt_no == 1:
+            title = _("You don't have internet!")
+            description = _("Connect to WiFi and try again.")
+        else:
+            title = _("Still not connected...")
+            description = _("Seems like you're having trouble connecting.") + \
                 "\n" + _("Try again later at another point")
-        )
 
-        if rv == "connect":
-            logger.debug("Second launching wifi gui")
+        connect_choice = self.connect_dialog(title, description)
+
+        if connect_choice == 'connect':
             self.win.blur()
 
             while Gtk.events_pending():
                 Gtk.main_iteration()
 
+            logger.debug("Launching WiFi GUI, attempt #{}".format(attempt_no))
             os.system("sudo /usr/bin/kano-wifi-gui")
-            logger.debug("Second finished launching wifi gui")
+            logger.debug("Finished connection attempt #{}".format(attempt_no))
 
             if is_internet():
+                return True
+
+            if attempt_no >= 2:
                 return False
 
-            return True
+            return self.try_to_connect_to_internet(attempt_no + 1)
         else:
             return False
+
 
     def connect_dialog(self, title, description):
         button_dict = [

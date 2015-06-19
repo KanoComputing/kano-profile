@@ -581,6 +581,7 @@ class AvatarCharacterSet(object):
 
     def add_category(self, categ_obj):
         self._categories[categ_obj.get_id()] = categ_obj
+        categ_obj.set_character(self.get_character())
 
     def get_categories(self):
         return sorted(self._categories.itervalues(),

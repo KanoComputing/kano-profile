@@ -63,17 +63,18 @@ class AvatarCreator(AvatarConfParser):
         :returns: True iff the environment exists (is available)
         :rtype: Boolean
         """
-        if env_name in self._environments:
-            if not self._environments[env_name].is_unlocked():
+        env_inst = self.layer(self._sel_char.get_id()).item(env_name)
+        if env_inst.category().get_id() == self.env_label:
+            if not env_inst.is_unlocked():
                 logger.warn(
                     "Environment {} is locked, replacing with random".format(
                         env_name))
                 # Select randomly among the unlocked environments
                 self._sel_env = random.choice(
-                    [env for env in self._environments.itervalues()
+                    [env for env in env_inst.category().items()
                         if env.is_unlocked()])
             else:
-                self._sel_env = self._environments[env_name]
+                self._sel_env = env_inst
             logger.debug(
                 'Selected Environment: {}'.format(self._sel_env.get_id()))
             return True
@@ -143,8 +144,9 @@ class AvatarCreator(AvatarConfParser):
                 return False
             else:
                 obj_inst = self.layer(self._sel_char.get_id()).item(obj_name)
-                if obj_inst.get_id() != self.env_label and \
-                        obj_inst.get_id() != self.char_label:
+                obj_inst = self._replace_locked(obj_inst)
+                if obj_inst.category().get_id() != self.env_label and \
+                        obj_inst.category().get_id() != self.char_label:
                     # Check whether we have selected multiple items from
                     # the same category
                     if obj_inst.category().get_id() in self._sel_obj_per_cat:
@@ -152,8 +154,6 @@ class AvatarCreator(AvatarConfParser):
                             'Multiple objects in category {}'.format(
                                 obj_inst.category()))
                         return False
-                    # Check whether it is unlocked
-                    obj_inst = self._replace_locked(obj_inst)
 
                     obj_cat = obj_inst.category().get_id()
                     self._sel_obj_per_cat[obj_cat] = obj_inst
@@ -161,7 +161,7 @@ class AvatarCreator(AvatarConfParser):
 
                     # Create a dictionary with which objects belong to
                     # each z-index
-                    obj_zindex = self.get_zindex(obj_cat)
+                    obj_zindex = obj_inst.category().get_zindex()
                     if obj_zindex not in self._sel_objs_per_zindex:
                         self._sel_objs_per_zindex[obj_zindex] = []
 

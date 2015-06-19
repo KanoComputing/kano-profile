@@ -104,13 +104,13 @@ class AvatarLayer(object):
             logger.error(("Category '{}' not in layer '{}', can't return"
                           "hover border").format(cat_name, self))
         else:
-            ret = [k.get_id() for k in cat.item_list()]
+            ret = [k.get_id() for k in cat.items()]
         return ret
 
     def item(self, item_name):
         ret = None
         for k in self.get_categories():
-            for it in k.item_list():
+            for it in k.items():
                 if it.get_id() == item_name:
                     ret = it
                     break
@@ -328,7 +328,7 @@ class AvatarConfParser(object):
                           "return hover border").format(
                               character, self))
         else:
-            ret = char.hover_border(category_name)
+            ret = char.category(character).hover_border(category_name)
         return ret
 
     def get_item_preview(self, character, item_name):

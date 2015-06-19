@@ -145,7 +145,6 @@ class AvatarCreator(AvatarConfParser):
                 obj_inst = self.layer(self._sel_char.get_id()).item(obj_name)
                 if obj_inst.get_id() != self.env_label and \
                         obj_inst.get_id() != self.char_label:
-                    obj_inst = self._objects[obj_name]
                     # Check whether we have selected multiple items from
                     # the same category
                     if obj_inst.category().get_id() in self._sel_obj_per_cat:

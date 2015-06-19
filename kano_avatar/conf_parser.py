@@ -119,7 +119,7 @@ class AvatarLayer(object):
         return ret
 
     def character(self):
-        self._character_set.get_character()
+        return self._character_set.get_character()
 
 
 class AvatarConfParser(object):

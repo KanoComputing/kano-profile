@@ -60,6 +60,7 @@ class AvatarBaseAccessory(AvatarBase):
         self._img_preview = img_prev
         self._is_unlocked = unlocked
         self._img = None
+        self._category = None
 
     def is_unlocked(self):
         """ Returns the locked state of the accessory
@@ -88,6 +89,20 @@ class AvatarBaseAccessory(AvatarBase):
         :rtype: Image class (from PIL module)
         """
         return self._img
+
+    def set_category(self, cat_obj):
+        if not self._category:
+            self._category = cat_obj
+        else:
+            logger.error("Item '{}' already points to a category {}".format(
+                self, self._category))
+
+    def category(self):
+        """ Provides the category name to which the Item belongs to
+        :returns: category name as a string
+        :rtype: string
+        """
+        return self._category
 
 
 class AvatarAccessory(AvatarBaseAccessory):
@@ -127,7 +142,6 @@ class AvatarAccessory(AvatarBaseAccessory):
         super(AvatarAccessory, self).__init__(
             name=name, unique_id=item_id, disp_order=display_order,
             date_created=date_created, unlocked=is_unlocked)
-        self._category = None
         self._img_position_x = x
         self._img_position_y = y
         # if an absolute path is given use it instead, so that we can
@@ -137,20 +151,6 @@ class AvatarAccessory(AvatarBaseAccessory):
 
     def __repr__(self):
         return 'Item {} of category {}'.format(self.get_id(), self.category())
-
-    def set_category(self, cat_obj):
-        if not self._category:
-            self._category = cat_obj
-        else:
-            logger.error("Item '{}' already points to a category {}".format(
-                self, self._category))
-
-    def category(self):
-        """ Provides the category name to which the Item belongs to
-        :returns: category name as a string
-        :rtype: string
-        """
-        return self._category
 
     def load_image(self):
         """ Loads the asset's image internally. This is necessary before
@@ -546,6 +546,7 @@ class AvatarCategory(AvatarBase):
     def add_item(self, item):
         if item:
             self._items[item.get_id()] = item
+            item.set_category(self)
         else:
             logger.error("Item {} can't be added to Category {}".format(
                 item, self))

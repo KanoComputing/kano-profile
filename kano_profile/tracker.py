@@ -19,6 +19,8 @@ import fcntl
 import json
 import os
 import hashlib
+import subprocess
+import shlex
 
 from kano.utils import get_program_name, is_number, read_file_contents, \
     get_cpu_id, chown_path, ensure_dir
@@ -250,6 +252,24 @@ def track_action(name):
             af.write(json.dumps(event) + "\n")
         if 'SUDO_USER' in os.environ:
             chown_path(tracker_events_file)
+
+
+def track_subprocess(name, cmd):
+    """ Launch and track the session of a process.
+
+        :param name: Name of the session.
+        :type name: str
+
+        :param cmd: The command line (env vars are not supported).
+        :type cmd: str
+    """
+
+    cmd_args = shlex.split(cmd)
+    p = subprocess.Popen(cmd_args)
+    pid = p.pid
+    session_start(name, pid)
+    p.wait()
+    session_end(get_session_file_path(name, pid))
 
 
 def get_action_event(name):

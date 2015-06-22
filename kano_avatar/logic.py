@@ -170,6 +170,17 @@ class AvatarCreator(AvatarConfParser):
             )
         return ret
 
+    def set_selected_items(self, obj_names):
+        for obj in obj_names:
+            if obj in self.list_available_chars():
+                self.char_select(obj)
+                break
+
+        obj_list = [it for it in obj_names
+                    if self.layer(self._sel_char.get_id()).item(it)]
+
+        self.randomise_rest(obj_list)
+
     def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character. if any of the
         items are locked, replace with a different unlocked one from the
@@ -244,8 +255,10 @@ class AvatarCreator(AvatarConfParser):
         if not rc:
             return False
         # For categories where we haven't specified, select randomly
-        for cat in self._categories.difference(
-                set(self._sel_obj_per_cat.keys())):
+        for cat in set(
+                self.layer(self._sel_char.get_id()).get_categories()
+                ).difference(
+                    set(self._sel_obj_per_cat.keys())):
             # Need to make sure that we can handle categories that contain no
             # items
             try:

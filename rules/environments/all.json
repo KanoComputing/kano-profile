@@ -8,7 +8,7 @@
     "title": "Arcade Hall",
     "img_name": "arcade_hall.png",
     "preview_img": "environments/pong.png",
-    "item_id": "cea1a14c48154a5299855a9c0c23eb72",
+    "item_id": "arcade_hall",
     "display_order": 4,
     "date_created": "2015-04-14T10:54:14Z"
   },
@@ -21,7 +21,7 @@
     "title": "Concert Hall",
     "img_name": "concert_hall.png",
     "preview_img": "environments/stage.png",
-    "item_id": "a82f8768e82a44d38973a90424503530",
+    "item_id": "concert_hall",
     "display_order": 6,
     "date_created": "2015-04-14T10:54:14Z"
   },
@@ -34,7 +34,7 @@
     "title": "Jungle",
     "img_name": "jungle.png",
     "preview_img": "environments/forest.png",
-    "item_id": "7d03fd052c0f4093aa50ae06cdb11b58",
+    "item_id": "jungle",
     "display_order": 3,
     "date_created": "2015-04-14T10:54:14Z"
   },
@@ -48,7 +48,7 @@
     "title": "Space",
     "img_name": "space.png",
     "preview_img": "environments/space.png",
-    "item_id": "7c35cae9155d4d1994efbd7e59d6607b",
+    "item_id": "space",
     "display_order": 5,
     "date_created": "2015-04-14T10:54:14Z"
   },
@@ -61,7 +61,7 @@
     "title": "Dojo",
     "img_name": "dojo.png",
     "preview_img": "environments/dojo.png",
-    "item_id": "46fa7e1c0bdc43e18114b8e452776b07",
+    "item_id": "dojo",
     "display_order": 1,
     "date_created": "2015-04-14T10:54:14Z"
   },
@@ -74,7 +74,7 @@
     "title": "Park",
     "img_name": "park.png",
     "preview_img": "environments/park.png",
-    "item_id": "239f0734d7364856a88806494675f4c5",
+    "item_id": "park",
     "display_order": 2,
     "date_created": "2015-04-30T09:10:14Z"
   },
@@ -87,7 +87,7 @@
     "title": "Video Set",
     "img_name": "video_set.png",
     "preview_img": "environments/scene_unavailable.png",
-    "item_id": "621df9b6faa1442184985591f1704c17",
+    "item_id": "video_set",
     "display_order": 7,
     "date_created": "2015-04-14T10:54:14Z"
   },
@@ -100,7 +100,7 @@
     "title": "Minecraft",
     "img_name": "minecraft.png",
     "preview_img": "environments/minecraft.png",
-    "item_id": "7c35cae9155d4d1994efbd7e59d6607b",
+    "item_id": "minecraft",
     "display_order": 8,
     "date_created": "2015-04-14T10:54:14Z"
   }

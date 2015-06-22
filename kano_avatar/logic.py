@@ -23,6 +23,18 @@ from .conf_parser import AvatarConfParser
 # TODO Check which types of names are case sensitive
 
 
+def has_selected_char(err_str):
+    def decor(method):
+        def check_and_call(self, *args, **kwargs):
+            if not self._sel_char:
+                logger.error("Character not selected, {}".format(err_str))
+                return None
+            else:
+                return method(self, *args, **kwargs)
+        return check_and_call
+    return decor
+
+
 class AvatarCreator(AvatarConfParser):
     """ The aim of this class is to help generate avatars for the kano world
     profile. It includes many accessor methods to get the attributes so that
@@ -39,6 +51,46 @@ class AvatarCreator(AvatarConfParser):
         self._sel_obj_per_cat = {}
         self._sel_objs_per_zindex = {}
         self._sel_env = None
+
+    @has_selected_char("can't return z-index")
+    def get_zindex(self, cat_id):
+        return super(AvatarCreator, self).get_zindex(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't list category objects")
+    def list_avail_objs(self, cat_id):
+        return super(AvatarCreator, self).get_avail_objs(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get active category icon")
+    def get_active_category_icon(self, cat_id):
+        return super(AvatarCreator, self).get_active_category_icon(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get inactive category icon")
+    def get_inactive_category_icon(self, cat_id):
+        return super(AvatarCreator, self).get_inactive_category_icon(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get selected border")
+    def get_selected_border(self, cat_id):
+        return super(AvatarCreator, self).get_selected_border(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get hover border")
+    def get_hover_border(self, cat_id):
+        return super(AvatarCreator, self).get_hover_border(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get item preview")
+    def get_item_preview(self, item_id):
+        return super(AvatarCreator, self).get_item_preview(
+            self._sel_char.get_id(), item_id)
+
+    @has_selected_char("can't list available characters")
+    def list_available_categories(self):
+        return super(AvatarCreator, self).list_available_categories(
+            self._sel_char.get_id())
 
     def char_select(self, char_name):
         """ Set a character as a base
@@ -89,6 +141,7 @@ class AvatarCreator(AvatarConfParser):
         """
         self._sel_env = None
 
+    @has_selected_char("can't return path to asset")
     def selected_char_asset(self):
         """ Get the asset path for the image corresponding to the
         characted that has been selected
@@ -96,11 +149,7 @@ class AvatarCreator(AvatarConfParser):
                   selected
         :rtype: string or None
         """
-        if self._sel_char is None:
-            logger.warn("Character not selected, can't return path to asset")
-            return None
-        else:
-            return self._sel_char.get_fname()
+        return self._sel_char.get_fname()
 
     def clear_sel_objs(self):
         """ Clear structures that contain items that have been selected

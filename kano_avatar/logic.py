@@ -167,7 +167,7 @@ class AvatarCreator(AvatarConfParser):
 
                     self._sel_objs_per_zindex[obj_zindex].append(obj_inst)
 
-                elif obj_inst.get_id() == self.env_label:
+                elif obj_inst.category().get_id() == self.env_label:
                     # Deal with the object if it is an environment
                     if not sel_env_flag:
                         self.env_select(obj_name)

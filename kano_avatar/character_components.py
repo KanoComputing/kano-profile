@@ -215,7 +215,7 @@ class AvatarCharacter(AvatarBaseAccessory):
             date_created=date_created, unlocked=is_unlocked)
 
         self._asset_fname = content_dir.get_file('CHARACTER_DIR', file_name)
-        self._img_preview = content_dir.get_file('CHARACTER_DIR', preview_img)
+        self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
         self._crop_x = x
         self._crop_y = y

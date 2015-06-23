@@ -188,6 +188,7 @@ class AvatarConfParser(object):
             layer = AvatarLayer.from_data(obj, char, env)
             if layer:
                 self._layers[layer.get_id()] = layer
+                char.add_item(layer.character())
 
     def _populate_environment_structures(self, conf_data, env_cat):
         """ Populates internal structures related to environments (backgrounds)

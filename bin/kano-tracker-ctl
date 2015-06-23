@@ -15,6 +15,7 @@ Usage:
   kano-tracker-ctl refresh [-w]
   kano-tracker-ctl session (start|end) <name> <pid>
   kano-tracker-ctl session log <name> <started> <length>
+  kano-tracker-ctl session run <name> <command>
   kano-tracker-ctl (+1|action) <name>
   kano-tracker-ctl data <name> <value>
   kano-tracker-ctl generate <event>
@@ -44,7 +45,8 @@ if __name__ == '__main__' and __package__ is None:
 from kano_profile.paths import tracker_dir, tracker_events_file
 from kano_profile.tracker import open_locked, session_start, session_end, \
     get_session_file_path, track_action, track_data, get_session_event, \
-    session_log, generate_tracker_token, load_token, get_utc_offset
+    session_log, generate_tracker_token, load_token, get_utc_offset, \
+    track_subprocess
 from kano.logging import logger
 from kano.utils import delete_file, ensure_dir, is_running, \
     get_rpi_model, detect_kano_keyboard
@@ -352,12 +354,15 @@ def main():
         clear_sessions()
     elif args['refresh']:
         update_status(args['--watch'])
-    elif args['session'] and args['start']:
-        session_start(args['<name>'], args['<pid>'])
-    elif args['session'] and args['end']:
-        session_end(get_session_file_path(args['<name>'], args['<pid>']))
-    elif args['session'] and args['log']:
-        session_log(args['<name>'], args['<started>'], args['<length>'])
+    elif args['session']:
+        if args['start']:
+            session_start(args['<name>'], args['<pid>'])
+        elif args['end']:
+            session_end(get_session_file_path(args['<name>'], args['<pid>']))
+        elif args['log']:
+            session_log(args['<name>'], args['<started>'], args['<length>'])
+        elif args['run']:
+            track_subprocess(args['<name>'], args['<command>'])
     elif args['+1'] or args['action']:
         track_action(args['<name>'])
     elif args['generate']:

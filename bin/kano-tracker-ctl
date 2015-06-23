@@ -93,6 +93,12 @@ def update_status(watch=False):
                   "({} secs difference).".format(time_diff)
             logger.warn(msg)
 
+            # Trigger an event about this
+            track_data('system-time-changed', {
+                'original': time_prev + sleep_for,
+                'new': time_now
+            })
+
             correct_sessions(time_diff, time_prev, sleep_for)
             correct_events(time_diff)
 

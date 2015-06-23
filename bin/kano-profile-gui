@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/kano-splash /usr/share/kano-profile/media/images/splash-profile.png /usr/bin/env python
 
 # kano-profile-gui
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 import os
@@ -70,6 +70,9 @@ class MainWindow(ApplicationWindow):
         self._vbox.pack_start(self._menu_bar, False, False, 0)
         self._vbox.pack_start(self._main_content, False, False, 0)
         self._vbox.pack_end(self._bottom_bar, False, False, 0)
+
+        # we are ready to display the gui, hence kill the splash
+        os.system('/usr/bin/kano-stop-splash')
 
         # init home screen
         self.go_to_category(self._menu_bar.home_button, 'CHARACTER')

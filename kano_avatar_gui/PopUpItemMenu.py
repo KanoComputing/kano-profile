@@ -36,7 +36,7 @@ class PopUpItemMenu(SelectMenu):
         self._border_path = self._parser.get_selected_border(self._category)
         self._hover_path = self._parser.get_hover_border(self._category)
 
-        obj_names = self._parser.get_avail_objs(self._category)
+        obj_names = self._parser.list_avail_objs(self._category)
         SelectMenu.__init__(self, obj_names, self._signal_name)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -88,7 +88,7 @@ class PopUpItemMenu(SelectMenu):
         row = 0
         column = 0
 
-        obj_names = self._parser.get_avail_objs(self._category)
+        obj_names = self._parser.list_avail_objs(self._category)
 
         for name in obj_names:
             button = self._create_button(name)

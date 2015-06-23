@@ -107,7 +107,7 @@ class Menu(Gtk.Fixed):
                 obj_name = item[category]
             logger.debug("loading obj_name = {}".format(obj_name))
 
-            if obj_name and obj_name in self._parser.get_avail_objs(category):
+            if obj_name and obj_name in self._parser.list_avail_objs(category):
                 logger.debug(
                     "Loading saved object {} for category {}".format(
                         obj_name,

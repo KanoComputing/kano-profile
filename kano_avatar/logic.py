@@ -92,6 +92,11 @@ class AvatarCreator(AvatarConfParser):
         return super(AvatarCreator, self).list_available_categories(
             self._sel_char.get_id())
 
+    @has_selected_char("can't return lock status")
+    def is_unlocked(self, obj_name):
+        return super(AvatarCreator, self).is_unlocked(
+            self._sel_char.get_id(), obj_name)
+
     def char_select(self, char_name):
         """ Set a character as a base
         :param char_name: Character name
@@ -108,6 +113,9 @@ class AvatarCreator(AvatarConfParser):
                     char_name))
             return False
 
+    def _sel_char_layer(self):
+        return self.layer(self._sel_char.get_id())
+
     def env_select(self, env_name):
         """ Set an environment for the background. If the environment given is
         not unlocked a different unlocked one is selected in random
@@ -115,7 +123,7 @@ class AvatarCreator(AvatarConfParser):
         :returns: True iff the environment exists (is available)
         :rtype: Boolean
         """
-        env_inst = self.layer(self._sel_char.get_id()).item(env_name)
+        env_inst = self._sel_char_layer().item(env_name)
         if env_inst.category().get_id() == self.env_label:
             if not env_inst.is_unlocked():
                 logger.warn(
@@ -177,7 +185,7 @@ class AvatarCreator(AvatarConfParser):
                 break
 
         obj_list = [it for it in obj_names
-                    if self.layer(self._sel_char.get_id()).item(it)]
+                    if self._sel_char_layer().item(it)]
 
         self.randomise_rest(obj_list)
 
@@ -197,13 +205,13 @@ class AvatarCreator(AvatarConfParser):
         sel_env_flag = False
 
         for obj_name in obj_names:
-            if not self.layer(self._sel_char.get_id()).item(obj_name):
+            if not self._sel_char_layer().item(obj_name):
                 logger.error(
                     'Object "{}" not available for character {}'.format(
                         obj_name, self._sel_char))
                 return False
             else:
-                obj_inst = self.layer(self._sel_char.get_id()).item(obj_name)
+                obj_inst = self._sel_char_layer().item(obj_name)
                 obj_inst = self._replace_locked(obj_inst)
                 if obj_inst.category().get_id() != self.env_label and \
                         obj_inst.category().get_id() != self.char_label:
@@ -256,13 +264,14 @@ class AvatarCreator(AvatarConfParser):
             return False
         # For categories where we haven't specified, select randomly
         for cat in set(
-                self.layer(self._sel_char.get_id()).get_categories()
+                self._sel_char_layer().get_categories()
                 ).difference(
                     set(self._sel_obj_per_cat.keys())):
             # Need to make sure that we can handle categories that contain no
             # items
             try:
-                available_objs = [obj for obj in self._object_per_cat[cat]
+                available_objs = [obj
+                                  for obj in self._sel_char_layer().category(cat).items()
                                   if obj.is_unlocked()]
                 if empty_cats:
                     available_objs.append(None)

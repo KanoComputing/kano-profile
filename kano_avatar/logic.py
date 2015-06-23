@@ -302,8 +302,13 @@ class AvatarCreator(AvatarConfParser):
         :rtype: List of strings
         """
         self.randomise_rest('')
-
         return self.selected_items_per_cat()
+
+    def selected_char(self):
+        if self._sel_char:
+            return self._sel_char.get_id()
+        else:
+            return ""
 
     def selected_items(self):
         """ Returns a list of the items that have been selected

@@ -3,7 +3,7 @@
 # kano-world-launcher
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 #
 # This is here only in case we'd like to track something here
@@ -52,11 +52,17 @@ def create_local_state():
 
 # Check internet status
 if not is_internet():
+    # Close splash before launching settings
+    os.system('kano-stop-splash')
+    # Launch WiFi config
     os.system('sudo /usr/bin/kano-settings 12')
     sys.exit()
 
 # Check for Kano World login
 if not is_registered():
+    # Close splash before launching login screen
+    os.system('kano-stop-splash')
+    # Launch login screen
     os.system('/usr/bin/kano-login 3')
 
 # Check local state

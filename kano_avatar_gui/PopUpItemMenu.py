@@ -22,7 +22,8 @@ class PopUpItemMenu(SelectMenu):
     }
 
     def __init__(self, category, avatar_parser):
-        logger.debug("Initialising pop up menu with category {}".format(category))
+        logger.debug(
+            "Initialising pop up menu with category {}".format(category))
 
         self.top_bar_height = 50
 

@@ -76,8 +76,6 @@ class CategoryMenu(SelectMenu):
     def _pack_buttons(self):
         '''Pack the buttons into the menu.
         '''
-        # Assume the list of buttons are in self._buttons
-
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(vbox)
 
@@ -85,10 +83,15 @@ class CategoryMenu(SelectMenu):
             button = self._create_button(category)
             self.set_button(category, button)
 
-            inactive_icon_path = self._parser.get_inactive_category_icon(category)
-            self._add_option_to_items(category, 'inactive_path', inactive_icon_path)
+            inactive_icon_path = self._parser.get_inactive_category_icon(
+                category)
+            self._add_option_to_items(category,
+                                      'inactive_path',
+                                      inactive_icon_path)
             active_icon_path = self._parser.get_active_category_icon(category)
-            self._add_option_to_items(category, 'active_path', active_icon_path)
+            self._add_option_to_items(category,
+                                      'active_path',
+                                      active_icon_path)
 
             vbox.pack_start(button, True, True, 0)
 

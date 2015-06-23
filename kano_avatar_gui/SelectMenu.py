@@ -72,14 +72,16 @@ class SelectMenu(Gtk.EventBox):
         if identifier in self._items:
             self._items[identifier]["button"] = button
         else:
-            logger.error("Trying to set a button for an identifier that is not present")
+            logger.error(
+                "Trying to set a button for an identifier that is not present")
 
     def get_button(self, identifier):
         if identifier in self._items:
             if 'button' in self._items[identifier]:
                 return self._items[identifier]['button']
 
-        logger.error("Trying to get a button for an identifier that is not present")
+        logger.error(
+            "Trying to get a button for an identifier that is not present")
         return None
 
     def _add_selected_css(self, button):

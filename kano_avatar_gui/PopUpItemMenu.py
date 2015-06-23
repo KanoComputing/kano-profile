@@ -18,7 +18,8 @@ class PopUpItemMenu(SelectMenu):
     '''
 
     __gsignals__ = {
-        'pop_up_item_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'pop_up_item_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        'character_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
     def __init__(self, category, avatar_parser):
@@ -33,7 +34,10 @@ class PopUpItemMenu(SelectMenu):
 
         self._category = category
         self._parser = avatar_parser
-        self._signal_name = 'pop_up_item_selected'
+        if self._category == self._parser.char_label:
+            self._signal_name = 'character_selected'
+        else:
+            self._signal_name = 'pop_up_item_selected'
         self._border_path = self._parser.get_selected_border(self._category)
         self._hover_path = self._parser.get_hover_border(self._category)
 

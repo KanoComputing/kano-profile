@@ -37,6 +37,15 @@ class CategoryMenu(SelectMenu):
         self.set_size_request(self.item_width, 7 * self.item_height)
         self._pack_buttons()
 
+    def set_new_categories(self):
+        # First clear existing
+        for category in self._items:
+            self._remove_button(category)
+
+        self.categories = self._parser.list_available_categories()
+        SelectMenu.__init__(self, self.categories, self._signal_name)
+        self._pack_buttons()
+
     def _add_selected_appearence(self, identifier):
         '''Change the appearence to the button to one that appears to be
         selected.

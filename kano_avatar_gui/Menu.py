@@ -72,12 +72,20 @@ class Menu(Gtk.Fixed):
 
         return objs
 
+    def _on_char_select(self, char_id):
+        if self._parser.selected_char == char_id:
+            return None
+        self._remove_pop_up_menus()
+        self._parser.char_select(char_id)
+        self._cat_menu.set_new_categories()
+
     def _initialise_pop_up_menus(self):
         self.menus = {}
 
         for category in self._cat_menu.categories:
             pop_up = PopUpItemMenu(category, self._parser)
             pop_up.connect('pop_up_item_selected', self._emit_signal)
+            pop_up.connect('character_selected', self._on_char_select)
 
             self.menus[category] = {}
             self.menus[category]["pop_up"] = pop_up
@@ -105,11 +113,12 @@ class Menu(Gtk.Fixed):
         char, item = get_avatar()
         env = get_environment()
 
-        item['environments'] = env
+        item[self._parser.char_label] = char
+        item[self._parser.env_label] = env
 
         self._parser.char_select(char)
 
-        for category in self.categories:
+        for category in self._cat_menu.categories:
             # TODO this is temporary for the kano-content demo
             if category not in item:
                 obj_name = None

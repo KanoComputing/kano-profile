@@ -57,9 +57,12 @@ class SelectMenu(Gtk.EventBox):
     def _add_option_to_items(self, identifier, name, item):
         '''Adds a new option in the self._items
         '''
-
         if identifier in self._items:
             self._items[identifier][name] = item
+
+    def _remove_option_from_items(self, identifier, name):
+        if identifier in self._items:
+            self._items[identifier].pop(name, None)
 
     def get_option(self, identifier, option):
         if identifier in self._items:
@@ -74,6 +77,9 @@ class SelectMenu(Gtk.EventBox):
         else:
             logger.error(
                 "Trying to set a button for an identifier that is not present")
+
+    def unset_button(self, identifier):
+        self._remove_option_from_items(identifier, "button")
 
     def get_button(self, identifier):
         if identifier in self._items:

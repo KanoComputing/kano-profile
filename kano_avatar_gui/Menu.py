@@ -31,6 +31,8 @@ class Menu(Gtk.Fixed):
         Gtk.Fixed.__init__(self)
 
         self._parser = parser
+        char, item = get_avatar()
+        self._parser.char_select(char)
         self._cat_menu = CategoryMenu(self._parser)
         self._cat_menu.connect('category_item_selected',
                                self.launch_pop_up_menu)
@@ -82,6 +84,14 @@ class Menu(Gtk.Fixed):
 
             self.put(self.menus[category]['pop_up'],
                      self.pop_up_pos_x, self.pop_up_pos_y)
+
+    def _remove_pop_up_menus(self):
+        for category in self.menus:
+            pop_up = self.menus[category]['pop_up']
+            if pop_up:
+                # TODO remove is redundant when using the destroy maybe?
+                self.remove(pop_up)
+                self.pop_up.destroy()
 
     def _create_start_up_image(self):
         '''We check what has been saved on kano-profile, and we use a default if

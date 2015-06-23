@@ -95,6 +95,19 @@ class CategoryMenu(SelectMenu):
 
             vbox.pack_start(button, True, True, 0)
 
+    def _remove_button(self, identifier):
+        ''' Reverse of _pack_buttons
+        '''
+        # TODO this is probably not the best way of getting the vbox
+        vbox = self.get_children()[0]
+        button = self.get_button(identifier)
+        if button:
+            vbox.remove(button)
+            self.unset_button(identifier)
+            self._remove_option_from_items(identifier, 'inactive_path')
+            self._remove_option_from_items(identifier, 'active_path')
+            button.destroy()
+
     def _select_button_wrapper(self, widget, identifier):
         '''This is connected to the button-release-event when you click on a
         button in the table.

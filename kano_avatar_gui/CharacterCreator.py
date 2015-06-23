@@ -34,12 +34,14 @@ class CharacterCreator(Gtk.EventBox):
 
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
-        self._get_obj_data()
 
         # Check profile information and load up either the created avatar or
         # the default
         self._create_menu()
         self._create_img_box(self.get_image_path())
+
+        # This needs to be called after _create_menu()
+        self._get_obj_data()
 
         self.width = self._imgbox.width
         self.height = self._imgbox.height

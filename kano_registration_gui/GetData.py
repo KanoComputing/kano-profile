@@ -81,11 +81,15 @@ class GetData2(DataTemplate):
         # Do not fill this in
         self.password_entry = LabelledEntry(_("Password"))
         self.password_entry.connect("key-release-event", self.validate_password)
+
         self.bday_widget = BirthdayWidget(
             data['birthday_day'],
             data['birthday_month'],
             data['birthday_year']
         )
+        self.bday_widget.connect('birthday-valid', self._birthday_valid)
+        self.bday_widget.connect('birthday-invalid', self._birthday_invalid)
+        self.bday_widget.validate()
 
         self.validate_username()
 
@@ -136,6 +140,14 @@ class GetData2(DataTemplate):
 
         self.widgets_full()
 
+    def _birthday_valid(self, widget=None, event=None):
+        self._is_birthday_valid = True
+        self.widgets_full()
+
+    def _birthday_invalid(self, widget=None, event=None):
+        self._is_birthday_valid = False
+        self.widgets_full()
+
     def calculate_age(self):
         return self.bday_widget.calculate_age()
 
@@ -180,17 +192,9 @@ class GetData2(DataTemplate):
         }
 
     def widgets_full(self, widget=None, event=None):
-        full = True
-
-        if not self.username_entry.validated:
-            full = False
-
-        if not self.password_entry.validated:
-            full = False
-
-        bday_filled = self.bday_widget.birthday_entries_filled()
-
-        if full and bday_filled:
+        if (self.username_entry.validated and
+                self.password_entry.validated and
+                self._is_birthday_valid):
             logger.debug("emiting widgets-full")
             self.emit('widgets-filled')
         else:

@@ -57,7 +57,6 @@ class SwagScreen(Template):
         self.win.set_main_widget(self)
         self.kano_button.connect("button_release_event", self.next_screen)
         self.kano_button.connect("key_release_event", self.next_screen)
-        self.button_box.set_margin_bottom(30)
         self.kano_button.grab_focus()
         self.win.show_all()
 

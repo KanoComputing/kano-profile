@@ -38,6 +38,7 @@ class Template(Gtk.Box):
 
         self.button_box = Gtk.ButtonBox(spacing=10)
         self.button_box.set_layout(Gtk.ButtonBoxStyle.SPREAD)
+        self.button_box.set_margin_bottom(30)
         self.pack_start(self.button_box, False, False, 0)
 
         if not orange_button_text == "":

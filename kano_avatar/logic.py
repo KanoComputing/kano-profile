@@ -263,9 +263,10 @@ class AvatarCreator(AvatarConfParser):
         if not rc:
             return False
         # For categories where we haven't specified, select randomly
-        for cat in set(
-                self._sel_char_layer().get_categories()
-                ).difference(
+        avail_cats = (cat.get_id()
+                       for cat in self._sel_char_layer().get_categories()
+                       if cat.get_id() != self.char_label)
+        for cat in set(avail_cats).difference(
                     set(self._sel_obj_per_cat.keys())):
             # Need to make sure that we can handle categories that contain no
             # items
@@ -282,13 +283,6 @@ class AvatarCreator(AvatarConfParser):
                 log_msg = "Category {} doesn't contain any items".format(cat)
                 logger.debug(log_msg)
                 continue
-
-        if not self._sel_env:
-            available_envs = [env.get_id()
-                              for env in self._environments.itervalues()
-                              if env.is_unlocked()]
-            choice_env = random.choice(available_envs)
-            random_item_names.append(choice_env)
 
         rc = self.obj_select(random_item_names, clear_existing=False)
 

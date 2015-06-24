@@ -192,11 +192,9 @@ class GetData2(DataTemplate):
         }
 
     def widgets_full(self, widget=None, event=None):
-        if (
-            self.username_entry.validated and
-            self.password_entry.validated and
-            self._is_birthday_valid):
-
+        if (self.username_entry.validated and
+                self.password_entry.validated and
+                self._is_birthday_valid):
             logger.debug("emiting widgets-full")
             self.emit('widgets-filled')
         else:

@@ -26,15 +26,15 @@ class CategoryMenu(SelectMenu):
         self._signal_name = 'category_item_selected'
         self._parser = parser
 
-        self._vertbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vertbox)
-
         # Initialise self._items
         self._items = {}
 
         # Save the order of the categories so we can use it outside
         self.categories = self._parser.list_available_categories()
         SelectMenu.__init__(self, self.categories, self._signal_name)
+
+        self._vertbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(self._vertbox)
 
         # The menu is one item by 7 items
         self.set_size_request(self.item_width, 7 * self.item_height)

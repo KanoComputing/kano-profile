@@ -24,7 +24,8 @@ from kano_profile.profile import get_avatar, get_environment
 class Menu(Gtk.Fixed):
 
     __gsignals__ = {
-        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        'randomise_all': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
     def __init__(self, parser):
@@ -73,11 +74,14 @@ class Menu(Gtk.Fixed):
         return objs
 
     def _on_char_select(self, widget, char_id):
-        if self._parser.selected_char == char_id:
+        if self._parser.selected_char() == char_id:
             return None
         self._remove_pop_up_menus()
         self._parser.char_select(char_id)
         self._cat_menu.set_new_categories()
+        self._initialise_pop_up_menus()
+        self._cat_menu.show_all()
+        self.emit('randomise_all', char_id)
 
     def _initialise_pop_up_menus(self):
         self.menus = {}

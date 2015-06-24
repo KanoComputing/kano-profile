@@ -123,6 +123,7 @@ class CharacterCreator(Gtk.EventBox):
     def _create_menu(self):
         self._menu = Menu(self.avatar_cr)
         self._menu.connect('asset_selected', self._update_img)
+        self._menu.connect('randomise_all', self._randomise_avatar_wrapper)
 
     def _get_obj_data(self):
         self._list_of_categories = self.avatar_cr.list_available_categories()

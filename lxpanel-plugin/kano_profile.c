@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
+#include <pwd.h>
 
 #include <kdesk-hourglass.h>
 
@@ -27,7 +28,7 @@
 #define BACKUP_ICON "/usr/share/kano-profile/icon/widget-backup.png"
 #define RESTORE_ICON "/usr/share/kano-profile/icon/widget-restore.png"
 
-#define PROFILE_STATUS_FILE "/home/kano/.kanoprofile/profile/profile.json"
+#define PROFILE_STATUS_FILE "/.kanoprofile/profile/profile.json"
 
 #define INTERNET_CMD "/usr/bin/is_internet"
 #define SETTINGS_CMD "sudo /usr/bin/kano-settings 12"
@@ -60,6 +61,27 @@ static gboolean profile_status(kano_profile_plugin_t*);
 static void plugin_destructor(gpointer user_data);
 void file_monitor_cb(GFileMonitor *monitor, GFile *first, GFile *second,
              GFileMonitorEvent event, gpointer user_data);
+
+gchar *get_profile_filename(void);
+
+
+gchar *get_profile_filename(void)
+{
+    struct passwd *pw = getpwuid(getuid());
+    const char *homedir = pw->pw_dir;
+
+    // You are responsible for freeing the returned char buffer
+    int buff_len=strlen(homedir) + strlen(PROFILE_STATUS_FILE) + sizeof(char) * 2;
+    gchar *filename = g_new0(gchar, buff_len);
+    if (!filename) {
+        return NULL;
+    }
+    else {
+        g_strlcpy(filename, homedir, buff_len);
+        g_strlcat(filename, PROFILE_STATUS_FILE, buff_len);
+        return (filename);
+    }
+}
 
 static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
 {
@@ -104,15 +126,19 @@ static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
     gtk_widget_set_sensitive(icon, TRUE);
 
     /* Start watching the pipe for input. */
-    plugin->status_file = g_file_new_for_path(PROFILE_STATUS_FILE);
-    g_assert(plugin->status_file != NULL);
 
-    plugin->monitor = g_file_monitor(plugin->status_file,
-                          G_FILE_MONITOR_NONE, NULL, NULL);
-    g_assert(plugin->monitor != NULL);
-    g_signal_connect(plugin->monitor, "changed",
-             G_CALLBACK(file_monitor_cb), (gpointer) plugin);
+    // Profile file
+    gchar *filename = get_profile_filename();
+    if (filename) {
+        plugin->status_file = g_file_new_for_path(filename);
+        g_assert(plugin->status_file != NULL);
 
+        plugin->monitor = g_file_monitor(plugin->status_file,
+                            G_FILE_MONITOR_NONE, NULL, NULL);
+        g_assert(plugin->monitor != NULL);
+        g_signal_connect(plugin->monitor, "changed",
+                G_CALLBACK(file_monitor_cb), (gpointer) plugin);
+    }
     /* show our widget */
     gtk_widget_show_all(pwid);
 
@@ -124,6 +150,11 @@ static void plugin_destructor(gpointer user_data)
     kano_profile_plugin_t *plugin = (kano_profile_plugin_t *)user_data;
     /* Disconnect the timer. */
     g_source_remove(plugin->timer);
+
+    if (plugin->status_file) {
+        g_free(plugin->status_file);
+    }
+    g_object_unref(plugin->monitor);
 
     g_free(plugin);
 }

@@ -72,7 +72,7 @@ class Menu(Gtk.Fixed):
 
         return objs
 
-    def _on_char_select(self, char_id):
+    def _on_char_select(self, widget, char_id):
         if self._parser.selected_char == char_id:
             return None
         self._remove_pop_up_menus()
@@ -99,7 +99,7 @@ class Menu(Gtk.Fixed):
             if pop_up:
                 # TODO remove is redundant when using the destroy maybe?
                 self.remove(pop_up)
-                self.pop_up.destroy()
+                pop_up.destroy()
 
     def _create_start_up_image(self):
         '''We check what has been saved on kano-profile, and we use a default if

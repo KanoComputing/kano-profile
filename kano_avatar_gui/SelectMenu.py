@@ -23,17 +23,20 @@ class SelectMenu(Gtk.EventBox):
         apply_styling_to_screen(CSS_PATH)
 
         # Initialise self._items
-        self._items = {}
-
-        for name in list_of_names:
-            self._items[name] = {}
-            self._items[name]["selected"] = False
+        self._set_items(list_of_names)
 
         self._signal_name = signal_name
 
         # This is the selected_identifier
         self._selected = None
         self.get_style_context().add_class("select_menu")
+
+    def _set_items(self, list_of_names):
+        self._items = {}
+
+        for name in list_of_names:
+            self._items[name] = {}
+            self._items[name]["selected"] = False
 
     def set_selected(self, identifier):
         '''Sets the selected element in the dictionary to True,

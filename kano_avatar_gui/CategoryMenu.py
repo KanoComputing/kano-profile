@@ -26,6 +26,9 @@ class CategoryMenu(SelectMenu):
         self._signal_name = 'category_item_selected'
         self._parser = parser
 
+        self._vertbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(self._vertbox)
+
         # Initialise self._items
         self._items = {}
 
@@ -43,7 +46,7 @@ class CategoryMenu(SelectMenu):
             self._remove_button(category)
 
         self.categories = self._parser.list_available_categories()
-        SelectMenu.__init__(self, self.categories, self._signal_name)
+        self._set_items(self.categories)
         self._pack_buttons()
 
     def _add_selected_appearence(self, identifier):
@@ -85,8 +88,6 @@ class CategoryMenu(SelectMenu):
     def _pack_buttons(self):
         '''Pack the buttons into the menu.
         '''
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vbox)
 
         for category in self.categories:
             button = self._create_button(category)
@@ -102,13 +103,12 @@ class CategoryMenu(SelectMenu):
                                       'active_path',
                                       active_icon_path)
 
-            vbox.pack_start(button, True, True, 0)
+            self._vertbox.pack_start(button, True, True, 0)
 
     def _remove_button(self, identifier):
         ''' Reverse of _pack_buttons
         '''
-        # TODO this is probably not the best way of getting the vbox
-        vbox = self.get_children()[0]
+        vbox = self._vertbox
         button = self.get_button(identifier)
         if button:
             vbox.remove(button)

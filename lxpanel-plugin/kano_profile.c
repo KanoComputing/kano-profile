@@ -27,6 +27,8 @@
 #define BACKUP_ICON "/usr/share/kano-profile/icon/widget-backup.png"
 #define RESTORE_ICON "/usr/share/kano-profile/icon/widget-restore.png"
 
+#define PROFILE_STATUS_FILE "/home/kano/.kanoprofile/profile/profile.json"
+
 #define INTERNET_CMD "/usr/bin/is_internet"
 #define SETTINGS_CMD "sudo /usr/bin/kano-settings 12"
 #define REGISTER_CMD "/usr/bin/kano-profile-cli is_registered"
@@ -44,6 +46,9 @@ typedef struct {
     GtkWidget *icon;
     guint timer;
     LXPanel *panel;
+
+    GFile *status_file;
+    GFileMonitor *monitor;
 } kano_profile_plugin_t;
 
 static gboolean show_menu(GtkWidget*, GdkEventButton*, kano_profile_plugin_t*);
@@ -53,6 +58,8 @@ static void menu_pos(GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
                      GtkWidget *widget);
 static gboolean profile_status(kano_profile_plugin_t*);
 static void plugin_destructor(gpointer user_data);
+void file_monitor_cb(GFileMonitor *monitor, GFile *first, GFile *second,
+             GFileMonitorEvent event, gpointer user_data);
 
 static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
 {
@@ -96,6 +103,16 @@ static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
 
     gtk_widget_set_sensitive(icon, TRUE);
 
+    /* Start watching the pipe for input. */
+    plugin->status_file = g_file_new_for_path(PROFILE_STATUS_FILE);
+    g_assert(plugin->status_file != NULL);
+
+    plugin->monitor = g_file_monitor(plugin->status_file,
+                          G_FILE_MONITOR_NONE, NULL, NULL);
+    g_assert(plugin->monitor != NULL);
+    g_signal_connect(plugin->monitor, "changed",
+             G_CALLBACK(file_monitor_cb), (gpointer) plugin);
+
     /* show our widget */
     gtk_widget_show_all(pwid);
 
@@ -109,6 +126,13 @@ static void plugin_destructor(gpointer user_data)
     g_source_remove(plugin->timer);
 
     g_free(plugin);
+}
+
+void file_monitor_cb(GFileMonitor *monitor, GFile *first, GFile *second,
+             GFileMonitorEvent event, gpointer user_data)
+{
+    kano_profile_plugin_t *plugin = (kano_profile_plugin_t *)user_data;
+    profile_status(plugin);
 }
 
 static gboolean profile_status(kano_profile_plugin_t *plugin)

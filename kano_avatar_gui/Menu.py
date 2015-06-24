@@ -25,7 +25,7 @@ class Menu(Gtk.Fixed):
 
     __gsignals__ = {
         'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
-        'randomise_all': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'randomise_all': (GObject.SIGNAL_RUN_FIRST, None, ())
     }
 
     def __init__(self, parser):
@@ -81,7 +81,7 @@ class Menu(Gtk.Fixed):
         self._cat_menu.set_new_categories()
         self._initialise_pop_up_menus()
         self._cat_menu.show_all()
-        self.emit('randomise_all', char_id)
+        self.emit('randomise_all')
 
     def _initialise_pop_up_menus(self):
         self.menus = {}

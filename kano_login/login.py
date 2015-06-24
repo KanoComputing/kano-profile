@@ -56,15 +56,18 @@ class Login(Gtk.Box):
             self.add_username_as_label()
 
         else:
-            self.labelled_entries = LabelledEntries(
-                [{"heading": _("Username"), "subheading": ""},
-                 {"heading": _("Password"), "subheading": ""}]
-            )
+            align = Gtk.Alignment(xscale=0, xalign=0.5)
+            self.pack_start(align, False, False, 15)
+
+            self.labelled_entries = LabelledEntries([
+                {"heading": _("Username"), "subheading": ""},
+                {"heading": _("Password"), "subheading": ""}
+            ])
             self.labelled_entries.set_spacing(15)
-            self.labelled_entries.set_margin_right(40)
             self.username_entry = self.labelled_entries.get_entry(0)
             self.password_entry = self.labelled_entries.get_entry(1)
-            self.pack_start(self.labelled_entries, False, False, 15)
+
+            align.add(self.labelled_entries)
 
         self.password_entry.set_visibility(False)
 
@@ -286,10 +289,16 @@ class ResetPassword(Gtk.Box):
         )
         self.pack_start(self.heading.container, False, False, 10)
 
-        self.labelled_entries = LabelledEntries(
-            [{"heading": _("Email"), "subheading": ""}]
-        )
-        self.pack_start(self.labelled_entries, False, False, 0)
+        self.labelled_entries = LabelledEntries([
+            {"heading": _("Email"), "subheading": ""}
+        ])
+        align = Gtk.Alignment(xscale=0, xalign=0.5)
+        self.pack_start(align, False, False, 15)
+
+        self.labelled_entries.set(0, 0, 1, 1)
+        self.labelled_entries.set_hexpand(True)
+
+        align.add(self.labelled_entries)
 
         # Read email from file
         user_email = get_email()

@@ -195,7 +195,7 @@ static void launch_cmd(const char *cmd, const char *appname)
                                                  G_APP_INFO_CREATE_NONE, NULL);
 
     if (appinfo == NULL) {
-        perror("Command lanuch failed.");
+        perror("Command launch failed.");
         if (appname) {
             kdesk_hourglass_end();
         }

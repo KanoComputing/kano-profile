@@ -99,7 +99,7 @@
         {
             "display_name": "Judoka",
             "img_name": "judoka_base.png",
-            "preview_img": "judoka_base.png",
+            "preview_img": "characters/judoka.png",
             "crop_x": 172,
             "crop_y": 115,
             "display_order": 1,

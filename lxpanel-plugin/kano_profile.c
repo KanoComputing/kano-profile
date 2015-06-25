@@ -126,12 +126,13 @@ static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
     gtk_widget_set_sensitive(icon, TRUE);
 
     /* Start watching the pipe for input. */
-
     // Profile file
     gchar *filename = get_profile_filename();
     if (filename) {
         plugin->status_file = g_file_new_for_path(filename);
         g_assert(plugin->status_file != NULL);
+        // We can now free the filename variable
+        g_free(filename);
 
         plugin->monitor = g_file_monitor(plugin->status_file,
                             G_FILE_MONITOR_NONE, NULL, NULL);
@@ -139,6 +140,7 @@ static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
         g_signal_connect(plugin->monitor, "changed",
                 G_CALLBACK(file_monitor_cb), (gpointer) plugin);
     }
+
     /* show our widget */
     gtk_widget_show_all(pwid);
 
@@ -148,12 +150,11 @@ static GtkWidget *plugin_constructor(LXPanel *panel, config_setting_t *settings)
 static void plugin_destructor(gpointer user_data)
 {
     kano_profile_plugin_t *plugin = (kano_profile_plugin_t *)user_data;
+
     /* Disconnect the timer. */
     g_source_remove(plugin->timer);
 
-    if (plugin->status_file) {
-        g_free(plugin->status_file);
-    }
+    /* Disconnect the monitor */
     g_object_unref(plugin->monitor);
 
     g_free(plugin);
@@ -333,7 +334,7 @@ menu_pos(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, GtkWidget *widget)
     gdk_window_get_origin(gtk_widget_get_window(widget), &ox, &oy);
 
     /* FIXME The X origin is being truncated for some reason, reset
-       it from the allocaation. */
+       it from the allocation. */
     ox = allocation.x;
 
 #if GTK_CHECK_VERSION(2,20,0)

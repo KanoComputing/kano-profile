@@ -73,7 +73,7 @@ class Menu(Gtk.Fixed):
 
         return objs
 
-    def _on_char_select(self, widget, char_id):
+    def _on_char_select(self, widget, char_id, randomise=True):
         if self._parser.selected_char() == char_id:
             return None
         self._remove_pop_up_menus()
@@ -81,7 +81,8 @@ class Menu(Gtk.Fixed):
         self._cat_menu.set_new_categories()
         self._initialise_pop_up_menus()
         self._cat_menu.show_all()
-        self.emit('randomise_all')
+        if randomise:
+            self.emit('randomise_all')
 
     def _initialise_pop_up_menus(self):
         self.menus = {}
@@ -163,6 +164,9 @@ class Menu(Gtk.Fixed):
             pop_up.only_style_selected(identifier)
 
     def reset_selected_menu_items(self):
+        saved_char = self.saved_selected_list[self._parser.char_label]
+        if self._parser.selected_char() != saved_char:
+            self._on_char_select(None, saved_char, randomise=False)
         self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):

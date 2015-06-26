@@ -206,7 +206,7 @@ def get_environment():
             'environment' in profile:
         environment = profile['environment']
     else:
-        environment = 'Dojo'
+        environment = 'dojo'
     return environment
 
 

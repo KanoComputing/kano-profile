@@ -264,8 +264,8 @@ class AvatarCreator(AvatarConfParser):
             return False
         # For categories where we haven't specified, select randomly
         avail_cats = (cat.get_id()
-                       for cat in self._sel_char_layer().get_categories()
-                       if cat.get_id() != self.char_label)
+                      for cat in self._sel_char_layer().get_categories()
+                      if cat.get_id() != self.char_label)
         for cat in set(avail_cats).difference(
                     set(self._sel_obj_per_cat.keys())):
             # Need to make sure that we can handle categories that contain no
@@ -652,12 +652,33 @@ def get_avatar_conf(aux_files=[]):
     conf = None
 
     cm = ContentManager.from_local()
-    for k in cm.list_local_objects(spec='kano-content-category'):
+    for k in cm.list_local_objects(spec='kano-character'):
+        content_dir.register_path(
+            'CHARACTER_DIR', k.get_data('character_base').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('character_thumb').get_dir())
         content_dir.register_path(
             'ACTIVE_CATEGORY_ICONS', k.get_data('active_cat_icon').get_dir())
         content_dir.register_path(
             'INACTIVE_CATEGORY_ICONS',
             k.get_data('inactive_cat_icon').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('previews').get_dir())
+        content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        aux_files.append(k.get_data('').get_content()[0])
+
+    for k in cm.list_local_objects(spec='kano-character-category'):
+        content_dir.register_path(
+            'ACTIVE_CATEGORY_ICONS', k.get_data('active_cat_icon').get_dir())
+        content_dir.register_path(
+            'INACTIVE_CATEGORY_ICONS',
+            k.get_data('inactive_cat_icon').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('previews').get_dir())
+        content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        aux_files.append(k.get_data('').get_content()[0])
+
+    for k in cm.list_local_objects(spec='kano-character-items'):
         content_dir.register_path(
             'PREVIEW_ICONS', k.get_data('previews').get_dir())
         content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())

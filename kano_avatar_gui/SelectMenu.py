@@ -3,7 +3,7 @@
 # SelectMenu.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 from gi.repository import Gtk
@@ -23,17 +23,20 @@ class SelectMenu(Gtk.EventBox):
         apply_styling_to_screen(CSS_PATH)
 
         # Initialise self._items
-        self._items = {}
-
-        for name in list_of_names:
-            self._items[name] = {}
-            self._items[name]["selected"] = False
+        self._set_items(list_of_names)
 
         self._signal_name = signal_name
 
         # This is the selected_identifier
         self._selected = None
         self.get_style_context().add_class("select_menu")
+
+    def _set_items(self, list_of_names):
+        self._items = {}
+
+        for name in list_of_names:
+            self._items[name] = {}
+            self._items[name]["selected"] = False
 
     def set_selected(self, identifier):
         '''Sets the selected element in the dictionary to True,
@@ -57,9 +60,12 @@ class SelectMenu(Gtk.EventBox):
     def _add_option_to_items(self, identifier, name, item):
         '''Adds a new option in the self._items
         '''
-
         if identifier in self._items:
             self._items[identifier][name] = item
+
+    def _remove_option_from_items(self, identifier, name):
+        if identifier in self._items:
+            self._items[identifier].pop(name, None)
 
     def get_option(self, identifier, option):
         if identifier in self._items:
@@ -72,14 +78,19 @@ class SelectMenu(Gtk.EventBox):
         if identifier in self._items:
             self._items[identifier]["button"] = button
         else:
-            logger.error("Trying to set a button for an identifier that is not present")
+            logger.error(
+                "Trying to set a button for an identifier that is not present")
+
+    def unset_button(self, identifier):
+        self._remove_option_from_items(identifier, "button")
 
     def get_button(self, identifier):
         if identifier in self._items:
             if 'button' in self._items[identifier]:
                 return self._items[identifier]['button']
 
-        logger.error("Trying to get a button for an identifier that is not present")
+        logger.error(
+            "Trying to get a button for an identifier that is not present")
         return None
 
     def _add_selected_css(self, button):

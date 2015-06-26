@@ -3,7 +3,7 @@
 # CategoryMenu.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 from gi.repository import Gtk, GObject
@@ -33,8 +33,20 @@ class CategoryMenu(SelectMenu):
         self.categories = self._parser.list_available_categories()
         SelectMenu.__init__(self, self.categories, self._signal_name)
 
+        self._vertbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(self._vertbox)
+
         # The menu is one item by 7 items
         self.set_size_request(self.item_width, 7 * self.item_height)
+        self._pack_buttons()
+
+    def set_new_categories(self):
+        # First clear existing
+        for category in self._items:
+            self._remove_button(category)
+
+        self.categories = self._parser.list_available_categories()
+        self._set_items(self.categories)
         self._pack_buttons()
 
     def _add_selected_appearence(self, identifier):
@@ -76,21 +88,34 @@ class CategoryMenu(SelectMenu):
     def _pack_buttons(self):
         '''Pack the buttons into the menu.
         '''
-        # Assume the list of buttons are in self._buttons
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vbox)
 
         for category in self.categories:
             button = self._create_button(category)
             self.set_button(category, button)
 
-            inactive_icon_path = self._parser.get_inactive_category_icon(category)
-            self._add_option_to_items(category, 'inactive_path', inactive_icon_path)
+            inactive_icon_path = self._parser.get_inactive_category_icon(
+                category)
+            self._add_option_to_items(category,
+                                      'inactive_path',
+                                      inactive_icon_path)
             active_icon_path = self._parser.get_active_category_icon(category)
-            self._add_option_to_items(category, 'active_path', active_icon_path)
+            self._add_option_to_items(category,
+                                      'active_path',
+                                      active_icon_path)
 
-            vbox.pack_start(button, True, True, 0)
+            self._vertbox.pack_start(button, True, True, 0)
+
+    def _remove_button(self, identifier):
+        ''' Reverse of _pack_buttons
+        '''
+        vbox = self._vertbox
+        button = self.get_button(identifier)
+        if button:
+            vbox.remove(button)
+            self.unset_button(identifier)
+            self._remove_option_from_items(identifier, 'inactive_path')
+            self._remove_option_from_items(identifier, 'active_path')
+            button.destroy()
 
     def _select_button_wrapper(self, widget, identifier):
         '''This is connected to the button-release-event when you click on a

@@ -3,24 +3,46 @@
 # kano-character-cli
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
 #
 # Program that generates character assets to be used with a Kano World profile
 
+
+"""Character generator CLI
+This program handles the Character creation for Kano World users
+
+Usage:
+    kano-character-cli -l (char|env)
+    kano-character-cli -l (obj|cat) <character_id>
+    kano-character-cli -c <selection>... (-s|-o <out_dir>)
+    kano-character-cli -g
+    kano-character-cli -h
+
+Options:
+    -h --help      Show this screen
+    -l --list      List available choices for characters (char),objects (obj),
+                   categories(cat) or all (all)
+    -c --create    Create a new character, specify the character name followed
+                   by the objects
+    -o --output    Specify output directory [default: new_character.png].
+    -s --sync      Sync with local and remote profile
+    -g --generate  Generate the character from values saved in the local
+                   profile
+"""
+
 import sys
 import os
-import argparse
+import docopt
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_avatar.logic import AvatarConfParser, AvatarCreator, get_avatar_conf
+from kano_avatar.logic import AvatarCreator, get_avatar_conf
+from kano_avatar.conf_parser import AvatarConfParser
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano.logging import logger
-
-program_desc = "This program handles the Character creation for Kano World users"
 
 configuration = get_avatar_conf()
 
@@ -29,116 +51,44 @@ if configuration is None:
     sys.exit(1)
 
 
-def main():
-    parser = argparse.ArgumentParser(description=program_desc)
-    group_view = parser.add_argument_group(
-        'View', 'View available choices and exit')
-    group_view.add_argument(
-        '-l',
-        '--list',
-        choices=['char', 'obj', 'env', 'cat', 'spec_cat', 'all'],
-        help='List available choices for characters (char),objects (obj), categories(cat) or all (all)')
-    group_create = parser.add_argument_group(
-        'Create', 'Create a new Character')
-    group_create.add_argument(
-        '-c',
-        '--create',
-        type=str,
-        nargs='+',
-        help='Create a new character, specify the character name followed by the objects')
-    group_create.add_argument(
-        '-e',
-        '--environment',
-        type=str,
-        default='',
-        help='Set environment (background) for the Character')
-    group_create.add_argument(
-        '-r',
-        '--randomise',
-        action='store_true',
-        help='Randomise rest of the items')
-    save_or_sync = group_create.add_mutually_exclusive_group()
-    save_or_sync.add_argument(
-        '-s',
-        '--sync',
-        action='store_true',
-        help='Put the resulting Character in the default location and save it to profile')
-    save_or_sync.add_argument(
-        '-o',
-        '--output',
-        type=str,
-        default='new_character.png',
-        help='Name (optionally with path) of output file')
-    group_gen = parser.add_argument_group('Generate', 'Re-generate character assets')
-    group_gen.add_argument(
-        '-g',
-        '--generate',
-        action='store_true',
-        help='Generate character assets from values kept in the profile structures')
-    args = parser.parse_args()
+def main(args):
 
-    if args.list:
+    if args['--list']:
         avail_conf = AvatarConfParser(configuration)
-        if args.list == 'char':
+        if args['char']:
             print avail_conf.list_available_chars()
-        elif args.list == 'obj':
-            print avail_conf.list_all_available_objs()
-        elif args.list == 'cat':
-            print avail_conf.list_available_categories()
-        elif args.list == 'all':
-            # Chars
-            chars = avail_conf.list_available_chars()
-            print chars
-            for char in chars:
-                prev = "Char: {} | Preview: {}".format(
-                    char, avail_conf.get_char_preview(char))
-                print prev
-            # Objs
-            objs = avail_conf.list_all_available_objs()
-            print objs
-            for obj in objs:
-                prev = "Item: {} | Preview: {}".format(
-                    obj, avail_conf.get_item_preview(obj))
-                print prev
-            # Categories
-            cats = avail_conf.list_available_categories()
-            print cats
+        elif args['obj']:
+            cats = avail_conf.list_available_categories(args['<character_id>'])
             for cat in cats:
-                icon_ac = "Cat: {} | Active Icon: {}".format(
-                    cat, avail_conf.get_active_category_icon(cat))
-                icon_inac = "Cat: {} | Inactive Icon: {}".format(
-                    cat, avail_conf.get_inactive_category_icon(cat))
-                print icon_ac
-                print icon_inac
+                print 'Cat {}'.format(cat)
+                print avail_conf.get_avail_objs(args['<character_id>'], cat)
+        elif args['cat']:
+            print avail_conf.list_available_categories(args['<character_id>'])
         return 0
-
-    if args.create:
+    elif args['--create']:
         char_creator = AvatarCreator(configuration)
-        char_creator.char_select(args.create.pop(0))
-        if args.environment:
-            char_creator.env_select(args.environment)
+        char_creator.char_select(args['<selection>'].pop(0))
 
-        if not args.randomise:
-            rc = char_creator.obj_select(args.create)
-        else:
-            rc = char_creator.randomise_rest(args.create)
+        # if not args.randomise:
+        #    rc = char_creator.obj_select(args.create)
+        # else:
+        rc = char_creator.randomise_rest(args['<selection>'])
         if not rc:
             logger.error('Error processing the list, please double check it')
             return 1
 
-        if args.sync:
+        if args['--sync']:
             out_path = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
         else:
             out_path = args.output
 
-        rc = char_creator.save_final_assets(out_path, sync=args.sync)
+        rc = char_creator.save_final_assets(out_path, sync=args['--sync'])
 
         if not rc:
             logger.error("Couldn't generate assets")
             return 2
         return 0
-
-    if args.generate:
+    elif args['--generate']:
         from kano_profile.profile import get_avatar, get_environment
 
         char, items = get_avatar(sync=False)
@@ -160,4 +110,5 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    args = docopt.docopt(__doc__)
+    sys.exit(main(args))

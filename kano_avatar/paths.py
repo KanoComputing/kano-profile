@@ -1,12 +1,13 @@
 # paths.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Path constants for character creation
 
 import os
 from kano.utils import get_home, get_user
+from kano_content.extended_paths import content_dir
 
 AVATAR_SCRATCH = os.path.join(
     '/tmp/', get_user(), 'char_gen_scratch', 'character.png')
@@ -17,7 +18,7 @@ AVATAR_ENV_SHIFTED = 'character_inc_env_page2.png'
 AVATAR_CIRC_PLAIN_DEFAULT = 'character_circ_plain.png'
 AVATAR_SELECTED_ITEMS = os.path.join(AVATAR_DEFAULT_LOC, 'character_log.json')
 
-AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.yaml'
+AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.json'
 PROFILE_IMAGES_FOLDER = '/usr/share/kano-profile/media/images'
 AVATAR_ASSET_FOLDER = os.path.join(PROFILE_IMAGES_FOLDER, 'avatar_generator')
 CSS_PATH = '/usr/share/kano-profile/media/CSS/avatar_generator.css'
@@ -44,3 +45,15 @@ RING_ASSET = os.path.join(
     AVATAR_ASSET_FOLDER, 'helper_assets', 'grey_ring.png')
 PLAIN_MASK = os.path.join(
     AVATAR_ASSET_FOLDER, 'helper_assets', 'plain_mask.png')
+
+# Register the paths that we will use
+content_dir.register_path('ACTIVE_CATEGORY_ICONS', ACTIVE_CATEGORY_ICONS)
+content_dir.register_path('INACTIVE_CATEGORY_ICONS', INACTIVE_CATEGORY_ICONS)
+content_dir.register_path('PREVIEW_ICONS', PREVIEW_ICONS)
+content_dir.register_path(
+    'ACTIVE_SPECIAL_CATEGORY_ICONS', ACTIVE_SPECIAL_CATEGORY_ICONS)
+content_dir.register_path(
+    'INACTIVE_SPECIAL_CATEGORY_ICONS', INACTIVE_SPECIAL_CATEGORY_ICONS)
+content_dir.register_path('CHARACTER_DIR', CHARACTER_DIR)
+content_dir.register_path('ITEM_DIR', ITEM_DIR)
+content_dir.register_path('ENVIRONMENT_DIR', ENVIRONMENT_DIR)

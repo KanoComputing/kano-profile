@@ -3,7 +3,7 @@
 # CharacterCreator.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 import os
@@ -34,12 +34,14 @@ class CharacterCreator(Gtk.EventBox):
 
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
-        self._get_obj_data()
 
         # Check profile information and load up either the created avatar or
         # the default
         self._create_menu()
         self._create_img_box(self.get_image_path())
+
+        # This needs to be called after _create_menu()
+        self._get_obj_data()
 
         self.width = self._imgbox.width
         self.height = self._imgbox.height
@@ -121,6 +123,7 @@ class CharacterCreator(Gtk.EventBox):
     def _create_menu(self):
         self._menu = Menu(self.avatar_cr)
         self._menu.connect('asset_selected', self._update_img)
+        self._menu.connect('randomise_all', self._randomise_avatar_wrapper)
 
     def _get_obj_data(self):
         self._list_of_categories = self.avatar_cr.list_available_categories()

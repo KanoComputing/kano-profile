@@ -3,7 +3,7 @@
 # Menu.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 import os
@@ -24,13 +24,16 @@ from kano_profile.profile import get_avatar, get_environment
 class Menu(Gtk.Fixed):
 
     __gsignals__ = {
-        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'asset_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        'randomise_all': (GObject.SIGNAL_RUN_FIRST, None, ())
     }
 
     def __init__(self, parser):
         Gtk.Fixed.__init__(self)
 
         self._parser = parser
+        char, item = get_avatar()
+        self._parser.char_select(char)
         self._cat_menu = CategoryMenu(self._parser)
         self._cat_menu.connect('category_item_selected',
                                self.launch_pop_up_menu)
@@ -70,18 +73,38 @@ class Menu(Gtk.Fixed):
 
         return objs
 
+    def _on_char_select(self, widget, char_id, randomise=True):
+        if self._parser.selected_char() == char_id:
+            return None
+        self._remove_pop_up_menus()
+        self._parser.char_select(char_id)
+        self._cat_menu.set_new_categories()
+        self._initialise_pop_up_menus()
+        self._cat_menu.show_all()
+        if randomise:
+            self.emit('randomise_all')
+
     def _initialise_pop_up_menus(self):
         self.menus = {}
 
         for category in self._cat_menu.categories:
             pop_up = PopUpItemMenu(category, self._parser)
             pop_up.connect('pop_up_item_selected', self._emit_signal)
+            pop_up.connect('character_selected', self._on_char_select)
 
             self.menus[category] = {}
             self.menus[category]["pop_up"] = pop_up
 
             self.put(self.menus[category]['pop_up'],
                      self.pop_up_pos_x, self.pop_up_pos_y)
+
+    def _remove_pop_up_menus(self):
+        for category in self.menus:
+            pop_up = self.menus[category]['pop_up']
+            if pop_up:
+                # TODO remove is redundant when using the destroy maybe?
+                self.remove(pop_up)
+                pop_up.destroy()
 
     def _create_start_up_image(self):
         '''We check what has been saved on kano-profile, and we use a default if
@@ -95,15 +118,20 @@ class Menu(Gtk.Fixed):
         char, item = get_avatar()
         env = get_environment()
 
-        item['environments'] = env
+        item[self._parser.char_label] = char
+        item[self._parser.env_label] = env
 
         self._parser.char_select(char)
 
-        for category in self.categories:
-            obj_name = item[category]
+        for category in self._cat_menu.categories:
+            # TODO this is temporary for the kano-content demo
+            if category not in item:
+                obj_name = None
+            else:
+                obj_name = item[category]
             logger.debug("loading obj_name = {}".format(obj_name))
 
-            if obj_name and obj_name in self._parser.get_avail_objs(category):
+            if obj_name and obj_name in self._parser.list_avail_objs(category):
                 logger.debug(
                     "Loading saved object {} for category {}".format(
                         obj_name,
@@ -136,6 +164,9 @@ class Menu(Gtk.Fixed):
             pop_up.only_style_selected(identifier)
 
     def reset_selected_menu_items(self):
+        saved_char = self.saved_selected_list[self._parser.char_label]
+        if self._parser.selected_char() != saved_char:
+            self._on_char_select(None, saved_char, randomise=False)
         self.select_pop_up_items(self.saved_selected_list)
 
     def launch_pop_up_menu(self, widget, category):

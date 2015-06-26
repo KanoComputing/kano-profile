@@ -1,1110 +1,38 @@
 # logic.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Logic for parsing and creating avatars for a Kano World profile
 import os
 import random
-import yaml
-from PIL import Image
 
-from kano_avatar.paths import (AVATAR_CONF_FILE, CHARACTER_DIR, ITEM_DIR,
-                               ACTIVE_CATEGORY_ICONS, INACTIVE_CATEGORY_ICONS,
-                               ACTIVE_SPECIAL_CATEGORY_ICONS,
-                               INACTIVE_SPECIAL_CATEGORY_ICONS,
-                               CIRC_ASSET_MASK, RING_ASSET, PREVIEW_ICONS,
-                               ENVIRONMENT_DIR, AVATAR_SCRATCH,
-                               AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME,
-                               PLAIN_MASK, AVATAR_SELECTED_ITEMS)
+from kano_avatar.paths import (AVATAR_CONF_FILE,
+                               AVATAR_SCRATCH, AVATAR_DEFAULT_LOC,
+                               AVATAR_DEFAULT_NAME, AVATAR_SELECTED_ITEMS)
 from kano.logging import logger
 
-from kano_profile.badges import calculate_badges
 from kano_profile.profile import (set_avatar, set_environment,
                                   save_profile_variable)
 from kano.utils import get_date_now
+from kano_content.api import ContentManager
+from kano_content.extended_paths import content_dir
 from json import dump, load
 
+from .conf_parser import AvatarConfParser
 # TODO Check which types of names are case sensitive
 
 
-class AvatarAccessory():
-    """ Class for handling items and applying them onto an Avatar Character
-    class.
-    """
-    _category = ''
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
-    _img_position_x = 0
-    _img_position_y = 0
-    _date_created = ''
-    _item_id = ''
-    _display_order = 0
-    _is_unlocked = False
-
-    _img = None
-
-    def __init__(self, name, category, file_name, preview_img, x, y,
-                 date_created, item_id, is_unlocked, display_order):
-        self._category = category
-        self._name = name
-        self._img_position_x = x
-        self._img_position_y = y
-        self._date_created = date_created
-        self._item_id = item_id
-        self._display_order = display_order
-        self._is_unlocked = is_unlocked
-        # if an absolute path is given use it instead, so that we can
-        # override elements
-        if os.path.isabs(file_name):
-            self._asset_fname = file_name
-        else:
-            self._asset_fname = os.path.join(ITEM_DIR, file_name)
-
-        if os.path.isabs(preview_img):
-            self._img_preview = preview_img
-        else:
-            self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
-
-    def name(self):
-        """ Provides the display name of the Item
-        :returns: display name of character as a string
-        :rtype: string
-        """
-        return self._name
-
-    def is_unlocked(self):
-        return self._is_unlocked
-
-    def category(self):
-        """ Provides the category name to which the Item belongs to
-        :returns: category name as a string
-        :rtype: string
-        """
-        return self._category
-
-    def get_fname(self):
-        """ Provides the item's asset filename
-        :returns: filename as a string
-        :rtype: string
-        """
-        return self._asset_fname
-
-    def load_image(self):
-        """ Loads the asset's image internally. This is necessary before
-        pasting the item over a character, however there is no need to call it
-        externally.
-        """
-        self._img = Image.open(self.get_fname())
-
-    def paste_over_image(self, img):
-        """ Pastes the item's image over a character's base image. The
-        position of where the image will be pasted is specified by the x,y
-        coordinates given during the class' instantiation. (x,y are distances
-        in pixels of the top left corner)
-        :param img: PIL Image class on which the pasting will occur
-        """
-        if self._img is None:
-            self.load_image()
-        # position of upper left corner
-        position = (self._img_position_x, self._img_position_y)
-        # We need to remove the transparency of the item so that it doesn't
-        # cause a gap on the base layer.
-        r, g, b, a = self._img.split()
-        item = Image.merge('RGB', (r, g, b))
-        transp_mask = Image.merge("L", (a,))
-        img.paste(item, position, transp_mask)
-
-    def get_preview_img(self):
-        """ Provides the item's preview image path
-        :returns: absolute path to preview image as a string
-        :rtype: string
-        """
-        return self._img_preview
-
-    def get_id(self):
-        """ Provides the unique id for the item
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._item_id
-
-    def get_date(self):
-        """ Provides the creation date of the item
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the item
-        :returns: display index as an integer
-        :rtype: integer
-        """
-        return self._display_order
-
-
-class AvatarCharacter():
-    """ Class for handling an Avatar character. It holds the image data for
-    the character so as to serve as a base on which the items are pasted on.
-    """
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
-    _img = None
-    _crop_x = 0
-    _crop_y = 0
-    _display_order = 0
-    _date_created = ''
-    _character_id = ''
-    _is_unlocked = False
-
-    def __init__(self, name, file_name, preview_img, x, y, date_created, char_id, is_unlocked, display_order):
-        self._name = name
-        if os.path.isabs(file_name):
-            self._asset_fname = file_name
-        else:
-            self._asset_fname = os.path.join(CHARACTER_DIR, file_name)
-
-        if os.path.isabs(preview_img):
-            self._img_preview = preview_img
-        else:
-            self._img_preview = os.path.join(CHARACTER_DIR, preview_img)
-        self._crop_x = x
-        self._crop_y = y
-        self._display_order = display_order
-        self._character_id = char_id
-        self._date_created = date_created
-        self._is_unlocked = is_unlocked
-
-    def load_image(self):
-        """ Loads the character's image internally. This is necessary before
-        pasting the item over a character.
-        """
-        self._img = Image.open(self._asset_fname)
-
-    def name(self):
-        """ Returns the Character's name as a string
-        :returns: Character name as a string
-        :rtype: string
-        """
-        return self._name
-
-    def get_img(self):
-        """ Get the image class for the character.
-        :returns: Image class (from PIL module)
-        :rtype: Image class (from PIL module)
-        """
-        return self._img
-
-    def is_unlocked(self):
-        """ Returns whether the character is unlocked
-        :returns: Lock state of the character
-        :rtype: Boolean
-        """
-        return self._is_unlocked
-
-    def get_fname(self):
-        """ Provides the item's asset filename
-        :returns: filename as a string
-        :rtype: string
-        """
-        return self._asset_fname
-
-    def save_image(self, file_name):
-        """ Save character image (together with items that have been pasted on
-        it), to a file.
-        :param file_name: filename to be saved to as a string
-        """
-        self._img.save(file_name)
-
-    def generate_circular_assets(self, file_name_plain, file_name_ring):
-        """ This function creates the circular assets that are required for the
-        kano profile
-        :param file_name: Path to where the completed file should be saved as a
-                          string
-        """
-        rc_plain = self._generate_plain_circular(file_name_plain)
-
-        # 54 is the size of the stamp icon we require
-        rc_ring = self._generate_white_circular(file_name_ring, resize=54)
-        return rc_plain and rc_ring
-
-    def _generate_white_circular(self, file_name, resize=0):
-        return self._generate_ring_circular(
-            file_name, RING_ASSET, CIRC_ASSET_MASK, resize=resize)
-
-    def _generate_plain_circular(self, file_name):
-        return self._generate_ring_circular(
-            file_name, PLAIN_MASK, PLAIN_MASK, invert_order=True)
-
-    def _generate_ring_circular(self, file_name, ring, mask,
-                                invert_order=False, resize=0):
-        """ Creates the circular asset to be used in the top left corner on the
-        desktop. The mask and ring assets need to have the same size.
-        :param file_name: Path to where the completed (and resized if set so)
-                          file will be saved as a string
-        :param ring: Path to the ring asset to be used
-        :param mask: Path to the mast asset to be used
-        :param invert_order: invert order of the ring and mask assets in the
-                             composite function
-        :type invert_order: Boolean
-        :param resize: (Optional) The size of the side of the resulting resized
-                       image (Will be a square)
-        :type resize: integer
-        :returns: True iff no errors have occurred
-        :rtype: Boolean
-        """
-        ring_img = Image.open(ring)
-        mask_img = Image.open(mask)
-
-        if ring_img.size != mask_img.size:
-            logger.warn('Mask and ring asset do not have the same size')
-            return False
-
-        cropped_img = self._get_image_cropped(
-            mask_img.size[0], mask_img.size[1])
-
-        if not invert_order:
-            img_out = Image.composite(ring_img, cropped_img, mask_img)
-        else:
-            img_out = Image.composite(cropped_img, ring_img, mask_img)
-
-        # Resize to specified width if set
-        if resize != 0:
-            if img_out.size[0] != img_out.size[1]:
-                logger.warn("Image is not square, resizing it will distort it")
-            if resize < 0:
-                logger.error(
-                    "Resize value negative: {}, won't continue".format(resize)
-                )
-                return False
-            img_out.thumbnail((resize, resize), Image.ANTIALIAS)
-
-        img_out.save(file_name)
-        logger.debug("created {}".format(file_name))
-        return True
-
-    def _get_image_cropped(self, size_x, size_y):
-        """ Returns an instance of an image cropped to the specified
-        dimensions, centered at the coordinates detailed by the class
-        variables _crop_x and _crop_y.
-        :param size_x: Size of the final image in the x dimension
-        :param size_y: Size of the final image in the y dimension
-        :returns: Instance of PIL Image
-        :rtype: Image class from PIL module
-        """
-        # Create a box of useful image data
-        x_left = int(size_x / 2)
-        x_right = size_x - x_left
-
-        y_up = int(size_y / 2)
-        y_down = size_y - y_up
-
-        box = (self._crop_x - x_left,
-               self._crop_y - y_up,
-               self._crop_x + x_right,
-               self._crop_y + y_down)
-
-        return self._img.crop(box)
-
-    def get_preview_img(self):
-        """ Provides the Character's preview image path
-        :returns: absolute path to preview image as a string
-        :rtype: string
-        """
-        return self._img_preview
-
-    def get_id(self):
-        """ Provides the unique id for the character
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._character_id
-
-    def get_date(self):
-        """ Provides the creation date of the character
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the character
-        :returns: display index as an integer
-        :rtype: string
-        """
-        return self._display_order
-
-
-class AvatarEnvironment():
-    """ Class for handling the environment (background) for a character. As
-    it contains the image that will work as the background (lowest z-index)
-    but also the largest in terms of size, it deserves a class of its own.
-    """
-    _name = ''
-    _asset_fname = ''
-    _img_preview = ''
-    _img = None
-    _date_created = ''
-    _environment_id = ''
-    _display_order = 0
-    _is_unlocked = False
-
-    def __init__(self, name, file_name, preview_img, date_created, env_id,
-                 is_unlocked, display_order):
-        self._name = name
-        self._date_created = date_created
-        self._display_order = display_order
-        self._environment_id = env_id
-        self._is_unlocked = is_unlocked
-        if os.path.isabs(file_name):
-            self._asset_fname = file_name
-        else:
-            self._asset_fname = os.path.join(ENVIRONMENT_DIR, file_name)
-
-        if os.path.isabs(preview_img):
-            self._img_preview = preview_img
-        else:
-            self._img_preview = os.path.join(PREVIEW_ICONS, preview_img)
-
-    def name(self):
-        """ Provides the display name of the Item
-        :returns: display name of character as a string
-        :rtype: string
-        """
-        return self._name
-
-    def get_preview_img(self):
-        """ Provides the Background preview image path
-        :returns: absolute path to preview image as a string
-        :rtype: string
-        """
-        return self._img_preview
-
-    def is_unlocked(self):
-        """ Returns the locked state of the environment
-        :returns: lock state
-        :rtype: Boolean
-        """
-        return self._is_unlocked
-
-    def load_image(self):
-        """ Loads the environment image internally.
-        """
-        self._img = Image.open(self._asset_fname).convert('RGBA')
-
-    def attach_char(self, char_img, x=0.5, y=0.5):
-        """ Attach a character to the environment. This method will overwrite
-        the internal image to include the character with the environment in
-        the background. In order to reset the environment you may use the
-        .load_image() method
-        :param char_img: Image object to be attached to the environment
-        :param x: Value between [0,1) to control the position of the character
-                  on the environment. It can be thought of like a percentage
-                  of the total x axis of the image where the centre of the new
-                  image will be pasted
-        :param y: Value between [0,1) to control the position of the character
-                  on the environment. It can be thought of like a percentage
-                  of the total y axis of the image where the centre of the new
-                  image will be pasted
-        :returns: False if the operation is not successful (with appropriate
-                  logging)
-        :rtype: Boolean
-        """
-
-        if not char_img:
-            logger.warn(
-                "Char image to be attached to the env is None, will exit")
-            return False
-
-        if x < 0 or x >= 1:
-            err_msg = 'Argument x given to attach_char is out of bounds [0,1)'
-            logger.error(err_msg)
-            return False
-        if y < 0 or y >= 1:
-            err_msg = 'Argument x given to attach_char is out of bounds [0,1)'
-            logger.error(err_msg)
-            return False
-
-        if not self._img:
-            err_msg = "Internal envir Image hasn't been loaded. Will load now"
-            logger.debug(err_msg)
-            self.load_image()
-
-        # Resize avatar if we can't fit it in (Normally shouldn't happen
-        # but it makes testing without properly sized assets easier)
-        char_szx = char_img.size[0]
-        char_szy = char_img.size[1]
-
-        if char_szx > self.get_img().size[0] or \
-           char_szy > self.get_img().size[1]:
-            # First calculate the reduction coefficient
-            # so that no side is larger than 90% of the background canvas
-            coeff = 0.9
-            c_x = coeff * self.get_img().size[0] / char_szx
-            c_y = coeff * self.get_img().size[1] / char_szy
-            c = min(c_x, c_y)
-            new_size = (int(c * char_szx), int(c * char_szy))
-            resized_char = char_img.resize(new_size, Image.ANTIALIAS)
-        else:
-            resized_char = char_img
-
-        top_left_x = int(self.get_img().size[0] * x - resized_char.size[0]/2)
-        top_left_y = int(self.get_img().size[1] * y - resized_char.size[1]/2)
-
-        # We need to create a temporary image to hold the avatar since
-        # in order to composite images they need to have the same size
-        temp_img = Image.new(self.get_img().mode, self.get_img().size)
-        temp_img.paste(resized_char, (top_left_x, top_left_y))
-
-        self._img = Image.composite(temp_img, self.get_img(), temp_img)
-
-        return True
-
-    def get_img(self):
-        """ Get the image class for the character.
-        :returns: the internally used Image class (from PIL module)
-        :rtype: Image class (from PIL module)
-        """
-        return self._img
-
-    def get_fname(self):
-        """ Provides the item's asset filename
-        :returns: filename as a string
-        :rtype: string
-        """
-        return self._asset_fname
-
-    def save_image(self, file_name):
-        """ Save character image (together with items that have been pasted on
-        it), to a file.
-        :param file_name: filename to be saved to as a string
-        :returns: Always True (for now, wink wink)
-        :rtype: Boolean
-        """
-        # TODO Error checking
-        self._img.save(file_name)
-        return True
-
-    def get_id(self):
-        """ Provides the unique id for the environment
-        :returns: unique id as a string
-        :rtype: string
-        """
-        return self._environment_id
-
-    def get_date(self):
-        """ Provides the creation date of the environment
-        :returns: creation date as a string
-        :rtype: string
-        """
-        return self._date_created
-
-    def get_disp_order(self):
-        """ Provides the display order of the environment
-        :returns: display index as an integer
-        :rtype: integer
-        """
-        return self._display_order
-
-
-class AvatarConfParser():
-    """ A class to take on the important task of parsing the configuration
-    file used for generating new Avatars.
-    Please use this class only if you require only parsing of the
-    conf file, otherwise please use the AvatarCreator() class
-    """
-    _categories = set()
-    _zindex = set()
-    _cat_to_z_index = {}
-    _cat_to_disp_order = {}
-    _zindex_to_categories = {}
-    _objects = {}
-    _characters = {}
-    _environments = {}
-    _object_per_cat = {}
-    _inactive_category_icons = {}
-    _active_category_icons = {}
-    _selected_borders = {}
-    _hover_borders = {}
-    _inactive_special_category_icons = {}
-    _active_special_category_icons = {}
-    _border_special_cat = {}
-    _hover_border_special_cat = {}
-    categories_label = 'categories'
-    objects_label = 'objects'
-    char_label = 'characters'
-    env_label = 'environments'
-    spec_cat_label = 'special_categories'
-    special_category_labels = [char_label, env_label]
-    _special_cat_to_disp_order = {}
-
-    def __init__(self, conf_data):
-        if self.categories_label not in conf_data:
-            logger.error('{} dict not found'.format(self.categories_label))
-        else:
-            self._populate_cat_structures(conf_data[self.categories_label])
-
-        if self.char_label not in conf_data:
-            logger.error('{} dict not found'.format(self.char_label))
-        else:
-            self._populate_character_structures(conf_data)
-
-        if self.objects_label not in conf_data:
-            logger.error('{} dict not found'.format(self.objects_label))
-        else:
-            self._populate_object_structures(conf_data)
-
-        self._populate_environment_structures(conf_data)
-
-        if self.spec_cat_label not in conf_data:
-            logger.error('{} dict not found'.format(self.spec_cat_label))
-        else:
-            self._populate_special_category_structures(conf_data)
-
-    def _populate_cat_structures(self, categories):
-        """ Populates internal structures related to categories
-        :param categories: categories section of YAML format configuration
-                           structure read from file
-        """
-        for cat in categories:
-            self._cat_to_z_index[cat['cat_name']] = cat['z_index']
-            icon_file = cat['disp_icon']
-            # TODO Fix the following if the icon_file is absolute
-            if not os.path.isabs(icon_file):
-                active_icon_file = os.path.join(ACTIVE_CATEGORY_ICONS,
-                                                icon_file)
-                inactive_icon_file = os.path.join(INACTIVE_CATEGORY_ICONS,
-                                                  icon_file)
-            self._active_category_icons[cat['cat_name']] = active_icon_file
-            self._inactive_category_icons[cat['cat_name']] = inactive_icon_file
-
-            selected_border_file = os.path.join(PREVIEW_ICONS,
-                                                cat['selected_border'])
-            self._selected_borders[cat['cat_name']] = selected_border_file
-            hover_border_file = os.path.join(PREVIEW_ICONS,
-                                             cat['hover_border'])
-            self._hover_borders[cat['cat_name']] = hover_border_file
-            self._cat_to_disp_order[cat['cat_name']] = cat['display_order']
-
-        # Save both the unique set of z-indexes and categories
-        self._categories = set(self._cat_to_z_index.keys())
-        self._zindex = set(self._cat_to_z_index.values())
-
-        self._zindex_to_categories = {i: [] for i in self._zindex}
-        for cat_name, zindex in self._cat_to_z_index.items():
-            self._zindex_to_categories[zindex].append(cat_name)
-
-    def _populate_object_structures(self, conf_data):
-        """ Populates internal structures related to items
-        :param conf_data: YAML format configuration structure read from file
-        """
-        for obj in conf_data[self.objects_label]:
-            new_name = obj['display_name']
-            new_cat = obj['category']
-            new_fname = obj['img_name']
-            new_prev_img = obj['preview_img']
-            new_x = obj['position_x']
-            new_y = obj['position_y']
-            new_disp_ord = obj['display_order']
-            new_date = obj['date_created']
-            new_id = obj['item_id']
-            # TODO hardcoded all unlocked for items until we change them to
-            # use the same scheme as environments
-            new_unlock = True
-            new_obj = AvatarAccessory(new_name,
-                                      new_cat,
-                                      new_fname,
-                                      new_prev_img,
-                                      new_x,
-                                      new_y,
-                                      new_date,
-                                      new_id,
-                                      new_unlock,
-                                      new_disp_ord)
-            self._objects[new_name] = new_obj
-            if new_cat not in self._object_per_cat:
-                self._object_per_cat[new_cat] = []
-            self._object_per_cat[new_cat].append(new_obj)
-
-    def _populate_character_structures(self, conf_data):
-        """ Populates internal structures related to characters
-        :param conf_data: YAML format configuration structure read from file
-        """
-        for obj in conf_data[self.char_label]:
-            new_name = obj['display_name']
-            new_fname = obj['img_name']
-            new_prev_img = obj['preview_img']
-            x = obj['crop_x']
-            y = obj['crop_y']
-            new_disp_ord = obj['display_order']
-            new_date = obj['date_created']
-            new_id = obj['character_id']
-            # TODO hardcoded all unlocked for characters until we change them
-            # to use the same scheme as environments
-            new_unlock = True
-            new_obj = AvatarCharacter(new_name,
-                                      new_fname,
-                                      new_prev_img,
-                                      x,
-                                      y,
-                                      new_date,
-                                      new_id,
-                                      new_unlock,
-                                      new_disp_ord)
-            self._characters[new_name] = new_obj
-
-    def _populate_environment_structures(self, conf_data):
-        """ Populates internal structures related to environments (backgrounds)
-        :param conf_data: YAML format configuration structure read from file
-        """
-        # TODO conf_data is not used any more in this function, maybe remove it
-        envirs = calculate_badges()
-
-        for _, env in envirs[self.env_label]['all'].iteritems():
-            new_name = env['title']
-            new_fname = env['img_name']
-            new_id = env['item_id']
-            new_disp_ord = env['display_order']
-            new_date = env['date_created']
-            new_unlocked = env['achieved']
-            if new_unlocked:
-                new_prev_img = env['preview_img']
-            else:
-                # TODO Unhardcode this
-                new_prev_img = 'environments/locked.png'
-            new_env = AvatarEnvironment(new_name,
-                                        new_fname,
-                                        new_prev_img,
-                                        new_date,
-                                        new_id,
-                                        new_unlocked,
-                                        new_disp_ord)
-            self._environments[new_name] = new_env
-
-    def _populate_special_category_structures(self, conf_data):
-        """ Populate internal structures related to the special categories
-        such as characters and environments
-        :param conf_data: YAML format configuration structure read from file
-        """
-        special_cat_data = conf_data[self.spec_cat_label]
-
-        for special_cat in self.special_category_labels:
-            active_icon_file = special_cat_data[special_cat]['active_icon']
-            if not os.path.isabs(active_icon_file):
-                active_icon_file = os.path.join(ACTIVE_SPECIAL_CATEGORY_ICONS,
-                                                active_icon_file)
-
-            inactive_icon_file = special_cat_data[special_cat]['inactive_icon']
-            if not os.path.isabs(inactive_icon_file):
-                inactive_icon_file = os.path.join(
-                    INACTIVE_SPECIAL_CATEGORY_ICONS,
-                    inactive_icon_file)
-
-            border_icon_file = special_cat_data[special_cat]['selected_border']
-            if not os.path.isabs(border_icon_file):
-                border_icon_file = os.path.join(PREVIEW_ICONS,
-                                                border_icon_file)
-
-            hover_icon_file = special_cat_data[special_cat]['hover_border']
-            if not os.path.isabs(hover_icon_file):
-                hover_icon_file = os.path.join(PREVIEW_ICONS,
-                                               hover_icon_file)
-
-            self._active_special_category_icons[special_cat] = active_icon_file
-            self._inactive_special_category_icons[special_cat] = \
-                inactive_icon_file
-            self._border_special_cat[special_cat] = border_icon_file
-            self._hover_border_special_cat[special_cat] = hover_icon_file
-            self._special_cat_to_disp_order[special_cat] = \
-                special_cat_data[special_cat]['display_order']
-
-    def get_zindex(self, category):
-        """ Provides the z-index for a specific category
-        :param category: The category whose z-index will be returned
-        :returns: z-index as integer
-        :rtype: integer
-        """
-        if category not in self._cat_to_z_index:
-            logger.warn('Category {} not in available ones'.format(category))
-        else:
-            return self._cat_to_z_index[category]
-
-    def _get_reg_item_cat(self, item_name):
-        """ Get the category of an item if that item belongs to a regular
-        category
-        :param item_name: Item whose category will be returned
-        :returns: category as a string
-        :rtype: string or None
-        """
-        if item_name in self._objects:
-            return self._objects[item_name].category()
-        else:
-            return None
-
-    def get_item_category(self, item_name):
-        """ Get the category of an item/environment if that item/env exists
-        :param item_name: item/env name whose category will be returned
-        :returns: category as a string or None
-        :rtype: string or None
-        """
-        cat_label = self._get_reg_item_cat(item_name)
-        if not cat_label:
-            if item_name not in self._environments:
-                logger.warn('Item {} neither in obj nor in env list'.format(
-                    item_name))
+def has_selected_char(err_str):
+    def decor(method):
+        def check_and_call(self, *args, **kwargs):
+            if not self._sel_char:
+                logger.error("Character not selected, {}".format(err_str))
                 return None
             else:
-                cat_label = self.env_label
-        return cat_label
-
-    def list_available_chars(self):
-        """ Provides a list of available characters
-        :returns: list of characters (list of strings)
-        :rtype: list of stings
-        """
-        return [k for k in self._characters.keys()]
-
-    def _list_all_available_regular_objs(self):
-        """ Provides a list of available regular objects
-        :returns: list of objects (list of strings)
-        :rtype: list of strings
-        """
-        return [k for k in self._objects.keys()]
-
-    def list_all_available_environments(self):
-        """ Provides a list of available environments
-        :returns: list of environments (list of strings)
-        :rtype: list of strings
-        """
-        env_inst_ord = sorted(self._environments.itervalues(),
-                              key=lambda env: env.get_disp_order())
-        return [k.name() for k in env_inst_ord]
-
-    def list_all_available_objs(self):
-        """ Provides a list of available objects
-        :returns: list of objects (list of strings)
-        :rtype: list of strings
-        """
-        ret = self._list_all_available_regular_objs()
-        ret.extend(self.list_all_available_environments())
-        return ret
-
-    def _get_avail_objs_regular_cat(self, category):
-        """ Provides a list of available objects for the specific normal category
-        :returns: [] of object names
-                  None if category is not found
-        :rtype: list of strings or None
-        """
-        if category not in self._object_per_cat:
-            err_msg = "cat {} not found, can't return objects".format(category)
-            logger.warn(err_msg)
-            return None
-        else:
-
-            item_inst_sorted = sorted(self._object_per_cat[category],
-                                      key=lambda obj: obj.get_disp_order())
-            return [it.name() for it in item_inst_sorted]
-
-    def get_avail_objs(self, category):
-        """ Provides a list of available objects for the category provided
-        :returns: [] of object names
-                  None if category is not found
-        :rtype: list of strings or None
-        """
-        if category == self.env_label:
-            return self.list_all_available_environments()
-        else:
-            return self._get_avail_objs_regular_cat(category)
-
-    def _list_available_regular_categories(self):
-        """ Provides a list of available regular categories (not case
-        sensitive)
-        :returns: list of categories (list of strings)
-        :rtype: list of strings
-        """
-        reg_cats_ord = sorted(self._cat_to_disp_order.iteritems(),
-                              key=lambda k: k[1])
-        return [k[0] for k in reg_cats_ord]
-
-    def _list_available_special_categories(self):
-        """ Provides a list of available special categories (not case
-        sensitive)
-        :returns: list of categories (list of strings)
-        :rtype: list of strings
-        """
-        # TODO Temporary hardcoding
-        # return self.special_category_labels
-        # At the time it is only one so it is sorted
-        return [self.env_label]
-
-    def list_available_categories(self):
-        """ Provides a list of available categories (not case sensitive)
-        :returns: list of categories (list of strings)
-        :rtype: list of strings
-        """
-        cats = self._list_available_regular_categories()
-        specs = self._list_available_special_categories()
-
-        cats.extend(specs)
-        return cats
-
-    def get_inactive_category_icon(self, category_name):
-        """ Provides the filename of the inactive icons of the provided
-        category
-        :param category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string
-        """
-        icon_path = self._get_inactive_reg_category_icon(category_name) or \
-            self._get_inactive_special_category_icon(category_name)
-
-        if not icon_path:
-            logger.warn(
-                "Cat {} not found, can't provide inactive icon path".format(
-                    category_name)
-            )
-        return icon_path
-
-    def _get_inactive_reg_category_icon(self, category_name):
-        """ Provides the filename of the active icons of the provided
-        regular category
-        :param category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if category_name not in self._inactive_category_icons:
-            return None
-        else:
-            return self._inactive_category_icons[category_name]
-
-    def get_active_category_icon(self, category_name):
-        """ Provides the filename of the active icons of the provided category
-        :param category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        icon_path = self._get_active_reg_category_icon(category_name) or \
-            self._get_active_special_category_icon(category_name)
-
-        if not icon_path:
-            logger.warn(
-                "Cat {} not found, can't provide active icon path".format(
-                    category_name)
-            )
-
-        return icon_path
-
-    def _get_active_reg_category_icon(self, category_name):
-        """ Provides the filename of the active icons of the provided active
-        category
-        :param category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if category_name not in self._active_category_icons:
-            return None
-        else:
-            return self._active_category_icons[category_name]
-
-    def get_selected_border(self, category_name):
-        """ Provides the filename of the selected border of the preview icon
-        :param category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        icon_path = self._get_selected_border_regular(category_name) or \
-            self._get_selected_border_special(category_name)
-        if not icon_path:
-            logger.warn(
-                "Cat {} not found, can't provide selected border path".format(
-                    category_name)
-            )
-
-        return icon_path
-
-    def _get_selected_border_regular(self, category_name):
-        """ Provides the filename of the selected border of the preview icon
-        :param category_name: Regular category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if category_name not in self._selected_borders:
-            return None
-        else:
-            return self._selected_borders[category_name]
-
-    def get_hover_border(self, category_name):
-        """ Provides the filename of the hover over border of the preview icon
-        :param category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        icon_path = self._get_hover_border_regular(category_name) or \
-            self._get_hover_border_special(category_name)
-
-        if not icon_path:
-            logger.warn(
-                "Cat {} wasn't found, can't provide hover border path".format(
-                    category_name)
-            )
-        return icon_path
-
-    def _get_hover_border_regular(self, category_name):
-        """ Provides the filename of the hover border of the preview icon
-        :param category_name: Regular category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if category_name not in self._hover_borders:
-            return None
-        else:
-            return self._hover_borders[category_name]
-
-    def _get_inactive_special_category_icon(self, special_category_name):
-        """ Provides the filename of the active icons of the provided category
-        :param special_category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if special_category_name not in self._inactive_special_category_icons:
-            return None
-        else:
-            return self._inactive_special_category_icons[special_category_name]
-
-    def _get_active_special_category_icon(self, special_category_name):
-        """ Provides the filename of the inactive icons of the provided category
-        :param special_category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if special_category_name not in self._active_special_category_icons:
-            return None
-        else:
-            return self._active_special_category_icons[special_category_name]
-
-    def _get_selected_border_special(self, special_category_name):
-        """ Provides the filename of the selected border of the preview icon
-        :param special_category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        self._border_special_cat
-        if special_category_name not in self._border_special_cat:
-            return None
-        else:
-            return self._border_special_cat[special_category_name]
-
-    def _get_hover_border_special(self, special_category_name):
-        """ Provides the filename of the hover border of the preview icon
-        :param special_category_name: Category name as a string
-        :returns: path to icon as string or None if category is not found
-        :rtype: string or None
-        """
-        if special_category_name not in self._hover_border_special_cat:
-            return None
-        else:
-            return self._border_special_cat[special_category_name]
-
-    def get_char_preview(self, char_name):
-        """ Provides the preview image for a given character
-        :param char_name: Character whose preview image will be returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the character is not available
-        :rtype: string or None
-        """
-        if char_name not in self._characters:
-            logger.warn(
-                "Char {} not in avail chars, can't return preview img".format(
-                    char_name))
-            return None
-        else:
-            return self._characters[char_name].get_preview_img()
-
-    def get_item_preview(self, item_name):
-        """ Provides the preview image for a given item
-        :param item_name: item whose preview image will be returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the item is not available
-        :rtype: string or None
-        """
-        prev_img = self._get_reg_item_preview(item_name) or \
-            self._get_environment_preview(item_name)
-
-        if not prev_img:
-            logger.warn(
-                "Item {} not in avail objs, can't return preview img".format(
-                    item_name)
-            )
-        return prev_img
-
-    def _get_reg_item_preview(self, item_name):
-        """ Provides the preview image for a given regular item
-        :param item_name: item whose preview image will be returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the item is not available
-        :rtype: string or None
-        """
-        if item_name not in self._objects:
-            return None
-        else:
-            return self._objects[item_name].get_preview_img()
-
-    def _get_environment_preview(self, environment_name):
-        """ Provides the preview image for a given environment
-        :param environment_name: environment whose preview image will be
-                                 returned
-        :returns: The absolute path to the preview image as a str or
-                  None if the environment is not available
-        :rtype: string or None
-        """
-        if environment_name not in self._environments:
-            return None
-        else:
-            return self._environments[environment_name].get_preview_img()
-
-    def is_unlocked(self, item_name):
-        """ Returns whether the item/environment is locked
-        :param item_name: item whose lock status will be returned
-        :returns: True iff it is unlocked
-        :rtype: Boolean or None
-        """
-        lock_state = self._is_unlocked_reg_item(item_name)
-
-        if lock_state is None:
-            lock_state = self._is_unlocked_env(item_name)
-
-        if lock_state is None:
-            logger.warn(
-                "Item {} not in avail objs/envs, can't return lock state".format(
-                    item_name)
-            )
-
-        return lock_state
-
-    def _is_unlocked_reg_item(self, item_name):
-        """ Get lock state of an item which belongs to a regular category
-        :param item_name: Item whose lock state will be returned
-        :retuns: Lock state or None if item doesn't belong to a regular category
-        :rtype: Boolean or None
-        """
-        if item_name not in self._objects:
-            return None
-        else:
-            return self._objects[item_name].is_unlocked()
-
-    def _is_unlocked_env(self, item_name):
-        """ Get lock state of an environment
-        :param item_name: env whose lock state will be returned
-        :retuns: Lock state or None if item isn't an environment
-        :rtype: Boolean or None
-        """
-        if item_name not in self._environments:
-            return None
-        else:
-            return self._environments[item_name].is_unlocked()
+                return method(self, *args, **kwargs)
+        return check_and_call
+    return decor
 
 
 class AvatarCreator(AvatarConfParser):
@@ -1115,14 +43,59 @@ class AvatarCreator(AvatarConfParser):
     Please note that when referring to items or characters, you may use their
     display name. However matching names to class objects is case sensitive.
     """
-    _sel_char = None
-    _sel_obj = {}
-    _sel_obj_per_cat = {}
-    _sel_objs_per_zindex = {}
-    _sel_env = None
 
     def __init__(self, conf_data):
-        AvatarConfParser.__init__(self, conf_data)
+        super(AvatarCreator, self).__init__(conf_data)
+        self._sel_char = None
+        self._sel_obj = {}
+        self._sel_obj_per_cat = {}
+        self._sel_objs_per_zindex = {}
+        self._sel_env = None
+
+    @has_selected_char("can't return z-index")
+    def get_zindex(self, cat_id):
+        return super(AvatarCreator, self).get_zindex(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't list category objects")
+    def list_avail_objs(self, cat_id):
+        return super(AvatarCreator, self).get_avail_objs(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get active category icon")
+    def get_active_category_icon(self, cat_id):
+        return super(AvatarCreator, self).get_active_category_icon(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get inactive category icon")
+    def get_inactive_category_icon(self, cat_id):
+        return super(AvatarCreator, self).get_inactive_category_icon(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get selected border")
+    def get_selected_border(self, cat_id):
+        return super(AvatarCreator, self).get_selected_border(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get hover border")
+    def get_hover_border(self, cat_id):
+        return super(AvatarCreator, self).get_hover_border(
+            self._sel_char.get_id(), cat_id)
+
+    @has_selected_char("can't get item preview")
+    def get_item_preview(self, item_id):
+        return super(AvatarCreator, self).get_item_preview(
+            self._sel_char.get_id(), item_id)
+
+    @has_selected_char("can't list available characters")
+    def list_available_categories(self):
+        return super(AvatarCreator, self).list_available_categories(
+            self._sel_char.get_id())
+
+    @has_selected_char("can't return lock status")
+    def is_unlocked(self, obj_name):
+        return super(AvatarCreator, self).is_unlocked(
+            self._sel_char.get_id(), obj_name)
 
     def char_select(self, char_name):
         """ Set a character as a base
@@ -1131,14 +104,17 @@ class AvatarCreator(AvatarConfParser):
         :rtype: Boolean
         """
         # Get the instance of the character
-        if char_name in self._characters:
-            self._sel_char = self._characters[char_name]
+        if char_name in self.list_available_chars():
+            self._sel_char = self.layer(char_name).character()
             return True
         else:
             logger.error(
                 'Character {} is not in the available char list'.format(
                     char_name))
             return False
+
+    def _sel_char_layer(self):
+        return self.layer(self._sel_char.get_id())
 
     def env_select(self, env_name):
         """ Set an environment for the background. If the environment given is
@@ -1147,19 +123,20 @@ class AvatarCreator(AvatarConfParser):
         :returns: True iff the environment exists (is available)
         :rtype: Boolean
         """
-        if env_name in self._environments:
-            if not self._environments[env_name].is_unlocked():
+        env_inst = self._sel_char_layer().item(env_name)
+        if env_inst.category().get_id() == self.env_label:
+            if not env_inst.is_unlocked():
                 logger.warn(
                     "Environment {} is locked, replacing with random".format(
                         env_name))
                 # Select randomly among the unlocked environments
                 self._sel_env = random.choice(
-                    [env for env in self._environments.itervalues()
+                    [env for env in env_inst.category().items()
                         if env.is_unlocked()])
             else:
-                self._sel_env = self._environments[env_name]
+                self._sel_env = env_inst
             logger.debug(
-                'Selected Environment: {}'.format(self._sel_env.name()))
+                'Selected Environment: {}'.format(self._sel_env.get_id()))
             return True
         else:
             logger.error(
@@ -1172,6 +149,7 @@ class AvatarCreator(AvatarConfParser):
         """
         self._sel_env = None
 
+    @has_selected_char("can't return path to asset")
     def selected_char_asset(self):
         """ Get the asset path for the image corresponding to the
         characted that has been selected
@@ -1179,11 +157,7 @@ class AvatarCreator(AvatarConfParser):
                   selected
         :rtype: string or None
         """
-        if self._sel_char is None:
-            logger.warn("Character not selected, can't return path to asset")
-            return None
-        else:
-            return self._sel_char.get_fname()
+        return self._sel_char.get_fname()
 
     def clear_sel_objs(self):
         """ Clear structures that contain items that have been selected
@@ -1191,6 +165,29 @@ class AvatarCreator(AvatarConfParser):
         self._sel_obj.clear()
         self._sel_obj_per_cat.clear()
         self._sel_objs_per_zindex.clear()
+
+    @staticmethod
+    def _replace_locked(item):
+        ret = item
+        if not item.is_unlocked():
+            logger.warn(
+                ('Item {} is locked, replacing with random from '
+                 'its category').format(item))
+            ret = random.choice(
+                [obj for obj in item.category().items() if obj.is_unlocked()]
+            )
+        return ret
+
+    def set_selected_items(self, obj_names):
+        for obj in obj_names:
+            if obj in self.list_available_chars():
+                self.char_select(obj)
+                break
+
+        obj_list = [it for it in obj_names
+                    if self._sel_char_layer().item(it)]
+
+        self.randomise_rest(obj_list)
 
     def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character. if any of the
@@ -1208,51 +205,47 @@ class AvatarCreator(AvatarConfParser):
         sel_env_flag = False
 
         for obj_name in obj_names:
-            if obj_name in self._objects:
-                # Deal with the object if it is a regular item
-                obj_instance = self._objects[obj_name]
-                # Check whether we have selected multiple items from the same
-                # category
-                if obj_instance.category() in self._sel_obj_per_cat:
-                    logger.error(
-                        'Multiple objects in category {}'.format(
-                            obj_instance.category()))
-                    return False
-                # Check whether it is unlocked
-                if not obj_instance.is_unlocked():
-                    logger.warn(
-                        'Item {} is locked, replacing with random from category {}'.format(
-                            obj_name, obj_instance.category()))
-                    obj_instance = random.choice(
-                        [obj
-                         for obj in self._object_per_cat[obj_instance.category()]
-                         if obj.is_unlocked()])
-
-                obj_cat = obj_instance.category()
-                self._sel_obj_per_cat[obj_cat] = obj_instance
-                self._sel_obj[obj_instance.name()] = obj_instance
-
-                # Create a dictionary with which objects belong to each z-index
-                obj_zindex = self.get_zindex(obj_cat)
-                if obj_zindex not in self._sel_objs_per_zindex:
-                    self._sel_objs_per_zindex[obj_zindex] = []
-
-                self._sel_objs_per_zindex[obj_zindex].append(obj_instance)
-            elif obj_name in self._environments:
-                # Deal with the object if it is an environment
-                if not sel_env_flag:
-                    self.env_select(obj_name)
-                    sel_env_flag = True
-                else:
-                    msg = "Provided multiple environments to select {}, {}".format(self._sel_env.name(), obj_name)
-                    logger.error(msg)
-                    return False
-            else:
-                # if it is neither show error message
+            if not self._sel_char_layer().item(obj_name):
                 logger.error(
-                    'Object {} not in available obj or env list'.format(
-                        obj_name))
+                    'Object "{}" not available for character {}'.format(
+                        obj_name, self._sel_char))
                 return False
+            else:
+                obj_inst = self._sel_char_layer().item(obj_name)
+                obj_inst = self._replace_locked(obj_inst)
+                if obj_inst.category().get_id() != self.env_label and \
+                        obj_inst.category().get_id() != self.char_label:
+                    # Check whether we have selected multiple items from
+                    # the same category
+                    if obj_inst.category().get_id() in self._sel_obj_per_cat:
+                        logger.error(
+                            'Multiple objects in category {}'.format(
+                                obj_inst.category()))
+                        return False
+
+                    obj_cat = obj_inst.category().get_id()
+                    self._sel_obj_per_cat[obj_cat] = obj_inst
+                    self._sel_obj[obj_inst.get_id()] = obj_inst
+
+                    # Create a dictionary with which objects belong to
+                    # each z-index
+                    obj_zindex = obj_inst.category().get_zindex()
+                    if obj_zindex not in self._sel_objs_per_zindex:
+                        self._sel_objs_per_zindex[obj_zindex] = []
+
+                    self._sel_objs_per_zindex[obj_zindex].append(obj_inst)
+
+                elif obj_inst.category().get_id() == self.env_label:
+                    # Deal with the object if it is an environment
+                    if not sel_env_flag:
+                        self.env_select(obj_name)
+                        sel_env_flag = True
+                    else:
+                        logger.error(
+                            ("Provided multiple environments to select "
+                             "{}, {}").format(
+                                self._sel_env.get_id(), obj_name))
+                        return False
         return True
 
     def randomise_rest(self, obj_names, empty_cats=False):
@@ -1270,29 +263,26 @@ class AvatarCreator(AvatarConfParser):
         if not rc:
             return False
         # For categories where we haven't specified, select randomly
-        for cat in self._categories.difference(
-                set(self._sel_obj_per_cat.keys())):
+        avail_cats = (cat.get_id()
+                      for cat in self._sel_char_layer().get_categories()
+                      if cat.get_id() != self.char_label)
+        for cat in set(avail_cats).difference(
+                    set(self._sel_obj_per_cat.keys())):
             # Need to make sure that we can handle categories that contain no
             # items
             try:
-                available_objs = [obj for obj in self._object_per_cat[cat]
+                available_objs = [obj
+                                  for obj in self._sel_char_layer().category(cat).items()
                                   if obj.is_unlocked()]
                 if empty_cats:
                     available_objs.append(None)
                 choice = random.choice(available_objs)
                 if choice:
-                    random_item_names.append(choice.name())
+                    random_item_names.append(choice.get_id())
             except KeyError:
                 log_msg = "Category {} doesn't contain any items".format(cat)
                 logger.debug(log_msg)
                 continue
-
-        if not self._sel_env:
-            available_envs = [env.name()
-                              for env in self._environments.itervalues()
-                              if env.is_unlocked()]
-            choice_env = random.choice(available_envs)
-            random_item_names.append(choice_env)
 
         rc = self.obj_select(random_item_names, clear_existing=False)
 
@@ -1306,8 +296,13 @@ class AvatarCreator(AvatarConfParser):
         :rtype: List of strings
         """
         self.randomise_rest('')
-
         return self.selected_items_per_cat()
+
+    def selected_char(self):
+        if self._sel_char:
+            return self._sel_char.get_id()
+        else:
+            return ""
 
     def selected_items(self):
         """ Returns a list of the items that have been selected
@@ -1317,7 +312,7 @@ class AvatarCreator(AvatarConfParser):
         ret = self._sel_obj.keys()
         # if there is an env selected, append it to the list to be returned
         if self._sel_env:
-            ret.append(self._sel_env.name())
+            ret.append(self._sel_env.get_id())
         return ret
 
     def selected_items_per_cat(self):
@@ -1326,9 +321,9 @@ class AvatarCreator(AvatarConfParser):
         :returns: A dict with [categ_labels] -> item_selected
         :rtype: dict
         """
-        ret = {cat: item.name()
+        ret = {cat: item.get_id()
                for cat, item in self._sel_obj_per_cat.iteritems()}
-        ret[self.env_label] = self._sel_env.name()
+        ret[self.env_label] = self._sel_env.get_id()
         return ret
 
     def create_avatar(self, file_name=''):
@@ -1413,7 +408,8 @@ class AvatarCreator(AvatarConfParser):
         rc_c = self.create_circular_assets(fname_plain, fname_circ)
         if not rc_c:
             logger.error(
-                "Couldn't create circular assets, aborting auxiliary asset generation")
+                ("Couldn't create circular assets, aborting auxiliary "
+                 "asset generation"))
             return False
 
         # Environment + avatar
@@ -1421,7 +417,8 @@ class AvatarCreator(AvatarConfParser):
         rc_env = self._sel_env.save_image(fname_env)
         if not rc_env:
             logger.error(
-                "Couldn't create environment asset, aborting auxiliary asset generation")
+                ("Couldn't create environment asset, aborting auxiliary "
+                 "asset generation"))
             return False
         # Shifted environment
         fname_env_23 = append_suffix_to_fname(file_name, '_inc_env_page2')
@@ -1430,7 +427,8 @@ class AvatarCreator(AvatarConfParser):
                                                    reload_img=True)
         if not rc_23:
             logger.error(
-                "Couldn't create shifted environment asset, aborting auxiliary asset generation")
+                ("Couldn't create shifted environment asset, aborting "
+                 "auxiliary asset generation"))
             return False
 
         return True
@@ -1479,8 +477,8 @@ class AvatarCreator(AvatarConfParser):
             # When saving a new character in the profile, ensure that
             # the right version is used to sync with the API
             save_profile_variable('version', 2)
-            set_avatar(self._sel_char.name(), items_no_env)
-            set_environment(self._sel_env.name(), sync=True)
+            set_avatar(self._sel_char.get_id(), items_no_env)
+            set_environment(self._sel_env.get_id(), sync=True)
 
         return True
 
@@ -1509,8 +507,8 @@ class AvatarCreator(AvatarConfParser):
             # ensure that environments is not present in this dict
             items = self.selected_items_per_cat()
             items.pop(self.env_label, None)
-            obj_av['avatar'] = [self._sel_char.name(), items]
-            obj_av['environment'] = self._sel_env.name()
+            obj_av['avatar'] = [self._sel_char.get_id(), items]
+            obj_av['environment'] = self._sel_env.get_id()
             obj_av['date_created'] = get_date_now()
             dump(obj_av, fp)
             created_file = True
@@ -1541,8 +539,8 @@ class AvatarCreator(AvatarConfParser):
                 char_ex, items_ex = log_ex['avatar']
                 env_ex = log_ex['environment']
                 # First check if environment and character match
-                if char_ex == self._sel_char.name() and \
-                   env_ex == self._sel_env.name():
+                if char_ex == self._sel_char.get_id() and \
+                   env_ex == self._sel_env.get_id():
                     items_now = self.selected_items_per_cat()
                     # Check if the no of catefories match
                     if len(items_now) == len(items_ex):
@@ -1650,12 +648,123 @@ def append_suffix_to_fname(filename, suffix):
     return fname + suffix + exten
 
 
-def get_avatar_conf():
+def get_avatar_conf(aux_files=[]):
     conf = None
+
+    cm = ContentManager.from_local()
+    for k in cm.list_local_objects(spec='kano-character'):
+        content_dir.register_path(
+            'CHARACTER_DIR', k.get_data('character_base').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('character_thumb').get_dir())
+        content_dir.register_path(
+            'ACTIVE_CATEGORY_ICONS', k.get_data('active_cat_icon').get_dir())
+        content_dir.register_path(
+            'INACTIVE_CATEGORY_ICONS',
+            k.get_data('inactive_cat_icon').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('previews').get_dir())
+        content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        aux_files.append(k.get_data('').get_content()[0])
+
+    for k in cm.list_local_objects(spec='kano-character-category'):
+        content_dir.register_path(
+            'ACTIVE_CATEGORY_ICONS', k.get_data('active_cat_icon').get_dir())
+        content_dir.register_path(
+            'INACTIVE_CATEGORY_ICONS',
+            k.get_data('inactive_cat_icon').get_dir())
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('previews').get_dir())
+        content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        aux_files.append(k.get_data('').get_content()[0])
+
+    for k in cm.list_local_objects(spec='kano-character-items'):
+        content_dir.register_path(
+            'PREVIEW_ICONS', k.get_data('previews').get_dir())
+        content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        aux_files.append(k.get_data('').get_content()[0])
+
     with open(AVATAR_CONF_FILE) as f:
-        conf = yaml.load(f)
+        conf = load(f)
 
     if conf is None:
-        logger.error('Conf file {} not found'.format(AVATAR_CONF_FILE))
+        logger.error('Default Conf file {} not found'.format(AVATAR_CONF_FILE))
+    else:
+        if not is_valid_configuration(conf):
+            logger.error('Default configuration file is not in valid format')
+            return dict()
 
+    if aux_files:
+        logger.debug(
+            'Auxiliary configuration files to be used: {}'.format(aux_files))
+
+        for con_fname in aux_files:
+            if os.path.isfile(con_fname):
+                # Attempt to decode as JSON
+                try:
+                    f = open(con_fname)
+                except IOError as e:
+                    logger.error(
+                        'Error opening the aux conf file {}'.format(e))
+                    continue
+                else:
+                    with f:
+                        try:
+                            aux_conf = load(f)
+                        except ValueError as e:
+                            logger.info('Conf file not a JSON {}'.format(e))
+                            continue
+
+                if is_valid_configuration(aux_conf):
+                    if not merge_conf_files(conf, aux_conf):
+                        logger.error(
+                            "Can't integrate conf file {}".format(con_fname))
+                else:
+                    logger.error(
+                        "Parsed auxiliary film doesn't contain valid conf")
+            else:
+                logger.warn(
+                    "Auxiliary conf file {} doen't exist".format(con_fname))
     return conf
+
+
+def is_valid_configuration(conf_struct):
+    allowed_conf = set(
+        ('special_categories',
+         'objects',
+         'categories',
+         'characters')
+    )
+    if set(conf_struct.iterkeys()).issubset(allowed_conf):
+        pass
+    else:
+        logger.error('Conf structure contains invalid objects')
+        return False
+    return True
+
+
+def merge_conf_files(conf_base, conf_added):
+    """
+    """
+    if not is_valid_configuration(conf_base) or \
+            not is_valid_configuration(conf_added):
+        return None
+    else:
+        for cat in conf_added.iterkeys():
+            if cat in conf_base:
+                if type(conf_base[cat]) != type(conf_added[cat]):
+                    logger.error(
+                        'base and auxiliary configuration types mismatch')
+                    return None
+                else:
+                    if type(conf_base[cat]) == list:
+                        conf_base[cat] += conf_added[cat]
+                    elif type(conf_base[cat]) == dict:
+                        conf_base[cat].update(conf_added[cat])
+                    else:
+                        logger.warning(
+                            "Can't handle type {}".format(conf_base[cat]))
+                        return None
+            else:
+                conf_base[cat] = conf_added[cat]
+    return True

@@ -3,7 +3,7 @@
 # profile.py
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 import os
@@ -70,6 +70,15 @@ def save_profile_variable(variable, value):
     profile[variable] = value
     save_profile(profile)
 
+category_conversion = {
+    'Belts': 'judoka-belts',
+    'Suits': 'judoka-suits',
+    'Faces': 'judoka-faces',
+    'Hair': 'judoka-hair',
+    'Stickers': 'judoka-stickers',
+    'Skins': 'judoka-skins'
+}
+
 
 def get_avatar(sync=True):
     """ Returns the information about the avatar for the specific profile. If
@@ -86,6 +95,12 @@ def get_avatar(sync=True):
     if 'version' in profile and profile['version'] == 2 and \
             'avatar' in profile:
         subcat, item = profile['avatar']
+
+        if subcat == 'Judoka_Base':
+            subcat = 'judoka'
+        for cat in category_conversion:
+            if cat in item:
+                item[category_conversion[cat]] = item.pop(cat)
     else:
         # Attempt to sync to retrieve the avatar from world
         if sync:
@@ -100,14 +115,14 @@ def get_avatar(sync=True):
 
 
 def get_default_avatar():
-    subcat = 'Judoka_Base'
+    subcat = 'judoka'
     item = {
-        'Belts': 'Belt_Orange',
-        'Suits': 'Suit_White',
-        'Faces': 'Face_Happy',
-        'Hair': 'Hair_Black',
-        'Stickers': 'Sticker_Code',
-        'Skins': 'Skin_Orange',
+        'judoka-belts': 'Belt_Orange',
+        'judoka-suits': 'Suit_White',
+        'judoka-faces': 'Face_Happy',
+        'judoka-hair': 'Hair_Black',
+        'judoka-stickers': 'Sticker_Code',
+        'judoka-skins': 'Skin_Orange',
     }
     return subcat, item
 

@@ -3,7 +3,7 @@
 # PopUpItemMenu.py
 #
 # Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 from gi.repository import Gtk, GObject
@@ -18,11 +18,13 @@ class PopUpItemMenu(SelectMenu):
     '''
 
     __gsignals__ = {
-        'pop_up_item_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'pop_up_item_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        'character_selected': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
     def __init__(self, category, avatar_parser):
-        logger.debug("Initialising pop up menu with category {}".format(category))
+        logger.debug(
+            "Initialising pop up menu with category {}".format(category))
 
         self.top_bar_height = 50
 
@@ -32,11 +34,14 @@ class PopUpItemMenu(SelectMenu):
 
         self._category = category
         self._parser = avatar_parser
-        self._signal_name = 'pop_up_item_selected'
+        if self._category == self._parser.char_label:
+            self._signal_name = 'character_selected'
+        else:
+            self._signal_name = 'pop_up_item_selected'
         self._border_path = self._parser.get_selected_border(self._category)
         self._hover_path = self._parser.get_hover_border(self._category)
 
-        obj_names = self._parser.get_avail_objs(self._category)
+        obj_names = self._parser.list_avail_objs(self._category)
         SelectMenu.__init__(self, obj_names, self._signal_name)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -88,7 +93,7 @@ class PopUpItemMenu(SelectMenu):
         row = 0
         column = 0
 
-        obj_names = self._parser.get_avail_objs(self._category)
+        obj_names = self._parser.list_avail_objs(self._category)
 
         for name in obj_names:
             button = self._create_button(name)

@@ -80,6 +80,10 @@ class Menu(Gtk.Fixed):
         self._parser.char_select(char_id)
         self._cat_menu.set_new_categories()
         self._initialise_pop_up_menus()
+        for cat in self.menus:
+            if cat != self._parser.char_label:
+                self.menus[cat]["pop_up"].hide()
+        self.menus[self._parser.char_label]["pop_up"].show()
         self._cat_menu.show_all()
         if randomise:
             self.emit('randomise_all')

@@ -41,7 +41,8 @@ class Menu(Gtk.Fixed):
 
         self.cat_position_x = 0
         self.cat_position_y = 0
-        self.pop_up_pos_x = self.cat_position_x + self._cat_menu.item_width + 5
+        self.pop_up_pos_x = (self.cat_position_x + self._cat_menu.item_width +
+                             5 + 20)
         self.pop_up_pos_y = self.cat_position_y
         self.put(self._cat_menu, 0, 0)
 

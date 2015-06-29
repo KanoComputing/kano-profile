@@ -97,6 +97,11 @@ class AvatarCreator(AvatarConfParser):
         return super(AvatarCreator, self).is_unlocked(
             self._sel_char.get_id(), obj_name)
 
+    @has_selected_char("can't return display name")
+    def get_category_display_name(self, cat_id):
+        return super(AvatarCreator, self).get_category_display_name(
+            self._sel_char.get_id(), cat_id)
+
     def char_select(self, char_name):
         """ Set a character as a base
         :param char_name: Character name

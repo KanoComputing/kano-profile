@@ -303,6 +303,16 @@ class AvatarConfParser(object):
             ret = char.category(category_name).get_active_icon()
         return ret
 
+    def get_category_display_name(self, character, category_name):
+        ret = ''
+        char = self.layer(character)
+        if not char:
+            logger.error(("Character '{}' isn't availabble in '{}', can't "
+                          "return display_name").format(character, self))
+        else:
+            ret = char.category(category_name).name()
+        return ret
+
     def get_selected_border(self, character, category_name):
         """ Provides the filename of the selected border of the preview icon
         :param category_name: Category name as a string

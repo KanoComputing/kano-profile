@@ -41,8 +41,9 @@ class Menu(Gtk.Fixed):
 
         self.cat_position_x = 0
         self.cat_position_y = 0
+        # Added an offset of 18 px to support the scrollbar category menu
         self.pop_up_pos_x = (self.cat_position_x + self._cat_menu.item_width +
-                             5 + 20)
+                             5 + 18)
         self.pop_up_pos_y = self.cat_position_y
         self.put(self._cat_menu, 0, 0)
 

@@ -55,7 +55,7 @@ class PopUpItemMenu(SelectMenu):
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         sw.apply_styling_to_widget()
         sw.add(self._grid)
-        sw.set_size_request(-1, 294)
+        sw.set_size_request(152, 294)
 
         # Labels the category
         top_bar = self._create_top_bar()

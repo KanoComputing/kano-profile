@@ -41,7 +41,9 @@ class Menu(Gtk.Fixed):
 
         self.cat_position_x = 0
         self.cat_position_y = 0
-        self.pop_up_pos_x = self.cat_position_x + self._cat_menu.item_width + 5
+        # Added an offset of 18 px to support the scrollbar category menu
+        self.pop_up_pos_x = (self.cat_position_x + self._cat_menu.item_width +
+                             5 + 18)
         self.pop_up_pos_y = self.cat_position_y
         self.put(self._cat_menu, 0, 0)
 
@@ -80,6 +82,10 @@ class Menu(Gtk.Fixed):
         self._parser.char_select(char_id)
         self._cat_menu.set_new_categories()
         self._initialise_pop_up_menus()
+        for cat in self.menus:
+            if cat != self._parser.char_label:
+                self.menus[cat]["pop_up"].hide()
+        self.menus[self._parser.char_label]["pop_up"].show()
         self._cat_menu.show_all()
         if randomise:
             self.emit('randomise_all')

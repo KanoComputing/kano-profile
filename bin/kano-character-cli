@@ -64,6 +64,9 @@ def main(args):
                 print avail_conf.get_avail_objs(args['<character_id>'], cat)
         elif args['cat']:
             print avail_conf.list_available_categories(args['<character_id>'])
+        elif args['env']:
+            print avail_conf.get_avail_objs(
+                avail_conf.list_available_chars()[0], avail_conf.env_label)
         return 0
     elif args['--create']:
         char_creator = AvatarCreator(configuration)

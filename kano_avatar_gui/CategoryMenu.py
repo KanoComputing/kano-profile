@@ -9,6 +9,7 @@
 from gi.repository import Gtk, GObject
 from kano_avatar_gui.SelectMenu import SelectMenu
 from kano.gtk3.cursor import attach_cursor_events
+from kano.gtk3.scrolled_window import ScrolledWindow
 
 
 class CategoryMenu(SelectMenu):
@@ -33,8 +34,17 @@ class CategoryMenu(SelectMenu):
         self.categories = self._parser.list_available_categories()
         SelectMenu.__init__(self, self.categories, self._signal_name)
 
+        # Add the scrollbar for the category menu
+        sw = ScrolledWindow()
+        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        # Set the scrollbar to the left
+        sw.set_placement(Gtk.CornerType.TOP_RIGHT)
+        sw.apply_styling_to_widget()
+        sw.set_size_request(-1, 364)
+        self.add(sw)
+
         self._vertbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vertbox)
+        sw.add(self._vertbox)
 
         # The menu is one item by 7 items
         self.set_size_request(self.item_width, 7 * self.item_height)

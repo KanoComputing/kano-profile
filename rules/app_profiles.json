@@ -39,7 +39,7 @@
   },
   "linux-story": {
     "cmd": "/usr/bin/linux-story-gui {fullpath}",
-    "max-level": 16,
+    "max-level": 31,
     "icon": "linux-story.png"
   },
   "kano-tracker": {

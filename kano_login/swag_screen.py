@@ -62,7 +62,7 @@ class SwagScreen(Template):
 
         # Hide the cross button - this feels like it shouldn't be necessary
         # but the self.set_decorated(False) isn't working...
-        self.win.headerbar.cross_button.hide()
+        self.win.headerbar.close_button.hide()
 
     def next_screen(self, widget, event):
         # If enter key is pressed or mouse button is clicked

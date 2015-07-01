@@ -25,7 +25,7 @@ class SwagScreen(Template):
         # Set text depending on login
         login = is_registered()
         if login:
-            header = _("Profile created!")
+            header = _("Profile activated!")
             subheader = _(
                 u"Now you can share stuff, build your character,"
                 u"and connect with friends! You've earned some "
@@ -59,6 +59,10 @@ class SwagScreen(Template):
         self.kano_button.connect("key_release_event", self.next_screen)
         self.kano_button.grab_focus()
         self.win.show_all()
+
+        # Hide the cross button - this feels like it shouldn't be necessary
+        # but the self.set_decorated(False) isn't working...
+        self.win.headerbar.cross_button.hide()
 
     def next_screen(self, widget, event):
         # If enter key is pressed or mouse button is clicked

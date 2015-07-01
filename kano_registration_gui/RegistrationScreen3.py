@@ -99,7 +99,6 @@ class RegistrationScreen3(Gtk.Box):
 
         self.register_user_with_gui()
 
-
     def register_user_with_gui(self):
         self.data_screen.cache_emails()
         self.data_screen.cache_marketing_choice()
@@ -170,7 +169,7 @@ class RegistrationScreen3(Gtk.Box):
 
             return_value = "SUCCEED"
             self.create_dialog(
-                title=_("Profile created!"),
+                title=_("Profile activated!"),
                 description=_("Now you can share stuff, build your character, "
                               "and connect with friends.")
             )

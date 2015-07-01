@@ -112,13 +112,13 @@ class HeaderBar(Gtk.Box):
         Gtk.Box.__init__(self)
         self.win = win
 
-        close_button = Gtk.Button()
+        self.close_button = Gtk.Button()
         cross_icon = icons.get_ui_icon("cross")
-        close_button.set_image(cross_icon)
-        close_button.connect("clicked", self.close_window)
-        close_button.get_style_context().add_class("close_button")
-        attach_cursor_events(close_button)
-        self.pack_end(close_button, False, False, 0)
+        self.close_button.set_image(cross_icon)
+        self.close_button.connect("clicked", self.close_window)
+        self.close_button.get_style_context().add_class("close_button")
+        attach_cursor_events(self.close_button)
+        self.pack_end(self.close_button, False, False, 0)
 
     def close_window(self, widget=None):
         close_window(self.win)

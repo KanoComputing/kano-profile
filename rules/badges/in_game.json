@@ -53,6 +53,6 @@
     "desc_unlocked": "After her family left her alone, you took Eleanor under your wing, and left her with someone who can take care of her. You are Eleanor's saviour.",
     "operation": "each_greater",
     "targets": [["linux-story", "level", 30]],
-    "title": "Eleanor's saviour"
+    "title": "Eleanor's Saviour"
   }
 }

@@ -60,8 +60,7 @@ class SwagScreen(Template):
         self.kano_button.grab_focus()
         self.win.show_all()
 
-        # Hide the cross button - this feels like it shouldn't be necessary
-        # but the self.set_decorated(False) isn't working...
+        # Force the cross button to hide
         self.win.headerbar.close_button.hide()
 
     def next_screen(self, widget, event):

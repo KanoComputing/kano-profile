@@ -46,5 +46,13 @@
     "operation": "each_greater",
     "targets": [["linux-story", "level", 14]],
     "title": "Folderton Hero"
+  },
+  "saving_eleanor": {
+    "bg_color": "FCE683",
+    "desc_locked": "Complete the thirtieth challenge in Terminal Quest to unlock this badge.",
+    "desc_unlocked": "After her family left her alone, you took Eleanor under your wing, and left her with someone who can take care of her. Well done for saving Eleanor.",
+    "operation": "each_greater",
+    "targets": [["linux-story", "level", 31]],
+    "title": "Saving Eleanor"
   }
 }

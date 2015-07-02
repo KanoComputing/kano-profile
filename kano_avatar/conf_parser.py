@@ -79,14 +79,14 @@ class AvatarLayer(object):
                 break
         return ret
 
-    def add_item(self, cat, item_obj):
-        cat = self.category(cat)
+    def add_item(self, cat_name, item_obj):
+        cat = self.category(cat_name)
         if cat:
             cat.add_item(item_obj)
         else:
             logger.warn(
                 'Category "{}" not available in [{}], skipping "{}"'.format(
-                    cat, self, item_obj))
+                    cat_name, self, item_obj))
 
     def get_categories(self):
         category_list = []

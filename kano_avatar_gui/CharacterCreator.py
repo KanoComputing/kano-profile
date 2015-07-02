@@ -88,7 +88,8 @@ class CharacterCreator(Gtk.EventBox):
         random_button.get_style_context().add_class("random_button")
         random_button.set_size_request(width, height)
         random_button.connect("clicked", self._randomise_avatar_wrapper)
-        random_button.connect("enter-notify-event", self._set_random_orange_icon)
+        random_button.connect("enter-notify-event",
+                              self._set_random_orange_icon)
         random_button.connect("leave-notify-event", self._set_random_grey_icon)
         attach_cursor_events(random_button)
 
@@ -160,7 +161,8 @@ class CharacterCreator(Gtk.EventBox):
         # change the character as it's being saved.
         self.disable_buttons()
 
-        self._menu.saved_selected_list = self.avatar_cr.selected_items_per_cat()
+        self._menu.saved_selected_list = \
+            self.avatar_cr.selected_items_per_cat()
         saved_path = self.get_avatar_save_path()
         self.avatar_cr.save_final_assets(saved_path)
         logger.debug("Saving generated avatar image to {}".format(saved_path))

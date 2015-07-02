@@ -163,6 +163,8 @@ class CharacterCreator(Gtk.EventBox):
 
         self._menu.saved_selected_list = \
             self.avatar_cr.selected_items_per_cat()
+        self._menu.saved_selected_list[self.avatar_cr.char_label] = \
+            self.avatar_cr.selected_char()
         saved_path = self.get_avatar_save_path()
         self.avatar_cr.save_final_assets(saved_path)
         logger.debug("Saving generated avatar image to {}".format(saved_path))

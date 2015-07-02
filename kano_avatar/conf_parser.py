@@ -80,7 +80,13 @@ class AvatarLayer(object):
         return ret
 
     def add_item(self, cat, item_obj):
-        self.category(cat).add_item(item_obj)
+        cat = self.category(cat)
+        if cat:
+            cat.add_item(item_obj)
+        else:
+            logger.warn(
+                'Category "{}" not available in [{}], skipping "{}"'.format(
+                    cat, self, item_obj))
 
     def get_categories(self):
         category_list = []
@@ -170,7 +176,13 @@ class AvatarConfParser(object):
         """
         for cat in categories:
             cat_obj, char_name = AvatarCategory.from_data(cat)
-            self.layer(char_name).add_category(cat_obj)
+            char_layer = self.layer(char_name)
+            if char_layer:
+                char_layer.add_category(cat_obj)
+            else:
+                logger.warn(
+                    ('Character layer "{}" missing, skipping category '
+                     '"{}"').format(char_name, cat_obj.get_id()))
 
     def _populate_object_structures(self, conf_data):
         """ Populates internal structures related to items
@@ -178,7 +190,13 @@ class AvatarConfParser(object):
         """
         for obj in conf_data[self.objects_label]:
             obj, char, cat = AvatarAccessory.from_data(obj)
-            self.layer(char).add_item(cat, obj)
+            char_layer = self.layer(char)
+            if char_layer:
+                char_layer.add_item(cat, obj)
+            else:
+                logger.warn(
+                    ('Character layer "{}" missing, skipping item '
+                     '"{}"').format(char, obj.get_id()))
 
     def _populate_layer_structures(self, conf_data, char, env):
         """ Populates internal structures related to characters

@@ -12,6 +12,8 @@ from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano_profile_gui.paths import media_dir
 from kano.logging import logger
 
+from kano_profile.apps import load_app_state_variable
+
 
 class CharacterDisplay(Gtk.EventBox):
     '''Show the character created by the user, progress bar,
@@ -61,11 +63,25 @@ class CharacterDisplay(Gtk.EventBox):
         self.fixed = Gtk.Fixed()
         self.fixed.put(image, 0, 0)
         self.fixed.put(launch_char_creator_btn, 30, 30)
+        self.put_pet_on_char_creator()
 
         self._win.pack_in_main_content(self.fixed)
         self._pack_progress_bar()
 
         self._win.show_all()
+
+    def put_pet_on_char_creator(self):
+        # Check for pet.  If pet has been hatched, then show on the character
+        # creator
+        egg_hatched = load_app_state_variable("kano-egg", "egg_level") == 2
+        if egg_hatched:
+            hatched_path = os.path.join(
+                os.path.expanduser("~"),
+                "content/hatched.png"
+            )
+            pet_image = Gtk.Image.new_from_file(hatched_path)
+            pet_image.set_size_request(100, 100)
+            self.fixed.put(pet_image, 30, 30)
 
     def set_orange_cog(self, widget, event):
         icon_filename = os.path.join(media_dir, "images/icons/edit-active.png")

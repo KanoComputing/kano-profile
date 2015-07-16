@@ -6,7 +6,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 import os
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 from kano_profile_gui.progress_bar import ProgressBar
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano_profile_gui.paths import media_dir
@@ -73,15 +73,15 @@ class CharacterDisplay(Gtk.EventBox):
     def put_pet_on_char_creator(self):
         # Check for pet.  If pet has been hatched, then show on the character
         # creator
-        egg_hatched = load_app_state_variable("kano-egg", "egg_level") == 2
+        egg_hatched = load_app_state_variable("kano-egg", "level") == 2
         if egg_hatched:
             hatched_path = os.path.join(
                 os.path.expanduser("~"),
                 "content/hatched.png"
             )
-            pet_image = Gtk.Image.new_from_file(hatched_path)
-            pet_image.set_size_request(100, 100)
-            self.fixed.put(pet_image, 30, 30)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(hatched_path, -1, 200)
+            pet_image = Gtk.Image.new_from_pixbuf(pixbuf)
+            self.fixed.put(pet_image, 390, 200)
 
     def set_orange_cog(self, widget, event):
         icon_filename = os.path.join(media_dir, "images/icons/edit-active.png")

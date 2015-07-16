@@ -1,0 +1,27 @@
+"""
+Modify the egg stats and display the status.
+
+Usage:
+  kano-egg save <level> [-n | --notification]
+  kano-egg load
+  kano-egg [-n | --notification]
+
+Options:
+   -h, --help       Show this message.
+"""
+
+import docopt
+from kano_profile_gui.MissionScreen import MissionScreen
+
+if __name__ == "__main__":
+    args = docopt.docopt(__doc__)
+
+    save = args['save']
+    load = args['load']
+    notification = args['--notification']
+
+    if save:
+        level_number = args['<level>']
+        MissionScreen.save_egg_level(level_number)
+    elif load:
+        return MissionScreen.read_egg_level()

@@ -1,7 +1,9 @@
 
+
 import os
 from gi.repository import Gtk, GdkPixbuf
 from kano_profile.apps import load_app_state_variable, save_app_state_variable
+from kano.notifications import display_generic_notification
 
 
 class MissionScreen(Gtk.Box):
@@ -35,7 +37,37 @@ class MissionScreen(Gtk.Box):
 
     @staticmethod
     def read_egg_stage():
-        return load_app_state_variable("kano-egg", "egg_stage")
+        return load_app_state_variable("kano-egg", "level")
+
+    @staticmethod
+    def save_egg_level(stage, level):
+        save_app_state_variable("kano-egg", "level", level)
+        MissionScreen.show_egg_notification()
+
+    @staticmethod
+    def show_egg_notification():
+        stage = MissionScreen.read_egg_stage()
+
+        if stage in [1, 2]:
+            # Needs to be 280 by 170
+            stage_info = {
+                1: {
+                    "title": "The egg is cracking!",
+                    "byline": "",
+                    "img_path": MissionScreen.cracked_egg_path
+                },
+                2: {
+                    "title": "The egg has hatched!",
+                    "byline": "You can now see your kreature next to your kharacter!",
+                    "img_path": MissionScreen.hatched_path
+                }
+            }
+
+            title = stage_info[stage]["title"]
+            byline = stage_info[stage]["byline"]
+            path = stage_info[stage]["img_path"]
+
+            display_generic_notification(title, byline, path)
 
     def show_stage(self, stage):
 
@@ -43,7 +75,7 @@ class MissionScreen(Gtk.Box):
         # stage 1 is cracked
         if not stage:
             if stage is None:
-                save_app_state_variable("kano-egg", "egg_stage", 0)
+                save_app_state_variable("kano-egg", "level", 0)
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.egg_path, -1, 300)
             self.title.set_text("It will only hatch if you're more active")
         elif stage == 1:

@@ -71,9 +71,9 @@ class CharacterDisplay(Gtk.EventBox):
         self._win.show_all()
 
     def put_pet_on_char_creator(self):
-        # Check for pet.  If pet has been hatched, then show on the character
+        # Check for pet. If pet has been hatched, then show on the character
         # creator
-        egg_hatched = load_app_state_variable("kano-egg", "level") == 2
+        egg_hatched = (load_app_state_variable("kano-egg", "level") == "2")
         if egg_hatched:
             hatched_path = os.path.join(
                 os.path.expanduser("~"),

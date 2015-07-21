@@ -40,13 +40,12 @@ class MissionScreen(Gtk.Box):
         return load_app_state_variable("kano-egg", "level")
 
     @staticmethod
-    def save_egg_level(stage, level):
+    def save_egg_level(level):
         save_app_state_variable("kano-egg", "level", level)
-        MissionScreen.show_egg_notification()
 
     @staticmethod
     def show_egg_notification():
-        stage = MissionScreen.read_egg_stage()
+        stage = int(MissionScreen.read_egg_stage())
 
         if stage in [1, 2]:
             # Needs to be 280 by 170
@@ -78,10 +77,10 @@ class MissionScreen(Gtk.Box):
                 save_app_state_variable("kano-egg", "level", 0)
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.egg_path, -1, 300)
             self.title.set_text("It will only hatch if you're more active")
-        elif stage == 1:
+        elif stage == "1":
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.cracked_egg_path, -1, 300)
             self.title.set_text("Ooh! It's making noises!")
-        elif stage == 2:
+        elif stage == "2":
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.hatched_path, -1, 300)
             self.title.set_text("Congratulations, it's hatched!")
 

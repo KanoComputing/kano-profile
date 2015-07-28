@@ -82,7 +82,13 @@ class BirthdayWidget(Gtk.Box):
     def validate(self, *dummy):
         day = self._str_to_int(self._day_entry.get_text())
         month = self._str_to_int(self._month_entry.get_text())
-        year = self._str_to_int(self._year_entry.get_text())
+
+        # Add extra validation to the year entry - if there are leading
+        # zeros and the year is not 00, return early.
+        year_text = self._year_entry.get_text()
+        if year_text.startswith('0') and not len(year_text) == 2:
+            return self._set_validation_msg(_('year out of range'), False)
+        year = self._str_to_int(year_text)
 
         if self.FIELD_INCOMPLETE in [day, month, year]:
             return self._set_validation_msg('', False)

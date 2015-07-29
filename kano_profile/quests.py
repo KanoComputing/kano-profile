@@ -56,9 +56,10 @@ class Quests(object):
             Currently, active quests are those ones that have all their
             dependencies completed, but haven't been completed themselves.
         """
+
         active = []
         for quest in self._quests:
-            if quest.is_active:
+            if quest.is_active():
                 active.append(quest)
 
         return active
@@ -98,13 +99,31 @@ class Step(object):
         pass
 
 
+class Reward(object):
+    pass
+
+
+class Badge(Reward):
+    pass
+
+
 class Quest(object):
     """
         A base class for each quest.
     """
 
+    INACTIVE = 'inactive'
+    IN_PROGRESS = 'in-progress'
+    FULFILLED = 'fulfilled'
+    COMPLETED = 'completed'
+
     def __init__(self, manager):
         self._manager = manager
+        self._state = INACTIVE # IN_PROGRESS, FULLFILED, COMPLETED
+                               # This needs to be loaded from user profile
+        self._configure()
+
+    def self._configure(self):
         self._name = None
         self._title = None
         self._description = None

@@ -100,12 +100,49 @@ class Step(object):
 
 
 class Reward(object):
-    pass
+    """
+        Represents an object (badge, environment, avatar asset and anything
+        else) that can be rewarded for a quest. It has to have a short name
+        and an icon to be displayed in the quest menu.
+    """
+
+    def __init__(self):
+        self._configure()
+
+    def _configure(self):
+        self._icon = None
+        self._title = None
+
+        self._notification = n = {}
+        n['title'] = None
+        n['byline'] = None
+        n['command'] = None
+        n['image'] = None
+
+    def get_notification(self):
+        if self._notification['title'] != None and
+           self._notification['byline'] != None:
+            return self._notification
+        else:
+            return None
 
 
 class Badge(Reward):
-    pass
+    def _configure(self):
+        super(Badge, self)._configure(self)
 
+        self._name = None
+        self._description = None
+        self._image = None
+
+class XP(Reward):
+    def __init__(self, amount):
+        self._xp = amount
+        super(XP, self).__init__()
+
+    def _configure(self):
+        self._icon = ..
+        self._title
 
 class Quest(object):
     """
@@ -119,7 +156,7 @@ class Quest(object):
 
     def __init__(self, manager):
         self._manager = manager
-        self._state = INACTIVE # IN_PROGRESS, FULLFILED, COMPLETED
+        self._state = INACTIVE # ACTIVE, FULLFILED, COMPLETED
                                # This needs to be loaded from user profile
         self._configure()
 
@@ -128,8 +165,6 @@ class Quest(object):
         self._title = None
         self._description = None
         self._steps = []
-        self._xp = 0
-        self._badges = []
         self._depends = []
 
     def is_completed(self):

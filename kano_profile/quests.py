@@ -234,6 +234,9 @@ class Quest(object):
         self._steps = []
         self._depends = []
 
+    def _get_media(self, media_path):
+        return os.path.join(self._path, 'media', media_path)
+
     def _load_state(self):
         if os.path.exists(QUESTS_STORE):
             with open(QUESTS_STORE, 'r') as f:

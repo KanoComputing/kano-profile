@@ -18,6 +18,14 @@ QUESTS_LOAD_PATH = "/usr/share/kano-profile/quests"
 QUESTS_STORE = os.path.join(profile_dir, 'quests.json')
 
 
+# Breaking the Quest API? Make sure to bump this number.
+#
+# Bump the major version if you're making an backwards incompatible change
+# and the minor one if the feature is backwards compatible.
+#
+API_VERSION = {'major': 1, 'minor': 1}
+
+
 class NotConfiguredError(Exception):
     pass
 
@@ -36,10 +44,15 @@ class Quests(object):
     def _load_system_modules(self):
         for f in os.listdir(QUESTS_LOAD_PATH):
             full_path = os.path.join(QUESTS_LOAD_PATH, f)
-            modname = os.path.basename(f)
+            modname = os.path.basename(os.path.dirname(f))
             if os.path.isfile(full_path):
                 qmod = imp.load_source(modname, full_path)
-                self._quests.append(qmod.init())
+                q = qmod.init()
+                if q.api_version['major'] == API_VERSION['major'] and \
+                   q.api_version['minor'] <= API_VERSION['minor']:
+                    self._quests.append(q)
+                else:
+                    logger.warn("Trying to load a quest with incompatible API")
 
     def _load_external_modules(self):
         """
@@ -200,16 +213,26 @@ class Quest(object):
 
     def __init__(self, manager):
         self._manager = manager
+        self._path = os.path.dirname(os.path.abspath(__file__))
         self._state = self.INACTIVE
+        self._req_api_version = None
         self._configure()
+
+        if self._req_api_version is None:
+            raise QuestError('req_api_version must be set!')
+
         self._load_quest_state()
 
     def _configure(self):
         self._id = None
+        self._icon = None
         self._title = None
         self._description = None
         self._steps = []
         self._depends = []
+
+    def _get_media(self, media_path):
+        return os.path.join(self._path, 'media', media_path)
 
     def _load_state(self):
         if os.path.exists(QUESTS_STORE):
@@ -282,6 +305,10 @@ class Quest(object):
             self._save_state()
         else:
             raise QuestError('Quest not ready to be completed.')
+
+    @property
+    def icon(self):
+        return self._icon
 
     @property
     def state(self):

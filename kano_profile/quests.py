@@ -11,10 +11,12 @@ import imp
 from kano.logging import logger
 from kano.utils import ensure_dir
 from .paths import profile_dir
-from .apps import load_app_state, get_app_list, save_app_state
 
 
-QUESTS_LOAD_PATH = "/usr/share/kano-profile/quests"
+QUESTS_LOAD_PATHS = [
+    '/usr/share/kano-profile/quests',
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), '../quests')
+]
 QUESTS_STORE = os.path.join(profile_dir, 'quests.json')
 
 
@@ -26,8 +28,39 @@ QUESTS_STORE = os.path.join(profile_dir, 'quests.json')
 API_VERSION = {'major': 1, 'minor': 1}
 
 
-class NotConfiguredError(Exception):
-    pass
+def api_version(version):
+    """
+        Request a certain version of the API.
+
+        :param version: The requested version of the API.
+        :type version: dict
+
+        :raises RuntimeError: If the request cannot be satisfied.
+        :returns: None
+    """
+
+    if ('major' in version and version['major'] != API_VERSION['major']) or \
+       ('minor' in version and version['minor'] > API_VERSION['minor']):
+        msg = 'Trying to load a quest with incompatible API'
+        logger.warn(msg)
+        raise RuntimeError(msg)
+
+
+def quest_media(quest_conf_path, media_path):
+    """
+        Get the full path to a media file in the quest's directory.
+
+        :param quest_conf_path: The location of the quest's config.py file.
+                                Use __file__ when in the file itself.
+        :type quest_conf_path: string
+
+        :raises IOError: If the file doesn't exist.
+
+        :returns: The absolute path to the file.
+    """
+
+    quest_dir = os.path.dirname(os.path.abspath(quest_conf_path))
+    return os.path.join(quest_dir, 'media', media_path)
 
 
 class Quests(object):
@@ -42,18 +75,22 @@ class Quests(object):
         self._quests = []
         self._quest_states = {}
 
+        self._load_system_modules()
+        self._load_external_modules()
+
     def _load_system_modules(self):
-        for f in os.listdir(QUESTS_LOAD_PATH):
-            full_path = os.path.join(QUESTS_LOAD_PATH, f)
-            modname = os.path.basename(os.path.dirname(f))
-            if os.path.isfile(full_path):
-                qmod = imp.load_source(modname, full_path)
-                q = qmod.init()
-                if q.api_version['major'] == API_VERSION['major'] and \
-                   q.api_version['minor'] <= API_VERSION['minor']:
-                    self._quests.append(q)
-                else:
-                    logger.warn("Trying to load a quest with incompatible API")
+        for load_path in QUESTS_LOAD_PATHS:
+            if os.path.exists(load_path):
+                for f in os.listdir(load_path):
+                    full_path = os.path.join(load_path, f, 'quest.py')
+                    print full_path
+                    modname = os.path.basename(os.path.dirname(f))
+                    if os.path.isfile(full_path):
+                        qmod = imp.load_source(modname, full_path)
+                        q = qmod.init()
+                        self._quests.append(q)
+            else:
+                logger.warn("'{}' not found".format(load_path))
 
     def _load_external_modules(self):
         """
@@ -81,10 +118,24 @@ class Quests(object):
         return active
 
     def get_quest(self, qid):
+        """
+            Returns a quest with the specified id.
+
+            :param qid: The id to look for.
+            :type qid: string
+
+            :returns: A `Quest` instance or None.
+            :rtype: Quest or None
+        """
+
         if qid not in self._quests:
             return None
 
-        return self._quests[qid]
+        for q in self._quests:
+            if q.id == qid:
+                return q
+
+        return None
 
     def evaluate_xp(self):
         xp = 0
@@ -234,9 +285,6 @@ class Quest(object):
         self._steps = []
         self._depends = []
 
-    def _get_media(self, media_path):
-        return os.path.join(self._path, 'media', media_path)
-
     def _load_state(self):
         if os.path.exists(QUESTS_STORE):
             with open(QUESTS_STORE, 'r') as f:
@@ -311,6 +359,10 @@ class Quest(object):
             self._save_state()
         else:
             raise QuestError('Quest not ready to be completed.')
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def icon(self):

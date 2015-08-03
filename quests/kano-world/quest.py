@@ -13,6 +13,8 @@ from kano_profile.apps import load_app_state, get_app_list, save_app_state
 
 class WorldExplorerBadge(Badge):
     def _configure(self):
+        super(WorldExplorerBadge, self)._configure()
+
         self._id = 'world-expoler'
         self._dest_locked = 'Kano World Explorer'
         self._desc_unlocked = 'You discovered Kano World!'
@@ -30,7 +32,7 @@ class Step1(Step):
     def _configure(self):
         self._title = 'Connect to wifi'
 
-    def is_completed(self):
+    def is_fulfilled(self):
         if is_internet():
             return True
         else:
@@ -41,7 +43,7 @@ class Step2(Step):
     def _configure(self):
         self._title = 'Connect your Kano World account'
 
-    def is_completed(self):
+    def is_fulfilled(self):
         return True
 
 
@@ -49,7 +51,7 @@ class Step3(Step):
     def _configure(self):
         self._title = 'Launch the Kano World app'
 
-    def is_completed(self):
+    def is_fulfilled(self):
         return True
 
 
@@ -57,7 +59,7 @@ class Step4(Step):
     def _configure(self):
         self._title = 'Like an awesome Kano World share'
 
-    def is_completed(self):
+    def is_fulfilled(self):
         return True
 
 

@@ -83,12 +83,11 @@ class Quests(object):
             if os.path.exists(load_path):
                 for f in os.listdir(load_path):
                     full_path = os.path.join(load_path, f, 'quest.py')
-                    print full_path
                     modname = os.path.basename(os.path.dirname(f))
                     if os.path.isfile(full_path):
                         qmod = imp.load_source(modname, full_path)
                         q = qmod.init()
-                        self._quests.append(q)
+                        self._quests.append(q(self))
             else:
                 logger.warn("'{}' not found".format(load_path))
 
@@ -128,10 +127,8 @@ class Quests(object):
             :rtype: Quest or None
         """
 
-        if qid not in self._quests:
-            return None
-
         for q in self._quests:
+            print q.id
             if q.id == qid:
                 return q
 
@@ -211,7 +208,7 @@ class Reward(object):
 
 class Badge(Reward):
     def _configure(self):
-        super(Badge, self)._configure(self)
+        super(Badge, self)._configure()
 
         # _title and _icon inherited from reward
 
@@ -244,7 +241,7 @@ class XP(Reward):
 
     @property
     def amount(self):
-        return self._amount
+        return self._xp
 
     def _configure(self):
         self._icon = None
@@ -269,13 +266,9 @@ class Quest(object):
         self._manager = manager
         self._path = os.path.dirname(os.path.abspath(__file__))
         self._state = self.INACTIVE
-        self._req_api_version = None
         self._configure()
 
-        if self._req_api_version is None:
-            raise QuestError('req_api_version must be set!')
-
-        self._load_quest_state()
+        self._load_state()
 
     def _configure(self):
         self._id = None
@@ -283,6 +276,7 @@ class Quest(object):
         self._title = None
         self._description = None
         self._steps = []
+        self._rewards = []
         self._depends = []
 
     def _load_state(self):
@@ -297,8 +291,11 @@ class Quest(object):
 
     def _save_state(self):
         ensure_dir(os.path.dirname(QUESTS_STORE))
-        with open(QUESTS_STORE, 'r') as f:
-            store = json.load(f)
+        if os.path.exists(QUESTS_STORE):
+            with open(QUESTS_STORE, 'r') as f:
+                store = json.load(f)
+        else:
+            store = {}
 
         if self._id not in store:
             store[self._id] = {}
@@ -322,7 +319,7 @@ class Quest(object):
 
         return self._state not in [self.ACTIVE, self.FULFILLED]
 
-    def is_fulfilled(self):
+    def evaluate_fulfilment(self):
         """
             Evaluate whether all the steps required to complete the quest
             were fulfulled. If yes, the status of the quest is changed
@@ -331,6 +328,9 @@ class Quest(object):
             :returns: True if fulfilled.
             :rtype: Boolean
         """
+
+        if self._state in [self.FULFILLED, self.COMPLETED]:
+            return True
 
         fulfilled = True
         for step in self._steps:
@@ -342,6 +342,7 @@ class Quest(object):
         return fulfilled
 
     def is_completed(self):
+        print self._state, self.COMPLETED
         return self._state == self.COMPLETED
 
     def mark_completed(self):
@@ -354,7 +355,7 @@ class Quest(object):
             :raises QuestError: If the quest isn't ready to be marked complete.
         """
 
-        if self.is_fulfilled():
+        if self.evaluate_fulfilment():
             self._state = self.COMPLETED
             self._save_state()
         else:
@@ -375,12 +376,12 @@ class Quest(object):
     @property
     def xp(self):
         xps = [r for r in self._rewards if isinstance(r, XP)]
-        return reduce(lambda s, xp: s+xp.amount(), xps, 0)
+        return reduce(lambda s, xp: s+xp.amount, xps, 0)
 
     @property
     def badges(self):
-        badges = [r for r in self._rewards if isinstance(r, Badge)]
-        return reduce(lambda lst, b: lst.append(b), badges, [])
+        badges = [r for r in self._rewards if issubclass(r.__class__, Badge)]
+        return badges
 
     @property
     def rewards(self):

@@ -314,12 +314,12 @@ class Quest(object):
     def is_active(self):
         if self._state == self.INACTIVE:
             if self._can_be_active():
-                if not self.evaluate_fulfilment():
+                if not self.is_fulfilled():
                     self._state = self.ACTIVE
 
-        return self._state not in [self.ACTIVE, self.FULFILLED]
+        return self._state not in [self.INACTIVE, self.COMPLETED]
 
-    def evaluate_fulfilment(self):
+    def is_fulfilled(self):
         """
             Evaluate whether all the steps required to complete the quest
             were fulfulled. If yes, the status of the quest is changed
@@ -355,7 +355,7 @@ class Quest(object):
             :raises QuestError: If the quest isn't ready to be marked complete.
         """
 
-        if self.evaluate_fulfilment():
+        if self.is_fulfilled():
             self._state = self.COMPLETED
             self._save_state()
         else:

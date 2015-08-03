@@ -18,8 +18,8 @@ class WorldExplorerBadge(Badge):
         self._id = 'world-expoler'
         self._dest_locked = 'Kano World Explorer'
         self._desc_unlocked = 'You discovered Kano World!'
-        self._icon = quest_media(__file__, 'badge-icon.png')
-        self._image = quest_media(__file__, 'badge.png')
+        self._icon = quest_media(__file__, 'badge.svg')
+        self._image = quest_media(__file__, 'badge.svg')
 
         n = self._notification
         n['title'] = 'Kano World Explorer'

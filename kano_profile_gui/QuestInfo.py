@@ -10,7 +10,7 @@
 import os
 from gi.repository import Gtk, GdkPixbuf
 from kano.gtk3.apply_styles import apply_styling_to_screen
-from kano_profile_gui.paths import css_dir
+from kano_profile_gui.paths import css_dir, image_dir
 from kano_profile_gui.navigation_buttons import create_navigation_button
 from kano.gtk3.scrolled_window import ScrolledWindow
 from kano_profile_gui.ProgressDot import ProgressDot
@@ -43,7 +43,7 @@ class QuestInfo(Gtk.EventBox):
 
         # Pack in Progress
         progress_section = self.create_progress_section()
-        self.grid.attach(progress_section, 0, 0, 1, 2)
+        self.grid.attach(progress_section, 0, 0, 1, 1)
 
         # Pack in Quest Description
         # quest_desc = self.create_quest_description()
@@ -51,17 +51,13 @@ class QuestInfo(Gtk.EventBox):
 
         # Pack in Rewards
         rewards = self.create_reward_section()
-
-        # If the quest description is packed, include this line
-        # self.grid.attach(rewards, 1, 1, 1, 1)
-
-        # Otherwise include this line
-        self.grid.attach(rewards, 1, 0, 1, 2)
-
-        bottom_bar = self._create_bottom_navigation_bar()
+        self.grid.attach(rewards, 1, 0, 1, 1)
 
         vbox.pack_start(self.grid, False, False, 0)
-        self.win.pack_in_bottom_bar(bottom_bar)
+
+        # Add the bottom bar
+        # bottom_bar = self._create_bottom_navigation_bar()
+        # self.win.pack_in_bottom_bar(bottom_bar)
 
         self.win.show_all()
 
@@ -90,15 +86,19 @@ class QuestInfo(Gtk.EventBox):
         return navigation_bar
 
     def create_progress_section(self):
-        background = Gtk.EventBox()
-        background.set_size_request(330, 400)
-        background.get_style_context().add_class("quest_section")
+        scroll_path = os.path.join(image_dir, "scroll.svg")
+        scroll_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(scroll_path, 505, -1)
+        scroll_img = Gtk.Image.new_from_pixbuf(scroll_pixbuf)
 
-        steps = self.quest._steps
+        fixed = Gtk.Fixed()
+        fixed.put(scroll_img, 0, 0)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.set_margin_left(10)
-        background.add(vbox)
+        text_background = Gtk.EventBox()
+        text_background.add(vbox)
+        fixed.put(text_background, 50, 50)
+        text_background.set_size_request(405, 350)
 
         title_label = Gtk.Label(self.quest._title)
         title_label.get_style_context().add_class("progress_title")
@@ -115,6 +115,8 @@ class QuestInfo(Gtk.EventBox):
 
         vbox.pack_start(header_box, True, False, 0)
 
+        steps = self.quest._steps
+
         for step in steps:
             quest_step_label = Gtk.Label(step._title)
 
@@ -130,7 +132,7 @@ class QuestInfo(Gtk.EventBox):
             hbox.pack_start(quest_step_label, False, False, 5)
             vbox.pack_start(hbox, True, False, 0)
 
-        return background
+        return fixed
 
     def create_quest_description(self):
         sw = ScrolledWindow()
@@ -165,7 +167,7 @@ class QuestInfo(Gtk.EventBox):
         background = Gtk.EventBox()
         background.get_style_context().add_class("quest_section")
         background.get_style_context().add_class("reward_background")
-        background.set_size_request(330, 250)
+        background.set_size_request(100, -1)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         background.add(vbox)
@@ -183,7 +185,7 @@ class QuestInfo(Gtk.EventBox):
 
         left = 0
         top = 0
-        max_columns = 3
+        max_columns = 1
 
         rewards = self.quest._rewards
 

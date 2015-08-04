@@ -64,7 +64,6 @@ class QuestListItem(Gtk.EventBox):
 
     # Placeholders
     reward_path = os.path.join(image_dir, "chest.svg")
-    default_icon_path = os.path.join(image_dir, "icons/snake.png")
 
     def __init__(self, win, quest_info):
 
@@ -90,6 +89,7 @@ class QuestListItem(Gtk.EventBox):
             self.get_style_context().add_class("not_fulfilled")
 
         valign = Gtk.Alignment(yalign=0.5)
+        valign.set_size_request(-1, 100)
         self.add(valign)
         hbox = Gtk.Box()
         valign.add(hbox)
@@ -130,7 +130,7 @@ class QuestListItem(Gtk.EventBox):
         if fulfilled:
             self.connect("button-release-event", self.claim_reward)
         else:
-            self.connect("button-release-event", self.go_to_individual_quest)
+            self.connect("button-release-event", self.go_to_quest_info)
 
         reward_image.set_margin_right(10)
         hbox.pack_end(reward_image, False, False, 0)
@@ -157,6 +157,6 @@ class QuestListItem(Gtk.EventBox):
         # Unpack current reward and reshow new quests
         self.emit("reward_claimed")
 
-    def go_to_individual_quest(self, button=None, event=None):
+    def go_to_quest_info(self, button=None, event=None):
         self.win.empty_main_content()
         QuestInfo(win=self.win, quest_info=self.quest_info)

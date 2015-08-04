@@ -27,7 +27,9 @@ from kano_profile_gui.QuestScreen import QuestScreen
 from kano_profile_gui.paths import media_dir
 from kano_profile_gui import projects
 
-from kano.gtk3.apply_styles import apply_colours_to_screen, apply_styling_to_screen
+from kano.gtk3.apply_styles import (
+    apply_colours_to_screen, apply_styling_to_screen
+)
 from kano.gtk3.application_window import ApplicationWindow
 from kano_profile_gui.MenuBar import MenuBar
 

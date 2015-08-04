@@ -16,6 +16,10 @@ from kano_profile_gui.components.icons import get_ui_icon
 from kano_profile.quests import Quests
 
 
+# TODO: Initialised here and in QuestScreen - just initialise in window
+quests = Quests()
+
+
 # In case we change the colour of the menu bar, we have a background
 # across all of them.
 class MenuBar(Gtk.EventBox):
@@ -28,9 +32,6 @@ class MenuBar(Gtk.EventBox):
 
         Gtk.EventBox.__init__(self)
         self.get_style_context().add_class('menu_bar_container')
-
-        # TODO: Initialised here and in QuestScreen - just initialise in window
-        self.quests = Quests()
 
         self.height = 110
         self.width = win_width
@@ -190,7 +191,7 @@ class MenuButton(Gtk.Button):
         # This could read from kano-profile based on the name
         # Returns an int between 0-10 inclusive.
 
-        active_quests = self.quests.list_active_quests()
+        active_quests = quests.list_active_quests()
         fulfilled = 0
 
         for quest in active_quests:

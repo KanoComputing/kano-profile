@@ -79,7 +79,7 @@ whatever readymade farm-to-table. Thundercats Pitchfork brunch drinking
 vinegar, four loko fashion axe polaroid freegan trust fund scenester meggings
 semiotics keytar vegan."""
 
-        self._icon = quest_media(__file__, 'quest-icon.png')
+        self._icon = quest_media(__file__, 'quest-icon.svg')
 
         self._steps = [
             Step1(),

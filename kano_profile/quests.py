@@ -11,7 +11,7 @@ import imp
 from kano.logging import logger
 from kano.utils import ensure_dir
 from .paths import profile_dir
-
+from kano_profile_gui.paths import media_dir
 
 QUESTS_LOAD_PATHS = [
     '/usr/share/kano-profile/quests',
@@ -46,6 +46,24 @@ def api_version(version):
         raise RuntimeError(msg)
 
 
+def profile_media(media_path):
+    """
+        Get the full path to a media file in profile's directory.
+
+        :param media_path: Relative path to the media file.
+        :type media_path: string
+
+        :raises OSError: If the file doesn't exist.
+        :returns: The absolute path to the file.
+    """
+
+    path = os.path.join(media_dir, media_path)
+
+    if not os.path.exists(path):
+        raise OSError("Media file ({}) not found".format(path))
+    return path
+
+
 def quest_media(quest_conf_path, media_path):
     """
         Get the full path to a media file in the quest's directory.
@@ -54,13 +72,19 @@ def quest_media(quest_conf_path, media_path):
                                 Use __file__ when in the file itself.
         :type quest_conf_path: string
 
-        :raises IOError: If the file doesn't exist.
+        :param media_path: Relative path to the media file.
+        :type media_path: string
 
+        :raises OSError: If the file doesn't exist.
         :returns: The absolute path to the file.
     """
 
     quest_dir = os.path.dirname(os.path.abspath(quest_conf_path))
-    return os.path.join(quest_dir, 'media', media_path)
+    path = os.path.join(quest_dir, 'media', media_path)
+
+    if not os.path.exists(path):
+        raise OSError("Media file ({}) not found".format(path))
+    return path
 
 
 class Quests(object):
@@ -156,7 +180,7 @@ class Step(object):
     """
 
     def __init__(self):
-        pass
+        self._configure()
 
     def _configure(self):
         self._title = None
@@ -164,6 +188,14 @@ class Step(object):
 
     def is_fulfilled(self):
         return True
+
+    @property
+    def title(self):
+        return self._title
+
+    @property
+    def help(self):
+        return self._help
 
 
 class Reward(object):
@@ -196,8 +228,7 @@ class Reward(object):
 
     @property
     def notification(self):
-        if self._notification['title'] is not None and \
-           self._notification['byline'] is not None:
+        if self._notification['title'] and self._notification['byline']:
             return self._notification
         else:
             return None
@@ -241,7 +272,8 @@ class XP(Reward):
         return self._xp
 
     def _configure(self):
-        self._icon = None
+        super(XP, self)._configure()
+        self._icon = profile_media('images/icons/xp-reward.png')
         self._title = None
 
 
@@ -358,6 +390,14 @@ class Quest(object):
     @property
     def id(self):
         return self._id
+
+    @property
+    def title(self):
+        return self._title
+
+    @property
+    def description(self):
+        return self._description
 
     @property
     def icon(self):

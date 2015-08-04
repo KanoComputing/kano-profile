@@ -16,13 +16,15 @@ class WorldExplorerBadge(Badge):
         super(WorldExplorerBadge, self)._configure()
 
         self._id = 'world-expoler'
-        self._dest_locked = 'Kano World Explorer'
-        self._desc_unlocked = 'You discovered Kano World!'
+        self._title = title = 'Kano World Explorer'
         self._icon = quest_media(__file__, 'badge.svg')
-        self._image = quest_media(__file__, 'badge.svg')
+
+        self._dest_locked = title
+        self._desc_unlocked = 'You discovered Kano World!'
+        self._image = self._icon
 
         n = self._notification
-        n['title'] = 'Kano World Explorer'
+        n['title'] = title
         n['byline'] = 'You made it to Kano World!'
         n['command'] = 'kano-profile badges'
         n['image'] = quest_media(__file__, 'badge-notification.png')

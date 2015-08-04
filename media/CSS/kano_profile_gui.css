@@ -67,7 +67,7 @@
 }
 .menu_bar_button {
     background: transparent;
-    padding: 45px 20px 0px 20px;
+    padding: 20px 20px 0px 20px;
 }
 .menu_bar_button GtkLabel {
     font: Bariol Bold 13;

@@ -7,11 +7,13 @@
 #
 # This controls the styling of the (pretend) top window bar.
 
+import os
 from gi.repository import Gtk, GObject
 from kano.gtk3.cursor import attach_cursor_events
 from kano_world.functions import get_mixed_username
 from kano_profile.badges import calculate_kano_level
 from kano_profile_gui.components.icons import get_ui_icon
+from kano_profile.quests import Quests
 
 
 # In case we change the colour of the menu bar, we have a background
@@ -26,6 +28,9 @@ class MenuBar(Gtk.EventBox):
 
         Gtk.EventBox.__init__(self)
         self.get_style_context().add_class('menu_bar_container')
+
+        # TODO: Initialised here and in QuestScreen - just initialise in window
+        self.quests = Quests()
 
         self.height = 110
         self.width = win_width
@@ -47,7 +52,7 @@ class MenuBar(Gtk.EventBox):
         hbox.pack_end(close_button, False, False, 0)
         close_button.connect("clicked", self.close_window)
 
-        name_array = ['SAVES', 'MISSIONS', 'BADGES', 'CHARACTER']
+        name_array = ['SAVES', 'QUESTS', 'BADGES', 'CHARACTER']
         for name in name_array:
             button = MenuButton(name)
             button.connect("clicked", self.emit_menu_signal, name)
@@ -57,6 +62,10 @@ class MenuBar(Gtk.EventBox):
             # add to the self.buttons dictionary
             self.buttons[name] = {}
             self.buttons[name]["button"] = button
+
+            if name == "QUESTS":
+                # check the notification image
+                button.check_for_notification()
 
             # HACKY: avoiding packing the label divider after the last element
             if name != "CHARACTER":
@@ -110,6 +119,9 @@ class MenuBar(Gtk.EventBox):
         button.selected = True
         button.set_selected_style()
 
+    def get_button(self, name):
+        return self.buttons[name]["button"]
+
     def close_window(self, button):
         Gtk.main_quit()
 
@@ -144,6 +156,8 @@ class HomeButton(Gtk.Button):
 
 class MenuButton(Gtk.Button):
 
+    kdesk_num_path = "/usr/share/kano-desktop/images/world-numbers"
+
     def __init__(self, name):
         self.name = name
 
@@ -154,8 +168,12 @@ class MenuButton(Gtk.Button):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(vbox)
 
+        self.notification_img = Gtk.Image()
+        self.notification_img.set_size_request(29, 29)
+        vbox.pack_start(self.notification_img, False, False, 0)
+
         label = Gtk.Label(name)
-        vbox.add(label)
+        vbox.pack_start(label, False, False, 0)
 
         # Makes it easy to access exactly where the icon is
         self.icon_align = Gtk.Alignment(xscale=0, xalign=0.5)
@@ -167,6 +185,22 @@ class MenuButton(Gtk.Button):
         # select on hover over
         self.connect("enter-notify-event", self.set_selected_wrapper)
         self.connect("leave-notify-event", self.remove_selected_wrapper)
+
+    def _get_show_mission_notification(self):
+        # This could read from kano-profile based on the name
+        # Returns an int between 0-10 inclusive.
+
+        active_quests = self.quests.list_active_quests()
+        fulfilled = 0
+
+        for quest in active_quests:
+            if quest.is_fulfilled():
+                fulfilled += 1
+
+        return fulfilled
+
+    def _set_show_mission_notification(self, show_notification):
+        self.show_notification = show_notification
 
     def set_selected_style(self):
         '''We shouldn't have to worry about applying this when it
@@ -192,3 +226,20 @@ class MenuButton(Gtk.Button):
     def remove_selected_wrapper(self, widget, args):
         if not self.selected:
             self.remove_selected_style()
+
+    def check_for_notification(self):
+        # Decide whether to show the notifications for the button
+        num = self._get_show_mission_notification()
+        if num > 0:
+            num = str(num)
+
+            # pack number icon next to it
+            num_path = os.path.join(
+                self.kdesk_num_path,
+                "{}.png".format(num)
+            )
+            self.notification_img.set_from_file(num_path)
+            return True
+        else:
+            self.notification_img.clear()
+            return False

@@ -152,7 +152,6 @@ class Quests(object):
         """
 
         for q in self._quests:
-            print q.id
             if q.id == qid:
                 return q
 
@@ -276,8 +275,14 @@ class XP(Reward):
 
     def _configure(self):
         super(XP, self)._configure()
-        self._icon = profile_media('images/icons/xp-reward.png')
-        self._title = None
+        self._icon = profile_media('images/icons/xp-reward-icon.png')
+        self._title = "{}XP".format(self._xp)
+
+        n = self._notification
+        n['title'] = self._title
+        n['byline'] = 'You gained new XP!'
+        n['image'] = profile_media('images/icons/xp-notification.png')
+        n['command'] = 'kano-profile profile'
 
 
 class QuestError(Exception):
@@ -344,18 +349,29 @@ class Quest(object):
         return active
 
     def is_active(self):
+        """
+            Check whether a quest is in progress.
+
+            :returns: True if yes.
+            :rtype: Boolean
+        """
+
         if self._state == self.INACTIVE:
             if self._can_be_active():
-                if not self.is_fulfilled():
+                if self.is_fulfilled():
+                    # The is_fulfilled function will update the status
+                    # appropriately.
+                    pass
+                else:
                     self._state = self.ACTIVE
 
-        return self._state not in [self.INACTIVE, self.COMPLETED]
+        return self._state in [self.ACTIVE, self.FULFILLED]
 
     def is_fulfilled(self):
         """
             Evaluate whether all the steps required to complete the quest
             were fulfulled. If yes, the status of the quest is changed
-            to FULFILLED and the status is saved into the quest store.
+            to FULFILLED and saved into the quest store.
 
             :returns: True if fulfilled.
             :rtype: Boolean
@@ -374,7 +390,13 @@ class Quest(object):
         return fulfilled
 
     def is_completed(self):
-        print self._state, self.COMPLETED
+        """
+            See whether this quest has been completed.
+
+            :returns: True if yes, False otherwise.
+            :rtype: Boolean
+        """
+
         return self._state == self.COMPLETED
 
     def mark_completed(self):

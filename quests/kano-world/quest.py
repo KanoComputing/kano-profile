@@ -7,22 +7,23 @@
 
 from kano.network import is_internet
 from kano_profile.quests import Quest, XP, Badge, quest_media, Step, \
-    CharacterAsset
+    api_version
+from kano_profile.apps import load_app_state, get_app_list, save_app_state
 
-class KanoWorldBadge(Badge):
+
+class WorldExplorerBadge(Badge):
     def _configure(self):
-        self._title = 'Kano World Explorer'
-        self._icon = quest_media('badge-icon.png')
+        self._id = 'world-expoler'
+        self._dest_locked = 'Kano World Explorer'
+        self._desc_unlocked = 'You discovered Kano World!'
+        self._icon = quest_media(__file__, 'badge-icon.png')
+        self._image = quest_media(__file__, 'badge.png')
 
         n = self._notification
         n['title'] = 'Kano World Explorer'
         n['byline'] = 'You made it to Kano World!'
         n['command'] = 'kano-profile badges'
-        n['image'] = quest_media('badge-notification.png')
-
-
-class SpaceSuit(CharacterAsset):
-    pass
+        n['image'] = quest_media(__file__, 'badge-notification.png')
 
 
 class Step1(Step):
@@ -36,11 +37,35 @@ class Step1(Step):
             return False
 
 
+class Step2(Step):
+    def _configure(self):
+        self._title = 'Connect your Kano World account'
+
+    def is_completed(self):
+        return True
+
+
+class Step3(Step):
+    def _configure(self):
+        self._title = 'Launch the Kano World app'
+
+    def is_completed(self):
+        return True
+
+
+class Step4(Step):
+    def _configure(self):
+        self._title = 'Like an awesome Kano World share'
+
+    def is_completed(self):
+        return True
+
+
 class KanoWorldQuest(Quest):
     def _configure(self):
-        self._name = 'kano-world'
-        self._title = 'Fly to Kano World'
-        self.description = """
+        self._id = 'travel-to-kano-world'
+        self._title = 'Travel to Kano World'
+        self._description = """
 Godard distillery bitters dreamcatcher butcher, pop-up irony Austin scenester
 narwhal retro raw denim. Irony pork belly slow-carb seitan Austin. Mlkshk
 plaid Neutra, quinoa tattooed bitters Odd Future paleo Helvetica next level
@@ -50,17 +75,24 @@ Schlitz you probably haven't heard of them. Odd Future lumbersexual umami
 hella fap you probably haven't heard of them American Apparel, paleo wolf
 whatever readymade farm-to-table. Thundercats Pitchfork brunch drinking
 vinegar, four loko fashion axe polaroid freegan trust fund scenester meggings
-semiotics keytar vegan. """
+semiotics keytar vegan."""
 
+        self._icon = quest_media(__file__, 'quest-icon.png')
 
-        self.steps = [
+        self._steps = [
             Step1(),
             Step2(),
-            Step3()
+            Step3(),
+            Step4()
         ]
         self._rewards = [
-            KanoWorldBadge(),
-            SpaceSuit(),
+            WorldExplorerBadge(),
+            # SpaceSuit(),
             XP(50)
         ]
         self._depends = []
+
+
+def init():
+    api_version({'major': 1, 'minor': 1})
+    return KanoWorldQuest

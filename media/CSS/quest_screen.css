@@ -20,11 +20,11 @@
     background: @kano_green_lighter;
 }
 
-.quest.not_completed {
+.quest.not_fulfilled {
     background: #ffffff;
 }
 
-.quest.not_completed.hover {
+.quest.not_fulfilled.hover {
     background: #eeeeee;
 }
 
@@ -43,7 +43,7 @@
     color: #777777;
 }
 
-.quest_step_label.completed {
+.quest_step_label.fulfilled {
     font: Bariol 15;
     color: @kano_green;
 }

@@ -54,7 +54,7 @@ class Step3(Step):
         self._title = 'Launch the Kano World app'
 
     def is_fulfilled(self):
-        return True
+        return False
 
 
 class Step4(Step):

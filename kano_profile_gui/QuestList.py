@@ -40,7 +40,7 @@ class QuestList(Gtk.EventBox):
         # Calculate the quests that are available.
         for quest in self.win.quests.list_active_quests():
             quest_item = QuestListItem(win=self.win, quest_info=quest)
-            vbox.pack_start(quest_item, False, False, 0)
+            vbox.pack_start(quest_item, False, False, 10)
             quest_item.connect("reward_claimed", self.repack_quests)
 
         self.show_all()
@@ -72,6 +72,8 @@ class QuestListItem(Gtk.EventBox):
 
         Gtk.EventBox.__init__(self)
         self.get_style_context().add_class("quest_section")
+        self.set_margin_right(10)
+        self.set_margin_left(10)
 
         # Add hover over effects - these could be added to CSS if the widget
         # is a Gtk.Button
@@ -92,10 +94,12 @@ class QuestListItem(Gtk.EventBox):
         self.add(hbox)
 
         quest_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            self.quest_info.icon, 100, 100
+            self.quest_info.icon, 120, 120
         )
         quest_icon = Gtk.Image.new_from_pixbuf(quest_pixbuf)
         quest_icon.set_margin_left(10)
+        quest_icon.set_margin_top(20)
+        quest_icon.set_margin_bottom(20)
 
         self.title_widget = Gtk.Label(title)
         self.title_widget.get_style_context().add_class("quest_item_title")
@@ -117,19 +121,19 @@ class QuestListItem(Gtk.EventBox):
         quest_text_vbox.pack_start(self.title_widget, True, True, 0)
         quest_text_vbox.pack_start(self.reward_list_label, True, True, 0)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.reward_path, 40, 40)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.reward_path, 60, 60)
         reward_image = Gtk.Image.new_from_pixbuf(pixbuf)
 
         # Pack in all the widgets.
-        hbox.pack_start(quest_icon, False, False, 0)
-        hbox.pack_start(quest_text_vbox, True, False, 10)
+        hbox.pack_start(quest_icon, False, False, 10)
+        hbox.pack_start(quest_text_vbox, True, True, 10)
 
         if fulfilled:
             self.connect("button-release-event", self.claim_reward)
         else:
             self.connect("button-release-event", self.go_to_quest_info)
 
-        reward_image.set_margin_right(10)
+        reward_image.set_margin_right(20)
         hbox.pack_end(reward_image, False, False, 0)
 
     def hover_over_effect(self, widget, event, hover):

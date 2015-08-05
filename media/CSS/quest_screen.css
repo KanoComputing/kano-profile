@@ -4,6 +4,7 @@
 
 .quest_screen_background {
     background: #dddddd;
+    color: #dddddd;
 }
 
 .quest.reward {
@@ -24,7 +25,7 @@
 }
 
 .quest_item_title {
-    font: Bariol bold 15;
+    font: Bariol bold 19px;
     color: #111111;
 }
 

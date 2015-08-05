@@ -16,6 +16,7 @@ from kano_profile_gui.ProgressDot import ProgressDot
 
 class QuestInfo(Gtk.EventBox):
     css_path = os.path.join(css_dir, "quest_screen.css")
+    reward_path = os.path.join(image_dir, "chest.svg")
 
     def __init__(self, **keywords):
         Gtk.EventBox.__init__(self)
@@ -69,7 +70,7 @@ class QuestInfo(Gtk.EventBox):
         fixed.put(text_background, 50, 50)
         text_background.set_size_request(405, 350)
 
-        title_label = Gtk.Label(self.quest._title)
+        title_label = Gtk.Label(self.quest.title)
         title_label.get_style_context().add_class("quest_info_title")
         title_label.set_alignment(yalign=0.5, xalign=0)
 
@@ -84,13 +85,15 @@ class QuestInfo(Gtk.EventBox):
 
         vbox.pack_start(header_box, True, False, 0)
 
-        steps = self.quest._steps
+        steps = self.quest.steps
+        self.progress_dots = []
 
         for step in steps:
-            quest_step_label = Gtk.Label(step._title)
+            quest_step_label = Gtk.Label(step.title)
 
             fulfilled = step.is_fulfilled()
             progress_dot = ProgressDot(fulfilled)
+            self.progress_dots.append(progress_dot)
             quest_step_label.get_style_context().add_class("quest_step_label")
 
             if fulfilled:
@@ -116,10 +119,11 @@ class QuestInfo(Gtk.EventBox):
         title = Gtk.Label("Rewards")
         title.set_alignment(xalign=0, yalign=0.5)
         title.set_padding(xpad=10, ypad=10)
-        title.get_style_context().add_class("rewards_title")
+        title.get_style_context().add_class("reward_title")
         grid = Gtk.Grid()
         grid.set_margin_left(20)
         grid.set_column_spacing(20)
+        grid.set_row_spacing(20)
 
         vbox.pack_start(title, False, False, 0)
         vbox.pack_start(grid, False, False, 0)
@@ -128,11 +132,11 @@ class QuestInfo(Gtk.EventBox):
         top = 0
         max_columns = 1
 
-        rewards = self.quest._rewards
+        rewards = self.quest.rewards
 
         for reward in rewards:
             reward_widget = self.create_reward(
-                reward._title, reward._icon
+                reward.title, reward.icon
             )
             grid.attach(reward_widget, left, top, 1, 1)
             left += 1
@@ -144,6 +148,7 @@ class QuestInfo(Gtk.EventBox):
         return background
 
     def create_reward(self, title, path):
+        # Add hover over effect
         background = Gtk.EventBox()
         background.get_style_context().add_class("quest_section")
 
@@ -152,10 +157,11 @@ class QuestInfo(Gtk.EventBox):
 
         # For now, use default
         label = Gtk.Label(title)
-        label.get_style_context().add_class("reward_title")
+        label.set_line_wrap(True)
+        label.get_style_context().add_class("reward_label")
 
         if path and os.path.exists(path):
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 40, 40)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 120, 120)
             image = Gtk.Image.new_from_pixbuf(pixbuf)
             vbox.pack_start(image, False, False, 5)
 

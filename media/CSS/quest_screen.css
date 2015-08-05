@@ -36,45 +36,25 @@
 
 .quest_step_label {
     font: Bariol bold 15;
-    color: #444444;
-}
-
-.quest_step_label.fulfilled {
-    font: Bariol bold 15;
-    color: @kano_green;
+    color: #ffffff;
 }
 
 .quest_info_title {
     font: Bariol Bold 18px;
-    color: #111111;
+    color: #ffffff;
 }
 /******************************************/
 
 .progress_outer_ring {
-    background: @kano_green_darker;
+    background: #ffffff;
+    color: #ffffff;
     border-radius: 22px;
 }
 
-.progress_white_section {
+.progress_scroll_section {
     background: #D3B28C;
+    color: #D3B28C;
     border-radius: 17px;
-}
-
-.progress_centre_filled, .progress_centre_unfilled {
-    border-radius: 12px;
-}
-
-.progress_centre_filled {
-    background: @kano_green_darker;
-}
-
-.progress_centre_unfilled {
-    background: #D3B28C;
-}
-
-.progress_linker {
-    background: @kano_green;
-    border-radius: 2px;
 }
 
 /******************************************/
@@ -85,11 +65,22 @@
 
 /******************************************/
 
-.rewards_title {
-    font: Bariol bold 15px;
+.reward_title {
+    font: Bariol bold 18px;
+    color: #111111;
+}
+
+.reward_label {
+    font: Bariol 15px;
+    color: #555555;
 }
 
 /*******************************************/
 .section_title {
     font: Bariol Bold 20px;
+}
+
+.transparent {
+    background: transparent;
+    color: transparent;
 }

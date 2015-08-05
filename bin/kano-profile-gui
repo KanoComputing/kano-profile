@@ -135,6 +135,10 @@ class MainWindow(ApplicationWindow):
         # else:
         #    module(self)
 
+    @property
+    def menu_bar(self):
+        return self._menu_bar
+
 
 def main():
 

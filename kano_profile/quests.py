@@ -443,3 +443,7 @@ class Quest(object):
     @property
     def rewards(self):
         return self._rewards
+
+    @property
+    def steps(self):
+        return self._steps

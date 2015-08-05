@@ -101,7 +101,7 @@ class QuestInfo(Gtk.EventBox):
         text_background.set_size_request(405, 350)
 
         title_label = Gtk.Label(self.quest._title)
-        title_label.get_style_context().add_class("progress_title")
+        title_label.get_style_context().add_class("quest_info_title")
         title_label.set_alignment(yalign=0.5, xalign=0)
 
         quest_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.quest.icon, 80, 80)
@@ -122,9 +122,10 @@ class QuestInfo(Gtk.EventBox):
 
             fulfilled = step.is_fulfilled()
             progress_dot = ProgressDot(fulfilled)
+            quest_step_label.get_style_context().add_class("quest_step_label")
 
             if fulfilled:
-                quest_step_label.get_style_context().add_class("quest_step_label")
+                quest_step_label.get_style_context().add_class("fulfilled")
 
             # Pack each section
             hbox = Gtk.Box()
@@ -133,35 +134,6 @@ class QuestInfo(Gtk.EventBox):
             vbox.pack_start(hbox, True, False, 0)
 
         return fixed
-
-    def create_quest_description(self):
-        sw = ScrolledWindow()
-        sw.apply_styling_to_widget()
-        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        sw.set_size_request(200, 150)
-        sw.get_style_context().add_class("quest_section")
-
-        desc_background = Gtk.EventBox()
-        desc_background.set_margin_top(10)
-        desc_background.set_margin_left(10)
-        sw.add(desc_background)
-
-        title_label = Gtk.Label("Quest Info")
-        title_label.get_style_context().add_class("quest_info_title")
-        title_label.set_alignment(xalign=0, yalign=0.5)
-
-        desc_label = Gtk.Label(self.quest._description)
-        desc_label.get_style_context().add_class("quest_info_description")
-        desc_label.set_alignment(xalign=0, yalign=0)
-        desc_label.set_line_wrap(True)
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        desc_background.add(vbox)
-
-        vbox.pack_start(title_label, False, False, 0)
-        vbox.pack_start(desc_label, False, False, 0)
-
-        return sw
 
     def create_reward_section(self):
         background = Gtk.EventBox()
@@ -220,3 +192,35 @@ class QuestInfo(Gtk.EventBox):
 
         vbox.pack_start(label, False, False, 5)
         return background
+
+    # Currently not used
+    '''
+    def create_quest_description(self):
+        sw = ScrolledWindow()
+        sw.apply_styling_to_widget()
+        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        sw.set_size_request(200, 150)
+        sw.get_style_context().add_class("quest_section")
+
+        desc_background = Gtk.EventBox()
+        desc_background.set_margin_top(10)
+        desc_background.set_margin_left(10)
+        sw.add(desc_background)
+
+        title_label = Gtk.Label("Quest Info")
+        title_label.get_style_context().add_class("quest_info_title")
+        title_label.set_alignment(xalign=0, yalign=0.5)
+
+        desc_label = Gtk.Label(self.quest._description)
+        desc_label.get_style_context().add_class("quest_info_description")
+        desc_label.set_alignment(xalign=0, yalign=0)
+        desc_label.set_line_wrap(True)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        desc_background.add(vbox)
+
+        vbox.pack_start(title_label, False, False, 0)
+        vbox.pack_start(desc_label, False, False, 0)
+
+        return sw
+    '''

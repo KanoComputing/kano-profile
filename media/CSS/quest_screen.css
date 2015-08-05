@@ -6,11 +6,6 @@
     background: #dddddd;
 }
 
-.quest.objective {
-    color: #555555;
-    font: Bariol bold 17;
-}
-
 .quest.reward {
     color: #555555;
     font: Bariol 17;
@@ -28,24 +23,29 @@
     background: #eeeeee;
 }
 
-.quest_info_title {
+.quest_item_title {
     font: Bariol bold 15;
     color: #111111;
 }
 
-.quest_info_rewards, .quest_info_description {
+.quest_item_rewards {
     font: Bariol 15;
     color: #777777;
 }
 
 .quest_step_label {
-    font: Bariol 15;
-    color: #777777;
+    font: Bariol bold 15;
+    color: #444444;
 }
 
 .quest_step_label.fulfilled {
-    font: Bariol 15;
+    font: Bariol bold 15;
     color: @kano_green;
+}
+
+.quest_info_title {
+    font: Bariol Bold 18px;
+    color: #111111;
 }
 /******************************************/
 
@@ -74,10 +74,6 @@
 .progress_linker {
     background: @kano_green;
     border-radius: 2px;
-}
-
-.progress_title {
-    font: Bariol Bold 18px;
 }
 
 /******************************************/

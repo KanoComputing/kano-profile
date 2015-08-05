@@ -98,7 +98,7 @@ class QuestListItem(Gtk.EventBox):
         quest_icon.set_margin_left(10)
 
         self.title_widget = Gtk.Label(title)
-        self.title_widget.get_style_context().add_class("quest_info_title")
+        self.title_widget.get_style_context().add_class("quest_item_title")
         self.title_widget.set_alignment(xalign=0, yalign=1)
 
         # Get text for the reward_list_widget
@@ -111,7 +111,7 @@ class QuestListItem(Gtk.EventBox):
 
         self.reward_list_label = Gtk.Label(reward_text)
         self.reward_list_label.set_alignment(xalign=0, yalign=0)
-        self.reward_list_label.get_style_context().add_class("quest_info_rewards")
+        self.reward_list_label.get_style_context().add_class("quest_item_rewards")
 
         quest_text_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         quest_text_vbox.pack_start(self.title_widget, True, True, 0)

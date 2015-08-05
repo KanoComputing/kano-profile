@@ -24,6 +24,14 @@
     background: #eeeeee;
 }
 
+.quest.fulfilled {
+    background: #ffff00;
+}
+
+.quest.fulfilled.hover {
+    background: #fff000;
+}
+
 .quest_item_title {
     font: Bariol bold 19px;
     color: #111111;

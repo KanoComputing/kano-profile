@@ -49,7 +49,7 @@ class ProgressDot(Gtk.Fixed):
         tick_background.add(self._tick)
         self.put(tick_background, 10, 0)
         tick_file = os.path.join(
-            image_dir, "ticks/{}-tick-stylised.svg".format(color)
+            image_dir, "quests/{}-tick-stylised.svg".format(color)
         )
 
         if filled:

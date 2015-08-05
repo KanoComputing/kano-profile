@@ -16,7 +16,7 @@ from kano_profile_gui.ProgressDot import ProgressDot
 
 class QuestInfo(Gtk.EventBox):
     css_path = os.path.join(css_dir, "quest_screen.css")
-    reward_path = os.path.join(image_dir, "chest.svg")
+    reward_path = os.path.join(image_dir, "quests/chest.svg")
 
     def __init__(self, **keywords):
         Gtk.EventBox.__init__(self)
@@ -56,7 +56,7 @@ class QuestInfo(Gtk.EventBox):
         self.win.show_all()
 
     def create_progress_section(self):
-        scroll_path = os.path.join(image_dir, "scroll.svg")
+        scroll_path = os.path.join(image_dir, "quests/scroll.svg")
         scroll_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(scroll_path, 505, -1)
         scroll_img = Gtk.Image.new_from_pixbuf(scroll_pixbuf)
 

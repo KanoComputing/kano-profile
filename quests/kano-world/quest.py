@@ -9,6 +9,7 @@ from kano.network import is_internet
 from kano_profile.quests import Quest, XP, Badge, quest_media, Step, \
     api_version
 from kano_profile.apps import load_app_state, get_app_list, save_app_state
+from kano_world.functions import is_registered
 
 
 class WorldExplorerBadge(Badge):
@@ -16,7 +17,7 @@ class WorldExplorerBadge(Badge):
         super(WorldExplorerBadge, self)._configure()
 
         self._id = 'world-expoler'
-        self._title = title = 'Kano World Explorer'
+        self._title = title = 'World Explorer'
         self._icon = quest_media(__file__, 'badge.svg')
 
         self._dest_locked = title
@@ -32,25 +33,25 @@ class WorldExplorerBadge(Badge):
 
 class Step1(Step):
     def _configure(self):
+        super(Step1, self)._configure()
         self._title = 'Connect to wifi'
 
     def is_fulfilled(self):
-        if is_internet():
-            return True
-        else:
-            return False
+        return is_internet()
 
 
 class Step2(Step):
     def _configure(self):
+        super(Step2, self)._configure()
         self._title = 'Connect your Kano World account'
 
     def is_fulfilled(self):
-        return True
+        return is_registered()
 
 
 class Step3(Step):
     def _configure(self):
+        super(Step3, self)._configure()
         self._title = 'Launch the Kano World app'
 
     def is_fulfilled(self):
@@ -59,6 +60,7 @@ class Step3(Step):
 
 class Step4(Step):
     def _configure(self):
+        super(Step4, self)._configure()
         self._title = 'Like an awesome Kano World share'
 
     def is_fulfilled(self):
@@ -67,6 +69,7 @@ class Step4(Step):
 
 class KanoWorldQuest(Quest):
     def _configure(self):
+        super(KanoWorldQuest, self)._configure()
         self._id = 'travel-to-kano-world'
         self._title = 'Travel to Kano World'
         self._description = """

@@ -9,7 +9,7 @@ import json
 import imp
 
 from kano.logging import logger
-from kano.utils import ensure_dir
+from kano.utils import ensure_dir, run_cmd
 from .paths import profile_dir
 from kano_profile_gui.paths import media_dir
 
@@ -102,6 +102,9 @@ class Quests(object):
         self._load_system_modules()
         self._load_external_modules()
 
+        self._event_map = {}
+        self._init_event_map()
+
     def _load_system_modules(self):
         for load_path in QUESTS_LOAD_PATHS:
             if os.path.exists(load_path):
@@ -120,6 +123,13 @@ class Quests(object):
             TODO: This needs to be populated from kano-content
         """
         pass
+
+    def _init_event_map(self):
+        for q in self._quests:
+            for event in q.events:
+                if event not in self._event_map:
+                    self._event_map[event] = []
+                self._event_map[event].append(q)
 
     def list_quests(self):
         return self._quests
@@ -173,6 +183,17 @@ class Quests(object):
 
         return badges
 
+    def trigger_event(self, event_name):
+        refresh_kdesk = False
+        if event_name in self._event_map:
+            for q in self._event_map[event_name]:
+                not_fulfilled_before = q.state == Quest.ACTIVE
+                if not_fulfilled_before == q.is_fulfilled():
+                    refresh_kdesk = True
+
+        if refresh_kdesk:
+            run_cmd('kdesk -a profile')
+
 
 class Step(object):
     """
@@ -182,11 +203,14 @@ class Step(object):
     """
 
     def __init__(self):
+        self._title = None
+        self._help = None
+        self._events = []
+
         self._configure()
 
     def _configure(self):
-        self._title = None
-        self._help = None
+        pass
 
     def is_fulfilled(self):
         return True
@@ -199,6 +223,10 @@ class Step(object):
     def help(self):
         return self._help
 
+    @property
+    def events(self):
+        return self._events
+
 
 class Reward(object):
     """
@@ -208,9 +236,6 @@ class Reward(object):
     """
 
     def __init__(self):
-        self._configure()
-
-    def _configure(self):
         self._icon = None
         self._title = None
 
@@ -219,6 +244,11 @@ class Reward(object):
         n['byline'] = None
         n['command'] = None
         n['image'] = None
+
+        self._configure()
+
+    def _configure(self):
+        pass
 
     @property
     def icon(self):
@@ -237,15 +267,18 @@ class Reward(object):
 
 
 class Badge(Reward):
-    def _configure(self):
-        super(Badge, self)._configure()
-
+    def __init__(self):
         # _title and _icon inherited from reward
 
         self._id = None
         self._desc_locked = None
         self._desc_unlocked = None
         self._image = None
+
+        super(Badge, self).__init__()
+
+    def _configure(self):
+        super(Badge, self)._configure()
 
     @property
     def id(self):
@@ -301,13 +334,7 @@ class Quest(object):
 
     def __init__(self, manager):
         self._manager = manager
-        self._path = os.path.dirname(os.path.abspath(__file__))
-        self._state = self.INACTIVE
-        self._configure()
 
-        self._load_state()
-
-    def _configure(self):
         self._id = None
         self._icon = None
         self._title = None
@@ -316,10 +343,18 @@ class Quest(object):
         self._rewards = []
         self._depends = []
 
+        self._configure()
+
+        self._state = self.INACTIVE
+        self._load_state()
+
+    def _configure(self):
+        pass
+
     def _load_state(self):
         if os.path.exists(QUESTS_STORE):
-            with open(QUESTS_STORE, 'r') as f:
-                store = json.load(f)
+            with open(QUESTS_STORE, 'r') as quest_store_f:
+                store = json.load(quest_store_f)
         else:
             store = {}
 
@@ -329,8 +364,8 @@ class Quest(object):
     def _save_state(self):
         ensure_dir(os.path.dirname(QUESTS_STORE))
         if os.path.exists(QUESTS_STORE):
-            with open(QUESTS_STORE, 'r') as f:
-                store = json.load(f)
+            with open(QUESTS_STORE, 'r') as quest_store_f:
+                store = json.load(quest_store_f)
         else:
             store = {}
 
@@ -338,8 +373,8 @@ class Quest(object):
             store[self._id] = {}
         store[self._id]['state'] = self._state
 
-        with open(QUESTS_STORE, 'w') as f:
-            json.dump(store, f)
+        with open(QUESTS_STORE, 'w') as quest_store_f:
+            json.dump(store, quest_store_f)
 
     def _can_be_active(self):
         active = True
@@ -412,6 +447,8 @@ class Quest(object):
         if self.is_fulfilled():
             self._state = self.COMPLETED
             self._save_state()
+
+            run_cmd('kdesk -a profile')
         else:
             raise QuestError('Quest not ready to be completed.')
 
@@ -448,3 +485,10 @@ class Quest(object):
     @property
     def rewards(self):
         return self._rewards
+
+    @property
+    def events(self):
+        events = []
+        for s in self._steps:
+            events += s.events
+        return list(set(events))

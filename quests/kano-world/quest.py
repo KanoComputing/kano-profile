@@ -22,6 +22,7 @@ class WorldExplorerBadge(Badge):
 
         self._dest_locked = title
         self._desc_unlocked = 'You discovered Kano World!'
+        self._bg_color = 'ffe591'
         self._image = self._icon
 
         n = self._notification

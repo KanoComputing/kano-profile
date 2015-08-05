@@ -88,11 +88,8 @@ class QuestListItem(Gtk.EventBox):
         else:
             self.get_style_context().add_class("not_fulfilled")
 
-        valign = Gtk.Alignment(yalign=0.5)
-        valign.set_size_request(-1, 100)
-        self.add(valign)
         hbox = Gtk.Box()
-        valign.add(hbox)
+        self.add(hbox)
 
         quest_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
             self.quest_info.icon, 100, 100
@@ -102,7 +99,7 @@ class QuestListItem(Gtk.EventBox):
 
         self.title_widget = Gtk.Label(title)
         self.title_widget.get_style_context().add_class("quest_info_title")
-        self.title_widget.set_alignment(xalign=0, yalign=0.5)
+        self.title_widget.set_alignment(xalign=0, yalign=1)
 
         # Get text for the reward_list_widget
         reward_text = "Rewards: "
@@ -112,20 +109,20 @@ class QuestListItem(Gtk.EventBox):
             if not reward == self.quest_info.rewards[-1]:
                 reward_text += ", "
 
-        self.reward_list_widget = Gtk.Label(reward_text)
-        self.reward_list_widget.set_alignment(xalign=0, yalign=0.5)
-        self.reward_list_widget.get_style_context().add_class("quest_info_rewards")
+        self.reward_list_label = Gtk.Label(reward_text)
+        self.reward_list_label.set_alignment(xalign=0, yalign=0)
+        self.reward_list_label.get_style_context().add_class("quest_info_rewards")
 
         quest_text_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        quest_text_vbox.pack_start(self.title_widget, False, False, 0)
-        quest_text_vbox.pack_start(self.reward_list_widget, False, False, 0)
+        quest_text_vbox.pack_start(self.title_widget, True, True, 0)
+        quest_text_vbox.pack_start(self.reward_list_label, True, True, 0)
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.reward_path, 40, 40)
         reward_image = Gtk.Image.new_from_pixbuf(pixbuf)
 
         # Pack in all the widgets.
         hbox.pack_start(quest_icon, False, False, 0)
-        hbox.pack_start(quest_text_vbox, False, False, 10)
+        hbox.pack_start(quest_text_vbox, True, False, 10)
 
         if fulfilled:
             self.connect("button-release-event", self.claim_reward)

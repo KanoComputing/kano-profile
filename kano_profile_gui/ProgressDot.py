@@ -19,14 +19,14 @@ class ProgressDot(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
 
         self.get_style_context().add_class("progress_outer_ring")
-        self.set_size_request(30, 30)
+        self.set_size_request(44, 44)
 
         align1 = Gtk.Alignment(xscale=0, yscale=0, xalign=0.5, yalign=0.5)
         self.add(align1)
 
         white_ring = Gtk.EventBox()
         white_ring.get_style_context().add_class("progress_white_section")
-        white_ring.set_size_request(20, 20)
+        white_ring.set_size_request(34, 34)
 
         align1.add(white_ring)
 
@@ -34,7 +34,7 @@ class ProgressDot(Gtk.EventBox):
         white_ring.add(align2)
 
         centre = Gtk.EventBox()
-        centre.set_size_request(10, 10)
+        centre.set_size_request(24, 24)
         align2.add(centre)
 
         if filled:

@@ -50,25 +50,25 @@
 /******************************************/
 
 .progress_outer_ring {
-    background: @kano_green;
-    border-radius: 15px;
+    background: @kano_green_darker;
+    border-radius: 22px;
 }
 
 .progress_white_section {
-    background: #ffffff;
-    border-radius: 10px;
+    background: #D3B28C;
+    border-radius: 17px;
 }
 
 .progress_centre_filled, .progress_centre_unfilled {
-    border-radius: 5px;
+    border-radius: 12px;
 }
 
 .progress_centre_filled {
-    background: @kano_green;
+    background: @kano_green_darker;
 }
 
 .progress_centre_unfilled {
-    background: #ffffff;
+    background: #D3B28C;
 }
 
 .progress_linker {

@@ -11,8 +11,6 @@ import os
 from gi.repository import Gtk, GdkPixbuf
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano_profile_gui.paths import css_dir, image_dir
-from kano_profile_gui.navigation_buttons import create_navigation_button
-from kano.gtk3.scrolled_window import ScrolledWindow
 from kano_profile_gui.ProgressDot import ProgressDot
 
 
@@ -34,6 +32,7 @@ class QuestInfo(Gtk.EventBox):
         self.grid.set_margin_right(10)
         self.grid.set_margin_bottom(10)
         self.grid.set_margin_top(10)
+        vbox.pack_start(self.grid, False, False, 0)
 
         # May be better elsewhere
         self.win = keywords["win"]
@@ -45,45 +44,15 @@ class QuestInfo(Gtk.EventBox):
         progress_section = self.create_progress_section()
         self.grid.attach(progress_section, 0, 0, 1, 1)
 
-        # Pack in Quest Description
-        # quest_desc = self.create_quest_description()
-        # self.grid.attach(quest_desc, 1, 0, 1, 1)
-
         # Pack in Rewards
         rewards = self.create_reward_section()
         self.grid.attach(rewards, 1, 0, 1, 1)
-
-        vbox.pack_start(self.grid, False, False, 0)
 
         # Add the bottom bar
         # bottom_bar = self._create_bottom_navigation_bar()
         # self.win.pack_in_bottom_bar(bottom_bar)
 
         self.win.show_all()
-
-    def _create_bottom_navigation_bar(self):
-        navigation_bar = Gtk.EventBox()
-        navigation_bar.get_style_context().add_class("quest_section")
-        bottom_bar = Gtk.ButtonBox()
-        navigation_bar.add(bottom_bar)
-
-        # Do we show these and navigate between the quests this way?
-        self.next_button = create_navigation_button(_("Next page").upper(),
-                                                    "next")
-        # self.next_button.connect("clicked", self._load_page_wrapper, 1)
-
-        self.prev_button = create_navigation_button(_("Previous").upper(),
-                                                    "previous")
-        # self.prev_button.connect("clicked", self._load_page_wrapper, -1)
-
-        quest_button = create_navigation_button(_("Back to quests").upper(),
-                                                "middle")
-
-        bottom_bar.pack_start(self.prev_button, False, False, 0)
-        bottom_bar.pack_start(quest_button, False, False, 0)
-        bottom_bar.pack_end(self.next_button, False, False, 0)
-
-        return navigation_bar
 
     def create_progress_section(self):
         scroll_path = os.path.join(image_dir, "scroll.svg")
@@ -223,4 +192,28 @@ class QuestInfo(Gtk.EventBox):
         vbox.pack_start(desc_label, False, False, 0)
 
         return sw
+
+    def _create_bottom_navigation_bar(self):
+        navigation_bar = Gtk.EventBox()
+        navigation_bar.get_style_context().add_class("quest_section")
+        bottom_bar = Gtk.ButtonBox()
+        navigation_bar.add(bottom_bar)
+
+        # Do we show these and navigate between the quests this way?
+        self.next_button = create_navigation_button(_("Next page").upper(),
+                                                    "next")
+        # self.next_button.connect("clicked", self._load_page_wrapper, 1)
+
+        self.prev_button = create_navigation_button(_("Previous").upper(),
+                                                    "previous")
+        # self.prev_button.connect("clicked", self._load_page_wrapper, -1)
+
+        quest_button = create_navigation_button(_("Back to quests").upper(),
+                                                "middle")
+
+        bottom_bar.pack_start(self.prev_button, False, False, 0)
+        bottom_bar.pack_start(quest_button, False, False, 0)
+        bottom_bar.pack_end(self.next_button, False, False, 0)
+
+        return navigation_bar
     '''

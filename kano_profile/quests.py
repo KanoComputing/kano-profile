@@ -512,6 +512,7 @@ class Quest(object):
     def steps(self):
         return self._steps
 
+    @property
     def events(self):
         events = []
         for s in self._steps:

@@ -9,7 +9,7 @@
 
 .quest.reward {
     color: #555555;
-    font: Bariol 17;
+    font: Bariol 17px;
 }
 
 .quest.completed {
@@ -38,12 +38,12 @@
 }
 
 .quest_item_rewards {
-    font: Bariol 15;
+    font: Bariol 15px;
     color: #777777;
 }
 
 .quest_step_label {
-    font: Bariol bold 15;
+    font: Bariol bold 15px;
     color: #ffffff;
 }
 
@@ -81,6 +81,16 @@
 .reward_label {
     font: Bariol 15px;
     color: #555555;
+}
+
+.reward_hover_background {
+    background: alpha(#111111, 0.7);
+    border-radius: 2px;
+}
+
+.reward_hover_label {
+    color: #ffffff;
+    font: Bariol bold 15px;
 }
 
 /*******************************************/

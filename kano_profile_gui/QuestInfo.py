@@ -111,62 +111,27 @@ class QuestInfo(Gtk.EventBox):
         background = Gtk.EventBox()
         background.get_style_context().add_class("quest_section")
         background.get_style_context().add_class("reward_background")
-        background.set_size_request(100, -1)
+        background.set_size_request(140, -1)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         background.add(vbox)
 
         title = Gtk.Label("Rewards")
-        title.set_alignment(xalign=0, yalign=0.5)
+        title.set_alignment(xalign=0.5, yalign=0.5)
         title.set_padding(xpad=10, ypad=10)
         title.get_style_context().add_class("reward_title")
-        grid = Gtk.Grid()
-        grid.set_margin_left(20)
-        grid.set_column_spacing(20)
-        grid.set_row_spacing(20)
+        vbox.pack_start(title, False, False, 10)
 
-        vbox.pack_start(title, False, False, 0)
-        vbox.pack_start(grid, False, False, 0)
-
-        left = 0
-        top = 0
-        max_columns = 1
-
-        rewards = self.quest.rewards
-
-        for reward in rewards:
+        for reward in self.quest.rewards:
             reward_widget = self.create_reward(
                 reward.title, reward.icon
             )
-            grid.attach(reward_widget, left, top, 1, 1)
-            left += 1
-
-            if left >= max_columns:
-                left = 0
-                top += 1
+            vbox.pack_start(reward_widget, False, False, 0)
 
         return background
 
-    def create_reward(self, title, path):
-        # Add hover over effect
-        background = Gtk.EventBox()
-        background.get_style_context().add_class("quest_section")
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        background.add(vbox)
-
-        # For now, use default
-        label = Gtk.Label(title)
-        label.set_line_wrap(True)
-        label.get_style_context().add_class("reward_label")
-
-        if path and os.path.exists(path):
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 120, 120)
-            image = Gtk.Image.new_from_pixbuf(pixbuf)
-            vbox.pack_start(image, False, False, 5)
-
-        vbox.pack_start(label, False, False, 5)
-        return background
+    def create_reward(self, title, icon):
+        return RewardItem(title, icon)
 
     # Currently not used
     '''
@@ -223,3 +188,49 @@ class QuestInfo(Gtk.EventBox):
 
         return navigation_bar
     '''
+
+
+class RewardItem(Gtk.EventBox):
+    height = 140
+    width = 140
+
+    def __init__(self, title, path):
+        Gtk.EventBox.__init__(self)
+        self.set_size_request(self.height, self.width)
+        self.connect("enter-notify-event", self.hover_over_effect)
+        self.connect("leave-notify-event", self.remove_hover_over)
+        self.title = title
+        self.fixed = Gtk.Fixed()
+        self.add(self.fixed)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.fixed.add(vbox)
+
+        if path and os.path.exists(path):
+            img_height = self.height - 40
+            img_width = self.width - 40
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                path, img_height, img_width
+            )
+            image = Gtk.Image.new_from_pixbuf(pixbuf)
+            image.set_margin_top(20)
+            image.set_margin_bottom(20)
+            image.set_margin_right(20)
+            image.set_margin_left(20)
+            vbox.pack_start(image, False, False, 5)
+
+    def hover_over_effect(self, widget, event):
+        label = Gtk.Label(self.title)
+        label.set_line_wrap(True)
+        label.get_style_context().add_class("reward_hover_label")
+
+        self.hover_info = Gtk.EventBox()
+        self.hover_info.set_size_request(self.width, self.height)
+        self.hover_info.get_style_context().add_class("reward_hover_background")
+        self.hover_info.add(label)
+
+        self.fixed.put(self.hover_info, 0, 0)
+        self.hover_info.show_all()
+
+    def remove_hover_over(self, widget, event):
+        self.fixed.remove(self.hover_info)

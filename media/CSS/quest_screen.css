@@ -25,11 +25,15 @@
 }
 
 .quest.fulfilled {
-    background: #ffff00;
+    background: #FCE152;
 }
 
 .quest.fulfilled.hover {
-    background: #fff000;
+    background: #FDF162;
+}
+
+.quest.fulfilled:active {
+    background: #EDd162;
 }
 
 .quest_item_title {
@@ -37,9 +41,17 @@
     color: #111111;
 }
 
+.quest_item_title.fulfilled {
+    color: #76651b;
+}
+
 .quest_item_rewards {
     font: Bariol 15px;
     color: #777777;
+}
+
+.quest_item_rewards.fulfilled {
+    color: #76651b;
 }
 
 .quest_step_label {

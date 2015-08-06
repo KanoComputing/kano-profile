@@ -166,6 +166,14 @@ class Quests(object):
         return None
 
     def evaluate_xp(self):
+        """
+            Returns the total amount of XP based on what quests were
+            completed.
+
+            :returns: Amount of XP.
+            :rtype: int
+        """
+
         xp = 0
         for quest in self._quests:
             if quest.is_completed():
@@ -174,10 +182,19 @@ class Quests(object):
         return xp
 
     def evaluate_badges(self):
-        badges = []
+        """
+            Returns a dict of badges ready to be added to the
+            `calculate_badges()` function's result. This includes both
+            locked and unlocked distinguished by a flag.
+
+            :returns: A dict of badges.
+            :rtype: dict
+        """
+
+        badges = {}
         for quest in self._quests:
-            if quest.is_completed():
-                badges += quest.badges
+            for badge in quest.badges:
+                badges[badge.id] = badge.to_dict(quest.is_completed)
 
         return badges
 
@@ -270,12 +287,22 @@ class Badge(Reward):
         self._id = None
         self._desc_locked = None
         self._desc_unlocked = None
+        self._bg_color = None
         self._image = None
 
         super(Badge, self).__init__()
 
     def _configure(self):
         super(Badge, self)._configure()
+
+    def to_dict(self, achieved=True):
+        b = {}
+
+        b['title'] = self._title
+        b['desc_locked'] = self._desc_locked
+        b['desc_unlocked'] = self._desc_unlocked
+        b['bg_color'] = self._bg_color
+        b['achieved'] = achieved
 
     @property
     def id(self):

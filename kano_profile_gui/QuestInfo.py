@@ -49,10 +49,6 @@ class QuestInfo(Gtk.EventBox):
         rewards = self.create_reward_section()
         self.grid.attach(rewards, 1, 0, 1, 1)
 
-        # Add the bottom bar
-        # bottom_bar = self._create_bottom_navigation_bar()
-        # self.win.pack_in_bottom_bar(bottom_bar)
-
         self.win.show_all()
 
     def create_progress_section(self):

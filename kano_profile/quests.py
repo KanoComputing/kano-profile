@@ -366,6 +366,7 @@ class Quest(object):
 
         self._id = None
         self._icon = None
+        self._fulfilled_icon = None
         self._title = None
         self._description = None
         self._steps = []
@@ -494,6 +495,10 @@ class Quest(object):
     @property
     def icon(self):
         return self._icon
+
+    @property
+    def fulfilled_icon(self):
+        return self._fulfilled_icon
 
     @property
     def state(self):

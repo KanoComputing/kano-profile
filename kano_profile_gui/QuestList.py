@@ -13,6 +13,7 @@ from gi.repository import Gtk, GObject, GdkPixbuf
 from kano_profile_gui.paths import css_dir
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano_profile_gui.QuestInfo import QuestInfo
+from kano_profile_gui.ProgressDot import Tick
 
 
 class QuestList(Gtk.EventBox):
@@ -104,8 +105,8 @@ class QuestListItem(Gtk.EventBox):
 
         # Get text for the reward_list_widget
         reward_text = "Rewards: "
-        rewards_box = Gtk.Box()
-        rewards_box.set_margin_right(20)
+        tick_box = Gtk.Box()
+        tick_box.set_margin_right(30)
 
         for reward in self.quest_info.rewards:
             reward_text += reward.title
@@ -113,9 +114,28 @@ class QuestListItem(Gtk.EventBox):
             if not reward == self.quest_info.rewards[-1]:
                 reward_text += ", "
 
-            reward_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(reward.icon, 60, 60)
-            reward_image = Gtk.Image.new_from_pixbuf(reward_pixbuf)
-            rewards_box.pack_start(reward_image, False, False, 5)
+            # reward_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(reward.icon, 60, 60)
+            # reward_image = Gtk.Image.new_from_pixbuf(reward_pixbuf)
+            # rewards_box.pack_start(reward_image, False, False, 5)
+
+        tick_width = 30
+        tick_height = 30
+        for step in self.quest_info.steps:
+
+            # If the whole quest has been completed,
+            # make all the ticks gold
+            if self.quest_info.is_completed():
+                tick = Tick(width=tick_width, height=tick_height, color="gold")
+
+            # If the individual step has been completed,
+            # make all tick orange
+            elif step.is_fulfilled():
+                tick = Tick(width=tick_width, height=tick_height, color="orange")
+
+            # uncompleted steps should have a grey tick
+            else:
+                tick = Tick(width=tick_width, height=tick_height, color="grey")
+            tick_box.pack_start(tick, False, False, 5)
 
         self.reward_list_label = Gtk.Label(reward_text)
         self.reward_list_label.set_alignment(xalign=0, yalign=0)
@@ -136,7 +156,7 @@ class QuestListItem(Gtk.EventBox):
         else:
             self.connect("button-release-event", self.go_to_quest_info)
 
-        hbox.pack_end(rewards_box, False, False, 0)
+        hbox.pack_end(tick_box, False, False, 0)
 
     def hover_over_effect(self, widget, event, hover):
 

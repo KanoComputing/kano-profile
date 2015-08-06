@@ -45,19 +45,30 @@ class ProgressDot(Gtk.Fixed):
 
         tick_background = Gtk.EventBox()
         tick_background.get_style_context().add_class("transparent")
-        self._tick = Gtk.Image()
-        tick_background.add(self._tick)
-        self.put(tick_background, 10, 0)
-        tick_file = os.path.join(
-            image_dir, "quests/{}-tick-stylised.svg".format(color)
-        )
+        self.put(tick_background, 5, 0)
 
         if filled:
-            tick_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                tick_file, 50, 50
-            )
-            self._tick.set_from_pixbuf(tick_pixbuf)
+            self._tick = Tick(50, 50)
+            tick_background.add(self._tick)
 
     @property
     def tick(self):
         return self._tick
+
+
+class Tick(Gtk.Image):
+    def __init__(self, width, height, color="orange", bold=True):
+        Gtk.Image.__init__(self)
+
+        if bold:
+            tick_file = os.path.join(
+                image_dir, "quests/{}-tick.svg".format(color)
+            )
+        else:
+            tick_file = os.path.join(
+                image_dir, "quests/{}-tick-stylised.svg".format(color)
+            )
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            tick_file, width, height
+        )
+        self.set_from_pixbuf(pixbuf)

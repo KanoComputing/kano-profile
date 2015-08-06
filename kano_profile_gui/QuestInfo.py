@@ -133,70 +133,16 @@ class QuestInfo(Gtk.EventBox):
     def create_reward(self, title, icon):
         return RewardItem(title, icon)
 
-    # Currently not used
-    '''
-    def create_quest_description(self):
-        sw = ScrolledWindow()
-        sw.apply_styling_to_widget()
-        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        sw.set_size_request(200, 150)
-        sw.get_style_context().add_class("quest_section")
-
-        desc_background = Gtk.EventBox()
-        desc_background.set_margin_top(10)
-        desc_background.set_margin_left(10)
-        sw.add(desc_background)
-
-        title_label = Gtk.Label("Quest Info")
-        title_label.get_style_context().add_class("quest_info_title")
-        title_label.set_alignment(xalign=0, yalign=0.5)
-
-        desc_label = Gtk.Label(self.quest._description)
-        desc_label.get_style_context().add_class("quest_info_description")
-        desc_label.set_alignment(xalign=0, yalign=0)
-        desc_label.set_line_wrap(True)
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        desc_background.add(vbox)
-
-        vbox.pack_start(title_label, False, False, 0)
-        vbox.pack_start(desc_label, False, False, 0)
-
-        return sw
-
-    def _create_bottom_navigation_bar(self):
-        navigation_bar = Gtk.EventBox()
-        navigation_bar.get_style_context().add_class("quest_section")
-        bottom_bar = Gtk.ButtonBox()
-        navigation_bar.add(bottom_bar)
-
-        # Do we show these and navigate between the quests this way?
-        self.next_button = create_navigation_button(_("Next page").upper(),
-                                                    "next")
-        # self.next_button.connect("clicked", self._load_page_wrapper, 1)
-
-        self.prev_button = create_navigation_button(_("Previous").upper(),
-                                                    "previous")
-        # self.prev_button.connect("clicked", self._load_page_wrapper, -1)
-
-        quest_button = create_navigation_button(_("Back to quests").upper(),
-                                                "middle")
-
-        bottom_bar.pack_start(self.prev_button, False, False, 0)
-        bottom_bar.pack_start(quest_button, False, False, 0)
-        bottom_bar.pack_end(self.next_button, False, False, 0)
-
-        return navigation_bar
-    '''
-
 
 class RewardItem(Gtk.EventBox):
+    width = 190
     height = 140
-    width = 140
+    img_width = 100
+    img_height = 100
 
     def __init__(self, title, path):
         Gtk.EventBox.__init__(self)
-        self.set_size_request(self.height, self.width)
+        self.set_size_request(self.width, self.height)
         self.connect("enter-notify-event", self.hover_over_effect)
         self.connect("leave-notify-event", self.remove_hover_over)
         self.title = title
@@ -207,17 +153,21 @@ class RewardItem(Gtk.EventBox):
         self.fixed.add(vbox)
 
         if path and os.path.exists(path):
-            img_height = self.height - 40
-            img_width = self.width - 40
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                path, img_height, img_width
+                path, self.img_height, self.img_width
             )
+
+            margin_top = (self.height - self.img_height) / 2
+            margin_bottom = margin_top
+            margin_left = (self.width - self.img_width) / 2
+            margin_right = margin_left
+
             image = Gtk.Image.new_from_pixbuf(pixbuf)
-            image.set_margin_top(20)
-            image.set_margin_bottom(20)
-            image.set_margin_right(20)
-            image.set_margin_left(20)
-            vbox.pack_start(image, False, False, 5)
+            image.set_margin_top(margin_top)
+            image.set_margin_bottom(margin_bottom)
+            image.set_margin_right(margin_right)
+            image.set_margin_left(margin_left)
+            vbox.pack_start(image, False, False, 0)
 
     def hover_over_effect(self, widget, event):
         label = Gtk.Label(self.title)

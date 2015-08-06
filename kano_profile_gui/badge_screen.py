@@ -7,7 +7,7 @@
 #
 
 import os
-from gi.repository import Gtk, Gdk, Pango
+from gi.repository import Gtk, Gdk, GdkPixbuf, Pango
 from kano_profile_gui.BadgeItem import BadgeItem
 from kano_profile_gui.backend import create_item_page_list
 from kano_profile_gui.paths import media_dir
@@ -116,21 +116,15 @@ class BadgeGrid(Gtk.Grid):
             row = badge_info['row']
             column = badge_info['column']
 
-            category = badge_info['category']
-            name = badge_info["name"]
             title = badge_info["title"]
             desc_unlocked = badge_info["desc_unlocked"]
             desc_locked = badge_info["desc_locked"]
             background_colour = badge_info['bg_color']
             locked = not badge_info['achieved']
 
-            image_path = get_image_path_at_size(
-                category, name, locked,
-                self._item_width, self._item_height
-            )
-
+            image = get_image(badge_info, self._item_width, self._item_height)
             badge_widget = BadgeItem(
-                image_path, title, desc_unlocked, desc_locked,
+                image, title, desc_unlocked, desc_locked,
                 background_colour, locked
             )
 
@@ -201,14 +195,8 @@ class BadgeInfoScreen(Gtk.EventBox):
         background.override_background_color(Gtk.StateFlags.NORMAL,
                                              color)
 
-        category = self.item_info['category']
-        name = self.item_info['name']
-
-        filename = get_image_path_at_size(
-            category, name, locked, self.image_width, self.image_height
-        )
-
-        self.image = Gtk.Image.new_from_file(filename)
+        self.image = get_image(self.item_info, self.image_width,
+                               self.image_height)
         info_box = self._create_info_box()
 
         hbox = Gtk.Box()
@@ -315,3 +303,19 @@ def get_image_path_at_size(category, name, locked, width, height):
 
     path = os.path.join(media_dir, "images", "badges", size_dir, category, name + '.png')
     return path
+
+
+def get_image(badge_info, width, height):
+    locked = not badge_info['achieved']
+
+    if 'image' in badge_info and 'image_locked' in badge_info:
+        path = badge_info['image_locked'] if locked else badge_info['image']
+    else:
+        path = get_image_path_at_size(
+            badge_info['category'], badge_info['name'], locked, width, height
+        )
+
+    pb = GdkPixbuf.Pixbuf.new_from_file_at_size(path, width, height)
+    img = Gtk.Image()
+    img.set_from_pixbuf(pb)
+    return img

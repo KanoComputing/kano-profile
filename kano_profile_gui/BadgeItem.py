@@ -15,7 +15,7 @@ import kano.gtk3.cursor as cursor
 
 class BadgeItem(Gtk.Button):
 
-    def __init__(self, image_path, title, unlocked_description,
+    def __init__(self, image, title, unlocked_description,
                  locked_description, background_color,
                  locked):
 
@@ -36,7 +36,6 @@ class BadgeItem(Gtk.Button):
 
         self.unlocked_description = unlocked_description
         self.locked_description = locked_description
-        self.image_path = image_path
         self.title = title
         self.locked = locked
 
@@ -46,7 +45,7 @@ class BadgeItem(Gtk.Button):
         self.locked_background_color = Gdk.RGBA()
         self.locked_background_color.parse('#e7e7e7')
 
-        self.image = Gtk.Image.new_from_file(image_path)
+        self.image = image
         self.create_hover_box()
 
         self.set_size_request(self.width, self.height)

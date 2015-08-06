@@ -194,7 +194,7 @@ class Quests(object):
         badges = {}
         for quest in self._quests:
             for badge in quest.badges:
-                badges[badge.id] = badge.to_dict(quest.is_completed)
+                badges[badge.id] = badge.to_dict(quest.is_completed())
 
         return badges
 
@@ -289,6 +289,7 @@ class Badge(Reward):
         self._desc_unlocked = None
         self._bg_color = None
         self._image = None
+        self._image_locked = None
 
         super(Badge, self).__init__()
 
@@ -303,6 +304,10 @@ class Badge(Reward):
         b['desc_unlocked'] = self._desc_unlocked
         b['bg_color'] = self._bg_color
         b['achieved'] = achieved
+        b['image'] = self._image
+        b['image_locked'] = self._image_locked
+
+        return b
 
     @property
     def id(self):

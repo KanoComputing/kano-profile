@@ -12,6 +12,7 @@ from kano.logging import logger
 from kano.utils import ensure_dir, run_cmd
 from .paths import profile_dir
 from kano_profile_gui.paths import media_dir
+from kano.notifications import display_generic_notification
 
 QUESTS_LOAD_PATHS = [
     '/usr/share/kano-profile/quests',
@@ -452,6 +453,13 @@ class Quest(object):
         if fulfilled:
             self._state = self.FULFILLED
             self._save_state()
+
+            display_generic_notification(
+                'Quest complete!',
+                'Click here to claim your rewards.',
+                profile_media('images/quests/quest-complete-notification.png'),
+                'kano-profile-gui quests'
+            )
         return fulfilled
 
     def is_completed(self):
@@ -472,11 +480,24 @@ class Quest(object):
             :raises QuestError: If the quest isn't ready to be marked complete.
         """
 
+        if self.is_completed():
+            return
+
         if self.is_fulfilled():
             self._state = self.COMPLETED
             self._save_state()
 
             run_cmd('kdesk -a profile')
+
+            for reward in self._rewards:
+                n = reward.notification
+                if n:
+                    display_generic_notification(
+                        n['title'],
+                        n['byline'],
+                        n['image'],
+                        n['command']
+                    )
         else:
             raise QuestError('Quest not ready to be completed.')
 

@@ -203,6 +203,7 @@ class QuestListItem(Gtk.Fixed):
             self.background.get_style_context().remove_class("hover")
 
     def claim_reward(self, widget=None, event=None):
+        self.quest_info.mark_completed()
 
         # TODO: this feels quite hacky. Should be moved back to the MenuBar
         # class, and maybe use signals instead?

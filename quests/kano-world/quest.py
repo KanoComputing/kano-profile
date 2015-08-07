@@ -86,6 +86,7 @@ vinegar, four loko fashion axe polaroid freegan trust fund scenester meggings
 semiotics keytar vegan."""
 
         self._icon = quest_media(__file__, 'quest-icon.svg')
+        self._fulfilled_icon = quest_media(__file__, 'quest-icon-completed.svg')
 
         self._steps = [
             Step1(),

@@ -3,23 +3,32 @@
 # BadgeItem.py
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # This controls the size and styling of the pictures displayed on the table
 # Used for badges, environments and avatar screen
 
-from gi.repository import Gtk, GdkPixbuf, Gdk
+# import os
+from gi.repository import Gtk, Gdk, GdkPixbuf
 import kano_profile_gui.components.icons as icons
 import kano.gtk3.cursor as cursor
+# from kano_profile_gui.paths import media_dir
+from kano_profile_gui.image_helper_functions import (
+    create_translucent_layer, get_image_path_at_size
+)
 
 
 class BadgeItem(Gtk.Button):
-
-    def __init__(self, image, title, unlocked_description,
-                 locked_description, background_color,
-                 locked):
+    def __init__(self, badge_info):
 
         Gtk.Button.__init__(self)
+
+        self.badge_info = badge_info
+        self.title = badge_info["title"]
+        self.unlocked_description = badge_info["desc_unlocked"]
+        self.locked_description = badge_info["desc_locked"]
+        background_color = badge_info['bg_color']
+        self.locked = not badge_info['achieved']
 
         # This is the dimensions of the actual item
         self.width = 243
@@ -34,18 +43,12 @@ class BadgeItem(Gtk.Button):
 
         self.get_style_context().add_class("badge_item")
 
-        self.unlocked_description = unlocked_description
-        self.locked_description = locked_description
-        self.title = title
-        self.locked = locked
-
         self.background_color = Gdk.RGBA()
         self.background_color.parse('#' + background_color)
 
         self.locked_background_color = Gdk.RGBA()
         self.locked_background_color.parse('#e7e7e7')
 
-        self.image = image
         self.create_hover_box()
 
         self.set_size_request(self.width, self.height)
@@ -57,7 +60,7 @@ class BadgeItem(Gtk.Button):
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
         self.fixed.set_size_request(self.width, self.height)
-        self.fixed.put(self.image, 7, 7)
+        self.pack_image(self.badge_info)
 
         cursor.attach_cursor_events(self)
         self.change_locked_style()
@@ -69,19 +72,6 @@ class BadgeItem(Gtk.Button):
         self.hover_label.get_style_context().add_class("hover_label")
         self.hover_box.add(self.hover_label)
         self.hover_box.set_size_request(self.width, self.label_height)
-
-    def get_locked(self):
-        return self.locked
-
-    def change_locked_style(self):
-        if self.locked:
-            self.padlock = icons.set_from_name("padlock")
-            self.fixed.put(self.padlock, 100, 77)
-            self.override_background_color(Gtk.StateFlags.NORMAL,
-                                           self.locked_background_color)
-        else:
-            self.override_background_color(Gtk.StateFlags.NORMAL,
-                                           self.background_color)
 
     # This function contains the styling applied to the picture when the mouse
     # hovers over it.
@@ -95,12 +85,59 @@ class BadgeItem(Gtk.Button):
     def get_filename_at_size(self, width_of_image, height_of_image):
         return self.item.get_filename_at_size(width_of_image, height_of_image)
 
-    def get_image_at_size(self):
-        filename = self.get_filename_at_size(self.width, self.height)
-
-        pb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, self.width,
-                                                    self.height)
-        self.image.set_from_pixbuf(pb)
-
     def get_title(self):
         return self.title.upper()
+
+    def pack_image(self, badge_info):
+        '''
+        Get the file path for the badge, pack it and optionally add
+        an overlay.
+        '''
+
+        locked = not badge_info['achieved']
+        force_locked = False
+
+        img = Gtk.Image()
+
+        # New system
+        if 'image' in badge_info:
+            path = badge_info['image']
+
+            if locked:
+                force_locked = True
+
+            width = 130
+            height = 130
+            self.fixed.put(img, 60, 30)
+
+        # Old system
+        else:
+            category = badge_info['category']
+            name = badge_info['name']
+            width = self.img_width
+            height = self.img_height
+            path = get_image_path_at_size(
+                category, name, width, height, locked
+            )
+            self.fixed.put(img, 7, 7)
+
+        pb = GdkPixbuf.Pixbuf.new_from_file_at_size(path, width, height)
+        img.set_from_pixbuf(pb)
+
+        if force_locked:
+            translucent_layer = create_translucent_layer(
+                self.img_width, self.img_height
+            )
+            self.fixed.put(translucent_layer, 0, 0)
+
+        return path
+
+    def change_locked_style(self):
+        if self.locked:
+            self.padlock = icons.set_from_name("padlock")
+            self.fixed.put(self.padlock, 100, 77)
+            self.override_background_color(Gtk.StateFlags.NORMAL,
+                                           self.locked_background_color)
+        else:
+            self.override_background_color(Gtk.StateFlags.NORMAL,
+                                           self.background_color)

@@ -212,3 +212,7 @@ GtkSwitch.slider {
 .button_divider {
     color: @menu_bar_inactive;
 }
+
+.locked_translucent {
+    background: alpha(#dddddd, 0.5);
+}

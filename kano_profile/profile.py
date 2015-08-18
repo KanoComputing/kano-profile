@@ -196,6 +196,18 @@ def set_avatar(subcat, item, sync=False):
     return needs_update
 
 
+ENVIRONMENT_REMAP = {
+    "Arcade Hall": "arcade_hall",
+    "Concert Hall": "concert_hall",
+    "Jungle": "jungle",
+    "Space": "space",
+    "Dojo": "dojo",
+    "Park": "park",
+    "Video Set": "video_set",
+    "Minecraft": "minecraft"
+}
+
+
 def get_environment():
     """ Return the environment
     :returns: the saved environment, or the default
@@ -205,6 +217,8 @@ def get_environment():
     if 'version' in profile and profile['version'] == 2 and \
             'environment' in profile:
         environment = profile['environment']
+        if environment in ENVIRONMENT_REMAP:
+            environment = ENVIRONMENT_REMAP[environment]
     else:
         environment = 'dojo'
     return environment

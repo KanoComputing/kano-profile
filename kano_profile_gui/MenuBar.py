@@ -13,11 +13,6 @@ from kano.gtk3.cursor import attach_cursor_events
 from kano_world.functions import get_mixed_username
 from kano_profile.badges import calculate_kano_level
 from kano_profile_gui.components.icons import get_ui_icon
-from kano_profile.quests import Quests
-
-
-# TODO: Initialised here and in QuestScreen - just initialise in window
-quests = Quests()
 
 
 # In case we change the colour of the menu bar, we have a background
@@ -28,7 +23,7 @@ class MenuBar(Gtk.EventBox):
         'menu-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
-    def __init__(self, win_width):
+    def __init__(self, win_width, quests):
 
         Gtk.EventBox.__init__(self)
         self.get_style_context().add_class('menu_bar_container')
@@ -36,6 +31,8 @@ class MenuBar(Gtk.EventBox):
         self.height = 110
         self.width = win_width
         self.set_size_request(self.width, self.height)
+
+        self._quests = quests
 
         hbox = Gtk.Box()
         self.add(hbox)
@@ -55,7 +52,7 @@ class MenuBar(Gtk.EventBox):
 
         name_array = ['QUESTS', 'BADGES', 'CHARACTER']
         for name in name_array:
-            button = MenuButton(name)
+            button = MenuButton(name, self._quests)
             button.connect("clicked", self.emit_menu_signal, name)
             button.connect("clicked", self.set_selected_wrapper, name)
             hbox.pack_end(button, False, False, 0)
@@ -159,8 +156,9 @@ class MenuButton(Gtk.Button):
 
     kdesk_num_path = "/usr/share/kano-desktop/images/world-numbers"
 
-    def __init__(self, name):
+    def __init__(self, name, quests):
         self.name = name
+        self._quests = quests
 
         Gtk.Button.__init__(self)
         self.selected = False
@@ -191,7 +189,7 @@ class MenuButton(Gtk.Button):
         # This could read from kano-profile based on the name
         # Returns an int between 0-10 inclusive.
 
-        active_quests = quests.list_active_quests()
+        active_quests = self._quests.list_active_quests()
         fulfilled = 0
 
         for quest in active_quests:

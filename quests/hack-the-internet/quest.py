@@ -41,6 +41,7 @@ class Step1(Step):
         ]
 
     def is_fulfilled(self):
+        return False
         return load_app_state_variable('hacker', 'kano-website') == 1
 
 
@@ -54,6 +55,7 @@ class Step2(Step):
         ]
 
     def is_fulfilled(self):
+        return False
         return load_app_state_variable('hacker', 'code') == 'judoka'
 
 

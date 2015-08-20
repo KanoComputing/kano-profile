@@ -55,18 +55,12 @@ class Step3(Step):
     def _configure(self):
         super(Step3, self)._configure()
         self._title = 'Launch the Kano World app'
+        self._events = [
+            'kano-world-launched'
+        ]
 
     def is_fulfilled(self):
-        return False
-
-
-class Step4(Step):
-    def _configure(self):
-        super(Step4, self)._configure()
-        self._title = 'Like an awesome Kano World share'
-
-    def is_fulfilled(self):
-        return True
+        return load_app_state_variable('kano-world-launcher', 'opened')
 
 
 class KanoWorldQuest(Quest):
@@ -92,8 +86,7 @@ semiotics keytar vegan."""
         self._steps = [
             Step1(),
             Step2(),
-            Step3(),
-            Step4()
+            Step3()
         ]
         self._rewards = [
             WorldExplorerBadge(),

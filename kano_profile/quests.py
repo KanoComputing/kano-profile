@@ -15,8 +15,8 @@ from kano_profile_gui.paths import media_dir
 from kano.notifications import display_generic_notification
 
 QUESTS_LOAD_PATHS = [
-    '/usr/share/kano-profile/quests',
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), '../quests')
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), '../quests'),
+    '/usr/share/kano-profile/quests'
 ]
 QUESTS_STORE = os.path.join(profile_dir, 'quests.json')
 
@@ -105,6 +105,13 @@ class Quests(object):
         self._event_map = {}
         self._init_event_map()
 
+    def _quest_exists(self, q):
+        for qi in self._quests:
+            if q.id == qi.id:
+                return True
+
+        return False
+
     def _load_system_modules(self):
         for load_path in QUESTS_LOAD_PATHS:
             if os.path.exists(load_path):
@@ -113,8 +120,10 @@ class Quests(object):
                     modname = os.path.basename(os.path.dirname(f))
                     if os.path.isfile(full_path):
                         qmod = imp.load_source(modname, full_path)
-                        q = qmod.init()
-                        self._quests.append(q(self))
+                        q_class = qmod.init()
+                        q = q_class(self)
+                        if not self._quest_exists(q):
+                            self._quests.append(q)
             else:
                 logger.warn("'{}' not found".format(load_path))
 

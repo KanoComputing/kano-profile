@@ -65,7 +65,7 @@ class MainWindow(ApplicationWindow):
 
         self._main_content = Gtk.EventBox()
 
-        self._menu_bar = MenuBar(self.width)
+        self._menu_bar = MenuBar(self.width, self.quests)
         self._menu_bar.connect('home-button-clicked', self.go_to_category)
         self._menu_bar.connect('menu-button-clicked', self.go_to_category)
 

@@ -16,11 +16,17 @@ from kano_world.config import WORLD_URL
 from kano.logging import logger
 from kano.network import is_internet
 from kano_profile.tracker import Tracker
+from kano_profile.apps import save_app_state_variable
+from kano_profile.quests import Quests
 
-kanotracker = Tracker()
 chromium_folder = os.path.join(get_home(), '.config/chromium/')
 chromium_local_state = os.path.join(chromium_folder, 'Local State')
 
+kanotracker = Tracker()
+
+# Trigger a quest event
+save_app_state_variable('kano-world-launcher', 'opened', True)
+Quests().trigger_event('kano-world-launched')
 
 def modify_local_state():
     logger.info('modify_local_state')

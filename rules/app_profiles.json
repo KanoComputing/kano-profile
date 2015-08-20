@@ -47,6 +47,9 @@
   },
   "kano-hardware": {
     "private": true
+  },
+  "kano-egg": {
+    "max-level": 5
   }
 }
 

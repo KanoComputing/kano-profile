@@ -1,0 +1,116 @@
+/* QuestScreen styling */
+
+/********** Quests screen ********/
+
+.quest_screen_background {
+    background: #dddddd;
+    color: #dddddd;
+}
+
+.quest.reward {
+    color: #555555;
+    font: Bariol 17px;
+}
+
+.quest.completed {
+    background: @kano_green_lighter;
+}
+
+.quest.not_fulfilled {
+    background: #ffffff;
+}
+
+.quest.not_fulfilled.hover {
+    background: #eeeeee;
+}
+
+.quest.fulfilled {
+    background: #FCE152;
+}
+
+.quest.fulfilled.hover {
+    background: #FDF162;
+}
+
+.quest.fulfilled:active {
+    background: #EDd162;
+}
+
+.quest_item_title {
+    font: Bariol bold 19px;
+    color: #111111;
+}
+
+.quest_item_title.fulfilled {
+    color: #76651b;
+}
+
+.quest_item_rewards {
+    font: Bariol 15px;
+    color: #777777;
+}
+
+.quest_item_rewards.fulfilled {
+    color: #76651b;
+}
+
+.quest_step_label {
+    font: Bariol bold 15px;
+    color: #ffffff;
+}
+
+.quest_info_title {
+    font: Bariol Bold 18px;
+    color: #ffffff;
+}
+/******************************************/
+
+.progress_outer_ring {
+    background: #ffffff;
+    color: #ffffff;
+    border-radius: 22px;
+}
+
+.progress_scroll_section {
+    background: #D3B28C;
+    color: #D3B28C;
+    border-radius: 17px;
+}
+
+/******************************************/
+
+.quest_section {
+    background: #ffffff;
+}
+
+/******************************************/
+
+.reward_title {
+    font: Bariol bold 18px;
+    color: #111111;
+}
+
+.reward_label {
+    font: Bariol 15px;
+    color: #555555;
+}
+
+.reward_hover_background {
+    background: alpha(#111111, 0.7);
+    border-radius: 2px;
+}
+
+.reward_hover_label {
+    color: #ffffff;
+    font: Bariol bold 15px;
+}
+
+/*******************************************/
+.section_title {
+    font: Bariol Bold 20px;
+}
+
+.transparent {
+    background: transparent;
+    color: transparent;
+}

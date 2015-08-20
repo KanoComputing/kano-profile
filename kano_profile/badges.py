@@ -3,7 +3,7 @@
 # badges.py
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 from __future__ import division
@@ -16,6 +16,7 @@ from kano.utils import read_json, is_gui, is_running, run_bg
 from .paths import xp_file, levels_file, rules_dir, bin_dir, \
     app_profiles_file, online_badges_dir, online_badges_file
 from .apps import load_app_state, get_app_list, save_app_state
+from .quests import Quests
 
 
 def calculate_xp():
@@ -49,7 +50,8 @@ def calculate_xp():
                     if thing in appstate:
                         points += value * appstate[thing]
 
-    return int(points)
+    qm = Quests()
+    return int(points) + qm.evaluate_xp()
 
 
 def calculate_kano_level():
@@ -177,6 +179,10 @@ def calculate_badges():
 
     # add pushed back ones
     do_calculate(True)
+
+    # Inject badges from quests to the dict
+    qm = Quests()
+    calculated_badges['badges']['quests'] = qm.evaluate_badges()
 
     return calculated_badges
 

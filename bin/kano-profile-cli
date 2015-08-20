@@ -19,6 +19,7 @@ from kano_profile.profile import load_profile, get_avatar, get_environment, \
 from kano_profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
     calculate_kano_level, increment_app_state_variable_with_dialog
 from kano_world.functions import is_registered, get_mixed_username, has_token
+from kano_profile.quests import Quests
 from kano.utils import is_number
 
 variable_not_found_str = "VARIABLE_NOT_FOUND"
@@ -38,7 +39,8 @@ if len(sys.argv) == 1:
     help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
     help += 'save_app_state_variable_get_xp_diff, increment_app_state_variable\n'
     help += 'is_registered, get_stats, get_email, get_notifications,\n'
-    help += 'get_notifications_count, increment_app_runtime'
+    help += 'get_notifications_count, increment_app_runtime,\n'
+    help += 'fulfilled_quests_count, trigger_quests_event'
     sys.exit(help)
 
 if sys.argv[1] == 'get_app_data_dir':
@@ -146,7 +148,7 @@ elif sys.argv[1] == 'get_notifications':
     check_arg_len(1)
     try:
         unread_notifications = load_profile()['notifications']
-        print 'notifications: {}'.format(unread_notfications)
+        print 'notifications: {}'.format(unread_notifications)
     except Exception:
         print 'notifications not found'
         sys.exit(1)
@@ -172,5 +174,17 @@ elif sys.argv[1] == 'increment_app_runtime':
 
     add_runtime_to_app(app, runtime)
 
+elif sys.argv[1] == 'fulfilled_quests_count':
+    check_arg_len(1)
+
+    qm = Quests()
+    print len([q for q in qm.list_active_quests() if q.is_fulfilled()])
+
+elif sys.argv[1] == 'trigger_quests_event':
+    check_arg_len(2)
+
+    event_name = sys.argv[2]
+    qm = Quests()
+    qm.trigger_event(event_name)
 else:
     sys.exit("wrong usage")

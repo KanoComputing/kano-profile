@@ -7,12 +7,15 @@
 #
 
 import os
-from gi.repository import Gtk, Gdk, Pango
+from gi.repository import Gtk, Gdk, GdkPixbuf, Pango
 from kano_profile_gui.BadgeItem import BadgeItem
 from kano_profile_gui.backend import create_item_page_list
 from kano_profile_gui.paths import media_dir
 from kano_profile_gui.navigation_buttons import create_navigation_button
 from kano.gtk3.apply_styles import apply_styling_to_screen
+from kano_profile_gui.image_helper_functions import (
+    create_translucent_layer, get_image_path_at_size
+)
 
 
 class BadgeScreen(Gtk.EventBox):
@@ -86,13 +89,6 @@ class BadgeGrid(Gtk.Grid):
         Gtk.Grid.__init__(self)
         self._win = win
         self.get_style_context().add_class("badge_grid")
-
-        # We use these to find the filepath leading to the images
-        # of these sizes, these aren't necessarily the size of the grid
-        # items
-        self._item_width = 230
-        self._item_height = 180
-
         self.row = 2
         self.column = 3
         self.number_on_page = self.row * self.column
@@ -115,24 +111,7 @@ class BadgeGrid(Gtk.Grid):
 
             row = badge_info['row']
             column = badge_info['column']
-
-            category = badge_info['category']
-            name = badge_info["name"]
-            title = badge_info["title"]
-            desc_unlocked = badge_info["desc_unlocked"]
-            desc_locked = badge_info["desc_locked"]
-            background_colour = badge_info['bg_color']
-            locked = not badge_info['achieved']
-
-            image_path = get_image_path_at_size(
-                category, name, locked,
-                self._item_width, self._item_height
-            )
-
-            badge_widget = BadgeItem(
-                image_path, title, desc_unlocked, desc_locked,
-                background_colour, locked
-            )
+            badge_widget = BadgeItem(badge_info)
 
             # This is the index of the badge in the ordered array of all the
             # badges
@@ -201,18 +180,12 @@ class BadgeInfoScreen(Gtk.EventBox):
         background.override_background_color(Gtk.StateFlags.NORMAL,
                                              color)
 
-        category = self.item_info['category']
-        name = self.item_info['name']
+        badge_fixed = self.create_badge_fixed(self.item_info)
 
-        filename = get_image_path_at_size(
-            category, name, locked, self.image_width, self.image_height
-        )
-
-        self.image = Gtk.Image.new_from_file(filename)
         info_box = self._create_info_box()
 
         hbox = Gtk.Box()
-        hbox.pack_start(self.image, False, False, 0)
+        hbox.pack_start(badge_fixed, False, False, 0)
         hbox.pack_start(info_box, False, False, 0)
 
         background.add(hbox)
@@ -302,16 +275,48 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _get_item_colour(self):
         return self.item_info['bg_color']
 
-    def set_image_from_info(self, width, height):
-        img_path = self._get_image_path_at_size(590, 270)
-        self.image = Gtk.Image.new_from_file(img_path)
+    def create_badge_fixed(self, badge_info):
+        '''
+        Get the file path for the badge, pack it and optionally add
+        an overlay.
+        '''
 
+        locked = not badge_info['achieved']
+        force_locked = False
 
-def get_image_path_at_size(category, name, locked, width, height):
-    size_dir = str(width) + 'x' + str(height)
+        fixed = Gtk.Fixed()
+        img = Gtk.Image()
+        fixed.set_size_request(self.image_width, self.image_height)
 
-    if locked:
-        name = name + "_locked"
+        # New system
+        if 'image' in badge_info:
+            path = badge_info['image']
 
-    path = os.path.join(media_dir, "images", "badges", size_dir, category, name + '.png')
-    return path
+            if locked:
+                force_locked = True
+
+            width = 330
+            height = 330
+            fixed.put(img, 60, 60)
+
+        # Old system
+        else:
+            category = badge_info['category']
+            name = badge_info['name']
+            width = self.image_width
+            height = self.image_height
+            path = get_image_path_at_size(
+                category, name, width, height, locked
+            )
+            fixed.put(img, 0, 0)
+
+        pb = GdkPixbuf.Pixbuf.new_from_file_at_size(path, width, height)
+        img.set_from_pixbuf(pb)
+
+        if force_locked:
+            translucent_layer = create_translucent_layer(
+                self.image_width, self.image_height
+            )
+            fixed.put(translucent_layer, 0, 0)
+
+        return fixed

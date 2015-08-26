@@ -159,7 +159,7 @@ class MainWindow(ApplicationWindow):
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
 
-    start_from = args['--screen'] if args['--screen'] != 'none' else None
+    start_from = args['--screen'].upper() if args['--screen'] != 'none' else None
     mw = MainWindow(start_from)
     mw.show_all()
     Gtk.main()

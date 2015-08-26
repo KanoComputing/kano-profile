@@ -6,6 +6,19 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
+"""
+kano-profile-gui shows the different screens for the GUI.
+
+Usage:
+  kano-profile-gui
+  kano-profile-gui [--screen=<screen-id>]
+
+Options:
+   -h, --help                Show this message.
+   -s, --screen=<screen-id>  Launch a specific screen by id
+"""
+
+import docopt
 import os
 import sys
 from gi.repository import Gtk
@@ -39,7 +52,7 @@ from kano_profile.quests import Quests
 
 class MainWindow(ApplicationWindow):
 
-    def __init__(self):
+    def __init__(self, start_screen="CHARACTER"):
         self.height = 596
         self.width = 734
         ApplicationWindow.__init__(self, 'Kano Profile', self.width,
@@ -49,6 +62,7 @@ class MainWindow(ApplicationWindow):
         apply_colours_to_screen()
         self.css_path = os.path.join(media_dir, "CSS/kano_profile_gui.css")
         apply_styling_to_screen(self.css_path)
+        self.connect('delete-event', Gtk.main_quit)
 
         # Initialise the character creator
         self.char_creator = CharacterCreator(randomise=True)
@@ -79,7 +93,7 @@ class MainWindow(ApplicationWindow):
         os.system('/usr/bin/kano-stop-splash')
 
         # init home screen
-        self.go_to_category(self._menu_bar.home_button, 'CHARACTER')
+        self.go_to_category(self._menu_bar.home_button, start_screen)
         self.show_all()
 
     def pack_in_main_content(self, widget):
@@ -119,6 +133,9 @@ class MainWindow(ApplicationWindow):
             'QUESTS': QuestList,
         }
 
+        if page not in refs:
+            raise Exception("Page {} not found!".format(page))
+
         module = refs[page]
         self.empty_main_content()
         self.empty_bottom_bar()
@@ -139,14 +156,10 @@ class MainWindow(ApplicationWindow):
     def menu_bar(self):
         return self._menu_bar
 
-
-def main():
-
-    win = MainWindow()
-    win.connect('delete-event', Gtk.main_quit)
-    win.show_all()
-    Gtk.main()
-
-
 if __name__ == '__main__':
-    main()
+    args = docopt.docopt(__doc__)
+
+    start_from = args['--screen'] if args['--screen'] != 'none' else None
+    mw = MainWindow(start_from)
+    mw.show_all()
+    Gtk.main()

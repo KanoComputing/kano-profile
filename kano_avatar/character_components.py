@@ -555,7 +555,8 @@ class AvatarCategory(AvatarBase):
         return self._items[item_name]
 
     def items(self):
-        return [k for k in self._items.itervalues()]
+        return sorted(self._items.itervalues(),
+                      key=lambda k: k.get_disp_order())
 
 
 class AvatarCharacterSet(object):

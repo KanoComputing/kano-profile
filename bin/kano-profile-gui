@@ -136,7 +136,9 @@ class MainWindow(ApplicationWindow):
         if not page:
             page = "CHARACTER"
 
-        if page.upper() not in refs:
+        page = page.upper()
+
+        if page not in refs:
             raise Exception("Page {} not found!".format(page))
 
         module = refs[page]

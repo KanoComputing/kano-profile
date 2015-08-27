@@ -133,6 +133,9 @@ class MainWindow(ApplicationWindow):
             'QUESTS': QuestList,
         }
 
+        if not page:
+            page = "CHARACTER"
+
         if page not in refs:
             raise Exception("Page {} not found!".format(page))
 

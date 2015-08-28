@@ -88,6 +88,7 @@ def main(args):
             logger.error("Couldn't generate assets")
             return 2
         return 0
+
     elif args['--generate']:
         from kano_profile.profile import get_avatar, get_environment
 
@@ -96,9 +97,22 @@ def main(args):
 
         char_creator = AvatarCreator(configuration)
 
-        char_creator.char_select(char)
-        char_creator.obj_select(items.values())
-        char_creator.env_select(env)
+        rc = char_creator.char_select(char)
+        if not rc:
+            logger.error("Can't select character, aborting character creation")
+            return 3
+
+        rc = char_creator.set_selected_items(items.values())
+        if not rc:
+            logger.error("Can't select items, aborting character creation")
+            return 4
+
+        rc = char_creator.env_select(env)
+        if not rc:
+            logger.error(
+                "Can't select environment, aborting character creation"
+            )
+            return 5
 
         path = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
 

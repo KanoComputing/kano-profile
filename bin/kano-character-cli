@@ -72,9 +72,6 @@ def main(args):
         char_creator = AvatarCreator(configuration)
         char_creator.char_select(args['<selection>'].pop(0))
 
-        # if not args.randomise:
-        #    rc = char_creator.obj_select(args.create)
-        # else:
         rc = char_creator.randomise_rest(args['<selection>'])
         if not rc:
             logger.error('Error processing the list, please double check it')

@@ -538,7 +538,6 @@ class AvatarCreator(AvatarConfParser):
             return False
 
         with open(dirname, 'r') as fp:
-            fp = open(dirname, 'r')
             log_ex = load(fp)
             try:
                 char_ex, items_ex = log_ex['avatar']

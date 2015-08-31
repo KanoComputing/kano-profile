@@ -50,6 +50,13 @@ if configuration is None:
     logger.error('Configuration was not loaded, check configuration file')
     sys.exit(1)
 
+# ERROR RETURN CODES
+SUCCESS = 0
+ERROR_PROCESSING_INPUT_LIST = 2
+COULD_NOT_GENERATE_FINAL_ASSET = 3
+CANT_SELECT_CHARACTER = 4
+CANT_SELECT_ITEMS = 5
+CANT_SELECT_ENV = 6
 
 def main(args):
 
@@ -67,7 +74,7 @@ def main(args):
         elif args['env']:
             print avail_conf.get_avail_objs(
                 avail_conf.list_available_chars()[0], avail_conf.env_label)
-        return 0
+        return SUCCESS
     elif args['--create']:
         char_creator = AvatarCreator(configuration)
         char_creator.char_select(args['<selection>'].pop(0))
@@ -75,7 +82,7 @@ def main(args):
         rc = char_creator.randomise_rest(args['<selection>'])
         if not rc:
             logger.error('Error processing the list, please double check it')
-            return 1
+            return ERROR_PROCESSING_INPUT_LIST
 
         if args['--sync']:
             out_path = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
@@ -86,8 +93,8 @@ def main(args):
 
         if not rc:
             logger.error("Couldn't generate assets")
-            return 2
-        return 0
+            return COULD_NOT_GENERATE_FINAL_ASSET
+        return SUCCESS
 
     elif args['--generate']:
         from kano_profile.profile import get_avatar, get_environment
@@ -100,27 +107,27 @@ def main(args):
         rc = char_creator.char_select(char)
         if not rc:
             logger.error("Can't select character, aborting character creation")
-            return 3
+            return CANT_SELECT_CHARACTER
 
         rc = char_creator.set_selected_items(items.values())
         if not rc:
             logger.error("Can't select items, aborting character creation")
-            return 4
+            return CANT_SELECT_ITEMS
 
         rc = char_creator.env_select(env)
         if not rc:
             logger.error(
                 "Can't select environment, aborting character creation"
             )
-            return 5
+            return CANT_SELECT_ENV
 
         path = os.path.join(AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME)
 
         rc = char_creator.save_final_assets(path, sync=False)
         if not rc:
             logger.error("Couldn't generate assets")
-            return 2
-        return 0
+            return COULD_NOT_GENERATE_FINAL_ASSET
+        return SUCCESS
 
 
 if __name__ == '__main__':

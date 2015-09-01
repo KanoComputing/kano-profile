@@ -42,7 +42,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano_avatar.conf_parser import AvatarConfParser
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
-from kano.utils import run_cmd_log
+from kano.utils import run_cmd
 from kano.network import is_internet
 from kano.logging import logger
 
@@ -108,7 +108,7 @@ def main(args):
         # Check that we have all of the unlocked content objects to ensure
         # that what we have synced is in profile is what we have locally
         if is_internet():
-            run_cmd_log('sudo kano-content sync')
+            run_cmd('sudo kano-content sync')
             configuration = get_avatar_conf()
 
         char_creator = AvatarCreator(configuration)

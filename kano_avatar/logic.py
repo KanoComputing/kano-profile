@@ -192,7 +192,7 @@ class AvatarCreator(AvatarConfParser):
         obj_list = [it for it in obj_names
                     if self._sel_char_layer().item(it)]
 
-        self.randomise_rest(obj_list)
+        return self.randomise_rest(obj_list)
 
     def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character. if any of the
@@ -538,7 +538,6 @@ class AvatarCreator(AvatarConfParser):
             return False
 
         with open(dirname, 'r') as fp:
-            fp = open(dirname, 'r')
             log_ex = load(fp)
             try:
                 char_ex, items_ex = log_ex['avatar']

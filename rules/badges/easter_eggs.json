@@ -8,7 +8,7 @@
     "title": "File Finder"
   },
   "use_the_force": {
-    "bg_color": "ffe9b1",
+    "bg_color": "b9b3aa",
     "desc_locked": "use-the-force, Luke... Do. Or do not. There is no try.",
     "desc_unlocked": "Great shot kid, that was one in a million. The Force is strong with you, Obi-Wan has taught you well.",
     "operation": "each_greater",

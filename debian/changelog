@@ -1,4 +1,10 @@
-kano-profile (2.1-2) unstable; urgency=low
+kano-profile (2.1-3) unstable; urgency=low
+
+  * Adding Use The Force badge.
+
+ -- Team Kano <dev@kano.me>  Fri, 4 Sep 2015 17:58:00 +0100
+
+ kano-profile (2.1-2) unstable; urgency=low
 
   * Adding quests.
 

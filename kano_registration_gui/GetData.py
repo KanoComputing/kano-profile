@@ -69,6 +69,8 @@ class GetData2(DataTemplate):
     def __init__(self):
         DataTemplate.__init__(self)
 
+        # Set the birthday to be False by default
+        self._is_birthday_valid = False
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         # This data contains the saved username and birthday
@@ -89,7 +91,7 @@ class GetData2(DataTemplate):
         )
         self.bday_widget.connect('birthday-valid', self._birthday_valid)
         self.bday_widget.connect('birthday-invalid', self._birthday_invalid)
-        self.bday_widget.validate()
+        # self.bday_widget.validate()
 
         self.validate_username()
 

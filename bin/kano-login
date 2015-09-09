@@ -65,6 +65,7 @@ class MainWindow(ApplicationWindow):
                                    'Kano-Login',
                                    self.width,
                                    self.height)
+        self.set_keep_above(True)
 
         self.connect("delete-event", Gtk.main_quit)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
@@ -100,7 +101,7 @@ class MainWindow(ApplicationWindow):
         '''This returns a widget suitable for controlling the flow between
         screens
         '''
-        page_control = PageControl(3, selected_page, back_text, next_text)
+        page_control = PageControl(2, selected_page, back_text, next_text)
         page_control.set_margin_bottom(25)
         page_control.set_margin_top(25)
 

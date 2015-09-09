@@ -164,24 +164,6 @@ class BirthdayWidget(Gtk.Box):
 
         self._birthday_status.set_text(message)
 
-    def _emit_key_press(self, widget, event):
-        self.emit("bday-key-release-event")
-
-    def birthday_entries_filled(self):
-        rv = (
-            self._year_entry.get_text() is not "" and
-            self._month_entry.get_text() is not "" and
-            self._day_entry.get_text() is not ""
-        )
-        logger.debug("birthday entries filled hit")
-        logger.debug("return {}".format(rv))
-        return rv
-
-    def _create_separater_label(self):
-        label = Gtk.Label("/")
-        label.get_style_context().add_class("birthday_separater")
-        return label
-
     def get_birthday_data(self):
         bday = {}
         bday["day"] = self._get_day()

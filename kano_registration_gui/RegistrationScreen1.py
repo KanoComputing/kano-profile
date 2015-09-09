@@ -27,7 +27,7 @@ class RegistrationScreen1(Gtk.Box):
         self.page_control.connect("next-button-clicked", self.next_page)
 
         title = Heading(
-            _('Character creator'),
+            _('Kano World'),
             _('Choose a cool name and secure password')
         )
 

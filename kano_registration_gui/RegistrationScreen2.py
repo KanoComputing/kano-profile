@@ -37,7 +37,7 @@ class RegistrationScreen2(Gtk.Box):
         self.page_control.connect("next-button-clicked", self.register_handler)
         self.page_control.connect("back-button-clicked", self.prev_page)
 
-        title = Heading(_('Character creator'), _('Sign up with your email'))
+        title = Heading(_('Kano World'), _('Sign up with your email'))
         self.pack_start(title.container, False, False, 0)
 
         # Pass age into the Data screen - decide whether to ask for

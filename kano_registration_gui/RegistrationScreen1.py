@@ -20,6 +20,7 @@ class RegistrationScreen1(Gtk.Box):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.win = win
         self.win.set_main_widget(self)
+        self.win.set_decorated(True)
 
         self.page_control = self.win.create_page_control(1, "", _("NEXT"))
         self.page_control.next_button.set_sensitive(False)

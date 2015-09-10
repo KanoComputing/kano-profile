@@ -99,8 +99,9 @@ class Quests(object):
         self._quests = []
         self._quest_states = {}
 
-        self._load_system_modules()
-        self._load_external_modules()
+        # TODO: uncomment these to enable quests
+        #self._load_system_modules()
+        #self._load_external_modules()
 
         self._event_map = {}
         self._init_event_map()

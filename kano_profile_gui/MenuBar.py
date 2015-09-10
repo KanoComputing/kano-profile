@@ -50,7 +50,7 @@ class MenuBar(Gtk.EventBox):
         hbox.pack_end(close_button, False, False, 0)
         close_button.connect("clicked", self.close_window)
 
-        name_array = ['QUESTS', 'BADGES', 'CHARACTER']
+        name_array = ['BADGES', 'CHARACTER'] # TODO: add 'QUESTS' to enable
         for name in name_array:
             button = MenuButton(name, self._quests)
             button.connect("clicked", self.emit_menu_signal, name)

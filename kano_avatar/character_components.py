@@ -555,8 +555,10 @@ class AvatarCategory(AvatarBase):
         return self._items[item_name]
 
     def items(self):
+        # Sort by increasing order of display_order & decreasing order of date
         return sorted(self._items.itervalues(),
-                      key=lambda k: k.get_disp_order())
+                      key=lambda k: (-1 * k.get_disp_order(), k.get_date()),
+                      reverse=True)
 
 
 class AvatarCharacterSet(object):
@@ -585,8 +587,10 @@ class AvatarCharacterSet(object):
         categ_obj.set_character(self.get_character())
 
     def get_categories(self):
+        # Sort by increasing order of display_order & decreasing order of date
         return sorted(self._categories.itervalues(),
-                      key=lambda k: k.get_disp_order())
+                      key=lambda k: (-1 * k.get_disp_order(), k.get_date()),
+                      reverse=True)
 
     def get_category(self, cat_name):
         if cat_name in self._categories:

@@ -50,6 +50,9 @@
   },
   "kano-egg": {
     "max-level": 5
+  },
+  "kano-avatar-registration": {
+    "private": true
   }
 }
 

@@ -54,5 +54,14 @@
     "operation": "each_greater",
     "targets": [["linux-story", "level", 30]],
     "title": "Eleanor's Saviour"
+  },
+  "make_light_winner": {
+    "bg_color": "C1C4E8",
+    "desc_locked": "You have mastered make light.",
+    "desc_unlocked": "You have unlocked Make Light.",
+    "operation": "each_greater",
+    "targets": [["make-light", "level", 8]],
+    "title": "Make Light master"
   }
+
 }

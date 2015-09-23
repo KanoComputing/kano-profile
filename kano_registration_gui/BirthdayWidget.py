@@ -169,14 +169,32 @@ class BirthdayWidget(Gtk.Box):
         bday["day"] = self._get_day()
         bday["month"] = self._get_month()
         bday["year"] = self._get_year()
+        bday["day_index"] = self._get_day_index()
+        bday["month_index"] = self._get_month_index()
+        bday["year_index"] = self._get_year_index()
 
-        return (True, bday)
+        return bday
 
+    def set_birthday_data(self, year_index, month_index, day_index):
+        # Get the data from the cache
+        # Can set value from the index, so either find the index in the
+        # combobox or store it
+        if year_index is not None:
+            self._year_dropdown.set_selected_item_index(year_index)
+        if month_index is not None:
+            self._month_dropdown.set_selected_item_index(month_index)
+        if day_index is not None:
+            self._day_dropdown.set_selected_item_index(day_index)
+
+    # TODO: what if there is no selected item?
     def _get_day(self):
         '''
             Returns an integer of the birthday day
         '''
         return self._str_to_int(self._day_dropdown.get_selected_item_text())
+
+    def _get_day_index(self):
+        return self._day_dropdown.get_selected_item_index()
 
     def _get_month(self):
         '''
@@ -184,32 +202,31 @@ class BirthdayWidget(Gtk.Box):
         '''
         return self._month_dropdown.get_selected_item_index() + 1
 
+    def _get_month_index(self):
+        return self._month_dropdown.get_selected_item_index()
+
     def _get_year(self):
         '''
             Returns an integer of the birthday year
         '''
         return self._str_to_int(self._year_dropdown.get_selected_item_text())
 
+    def _get_year_index(self):
+        return self._year_dropdown.get_selected_item_index()
+
     def calculate_age(self):
         # Error messages
         default_error = N_("Oops!")
         default_desc = N_("You haven't entered a valid birthday")
-        entry_not_valid = N_("You haven't entered a valid number")
+        # entry_not_valid = N_("You haven't entered a valid number")
 
         try:
             # boolean, dictionary
-            valid_bday, bday = self.get_birthday_data()
-            print "birthday data {} {}".format(valid_bday, bday)
-
-            if not valid_bday:
-                raise Exception(default_error, entry_not_valid)
-
+            bday = self.get_birthday_data()
             logger.debug("User birthday = {}".format(bday))
-
             bday_date = str(datetime.date(bday["year"],
                                           bday["month"],
                                           bday["day"]))
-            print "bday_date = {}".format(bday_date)
 
             # To allow people to enter their year as a two digit number
             if bday["year"] < 15 and bday["year"] >= 0:

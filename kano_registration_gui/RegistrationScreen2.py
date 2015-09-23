@@ -125,6 +125,9 @@ class RegistrationScreen2(Gtk.Box):
                                   secondary_email=secondary_email,
                                   marketing_enabled=marketing_enabled)
 
+        # This should no longer be needed, since this is checked in the first screen.
+        # However there is a small chance someone could take the username
+        # while the user is in the process of registering
         if not success:
             if text.strip() == "Cannot register, problem: Username already registered":
 

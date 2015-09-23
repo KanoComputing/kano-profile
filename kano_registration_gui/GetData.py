@@ -91,7 +91,8 @@ class GetData2(DataTemplate):
         )
         self.bday_widget.connect('birthday-valid', self._birthday_valid)
         self.bday_widget.connect('birthday-invalid', self._birthday_invalid)
-        # self.bday_widget.validate()
+
+        self.update_birthday_widget_from_cache()
 
         self.validate_username()
 
@@ -160,13 +161,13 @@ class GetData2(DataTemplate):
         self._password.set_sensitive(True)
         self.tc_button.set_sensitive(True)
 
-    def get_entry_data(self):
+    def get_widget_data(self):
         data = {}
 
         data['username'] = self._username.get_text()
         data['password'] = self._password.get_text()
 
-        bday_data = self.bday_widget.get_birthday_data()[1]
+        bday_data = self.bday_widget.get_birthday_data()
         data.update(bday_data)
 
         data['age'] = self.bday_widget.calculate_age()
@@ -176,11 +177,24 @@ class GetData2(DataTemplate):
 
     # To be passed to the registration screen
     def save_username_and_birthday(self):
-        data = self.get_entry_data()
+
+        # Birthday should not strictly be got in entry data
+        data = self.get_widget_data()
+
         cache_data("username", data['username'])
         cache_data("birthday_day", data['day'])
+        cache_data("birthday_day_index", data["day_index"])
         cache_data("birthday_month", data['month'])
+        cache_data("birthday_month_index", data["month_index"])
         cache_data("birthday_year", data['year'])
+        cache_data("birthday_year_index", data["year_index"])
+
+    def update_birthday_widget_from_cache(self):
+        self.bday_widget.set_birthday_data(
+            get_cached_data("birthday_year_index"),
+            get_cached_data("birthday_month_index"),
+            get_cached_data("birthday_day_index")
+        )
 
     def get_cached_username_and_birthday(self):
         username = get_cached_data("username")

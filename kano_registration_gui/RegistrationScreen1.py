@@ -54,7 +54,7 @@ class RegistrationScreen1(Gtk.Box):
             return
 
         # Get the username, password and birthday
-        data = self.data_screen.get_entry_data()
+        data = self.data_screen.get_widget_data()
         username = data["username"]
 
         if not self.is_username_available(username):

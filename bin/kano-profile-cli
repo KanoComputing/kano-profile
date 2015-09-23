@@ -39,7 +39,7 @@ if len(sys.argv) == 1:
     help += 'Possible uses: get_app_data_dir, load_app_state_variable, save_app_state_variable\n'
     help += 'save_app_state_variable_get_xp_diff, increment_app_state_variable\n'
     help += 'is_registered, get_stats, get_email, get_notifications,\n'
-    help += 'get_notifications_count, increment_app_runtime,\n'
+    help += 'get_notifications_count, increment_app_runtime, get_world_info\n'
     help += 'fulfilled_quests_count, trigger_quests_event'
     sys.exit(help)
 
@@ -173,6 +173,31 @@ elif sys.argv[1] == 'increment_app_runtime':
         sys.exit('3rd argument is not a number')
 
     add_runtime_to_app(app, runtime)
+
+elif sys.argv[1] == 'get_world_info':
+    # Returns: is_registered
+    # Prints: notifications count and stats activity
+    from kano_world.functions import get_stats_activity
+
+    check_arg_len(1)
+    # Notifications
+    try:
+        unread_notifications = load_profile()['notifications']
+        print 'notifications: {}'.format(unread_notifications)
+    except Exception:
+        print 'notifications not found'
+    # Stats activity
+    success, data = get_stats_activity()
+    if success:
+        print "total_users: {}".format(data['total_users'])
+        print "total_shares: {}".format(data['total_shares'])
+        print "total_comments: {}".format(data['total_comments'])
+        print "total_likes: {}".format(data['total_likes'])
+        print "total_active_today: {}".format(data['total_active_today'])
+        print "total_lines_of_code: {}".format(data['total_lines_of_code'])
+        print "total_blocks_created: {}".format(data['total_blocks_created'])
+        print "total_number_of_apples: {}".format(data['total_number_of_apples'])
+    sys.exit(int(is_registered()))
 
 elif sys.argv[1] == 'fulfilled_quests_count':
     check_arg_len(1)

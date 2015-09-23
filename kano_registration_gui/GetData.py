@@ -76,13 +76,13 @@ class GetData2(DataTemplate):
         # This data contains the saved username and birthday
         data = self.get_cached_username_and_birthday()
 
-        self.username_entry = LabelledEntry("Username", data["username"])
-        self.username_entry.connect("key-release-event", self.validate_username)
+        self._username = LabelledEntry("Username", data["username"])
+        self._username.connect("key-release-event", self.validate_username)
         logger.debug("Checking for internet")
 
         # Do not fill this in
-        self.password_entry = LabelledEntry(_("Password"))
-        self.password_entry.connect("key-release-event", self.validate_password)
+        self._password = LabelledEntry(_("Password"))
+        self._password.connect("key-release-event", self.validate_password)
 
         self.bday_widget = BirthdayWidget(
             data['birthday_day'],
@@ -102,8 +102,8 @@ class GetData2(DataTemplate):
         self.show_password.set_margin_left(30)
 
         self.bday_widget.connect("bday-key-release-event", self.widgets_full)
-        box.pack_start(self.username_entry, False, False, 15)
-        box.pack_start(self.password_entry, False, False, 5)
+        box.pack_start(self._username, False, False, 15)
+        box.pack_start(self._password, False, False, 5)
         box.pack_start(self.show_password, False, False, 0)
         box.pack_start(self.bday_widget, False, False, 15)
 
@@ -111,34 +111,35 @@ class GetData2(DataTemplate):
 
         self.add(box)
 
+    @property
+    def username(self):
+        return self._username
+
     def make_password_entry_visible(self, widget):
         visibility = self.show_password.get_active()
-        self.password_entry.set_visibility(visibility)
+        self._password.set_visibility(visibility)
 
     def validate_password(self, widget=None, event=None):
         '''widget is the password entry
         '''
-        password = self.password_entry.get_text()
+        password = self._password.get_text()
         if len(password) == 0:
-            self.password_entry.label_success("")
+            self._password.label_success("")
         elif check_password(password):
-            self.password_entry.label_success(_("looks good!"), "success")
+            self._password.label_success(_("looks good!"), "success")
         else:
-            self.password_entry.label_success(_("is not valid"), "fail")
+            self._password.label_success(_("is not valid"), "fail")
 
         self.widgets_full()
 
     def validate_username(self, widget=None, event=None):
-        '''widget is the username entry as is conencted to the key-release-event
-        '''
-
-        username = self.username_entry.get_text()
+        username = self._username.get_text()
         if len(username) == 0:
-            self.username_entry.label_success("")
+            self._username.label_success("")
         elif check_username(username):
-            self.username_entry.label_success(_("is valid"), "success")
+            self._username.label_success(_("is valid"), "success")
         else:
-            self.username_entry.label_success(_("is invalid"), "fail")
+            self._username.label_success(_("is invalid"), "fail")
 
         self.widgets_full()
 
@@ -155,15 +156,15 @@ class GetData2(DataTemplate):
 
     def enable_all(self):
         self.checkbutton.set_sensitive(True)
-        self.username_entry.set_sensitive(True)
-        self.password_entry.set_sensitive(True)
+        self._username.set_sensitive(True)
+        self._password.set_sensitive(True)
         self.tc_button.set_sensitive(True)
 
     def get_entry_data(self):
         data = {}
 
-        data['username'] = self.username_entry.get_text()
-        data['password'] = self.password_entry.get_text()
+        data['username'] = self._username.get_text()
+        data['password'] = self._password.get_text()
 
         bday_data = self.bday_widget.get_birthday_data()[1]
         data.update(bday_data)
@@ -194,8 +195,8 @@ class GetData2(DataTemplate):
         }
 
     def widgets_full(self, widget=None, event=None):
-        if (self.username_entry.validated and
-                self.password_entry.validated and
+        if (self._username.validated and
+                self._password.validated and
                 self._is_birthday_valid):
             logger.debug("emiting widgets-full")
             self.emit('widgets-filled')

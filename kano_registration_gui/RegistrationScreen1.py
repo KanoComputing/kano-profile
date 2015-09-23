@@ -11,6 +11,7 @@ from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
 from kano_registration_gui.GetData import GetData2
 from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
+from kano_world.functions import request_wrapper, content_type_json
 
 
 # Get username, password and birthday data from user.
@@ -54,6 +55,20 @@ class RegistrationScreen1(Gtk.Box):
 
         # Get the username, password and birthday
         data = self.data_screen.get_entry_data()
+        username = data["username"]
+
+        if not self.is_username_available(username):
+            kd = KanoDialog(
+                "This username is taken!",
+                "Try another one",
+                parent_window=self.win
+            )
+            kd.run()
+            self.data_screen.username.set_text("")
+            self.data_screen.validate_username()
+            self.data_screen.username.grab_focus()
+            return
+
         self.win.data = data
 
         # We can save the username and birthday to kano-profile
@@ -71,3 +86,24 @@ class RegistrationScreen1(Gtk.Box):
 
     def disable_next(self, widget):
         self.page_control.disable_next()
+
+    def is_username_available(self, name):
+        '''
+        Returns True if username is available, and False otherwise
+        '''
+        # Use the endpoint api.kano.me/users/username/:name
+        success, text, data = request_wrapper(
+            'get',
+            '/users/username/{}'.format(name),
+            headers=content_type_json
+        )
+
+        if not success and text.strip() == "User not found":
+            return True
+        elif success:
+            # Username is definitely taken
+            return False
+        else:
+            # Maybe let the user know something went wrong? e.g. if there's no
+            # internet, launch a dialog at this point
+            return False

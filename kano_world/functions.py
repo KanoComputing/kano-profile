@@ -243,3 +243,16 @@ def mark_notification_read(n_id):
     )
 
     return success, text
+
+
+def get_stats_activity():
+    # Instantiate the global session variable
+    login_using_token()
+    
+    if not glob_session:
+        return False, 'OFFLINE'
+
+    success, text, data = request_wrapper('get', '/stats/activity',
+                                          headers=content_type_json,
+                                          session=glob_session.session)
+    return success, data

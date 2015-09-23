@@ -247,10 +247,10 @@ def mark_notification_read(n_id):
 
 def get_stats_activity():
     # Instantiate the global session variable
-    login_using_token()
-    
-    if not glob_session:
-        return False, 'OFFLINE'
+    success, text = login_using_token()
+
+    if not success:
+        return False, text
 
     success, text, data = request_wrapper('get', '/stats/activity',
                                           headers=content_type_json,

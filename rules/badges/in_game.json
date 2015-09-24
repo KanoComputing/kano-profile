@@ -57,8 +57,8 @@
   },
   "make_light_winner": {
     "bg_color": "C1C4E8",
-    "desc_locked": "You have mastered make light.",
-    "desc_unlocked": "You have unlocked Make Light.",
+    "desc_locked": "Complete the eighth challenge in Make Light to unlock this badge.",
+    "desc_unlocked": "Wow! You completed all the challenges. You are a Master of Lights!",
     "operation": "each_greater",
     "targets": [["make-light", "level", 8]],
     "title": "Make Light master"

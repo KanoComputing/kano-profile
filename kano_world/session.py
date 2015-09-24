@@ -179,7 +179,7 @@ class KanoWorldSession(object):
             logger.debug(
                 "Unknown profile ver: {}, can't upload data".format(
                     profile_data['version'])
-                )
+            )
         return data_to_send, files
 
     def _tidy_up_avatar_files(self, files):
@@ -511,7 +511,6 @@ class KanoWorldSession(object):
             if 'SUDO_USER' in os.environ:
                 chown_path(online_badges_dir)
                 chown_path(online_badges_file)
-
 
         return may_write, txt
 

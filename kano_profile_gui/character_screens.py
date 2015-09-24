@@ -86,6 +86,7 @@ class CharacterDisplay(Gtk.EventBox):
     def go_to_edit_character_screen(self, widget=None):
         self._win.empty_main_content()
         self._win.empty_bottom_bar()
+        self._win.menu_bar.disable_buttons()
         CharacterEdit(self._win, self._char_creator)
 
 
@@ -137,4 +138,5 @@ class CharacterEdit(Gtk.EventBox):
         '''
         self._win.empty_main_content()
         self._win.empty_bottom_bar()
+        self._win.menu_bar.enable_buttons()
         CharacterDisplay(self._win)

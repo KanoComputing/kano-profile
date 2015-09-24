@@ -1,3 +1,9 @@
+kano-profile (2.1-5) unstable; urgency=low
+
+  * Adding Make Light challenges Badge.
+
+ -- Team Kano <dev@kano.me>  Fri, 24 Sep 2015 11:44:00 +0100
+
 kano-profile (2.1-4) unstable; urgency=low
 
   * Added Stats Activity endpoint funtionality.

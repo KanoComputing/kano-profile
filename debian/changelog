@@ -1,8 +1,14 @@
+kano-profile (2.2-1) unstable; urgency=low
+
+  * Tracker: Adding ping event
+
+ -- Team Kano <dev@kano.me>  Fri, 25 Sep 2015 17:57:00 +0100
+
 kano-profile (2.1-5) unstable; urgency=low
 
   * Adding Make Light challenges Badge.
 
- -- Team Kano <dev@kano.me>  Fri, 24 Sep 2015 11:44:00 +0100
+ -- Team Kano <dev@kano.me>  Fri, 25 Sep 2015 11:44:00 +0100
 
 kano-profile (2.1-4) unstable; urgency=low
 

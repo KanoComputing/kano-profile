@@ -23,6 +23,9 @@
 .home_button .menu_bar_button GtkLabel {
     color: @menu_bar_inactive;
 }
+.home_button GtkLabel:insensitive {
+    background: transparent;
+}
 .home_button_active .menu_bar_button_active GtkLabel {
     color: @menu_bar_active;
 }
@@ -72,6 +75,9 @@
 .menu_bar_button GtkLabel {
     font: Bariol Bold 13;
     color: @menu_bar_inactive;
+}
+.menu_bar_button GtkLabel:insensitive {
+    background: transparent;
 }
 .menu_bar_button.selected GtkLabel {
     color: @menu_bar_active;

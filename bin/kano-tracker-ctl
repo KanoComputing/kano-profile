@@ -46,32 +46,11 @@ from kano_profile.paths import tracker_dir, tracker_events_file
 from kano_profile.tracker import open_locked, session_start, session_end, \
     get_session_file_path, track_action, track_data, get_session_event, \
     session_log, generate_tracker_token, load_token, get_utc_offset, \
-    track_subprocess, get_action_event
+    track_subprocess
 from kano.logging import logger
-from kano.utils import delete_file, ensure_dir, is_running, \
-    get_rpi_model, detect_kano_keyboard
+from kano.utils import delete_file, ensure_dir, is_running
 from kano.colours import decorate_string_only_terminal
-from kano_world.connection import request_wrapper, content_type_json
-
-
-# TODO: Move it somewhere nicer in the future
-def _hw_info():
-    track_data("hw-info", {
-        "keyboard": "kano" if detect_kano_keyboard() else "generic",
-        "model": get_rpi_model()
-    })
-
-
-def _ping():
-    event = json.dumps(get_action_event('ping'))
-    request_wrapper('post', '/tracking/ping', data=event,
-                    headers=content_type_json)
-
-
-event_templates = {
-    "hw-info": _hw_info,
-    "ping": _ping
-}
+from kano_profile.tracking_events import event_templates
 
 
 def show_status():

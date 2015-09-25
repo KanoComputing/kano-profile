@@ -130,8 +130,8 @@ class MenuBar(Gtk.EventBox):
         self._set_button_sensitivity(False)
 
     def enable_buttons(self):
-        """ Disable all the buttons except for the exit button.
-        The latter's sensitivity is not altered
+        """ Enable all the menu buttons. The exit button's sensitivity is
+        not altered
         """
         self._set_button_sensitivity(True)
 

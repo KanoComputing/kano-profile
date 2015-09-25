@@ -27,8 +27,12 @@ def _ping():
         without passing through the caching layer in the `events` file.
     """
     event = json.dumps(get_action_event('ping'))
-    request_wrapper('post', '/tracking/ping', data=event,
-                    headers=content_type_json)
+    status, err, _ = request_wrapper('post', '/tracking/ping', data=event,
+                                     headers=content_type_json)
+
+    if not status:
+        msg = "Failed to send the ping event ({})".format(err)
+        raise RuntimeError(msg)
 
 
 event_templates = {

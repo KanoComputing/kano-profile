@@ -35,3 +35,17 @@ event_templates = {
     "hw-info": _hw_info,
     "ping": _ping
 }
+
+
+def generate_event(event_name):
+    """
+        Fires off a predefined tracker event (see the tracking_events module).
+
+        :param name: The identifier of the event.
+        :type name: str
+    """
+
+    if event_name in event_templates:
+        event_templates[event_name]()
+    else:
+        raise RuntimeError("Unknown event template.")

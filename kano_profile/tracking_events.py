@@ -52,4 +52,4 @@ def generate_event(event_name):
     if event_name in event_templates:
         event_templates[event_name]()
     else:
-        raise RuntimeError("Unknown event template.")
+        raise RuntimeError("Unknown event template '{}'.".format(event_name))

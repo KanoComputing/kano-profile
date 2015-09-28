@@ -123,6 +123,25 @@ class MenuBar(Gtk.EventBox):
     def close_window(self, button):
         Gtk.main_quit()
 
+    def disable_buttons(self):
+        """ Disable all the buttons except for the exit button.
+        The latter's sensitivity is not altered
+        """
+        self._set_button_sensitivity(False)
+
+    def enable_buttons(self):
+        """ Enable all the menu buttons. The exit button's sensitivity is
+        not altered
+        """
+        self._set_button_sensitivity(True)
+
+    def _set_button_sensitivity(self, sensitivity_value):
+        """ Keep all the buttons whose sensitivity we want to control here
+        """
+        self.home_button.set_sensitive(sensitivity_value)
+        for button in self.buttons.itervalues():
+            button["button"].set_sensitive(sensitivity_value)
+
 
 class HomeButton(Gtk.Button):
 

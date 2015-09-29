@@ -631,3 +631,22 @@ class KanoWorldSession(object):
                 return None
 
         return cur_root
+
+    def post_comment(self, share_id, comment):
+        payload = {
+            'type': 'share',
+            'item_id': share_id,
+            'text': comment
+        }
+
+        success, text, data = request_wrapper(
+            'post', '/comments', session=self.session, data=payload
+        )
+
+        if not success:
+            return False, text
+
+        if not ('success' in data and data['success']):
+            return False, 'Comment not successful!'
+
+        return True, None

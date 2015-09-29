@@ -36,6 +36,29 @@ def list_shares(app_name=None, page=0, featured=False, user_id=None):
     return False, 'Something wrong with listing shares!', None
 
 
+def get_comments(share_id):
+    success, text, data = request_wrapper(
+        'get', '/comments/share/{}'.format(share_id)
+    )
+
+    if not success:
+        return success, text, None
+
+    if 'entries' in data:
+        return True, None, data['entries']
+
+    return False, 'Something wrong retrieving comments!', None
+
+
+def post_comment(share_id, comment):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.post_comment(share_id, comment)
+
+
 def upload_share(file_path, title, app_name, featured=False):
     glob_session = get_glob_session()
     if not glob_session:

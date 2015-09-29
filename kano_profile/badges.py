@@ -10,6 +10,8 @@ from __future__ import division
 
 import os
 import json
+import itertools
+from copy import deepcopy
 
 from kano.logging import logger
 from kano.utils import read_json, is_gui, is_running, run_bg
@@ -102,6 +104,125 @@ def calculate_min_current_max_xp():
 
         if level_min <= xp_now <= level_max:
             return level_min, xp_now, level_max
+
+
+class BadgeCalc(object):
+    def __init__(self):
+        self._app_profiles = read_json(app_profiles_file)
+        if not self._app_profiles:
+            logger.error('Error reading app_profiles.json')
+            raise RuntimeError("Couldn't read app profiles")
+
+        self._app_list = get_app_list() + ['computed']
+        self._app_state = dict()
+        for app in self._app_list:
+            self._app_state[app] = load_app_state(app)
+
+        self._app_state.setdefault('computed', dict())['kano_level'] = \
+            calculate_kano_level()[0]
+
+        self._all_rules = load_badge_rules()
+        self._calculated_badges = {}
+
+    def _evaluate_rules(self, rules):
+        if 'operation' not in rules:
+            return None
+
+        if rules['operation'] == 'each_greater':
+            achieved = True
+            for target in rules['targets']:
+                app = target[0]
+                variable = target[1]
+                value = target[2]
+
+                if variable == 'level' and value == -1:
+                    value = self._app_profiles[app]['max_level']
+                if (app not in self._app_list or
+                        variable not in self._app_state[app]):
+                    achieved = False
+                    break
+                achieved &= self._app_state[app][variable] >= value
+
+        elif rules['operation'] == 'sum_greater':
+            sum = 0
+            for target in rules['targets']:
+                app = target[0]
+                variable = target[1]
+
+                if (app not in self._app_list or
+                        variable not in self._app_state[app]):
+                    continue
+
+                sum += float(self._app_state[app][variable])
+
+            achieved = sum >= rules['value']
+        else:
+            achieved = None
+
+        return achieved
+
+    @staticmethod
+    def is_push_back(item):
+        rules = item[1]
+        return 'push_back' in rules and rules['push_back'] is True
+
+    def do_calculate(self, calculate_only_pushed_back):
+        for category, subcats in self._all_rules.iteritems():
+            for subcat, items in subcats.iteritems():
+                if calculate_only_pushed_back:
+                    filter_fn = itertools.ifilter
+                else:
+                    filter_fn = itertools.ifilterfalse
+
+                it = filter_fn(self.is_push_back, items.iteritems())
+
+                for item, rules in it:
+                    achieved = self._evaluate_rules(rules)
+                    if achieved is None:
+                        continue
+
+                    calc_badge = self._calculated_badges.setdefault(
+                        category,
+                        {}
+                    )
+                    calc_subcat = calc_badge.setdefault(subcat, {})
+                    calc_subcat[item] = self._all_rules[category][subcat][item]
+                    calc_subcat[item]['achieved'] = achieved
+
+    def count_offline_badges(self):
+        count = 0
+        # Only iterate over badges
+        iter_badges = itertools.ifilter(lambda k: k[0] == 'badges',
+                                        self._calculated_badges.iteritems())
+        for category, subcats in iter_badges:
+            # Only get the online badges
+            iter_subcats = itertools.ifilter(lambda k: k[0] != 'online',
+                                             subcats.iteritems())
+            for subcat, items in iter_subcats:
+                # Count achieved
+                achieved_iter = itertools.ifilter(lambda k: k['achieved'],
+                                                  items.itervalues())
+                count += sum(1 for b in achieved_iter)
+        return count
+
+    @property
+    def calculated_badges(self):
+        # Calculate badges/environments
+        self.do_calculate(False)
+
+        # count offline badges
+        self._app_state['computed']['num_offline_badges'] = \
+            self.count_offline_badges()
+
+        # Calculate badges marked as push_back (those for which the num of
+        # offline badges needs to have been calculated)
+        self.do_calculate(True)
+
+        # Inject badges from quests to the dict
+        qm = Quests()
+        self._calculated_badges['badges']['quests'] = qm.evaluate_badges()
+
+        return deepcopy(self._calculated_badges)
 
 
 def calculate_badges():

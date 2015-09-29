@@ -6,12 +6,14 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
+import subprocess
 from gi.repository import Gtk
 from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
 from kano_registration_gui.GetData import GetData2
 from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 from kano_world.functions import request_wrapper, content_type_json
+from kano.network import is_internet
 
 
 # Get username, password and birthday data from user.
@@ -56,6 +58,35 @@ class RegistrationScreen1(Gtk.Box):
         # Get the username, password and birthday
         data = self.data_screen.get_widget_data()
         username = data["username"]
+
+        if not is_internet():
+            kd = KanoDialog(
+                "You don't have internet",
+                "Do you want to connect to WiFi?",
+                [
+                    {
+                        "label": "YES",
+                        "color": "green",
+                        "return_value": 0
+                    },
+                    {
+                        "label": "NO",
+                        "color": "red",
+                        "return_value": 1
+                    }
+                ],
+                parent_window=self.win
+            )
+            response = kd.run()
+
+            # Close the dialog
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+
+            if response == 0:
+                subprocess.Popen("sudo kano-wifi-gui", shell=True)
+
+            return
 
         if not self.is_username_available(username):
             kd = KanoDialog(

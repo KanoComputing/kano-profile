@@ -226,86 +226,16 @@ class BadgeCalc(object):
 
 
 def calculate_badges():
-    # helper function to calculate operations
-    def do_calculate(select_push_back):
-        for category, subcats in all_rules.iteritems():
-            for subcat, items in subcats.iteritems():
-                for item, rules in items.iteritems():
-                    target_pushback = 'push_back' in rules and rules['push_back'] is True
-                    if target_pushback != select_push_back:
-                        continue
+    ret_v = {}
+    try:
+        badge_c = BadgeCalc()
+        ret_v = badge_c.calculated_badges
+    except KeyError as exc:
+        logger.error('Configuration missing some value: [{}]'.format(exc))
+    except RuntimeError as exc:
+        logger.error('Error while trying to calculate badges [{}]'.format(exc))
 
-                    if rules['operation'] == 'each_greater':
-                        achieved = True
-                        for target in rules['targets']:
-                            app = target[0]
-                            variable = target[1]
-                            value = target[2]
-
-                            if variable == 'level' and value == -1:
-                                value = app_profiles[app]['max_level']
-                            if app not in app_list or variable not in app_state[app]:
-                                achieved = False
-                                break
-                            achieved &= app_state[app][variable] >= value
-
-                    elif rules['operation'] == 'sum_greater':
-                        sum = 0
-                        for target in rules['targets']:
-                            app = target[0]
-                            variable = target[1]
-
-                            if app not in app_list or variable not in app_state[app]:
-                                continue
-
-                            sum += float(app_state[app][variable])
-
-                        achieved = sum >= rules['value']
-
-                    else:
-                        continue
-
-                    calculated_badges.setdefault(category, dict()).setdefault(subcat, dict())[item] \
-                        = all_rules[category][subcat][item]
-                    calculated_badges[category][subcat][item]['achieved'] = achieved
-
-    def count_offline_badges():
-        count = 0
-        for category, subcats in calculated_badges.iteritems():
-            for subcat, items in subcats.iteritems():
-                for item, rules in items.iteritems():
-                    if category == 'badges' and subcat != 'online' and rules['achieved']:
-                        count += 1
-        return count
-
-    app_profiles = read_json(app_profiles_file)
-    if not app_profiles:
-        logger.error('Error reading app_profiles.json')
-
-    app_list = get_app_list() + ['computed']
-    app_state = dict()
-    for app in app_list:
-        app_state[app] = load_app_state(app)
-
-    app_state.setdefault('computed', dict())['kano_level'] = calculate_kano_level()[0]
-
-    all_rules = load_badge_rules()
-    calculated_badges = dict()
-
-    # normal ones
-    do_calculate(False)
-
-    # count offline badges
-    app_state['computed']['num_offline_badges'] = count_offline_badges()
-
-    # add pushed back ones
-    do_calculate(True)
-
-    # Inject badges from quests to the dict
-    qm = Quests()
-    calculated_badges['badges']['quests'] = qm.evaluate_badges()
-
-    return calculated_badges
+    return ret_v
 
 
 def compare_badges_dict(old, new):

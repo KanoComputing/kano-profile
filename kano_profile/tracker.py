@@ -165,8 +165,8 @@ def session_end(session_file):
             else:
                 with wf:
                     json.dump(data, wf)
-                if 'SUDO_USER' in os.environ:
-                    chown_path(data)
+        if 'SUDO_USER' in os.environ:
+            chown_path(session_file)
 
 
 def session_log(name, started, length):

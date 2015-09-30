@@ -217,6 +217,14 @@ def get_secondary_email():
     return sec_email
 
 
+def get_kano_world_id():
+    try:
+        kw_id = load_profile()['kanoworld_id']
+    except Exception:
+        kw_id = ''
+    return kw_id
+
+
 def reset_password(email):
     payload = {
         'email': email,

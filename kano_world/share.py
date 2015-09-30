@@ -59,6 +59,24 @@ def post_comment(share_id, comment):
     return glob_session.post_comment(share_id, comment)
 
 
+def like_share(share_id):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.like_share(share_id)
+
+
+def unlike_share(share_id):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.unlike_share(share_id)
+
+
 def upload_share(file_path, title, app_name, featured=False):
     glob_session = get_glob_session()
     if not glob_session:

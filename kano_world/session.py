@@ -650,3 +650,23 @@ class KanoWorldSession(object):
             return False, 'Comment not successful!'
 
         return True, None
+
+    def like_share(self, share_id):
+        success, text, data = request_wrapper(
+            'post', '/share/{}/like'.format(share_id), session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        return True, None
+
+    def unlike_share(self, share_id):
+        success, text, data = request_wrapper(
+            'delete', '/share/{}/like'.format(share_id), session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        return True, None

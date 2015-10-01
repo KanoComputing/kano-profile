@@ -40,7 +40,6 @@ from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano.gtk3.cursor import attach_cursor_events
 from kano_profile_gui.paths import media_dir
-from kano_avatar_gui.CharacterCreator import CharacterCreator
 from kano_registration_gui.PageControl import PageControl
 from kano_login.first_screen import FirstScreen
 import kano_profile_gui.components.icons as icons
@@ -65,6 +64,7 @@ class MainWindow(ApplicationWindow):
                                    'Kano-Login',
                                    self.width,
                                    self.height)
+        self.set_keep_above(True)
 
         self.connect("delete-event", Gtk.main_quit)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
@@ -79,8 +79,6 @@ class MainWindow(ApplicationWindow):
         css_path = os.path.join(media_dir, "CSS/register.css")
         apply_styling_to_screen(css_path)
 
-        self.create_char_creator()
-
         if screen == "register":
             # Gives the user the option to log in or register
             FirstScreen(self)
@@ -89,10 +87,6 @@ class MainWindow(ApplicationWindow):
 
         self.show_all()
 
-    def create_char_creator(self):
-        # This is very very slow
-        self.char_creator = CharacterCreator(randomise=True)
-
     def set_data(self, data_label, data):
         self._data[data_label] = data
 
@@ -100,7 +94,7 @@ class MainWindow(ApplicationWindow):
         '''This returns a widget suitable for controlling the flow between
         screens
         '''
-        page_control = PageControl(3, selected_page, back_text, next_text)
+        page_control = PageControl(2, selected_page, back_text, next_text)
         page_control.set_margin_bottom(25)
         page_control.set_margin_top(25)
 

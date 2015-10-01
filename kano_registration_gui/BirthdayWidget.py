@@ -9,8 +9,10 @@
 from gi.repository import Gtk, GObject
 import time
 import datetime
+import calendar
+
 from kano.logging import logger
-from kano.utils import is_number
+from kano.gtk3.kano_combobox import KanoComboBox
 
 
 class BirthdayWidget(Gtk.Box):
@@ -29,26 +31,35 @@ class BirthdayWidget(Gtk.Box):
         self._create_birthday_widget(day, month, year)
 
     def _create_birthday_widget(self, day=None, month=None, year=None):
-        # TODO: Establish how DD, MM, YYYY should be translated
-        self._day_entry = self._create_entry("DD", 60, 2, day)
-        self._month_entry = self._create_entry("MM", 60, 2, month)
-        self._year_entry = self._create_entry("YYYY", 70, 4, year)
+        KanoComboBox.apply_styling_to_screen()
 
-        self._day_entry.connect('key-release-event', self.validate)
-        self._month_entry.connect('key-release-event', self.validate)
-        self._year_entry.connect('key-release-event', self.validate)
+        current_year = datetime.datetime.now().year
+        years = [str(i) for i in range(current_year, 1900, -1)]
+        self._year_dropdown = self._create_dropdown(years, "Year")
+        self._year_dropdown.connect("changed", self._update_day_dropdown)
 
-        label1 = self._create_separater_label()
-        label2 = self._create_separater_label()
+        months = []
+        for i in range(1, 13):
+            months.append(calendar.month_name[i])
+
+        self._month_dropdown = self._create_dropdown(months, "Month", width=60)
+        self._month_dropdown.connect("changed", self._update_day_dropdown)
+
+        # When the month gets changed, the day gets changed.
+        # At start, shows days 1-31
+        days = [str(i) for i in range(1, 32)]
+        self._day_dropdown = self._create_dropdown(days, "Day")
 
         hbox = Gtk.Box()
-        hbox.pack_start(self._year_entry, False, False, 0)
-        hbox.pack_start(label1, False, False, 0)
-        hbox.pack_start(self._month_entry, False, False, 0)
-        hbox.pack_start(label2, False, False, 0)
-        hbox.pack_start(self._day_entry, False, False, 0)
+        hbox.pack_start(self._year_dropdown, False, False, 10)
+        hbox.pack_start(self._month_dropdown, False, False, 10)
+        hbox.pack_start(self._day_dropdown, False, False, 10)
+        hbox.set_margin_left(20)
+        hbox.set_margin_right(10)
 
+        # validation
         label_box = Gtk.Box()
+        label_box.set_margin_left(30)
 
         birthday_label = Gtk.Label(_("Birthday"))
         birthday_label.get_style_context().add_class("get_data_label")
@@ -58,48 +69,65 @@ class BirthdayWidget(Gtk.Box):
         self._birthday_status.get_style_context().add_class("validation_label")
         label_box.pack_start(self._birthday_status, False, False, 0)
 
+        # Container for the validation and title labels
         self.pack_start(label_box, False, False, 0)
+
+        # Container for the dropdowns
         self.pack_start(hbox, False, False, 0)
 
-        self.set_margin_left(30)
+    def _create_dropdown(self, item_list, default_text=None, width=-1):
 
-    def _create_entry(self, placeholder_text, width=60, char_num=2, entry_text=None):
-        entry = Gtk.Entry()
+        logger.debug("in create_dropdown, item_list = {}".format(item_list))
+        if default_text:
+            dropdown = KanoComboBox(default_text=default_text,
+                                    max_display_items=7)
+        else:
+            dropdown = KanoComboBox(max_display_items=7)
 
-        entry.set_size_request(width, -1)
+        dropdown.set_size_request(width, -1)
 
-        entry.set_width_chars(char_num)
-        entry.set_max_length(char_num)
-        entry.set_placeholder_text(placeholder_text)
-        entry.get_style_context().add_class("get_data_entry")
-        entry.connect("key-release-event", self._emit_key_press)
+        for i in item_list:
+            dropdown.append(i)
 
-        if entry_text:
-            entry.set_text(str(entry_text))
+        # TODO: check birthday is valid when selection has been made
+        dropdown.connect("changed", self.validate)
 
-        return entry
+        return dropdown
+
+    def _update_day_dropdown(self, widget):
+        logger.debug("changing day dropdown")
+
+        # Get new list of days
+        # First, get the selected year and selected month
+
+        year = self._get_year()
+        month = self._get_month()
+
+        if year == 0 or month == 0:
+            logger.debug("returning as year or month is blank, year = {}, month = {}".format(year, month))
+            # Don't update the days
+            return
+
+        logger.debug("not returning, month = {}, year = {}".format(month, year))
+        days = calendar.monthrange(year, month)[1]
+        logger.debug("days dropdown changing, days = {}".format(days))
+
+        days_list = [str(i) for i in range(1, days + 1)]
+        self._day_dropdown.set_items(days_list)
 
     def validate(self, *dummy):
-        day = self._str_to_int(self._day_entry.get_text())
-        month = self._str_to_int(self._month_entry.get_text())
+        day = self._str_to_int(self._day_dropdown.get_selected_item_text())
+        month = self._month_dropdown.get_selected_item_index() + 1
+        year = self._str_to_int(self._year_dropdown.get_selected_item_text())
 
-        # Add extra validation to the year entry - if there are leading
-        # zeros and the year is not 00, return early.
-        year_text = self._year_entry.get_text()
-        if year_text.startswith('0') and not len(year_text) == 2:
-            return self._set_validation_msg(_('year out of range'), False)
-        year = self._str_to_int(year_text)
-
-        if self.FIELD_INCOMPLETE in [day, month, year]:
+        if self.FIELD_INCOMPLETE in [day, year] or month == 0:
             return self._set_validation_msg('', False)
-
-        if self.NOT_A_NUMBER in [day, month, year]:
-            return self._set_validation_msg(_('must be a number'), False)
 
         try:
             birthday = datetime.date(year, month, day)
         except Exception as e:
-            return self._set_validation_msg(_(e.message), False)
+            logger.debug("Exception raised when validating = {}".format(str(e)))
+            return
 
         today = datetime.date.today()
         if birthday > today:
@@ -111,7 +139,6 @@ class BirthdayWidget(Gtk.Box):
 
         return self._set_validation_msg(_('is valid'), True)
 
-
     def _str_to_int(self, string):
         if len(string) == 0:
             return self.FIELD_INCOMPLETE
@@ -120,7 +147,6 @@ class BirthdayWidget(Gtk.Box):
             return self.NOT_A_NUMBER
 
         return int(string)
-
 
     def _set_validation_msg(self, message, valid):
         label = self._birthday_status
@@ -138,52 +164,66 @@ class BirthdayWidget(Gtk.Box):
 
         self._birthday_status.set_text(message)
 
-
-    def _emit_key_press(self, widget, event):
-        self.emit("bday-key-release-event")
-
-    def birthday_entries_filled(self):
-        rv = (
-            self._year_entry.get_text() is not "" and
-            self._month_entry.get_text() is not "" and
-            self._day_entry.get_text() is not ""
-        )
-        logger.debug("birthday entries filled hit")
-        logger.debug("return {}".format(rv))
-        return rv
-
-    def _create_separater_label(self):
-        label = Gtk.Label("/")
-        label.get_style_context().add_class("birthday_separater")
-        return label
-
     def get_birthday_data(self):
-        bday_entries = [self._day_entry, self._month_entry, self._year_entry]
-        bday = []
+        bday = {}
+        bday["day"] = self._get_day()
+        bday["month"] = self._get_month()
+        bday["year"] = self._get_year()
+        bday["day_index"] = self._get_day_index()
+        bday["month_index"] = self._get_month_index()
+        bday["year_index"] = self._get_year_index()
 
-        for entry in bday_entries:
-            is_valid_number, text = self._check_entry_is_number(entry)
-            if not is_valid_number:
-                return (False, {})
-            else:
-                bday.append(text)
+        return bday
 
-        return (True, {'day': bday[0], 'month': bday[1], 'year': bday[2]})
+    def set_birthday_data(self, year_index, month_index, day_index):
+        # Get the data from the cache
+        # Can set value from the index, so either find the index in the
+        # combobox or store it
+        if year_index is not None:
+            self._year_dropdown.set_selected_item_index(year_index)
+        if month_index is not None:
+            self._month_dropdown.set_selected_item_index(month_index)
+        if day_index is not None:
+            self._day_dropdown.set_selected_item_index(day_index)
+
+    # TODO: what if there is no selected item?
+    def _get_day(self):
+        '''
+            Returns an integer of the birthday day
+        '''
+        return self._str_to_int(self._day_dropdown.get_selected_item_text())
+
+    def _get_day_index(self):
+        return self._day_dropdown.get_selected_item_index()
+
+    def _get_month(self):
+        '''
+            Returns an integer of the birthday month
+        '''
+        return self._month_dropdown.get_selected_item_index() + 1
+
+    def _get_month_index(self):
+        return self._month_dropdown.get_selected_item_index()
+
+    def _get_year(self):
+        '''
+            Returns an integer of the birthday year
+        '''
+        return self._str_to_int(self._year_dropdown.get_selected_item_text())
+
+    def _get_year_index(self):
+        return self._year_dropdown.get_selected_item_index()
 
     def calculate_age(self):
         # Error messages
         default_error = N_("Oops!")
         default_desc = N_("You haven't entered a valid birthday")
-        entry_not_valid = N_("You haven't entered a valid number")
+        # entry_not_valid = N_("You haven't entered a valid number")
 
         try:
             # boolean, dictionary
-            valid_bday, bday = self.get_birthday_data()
-            if not valid_bday:
-                raise Exception(default_error, entry_not_valid)
-
+            bday = self.get_birthday_data()
             logger.debug("User birthday = {}".format(bday))
-
             bday_date = str(datetime.date(bday["year"],
                                           bday["month"],
                                           bday["day"]))
@@ -230,10 +270,3 @@ class BirthdayWidget(Gtk.Box):
                 error2 = default_desc
 
             return -1, -1, (error1, error2)
-
-    def _check_entry_is_number(self, entry):
-        entry_text = entry.get_text()
-        if not is_number(entry_text):
-            return False, ''
-
-        return True, int(entry_text)

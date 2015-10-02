@@ -49,6 +49,7 @@ class BirthdayWidget(Gtk.Box):
         # At start, shows days 1-31
         days = [str(i) for i in range(1, 32)]
         self._day_dropdown = self._create_dropdown(days, "Day")
+        self._day_dropdown.connect("changed", self.validate)
 
         hbox = Gtk.Box()
         hbox.pack_start(self._year_dropdown, False, False, 10)
@@ -77,7 +78,6 @@ class BirthdayWidget(Gtk.Box):
 
     def _create_dropdown(self, item_list, default_text=None, width=-1):
 
-        logger.debug("in create_dropdown, item_list = {}".format(item_list))
         if default_text:
             dropdown = KanoComboBox(default_text=default_text,
                                     max_display_items=7)
@@ -88,9 +88,6 @@ class BirthdayWidget(Gtk.Box):
 
         for i in item_list:
             dropdown.append(i)
-
-        # TODO: check birthday is valid when selection has been made
-        dropdown.connect("changed", self.validate)
 
         return dropdown
 
@@ -105,7 +102,9 @@ class BirthdayWidget(Gtk.Box):
 
         if year == 0 or month == 0:
             logger.debug("returning as year or month is blank, year = {}, month = {}".format(year, month))
-            # Don't update the days
+            # Update the days as an empty list
+            self._day_dropdown.remove_items()
+            self._day_dropdown.set_text("Day")
             return
 
         logger.debug("not returning, month = {}, year = {}".format(month, year))
@@ -115,10 +114,20 @@ class BirthdayWidget(Gtk.Box):
         days_list = [str(i) for i in range(1, days + 1)]
         self._day_dropdown.set_items(days_list)
 
+        # Unselect the current item
+        self._day_dropdown.selected_item_index = -1
+        self._day_dropdown.selected_item_text = ""
+        self._day_dropdown.set_text("Day")
+
     def validate(self, *dummy):
         day = self._str_to_int(self._day_dropdown.get_selected_item_text())
         month = self._month_dropdown.get_selected_item_index() + 1
         year = self._str_to_int(self._year_dropdown.get_selected_item_text())
+
+        logger.debug("validate function")
+        logger.debug("day = {}".format(day))
+        logger.debug("month = {}".format(month))
+        logger.debug("year = {}".format(year))
 
         if self.FIELD_INCOMPLETE in [day, year] or month == 0:
             return self._set_validation_msg('', False)
@@ -186,10 +195,12 @@ class BirthdayWidget(Gtk.Box):
         if day_index is not None:
             self._day_dropdown.set_selected_item_index(day_index)
 
-    # TODO: what if there is no selected item?
+        self.validate()
+
     def _get_day(self):
         '''
             Returns an integer of the birthday day
+            If the return value is 0, then nothing has been selected
         '''
         return self._str_to_int(self._day_dropdown.get_selected_item_text())
 
@@ -199,6 +210,7 @@ class BirthdayWidget(Gtk.Box):
     def _get_month(self):
         '''
             Returns an integer of the birthday month
+            If the return value is 0, then nothing has been selected
         '''
         return self._month_dropdown.get_selected_item_index() + 1
 
@@ -208,6 +220,7 @@ class BirthdayWidget(Gtk.Box):
     def _get_year(self):
         '''
             Returns an integer of the birthday year
+            If the return value is 0, then nothing has been selected
         '''
         return self._str_to_int(self._year_dropdown.get_selected_item_text())
 

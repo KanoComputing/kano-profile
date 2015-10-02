@@ -93,7 +93,6 @@ class GetData1(DataTemplate):
         self.bday_widget.connect('birthday-invalid', self._birthday_invalid)
 
         self.update_birthday_widget_from_cache()
-
         self.validate_username()
 
         self.show_password = Gtk.CheckButton.new_with_label(_("Show password"))
@@ -212,10 +211,10 @@ class GetData1(DataTemplate):
         if (self._username.validated and
                 self._password.validated and
                 self._is_birthday_valid):
-            logger.debug("emiting widgets-full")
+            logger.debug("emitting widgets-full")
             self.emit('widgets-filled')
         else:
-            logger.debug("emiting widgets-empty")
+            logger.debug("emitting widgets-empty")
             self.emit('widgets-empty')
 
 

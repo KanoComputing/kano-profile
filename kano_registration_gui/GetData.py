@@ -61,7 +61,7 @@ class DataTemplate(Gtk.EventBox):
         self.get_style_context().add_class("data_screen")
 
 
-class GetData2(DataTemplate):
+class GetData1(DataTemplate):
     '''This second class registration box is to get the username,
     password and birthday of the user.
     '''
@@ -219,7 +219,7 @@ class GetData2(DataTemplate):
             self.emit('widgets-empty')
 
 
-class GetData3(DataTemplate):
+class GetData2(DataTemplate):
     '''This first class registration box is to get
     the username, password and birthday
     '''
@@ -235,7 +235,6 @@ class GetData3(DataTemplate):
         self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
         self.t_and_cs.connect("t-and-cs-clicked",
                               self.show_terms_and_conditions)
-
 
         marketing_container = self._create_marketing_checkbox()
         marketing_enabled = get_cached_data("marketing_enabled")

@@ -12,7 +12,7 @@ from gi.repository import Gtk, Gdk
 
 from kano.gtk3.heading import Heading
 from kano.gtk3.kano_dialog import KanoDialog
-from kano_registration_gui.GetData import GetData3, cache_data
+from kano_registration_gui.GetData import GetData2, cache_data
 from kano_world.functions import register as register_
 from kano_profile.profile import save_profile_variable
 from kano_profile.tracker import save_hardware_info, save_kano_version
@@ -42,7 +42,7 @@ class RegistrationScreen2(Gtk.Box):
 
         # Pass age into the Data screen - decide whether to ask for
         # Guardian's email
-        self.data_screen = GetData3(age)
+        self.data_screen = GetData2(age)
         self.data_screen.connect("widgets-filled", self.enable_next)
         self.data_screen.connect("widgets-empty", self.disable_next)
         self.add(self.data_screen)

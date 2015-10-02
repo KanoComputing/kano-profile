@@ -10,7 +10,7 @@ import subprocess
 from gi.repository import Gtk
 from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
-from kano_registration_gui.GetData import GetData2
+from kano_registration_gui.GetData import GetData1
 from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 from kano_world.functions import request_wrapper, content_type_json
 from kano.network import is_internet
@@ -36,7 +36,7 @@ class RegistrationScreen1(Gtk.Box):
         )
 
         self.pack_start(title.container, False, False, 0)
-        self.data_screen = GetData2()
+        self.data_screen = GetData1()
         self.data_screen.connect("widgets-filled", self.enable_next)
         self.data_screen.connect("widgets-empty", self.disable_next)
 

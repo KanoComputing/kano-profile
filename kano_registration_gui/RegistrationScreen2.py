@@ -20,6 +20,7 @@ from kano_profile.paths import bin_dir
 from kano.network import is_internet
 from kano.logging import logger
 from kano.utils import run_bg
+from kano_profile.tracker import track_data
 
 
 # Get emails and show the terms and conditions
@@ -142,6 +143,7 @@ class RegistrationScreen2(Gtk.Box):
                     title=_("Houston, we have a problem"),
                     description=str(text)
                 )
+                track_data('world-registration-failed', {'reason': text})
 
         else:
             logger.info('registration successful')

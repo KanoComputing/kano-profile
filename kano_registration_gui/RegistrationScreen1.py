@@ -14,6 +14,7 @@ from kano_registration_gui.GetData import GetData1
 from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 from kano_world.functions import request_wrapper, content_type_json
 from kano.network import is_internet
+from kano_profile.tracker import track_data
 
 
 # Get username, password and birthday data from user.
@@ -89,6 +90,8 @@ class RegistrationScreen1(Gtk.Box):
             return
 
         if not self.is_username_available(username):
+            track_data('world-registration-username-taken',
+                       {'username': username})
             kd = KanoDialog(
                 "This username is taken!",
                 "Try another one",

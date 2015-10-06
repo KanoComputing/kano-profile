@@ -40,7 +40,7 @@ class SwagScreen(Template):
                 "challenges. But fear not - we'll save everything for "
                 "when you have internet."
             )
-            image_name = "no-profile"
+            image_name = "no-profile-new"
             button_label = _("Let's go").upper()
 
         # Set image

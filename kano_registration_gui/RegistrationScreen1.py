@@ -6,6 +6,7 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
+import os
 import subprocess
 from gi.repository import Gtk
 from kano.gtk3.kano_dialog import KanoDialog
@@ -15,20 +16,20 @@ from kano_registration_gui.RegistrationScreen2 import RegistrationScreen2
 from kano_world.functions import request_wrapper, content_type_json
 from kano.network import is_internet
 from kano_profile.tracker import track_data
+from kano_profile_gui.paths import image_dir
 
 
 # Get username, password and birthday data from user.
-class RegistrationScreen1(Gtk.Box):
+class RegistrationScreen1(Gtk.Fixed):
 
     def __init__(self, win):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super(RegistrationScreen1, self).__init__()
         self.win = win
         self.win.set_main_widget(self)
         self.win.set_decorated(True)
 
         self.page_control = self.win.create_page_control(1, "", _("NEXT"))
         self.page_control.next_button.set_sensitive(False)
-        self.pack_end(self.page_control, False, False, 0)
         self.page_control.connect("next-button-clicked", self.next_page)
 
         title = Heading(
@@ -36,12 +37,25 @@ class RegistrationScreen1(Gtk.Box):
             _('Choose a cool name and secure password')
         )
 
-        self.pack_start(title.container, False, False, 0)
         self.data_screen = GetData1()
         self.data_screen.connect("widgets-filled", self.enable_next)
         self.data_screen.connect("widgets-empty", self.disable_next)
 
-        self.add(self.data_screen)
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        vbox.pack_start(title.container, False, False, 0)
+        vbox.pack_start(self.data_screen, False, False, 0)
+        vbox.pack_end(self.page_control, False, False, 0)
+
+        ebox = Gtk.EventBox()
+        ebox.get_style_context().add_class("data_screen")
+        ebox.add(vbox)
+
+        file_path = os.path.join(image_dir, "login/sign-up-graphic.png")
+        background = Gtk.Image.new_from_file(file_path)
+
+        self.put(background, 0, 0)
+        self.put(ebox, 250, 200)
+
         self.win.show_all()
 
     def _show_error_dialog(self, title, description):

@@ -48,22 +48,9 @@ from kano_profile.tracker import open_locked, session_start, session_end, \
     session_log, generate_tracker_token, load_token, get_utc_offset, \
     track_subprocess
 from kano.logging import logger
-from kano.utils import delete_file, ensure_dir, is_running, \
-    get_rpi_model, detect_kano_keyboard
+from kano.utils import delete_file, ensure_dir, is_running
 from kano.colours import decorate_string_only_terminal
-
-
-# TODO: Move it somewhere nicer in the future
-def _hw_info():
-    track_data("hw-info", {
-        "keyboard": "kano" if detect_kano_keyboard() else "generic",
-        "model": get_rpi_model()
-    })
-
-
-event_templates = {
-    "hw-info": _hw_info,
-}
+from kano_profile.tracking_events import generate_event
 
 
 def show_status():
@@ -189,19 +176,6 @@ def clear_sessions():
             af.write(json.dumps(event) + "\n")
 
             delete_file(path)
-
-
-def generate_event(event_name):
-    """ Generates one of the predefined events.
-
-        :param event_name: The identifier of the event.
-        :type event_name: str
-    """
-
-    if event_name in event_templates:
-        event_templates[event_name]()
-    else:
-        sys.exit("ERROR: Unknown event template.")
 
 
 def _do_update_status():

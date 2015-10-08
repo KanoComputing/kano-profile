@@ -103,7 +103,7 @@ class BirthdayWidget(Gtk.Box):
         if year == 0 or month == 0:
             logger.debug("returning as year or month is blank, year = {}, month = {}".format(year, month))
             # Update the days as an empty list
-            self._day_dropdown.remove_items()
+            self._day_dropdown.remove_all()
             self._day_dropdown.set_text("Day")
             return
 

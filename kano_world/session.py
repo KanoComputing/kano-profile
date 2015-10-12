@@ -631,3 +631,77 @@ class KanoWorldSession(object):
                 return None
 
         return cur_root
+
+    def post_comment(self, share_id, comment):
+        payload = {
+            'type': 'share',
+            'item_id': share_id,
+            'text': comment
+        }
+
+        success, text, data = request_wrapper(
+            'post', '/comments', session=self.session, data=payload
+        )
+
+        if not success:
+            return False, text
+
+        if not ('success' in data and data['success']):
+            return False, 'Comment not successful!'
+
+        return True, None
+
+    def like_share(self, share_id):
+        success, text, data = request_wrapper(
+            'post', '/share/{}/like'.format(share_id), session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        return True, None
+
+    def unlike_share(self, share_id):
+        success, text, data = request_wrapper(
+            'delete', '/share/{}/like'.format(share_id), session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        return True, None
+
+    def follow_user(self, user_id):
+        success, text, data = request_wrapper(
+            'post', '/users/follow/{}'.format(user_id), session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        return True, None
+
+    def unfollow_user(self, user_id):
+        success, text, data = request_wrapper(
+            'delete', '/users/follow/{}'.format(user_id), session=self.session
+        )
+
+        if not success:
+            return False, text
+
+        return True, None
+
+    def get_users_following(self, user_id):
+        success, text, data = request_wrapper(
+            'get', '/users/{}/following'.format(user_id), session=self.session
+        )
+
+        if not success:
+            print 'failed'
+            return False, text
+
+        if 'entries' not in data:
+            return False, 'Get unsuccessful!'
+
+
+        return True, data['entries']

@@ -13,7 +13,7 @@ from kano.utils import get_home, download_url, ensure_dir, read_json, write_json
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 from .connection import request_wrapper, content_type_json
-from .functions import get_glob_session
+from .functions import get_glob_session, get_kano_world_id
 
 
 def list_shares(app_name=None, page=0, featured=False, user_id=None):
@@ -34,6 +34,75 @@ def list_shares(app_name=None, page=0, featured=False, user_id=None):
         return True, None, data
 
     return False, 'Something wrong with listing shares!', None
+
+
+def get_comments(share_id):
+    success, text, data = request_wrapper(
+        'get', '/comments/share/{}'.format(share_id)
+    )
+
+    if not success:
+        return success, text, None
+
+    if 'entries' in data:
+        return True, None, data['entries']
+
+    return False, 'Something wrong retrieving comments!', None
+
+
+def post_comment(share_id, comment):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.post_comment(share_id, comment)
+
+
+def like_share(share_id):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.like_share(share_id)
+
+
+def unlike_share(share_id):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.unlike_share(share_id)
+
+
+def get_following():
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    user_id = get_kano_world_id()
+    return glob_session.get_users_following(user_id)
+
+
+def follow_user(user_id):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.follow_user(user_id)
+
+
+def unfollow_user(user_id):
+    glob_session = get_glob_session()
+
+    if not glob_session:
+        return False, 'You are not logged in!'
+
+    return glob_session.unfollow_user(user_id)
 
 
 def upload_share(file_path, title, app_name, featured=False):

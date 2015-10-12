@@ -9,7 +9,7 @@
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, \
-    chown_path, run_print_output_error
+    chown_path, run_print_output_error, run_bg
 from kano.logging import logger
 from .paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
 
@@ -121,15 +121,19 @@ def get_gamestate_variables(app_name):
             return [str(key) for key in rules.keys()]
 
 
-def launch_project(app, filename, data_dir):
+def launch_project(app, filename, data_dir, background=False):
     logger.info('launch_project: {} {} {}'.format(app, filename, data_dir))
 
     app_profiles = read_json(app_profiles_file)
 
     fullpath = os.path.join(data_dir, filename)
     cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
-    _, _, rc = run_print_output_error(cmd)
-    return rc
+
+    if background:
+        run_bg(cmd)
+    else:
+        _, _, rc = run_print_output_error(cmd)
+        return rc
 
 
 def get_app_xp_for_challenge(app, challenge_no):

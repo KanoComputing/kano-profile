@@ -215,8 +215,11 @@ class BadgeInfoScreen(Gtk.EventBox):
         description_label = Gtk.Label(description, xalign=0)
         description_label.get_style_context().add_class("info_paragraph")
         description_label.set_line_wrap(True)
-        description_label.set_line_wrap_mode(Pango.WrapMode.WORD)
+        description_label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)
         description_label.set_size_request(info_width, -1)
+        # TODO: Figure out a way of doing the line wrap according to size
+        # instead of relying on characters
+        description_label.set_max_width_chars(20)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.pack_start(title_label, False, False, 0)

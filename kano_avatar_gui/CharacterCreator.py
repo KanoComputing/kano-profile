@@ -59,7 +59,7 @@ class CharacterCreator(Gtk.EventBox):
             self.randomise_button = self._create_random_button()
             self.fixed.put(self.randomise_button, 645, self.meny_y_pos)
 
-        self.connect("button-release-event", self._hide_pop_ups)
+        self.connect("button-press-event", self._hide_pop_ups)
         self._update_img(None, None)
 
     def select_category_button(self, identifier):
@@ -85,7 +85,6 @@ class CharacterCreator(Gtk.EventBox):
         width = 40
         height = 40
 
-        # TODO: get file path for the random icon
         icon_path = os.path.join(media_dir, "images/icons/random.png")
         icon = Gtk.Image.new_from_file(icon_path)
         random_button.set_image(icon)

@@ -28,11 +28,11 @@ class Menu(Gtk.Fixed):
         'randomise_all': (GObject.SIGNAL_RUN_FIRST, None, ())
     }
 
-    def __init__(self, parser):
+    def __init__(self, parser, no_sync=False):
         Gtk.Fixed.__init__(self)
 
         self._parser = parser
-        char, item = get_avatar()
+        char, item = get_avatar(sync=not no_sync)
         self._parser.char_select(char)
         self._cat_menu = CategoryMenu(self._parser)
         self._cat_menu.connect('category_item_selected',
@@ -48,7 +48,7 @@ class Menu(Gtk.Fixed):
         self.put(self._cat_menu, 0, 0)
 
         self._initialise_pop_up_menus()
-        self._create_start_up_image()
+        self._create_start_up_image(char_item_tup=(char,item))
         self.show_all()
 
     def select_category_button(self, identifier):
@@ -112,7 +112,7 @@ class Menu(Gtk.Fixed):
                 self.remove(pop_up)
                 pop_up.destroy()
 
-    def _create_start_up_image(self):
+    def _create_start_up_image(self, char_item_tup=None, env=None):
         '''We check what has been saved on kano-profile, and we use a default if
         something hasn't been specified
         '''
@@ -121,8 +121,13 @@ class Menu(Gtk.Fixed):
         # This is a dictionary so we can eaily reset the menus
         self.saved_selected_list = {}
 
-        char, item = get_avatar()
-        env = get_environment()
+        if char_item_tup is None:
+            char, item = get_avatar()
+        else:
+            char, item = char_item_tup
+
+        if env is None:
+            env = get_environment()
 
         item[self._parser.char_label] = char
         item[self._parser.env_label] = env

@@ -16,6 +16,7 @@ from kano.gtk3.apply_styles import apply_styling_to_screen
 from kano_profile_gui.image_helper_functions import (
     create_translucent_layer, get_image_path_at_size
 )
+import unicodedata
 
 
 class BadgeScreen(Gtk.EventBox):
@@ -170,15 +171,22 @@ class BadgeInfoScreen(Gtk.EventBox):
         # TODO: this is repeated.  Fix this.
         locked = not self.item_info['achieved']
         if locked:
-            color = Gdk.RGBA()
-            color.parse('#dddddd')
+            bg_color = "#dddddd"
         else:
-            bg_color = self.item_info['bg_color']
-            color = Gdk.RGBA()
-            color.parse('#' + bg_color)
+            bg_color = self.background_color = unicodedata.normalize('NFKD', '#' + self.item_info['bg_color']).encode('ascii', 'ignore')
 
-        background.override_background_color(Gtk.StateFlags.NORMAL,
-                                             color)
+        style_provider = Gtk.CssProvider()
+
+        css = ".badge_screen_background {background: %s}" % bg_color
+        style_provider.load_from_data(css)
+
+        style_context = background.get_style_context()
+        style_context.add_class("badge_screen_background")
+
+        style_context.add_provider(
+            style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+        )
 
         badge_fixed = self.create_badge_fixed(self.item_info)
 

@@ -9,13 +9,14 @@
 # Used for badges, environments and avatar screen
 
 # import os
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf
 import kano_profile_gui.components.icons as icons
 import kano.gtk3.cursor as cursor
 # from kano_profile_gui.paths import media_dir
 from kano_profile_gui.image_helper_functions import (
     create_translucent_layer, get_image_path_at_size
 )
+import unicodedata
 
 
 class BadgeItem(Gtk.Button):
@@ -42,12 +43,11 @@ class BadgeItem(Gtk.Button):
         self.label_height = 44
 
         self.get_style_context().add_class("badge_item")
+        self.background_color = unicodedata.normalize(
+            'NFKD', '#' + background_color
+        ).encode('ascii', 'ignore')
 
-        self.background_color = Gdk.RGBA()
-        self.background_color.parse('#' + background_color)
-
-        self.locked_background_color = Gdk.RGBA()
-        self.locked_background_color.parse('#e7e7e7')
+        self.locked_background_color = '#e7e7e7'
 
         self.create_hover_box()
 
@@ -136,8 +136,18 @@ class BadgeItem(Gtk.Button):
         if self.locked:
             self.padlock = icons.set_from_name("padlock")
             self.fixed.put(self.padlock, 100, 77)
-            self.override_background_color(Gtk.StateFlags.NORMAL,
-                                           self.locked_background_color)
+            background_color = self.locked_background_color
         else:
-            self.override_background_color(Gtk.StateFlags.NORMAL,
-                                           self.background_color)
+            background_color = self.background_color
+
+        style_provider = Gtk.CssProvider()
+        css = ".badge_background {background: %s}" % background_color
+        style_provider.load_from_data(css)
+
+        style_context = self.get_style_context()
+        style_context.add_class("badge_background")
+
+        style_context.add_provider(
+            style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+        )

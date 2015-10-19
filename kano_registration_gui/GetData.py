@@ -133,9 +133,9 @@ class GetData1(DataTemplate):
         if len(password) == 0:
             self._password.label_success("")
         elif check_password(password):
-            self._password.label_success(_("looks good!"), "success")
+            self._password.label_success(_(" looks good!"), "success")
         else:
-            self._password.label_success(_("is not valid"), "fail")
+            self._password.label_success(_(" is not valid"), "fail")
 
         self.widgets_full()
 
@@ -146,7 +146,7 @@ class GetData1(DataTemplate):
         elif check_username(username):
             self._username.label_success(_(""), "success")
         else:
-            self._username.label_success(_("is invalid"), "fail")
+            self._username.label_success(_(" is invalid"), "fail")
 
         self.widgets_full()
 

@@ -143,13 +143,13 @@ class BirthdayWidget(Gtk.Box):
 
         today = datetime.date.today()
         if birthday > today:
-            return self._set_validation_msg(_('date is in the future'), False)
+            return self._set_validation_msg(_(' date is in the future'), False)
 
         oldest_date = today.replace(year=(today.year - 100))
         if birthday < oldest_date and (birthday.year < 0 or birthday.year > 99):
-            return self._set_validation_msg(_('year out of range'), False)
+            return self._set_validation_msg(_(' year out of range'), False)
 
-        return self._set_validation_msg(_('is valid'), True)
+        return self._set_validation_msg(_(' is valid'), True)
 
     def _str_to_int(self, string):
         if len(string) == 0:

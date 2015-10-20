@@ -25,7 +25,7 @@ class CharacterCreator(Gtk.EventBox):
     avatar_cr = AvatarCreator(configuration)
     meny_y_pos = 20
 
-    def __init__(self, randomise=False):
+    def __init__(self, randomise=False, no_sync=False):
         Gtk.EventBox.__init__(self)
 
         # This is the avatar specific styling
@@ -37,7 +37,7 @@ class CharacterCreator(Gtk.EventBox):
 
         # Check profile information and load up either the created avatar or
         # the default
-        self._create_menu()
+        self._create_menu(no_sync=no_sync)
         self._create_img_box(self.get_image_path())
 
         # This needs to be called after _create_menu()
@@ -121,8 +121,8 @@ class CharacterCreator(Gtk.EventBox):
         self._menu.hide_pop_ups()
         self._menu.unselect_categories()
 
-    def _create_menu(self):
-        self._menu = Menu(self.avatar_cr)
+    def _create_menu(self, no_sync=False):
+        self._menu = Menu(self.avatar_cr, no_sync=no_sync)
         self._menu.connect('asset_selected', self._update_img)
         self._menu.connect('randomise_all', self._randomise_avatar_wrapper)
 

@@ -27,7 +27,7 @@ class SwagScreen(Template):
         if login:
             header = _("Profile activated!")
             subheader = _(
-                u"Now you can share stuff, build your character,"
+                u"Now you can share stuff, build your character, "
                 u"and connect with friends! You've earned some "
                 u"rewards\N{HORIZONTAL ELLIPSIS}"
             )

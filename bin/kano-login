@@ -104,6 +104,7 @@ class MainWindow(ApplicationWindow):
 class HeaderBar(Gtk.Box):
     def __init__(self, win):
         Gtk.Box.__init__(self)
+        self.get_style_context().add_class("header_bar")
         self.win = win
 
         self.close_button = Gtk.Button()

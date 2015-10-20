@@ -99,4 +99,7 @@ GtkCheckButton:active:insensitive {
     color: @kano_red;
 }
 
-
+.header_bar, .header_bar GtkButton {
+    color: transparent;
+    background: transparent;
+}

@@ -52,6 +52,19 @@ def calculate_xp():
                     if thing in appstate:
                         points += value * appstate[thing]
 
+            if group == 'groups':
+                # Iterate over the groups of the local profile
+                groups_item_iter = appstate.get('groups', {}).iteritems
+                for grp_name, grp_obj in groups_item_iter():
+                    level_achieved = int(
+                        appstate['groups'][grp_name]['challengeNo']
+                    )
+                    for level, value in rules.get(grp_name, {}).iteritems():
+                        level = int(level)
+                        value = int(value)
+
+                        if level <= level_achieved:
+                            points += value
     qm = Quests()
     return int(points) + qm.evaluate_xp()
 

@@ -94,6 +94,9 @@ class BirthdayWidget(Gtk.Box):
     def _update_day_dropdown(self, widget):
         logger.debug("changing day dropdown")
 
+        # Day dropdown is empty, so remove any validation message
+        self._set_validation_msg("", False)
+
         # Get new list of days
         # First, get the selected year and selected month
 

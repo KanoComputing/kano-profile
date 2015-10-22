@@ -137,38 +137,65 @@ class BadgeCalc(object):
         self._all_rules = load_badge_rules()
         self._calculated_badges = {}
 
+    def _parse_target_variable(self, variable):
+        return variable.split('.')
+
+    def _get_variable(self, app, levels):
+        ret_val = None
+        try:
+            ret_val = self._app_state[app]
+            for k in xrange(len(levels)):
+                ret_val = ret_val[levels[k]]
+        except (TypeError, KeyError) as exc:
+            logger.debug(
+                "Can't find levels {} in app {}, - {}".format(levels, app, exc)
+            )
+            ret_val = None
+        return ret_val
+
     def _evaluate_rules(self, rules):
+        """ Evaluates the rules and returns whether the badge has been unlocked
+        :param rules: The category whose z-index will be returned
+        :returns: True or False if the badge has been achieved. If the rules
+                  are malformed it returns None
+        :rtype: Boolean or NoneType
+        """
         if 'operation' not in rules:
+            logger.warn(
+                "Malformed badge rules, missing 'operation' - [{}] "
+                .format(rules)
+            )
             return None
 
         if rules['operation'] == 'each_greater':
             achieved = True
             for target in rules['targets']:
                 app = target[0]
-                variable = target[1]
-                value = target[2]
+                attr_list = self._parse_target_variable(target[1])
+                threshold_value = target[2]
 
-                if variable == 'level' and value == -1:
-                    value = self._app_profiles[app]['max_level']
-                if (app not in self._app_list or
-                        variable not in self._app_state[app]):
+                local_value = self._get_variable(app, attr_list)
+                if local_value is None:
                     achieved = False
+                if attr_list[-1] == 'level' and threshold_value == -1:
+                    threshold_value = self._app_profiles[app]['max_level']
                     break
-                achieved &= self._app_state[app][variable] >= value
+
+                achieved &= local_value >= threshold_value
 
         elif rules['operation'] == 'sum_greater':
-            sum = 0
+            total = 0
             for target in rules['targets']:
                 app = target[0]
-                variable = target[1]
+                attr_list = self._parse_target_variable(target[1])
 
-                if (app not in self._app_list or
-                        variable not in self._app_state[app]):
+                local_value = self._get_variable(app, attr_list)
+                if local_value is None:
                     continue
 
-                sum += float(self._app_state[app][variable])
+                total += float(local_value)
 
-            achieved = sum >= rules['value']
+            achieved = total >= rules['value']
         else:
             achieved = None
 
@@ -176,10 +203,25 @@ class BadgeCalc(object):
 
     @staticmethod
     def is_push_back(item):
+        """ Tells us if a rule is of type push_back i.e. to be calculated at
+        the end
+        :param item: A container with the rules dict embedded
+        :type item: tuple with dict in position [1]
+        :returns: True if the rule calculation is to be delayed until non push
+                  back badges are evaluated
+        :rtype: Boolean
+        """
         rules = item[1]
         return 'push_back' in rules and rules['push_back'] is True
 
-    def do_calculate(self, calculate_only_pushed_back):
+    def _do_calculate(self, calculate_only_pushed_back):
+        """ Perform the evaluation of the badge unlocking conditions. It stores
+        the results in self._calculated_badges
+        the end
+        :param calculate_only_pushed_back: Only calculate 'push_back' type
+                                           badges
+        :type calculate_only_pushed_back: Boolean
+        """
         for category, subcats in self._all_rules.iteritems():
             for subcat, items in subcats.iteritems():
                 if calculate_only_pushed_back:
@@ -221,7 +263,7 @@ class BadgeCalc(object):
     @property
     def calculated_badges(self):
         # Calculate badges/environments
-        self.do_calculate(False)
+        self._do_calculate(False)
 
         # count offline badges
         self._app_state['computed']['num_offline_badges'] = \
@@ -229,7 +271,7 @@ class BadgeCalc(object):
 
         # Calculate badges marked as push_back (those for which the num of
         # offline badges needs to have been calculated)
-        self.do_calculate(True)
+        self._do_calculate(True)
 
         # Inject badges from quests to the dict
         qm = Quests()
@@ -328,9 +370,10 @@ def save_app_state_with_dialog(app_name, data):
         return
 
     if is_gui():
-        fifo = open(os.path.join(os.path.expanduser('~'),
-                                 '.kano-notifications.fifo'),
-                    'w')
+        fifo = open(
+            os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'),
+            'w'
+        )
         with fifo:
             for notification in (new_level_str + ' ' + new_items_str).split(' '):
                 if len(notification) > 0:

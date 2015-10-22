@@ -434,6 +434,11 @@ def load_badge_rules():
 
         for rule_file in rule_files:
             rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
+            if os.path.splitext(rule_file_fullpath)[1] != '.json':
+                logger.debug(
+                    'Skipping over non json {}'.format(rule_file_fullpath)
+                )
+                continue
             rule_data = read_json(rule_file_fullpath)
             if not rule_data:
                 logger.error('rule file empty: {}'.format(rule_file_fullpath))

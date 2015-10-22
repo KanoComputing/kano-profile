@@ -328,10 +328,15 @@ def save_app_state_with_dialog(app_name, data):
         return
 
     if is_gui():
-        with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
+        fifo = open(os.path.join(os.path.expanduser('~'),
+                                 '.kano-notifications.fifo'),
+                    'w')
+        with fifo:
             for notification in (new_level_str + ' ' + new_items_str).split(' '):
                 if len(notification) > 0:
-                    logger.debug("Showing the {} notification".format(notification))
+                    logger.debug(
+                        "Showing the {} notification".format(notification)
+                    )
                     fifo.write('{}\n'.format(notification))
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
@@ -339,7 +344,10 @@ def save_app_state_with_dialog(app_name, data):
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
-    logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+    logger.debug(
+        'save_app_state_variable_with_dialog {} {} {}'
+        .format(app_name, variable, value)
+    )
 
     data = load_app_state(app_name)
     data[variable] = value
@@ -348,7 +356,10 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
 
 
 def increment_app_state_variable_with_dialog(app_name, variable, value):
-    logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+    logger.debug(
+        'increment_app_state_variable_with_dialog {} {} {}'
+        .format(app_name, variable, value)
+    )
 
     data = load_app_state(app_name)
     if variable not in data:
@@ -373,7 +384,9 @@ def load_badge_rules():
 
         rule_files = os.listdir(folder_fullpath)
         if not rule_files:
-            logger.error('no rule files in subfolder: {}'.format(folder_fullpath))
+            logger.error(
+                'no rule files in subfolder: {}'.format(folder_fullpath)
+            )
             return
 
         for rule_file in rule_files:

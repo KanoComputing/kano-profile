@@ -20,7 +20,6 @@ class TermsAndConditions(Gtk.Box):
 
         self.checkbutton = Gtk.CheckButton()
         self.checkbutton.get_style_context().add_class("get_data_checkbutton")
-        self.checkbutton.set_size_request(50, 50)
         self.checkbutton.set_margin_left(30)
 
         self.tc_button = OrangeButton(_("I agree to the terms and conditions"))

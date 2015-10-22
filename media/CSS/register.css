@@ -60,7 +60,6 @@ GtkCheckButton:active:insensitive {
 .get_data_checkbutton {
     border-color: #bbbbbb;
     border-width: 2px;
-    -GtkCheckButton-indicator-size: 40;
     -GtkCheckButton-indicator-spacing: 3;
     color: #555555;
     font: Bariol 13;

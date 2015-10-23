@@ -10,6 +10,8 @@ from __future__ import division
 
 import os
 import json
+import itertools
+from copy import deepcopy
 
 from kano.logging import logger
 from kano.utils import read_json, is_gui, is_running, run_bg
@@ -50,6 +52,19 @@ def calculate_xp():
                     if thing in appstate:
                         points += value * appstate[thing]
 
+            if group == 'groups':
+                # Iterate over the groups of the local profile
+                groups_item_iter = appstate.get('groups', {}).iteritems
+                for grp_name, grp_obj in groups_item_iter():
+                    level_achieved = int(
+                        appstate['groups'][grp_name]['challengeNo']
+                    )
+                    for level, value in rules.get(grp_name, {}).iteritems():
+                        level = int(level)
+                        value = int(value)
+
+                        if level <= level_achieved:
+                            points += value
     qm = Quests()
     return int(points) + qm.evaluate_xp()
 
@@ -104,87 +119,178 @@ def calculate_min_current_max_xp():
             return level_min, xp_now, level_max
 
 
-def calculate_badges():
-    # helper function to calculate operations
-    def do_calculate(select_push_back):
-        for category, subcats in all_rules.iteritems():
+class BadgeCalc(object):
+    def __init__(self):
+        self._app_profiles = read_json(app_profiles_file)
+        if not self._app_profiles:
+            logger.error('Error reading app_profiles.json')
+            raise RuntimeError("Couldn't read app profiles")
+
+        self._app_list = get_app_list() + ['computed']
+        self._app_state = dict()
+        for app in self._app_list:
+            self._app_state[app] = load_app_state(app)
+
+        self._app_state.setdefault('computed', dict())['kano_level'] = \
+            calculate_kano_level()[0]
+
+        self._all_rules = load_badge_rules()
+        self._calculated_badges = {}
+
+    def _parse_target_variable(self, variable):
+        return variable.split('.')
+
+    def _get_variable(self, app, levels):
+        ret_val = None
+        try:
+            ret_val = self._app_state[app]
+            for k in xrange(len(levels)):
+                ret_val = ret_val[levels[k]]
+        except (TypeError, KeyError) as exc:
+            logger.debug(
+                "Can't find levels {} in app {}, - {}".format(levels, app, exc)
+            )
+            ret_val = None
+        return ret_val
+
+    def _evaluate_rules(self, rules):
+        """ Evaluates the rules and returns whether the badge has been unlocked
+        :param rules: The category whose z-index will be returned
+        :returns: True or False if the badge has been achieved. If the rules
+                  are malformed it returns None
+        :rtype: Boolean or NoneType
+        """
+        if 'operation' not in rules:
+            logger.warn(
+                "Malformed badge rules, missing 'operation' - [{}] "
+                .format(rules)
+            )
+            return None
+
+        if rules['operation'] == 'each_greater':
+            achieved = True
+            for target in rules['targets']:
+                app = target[0]
+                attr_list = self._parse_target_variable(target[1])
+                threshold_value = target[2]
+
+                local_value = self._get_variable(app, attr_list)
+                if local_value is None:
+                    achieved = False
+                if attr_list[-1] == 'level' and threshold_value == -1:
+                    threshold_value = self._app_profiles[app]['max_level']
+                    break
+
+                achieved &= local_value >= threshold_value
+
+        elif rules['operation'] == 'sum_greater':
+            total = 0
+            for target in rules['targets']:
+                app = target[0]
+                attr_list = self._parse_target_variable(target[1])
+
+                local_value = self._get_variable(app, attr_list)
+                if local_value is None:
+                    continue
+
+                total += float(local_value)
+
+            achieved = total >= rules['value']
+        else:
+            achieved = None
+
+        return achieved
+
+    @staticmethod
+    def is_push_back(item):
+        """ Tells us if a rule is of type push_back i.e. to be calculated at
+        the end
+        :param item: A container with the rules dict embedded
+        :type item: tuple with dict in position [1]
+        :returns: True if the rule calculation is to be delayed until non push
+                  back badges are evaluated
+        :rtype: Boolean
+        """
+        rules = item[1]
+        return 'push_back' in rules and rules['push_back'] is True
+
+    def _do_calculate(self, calculate_only_pushed_back):
+        """ Perform the evaluation of the badge unlocking conditions. It stores
+        the results in self._calculated_badges
+        the end
+        :param calculate_only_pushed_back: Only calculate 'push_back' type
+                                           badges
+        :type calculate_only_pushed_back: Boolean
+        """
+        for category, subcats in self._all_rules.iteritems():
             for subcat, items in subcats.iteritems():
-                for item, rules in items.iteritems():
-                    target_pushback = 'push_back' in rules and rules['push_back'] is True
-                    if target_pushback != select_push_back:
+                if calculate_only_pushed_back:
+                    filter_fn = itertools.ifilter
+                else:
+                    filter_fn = itertools.ifilterfalse
+
+                it = filter_fn(self.is_push_back, items.iteritems())
+
+                for item, rules in it:
+                    achieved = self._evaluate_rules(rules)
+                    if achieved is None:
                         continue
 
-                    if rules['operation'] == 'each_greater':
-                        achieved = True
-                        for target in rules['targets']:
-                            app = target[0]
-                            variable = target[1]
-                            value = target[2]
+                    calc_badge = self._calculated_badges.setdefault(
+                        category,
+                        {}
+                    )
+                    calc_subcat = calc_badge.setdefault(subcat, {})
+                    calc_subcat[item] = self._all_rules[category][subcat][item]
+                    calc_subcat[item]['achieved'] = achieved
 
-                            if variable == 'level' and value == -1:
-                                value = app_profiles[app]['max_level']
-                            if app not in app_list or variable not in app_state[app]:
-                                achieved = False
-                                break
-                            achieved &= app_state[app][variable] >= value
-
-                    elif rules['operation'] == 'sum_greater':
-                        sum = 0
-                        for target in rules['targets']:
-                            app = target[0]
-                            variable = target[1]
-
-                            if app not in app_list or variable not in app_state[app]:
-                                continue
-
-                            sum += float(app_state[app][variable])
-
-                        achieved = sum >= rules['value']
-
-                    else:
-                        continue
-
-                    calculated_badges.setdefault(category, dict()).setdefault(subcat, dict())[item] \
-                        = all_rules[category][subcat][item]
-                    calculated_badges[category][subcat][item]['achieved'] = achieved
-
-    def count_offline_badges():
+    def count_offline_badges(self):
         count = 0
-        for category, subcats in calculated_badges.iteritems():
-            for subcat, items in subcats.iteritems():
-                for item, rules in items.iteritems():
-                    if category == 'badges' and subcat != 'online' and rules['achieved']:
-                        count += 1
+        # Only iterate over badges
+        iter_badges = itertools.ifilter(lambda k: k[0] == 'badges',
+                                        self._calculated_badges.iteritems())
+        for category, subcats in iter_badges:
+            # Only get the online badges
+            iter_subcats = itertools.ifilter(lambda k: k[0] != 'online',
+                                             subcats.iteritems())
+            for subcat, items in iter_subcats:
+                # Count achieved
+                achieved_iter = itertools.ifilter(lambda k: k['achieved'],
+                                                  items.itervalues())
+                count += sum(1 for b in achieved_iter)
         return count
 
-    app_profiles = read_json(app_profiles_file)
-    if not app_profiles:
-        logger.error('Error reading app_profiles.json')
+    @property
+    def calculated_badges(self):
+        # Calculate badges/environments
+        self._do_calculate(False)
 
-    app_list = get_app_list() + ['computed']
-    app_state = dict()
-    for app in app_list:
-        app_state[app] = load_app_state(app)
+        # count offline badges
+        self._app_state['computed']['num_offline_badges'] = \
+            self.count_offline_badges()
 
-    app_state.setdefault('computed', dict())['kano_level'] = calculate_kano_level()[0]
+        # Calculate badges marked as push_back (those for which the num of
+        # offline badges needs to have been calculated)
+        self._do_calculate(True)
 
-    all_rules = load_badge_rules()
-    calculated_badges = dict()
+        # Inject badges from quests to the dict
+        qm = Quests()
+        self._calculated_badges['badges']['quests'] = qm.evaluate_badges()
 
-    # normal ones
-    do_calculate(False)
+        return deepcopy(self._calculated_badges)
 
-    # count offline badges
-    app_state['computed']['num_offline_badges'] = count_offline_badges()
 
-    # add pushed back ones
-    do_calculate(True)
+def calculate_badges():
+    ret_v = {}
+    try:
+        badge_c = BadgeCalc()
+        ret_v = badge_c.calculated_badges
+    except KeyError as exc:
+        logger.error('Configuration missing some value: [{}]'.format(exc))
+    except RuntimeError as exc:
+        logger.error('Error while trying to calculate badges [{}]'.format(exc))
 
-    # Inject badges from quests to the dict
-    qm = Quests()
-    calculated_badges['badges']['quests'] = qm.evaluate_badges()
-
-    return calculated_badges
+    return ret_v
 
 
 def compare_badges_dict(old, new):
@@ -264,10 +370,16 @@ def save_app_state_with_dialog(app_name, data):
         return
 
     if is_gui():
-        with open(os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'), 'w') as fifo:
+        fifo = open(
+            os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'),
+            'w'
+        )
+        with fifo:
             for notification in (new_level_str + ' ' + new_items_str).split(' '):
                 if len(notification) > 0:
-                    logger.debug("Showing the {} notification".format(notification))
+                    logger.debug(
+                        "Showing the {} notification".format(notification)
+                    )
                     fifo.write('{}\n'.format(notification))
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
@@ -275,7 +387,10 @@ def save_app_state_with_dialog(app_name, data):
 
 
 def save_app_state_variable_with_dialog(app_name, variable, value):
-    logger.debug('save_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+    logger.debug(
+        'save_app_state_variable_with_dialog {} {} {}'
+        .format(app_name, variable, value)
+    )
 
     data = load_app_state(app_name)
     data[variable] = value
@@ -284,7 +399,10 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
 
 
 def increment_app_state_variable_with_dialog(app_name, variable, value):
-    logger.debug('increment_app_state_variable_with_dialog {} {} {}'.format(app_name, variable, value))
+    logger.debug(
+        'increment_app_state_variable_with_dialog {} {} {}'
+        .format(app_name, variable, value)
+    )
 
     data = load_app_state(app_name)
     if variable not in data:
@@ -309,11 +427,18 @@ def load_badge_rules():
 
         rule_files = os.listdir(folder_fullpath)
         if not rule_files:
-            logger.error('no rule files in subfolder: {}'.format(folder_fullpath))
+            logger.error(
+                'no rule files in subfolder: {}'.format(folder_fullpath)
+            )
             return
 
         for rule_file in rule_files:
             rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
+            if os.path.splitext(rule_file_fullpath)[1] != '.json':
+                logger.debug(
+                    'Skipping over non json {}'.format(rule_file_fullpath)
+                )
+                continue
             rule_data = read_json(rule_file_fullpath)
             if not rule_data:
                 logger.error('rule file empty: {}'.format(rule_file_fullpath))

@@ -7,11 +7,14 @@
 #
 
 import os
+import pwd
+import grp
+import json
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, \
     chown_path, run_print_output_error, run_bg
 from kano.logging import logger
-from .paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
+from kano_profile.paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
 
 
 def get_app_dir(app_name):
@@ -143,3 +146,30 @@ def get_app_xp_for_challenge(app, challenge_no):
         return xp_file_json[app]['level'][challenge_no]
     except KeyError:
         return 0
+
+
+def get_all_users():
+    existing_users = []
+    possible_users = os.listdir("/home")
+    for user in possible_users:
+        profile_path = os.path.join("/home", user, ".kanoprofile")
+        if os.path.exists(profile_path):
+            existing_users.append(user)
+    return existing_users
+
+
+def save_app_state_variable_all_users(app, variable, value):
+    users = get_all_users()
+
+    for user in users:
+        path = os.path.join(
+            "/home", user, ".kanoprofile/apps", app, "state.json"
+        )
+        if not os.path.exists(path):
+            os.makedirs(os.path.dirname(path))
+        data = {variable: value}
+        data['save_date'] = get_date_now()
+        write_json(path, data)
+        uid = pwd.getpwnam(user).pw_uid
+        gid = grp.getgrnam(user).gr_gid
+        os.chown(path, uid, gid)

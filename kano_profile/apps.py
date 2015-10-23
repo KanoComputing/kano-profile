@@ -128,7 +128,15 @@ def launch_project(app, filename, data_dir, background=False):
     app_profiles = read_json(app_profiles_file)
 
     fullpath = os.path.join(data_dir, filename)
-    cmd = app_profiles[app]['cmd'].format(fullpath=fullpath, filename=filename)
+
+    try:
+        cmd = (app_profiles[app]['cmd']
+               .format(fullpath=fullpath, filename=filename))
+    except KeyError as exc:
+        logger.warn(
+            "Can't find app [] in the app profiles - [{}]".format(app, exc)
+        )
+        raise ValueError('App "{}" not available'.format(app))
 
     if background:
         run_bg(cmd)

@@ -1,6 +1,7 @@
 kano-profile (2.2.0-4) unstable; urgency=low
 
   * Computer Commander badge is not unlocked using kano_level
+  * Add lauch hook for kano_world
 
  -- Team Kano <dev@kano.me>  Thu, 22 Oct 2015 17:22:00 +0100
 

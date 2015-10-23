@@ -171,7 +171,7 @@ def save_app_state_variable_all_users(app, variable, value):
             os.makedirs(dir_path)
             chown_path(dir_path, user, user)
 
-        state_path = os.path(dir_path, "state.json")
+        state_path = os.path.join(dir_path, "state.json")
         data = {variable: value}
         data['save_date'] = get_date_now()
         write_json(state_path, data)

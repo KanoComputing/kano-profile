@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # share.py
 #
 # Copyright (C) 2014-2015 Kano Computing Ltd.
@@ -8,14 +6,6 @@
 
 # args is an array of arguments that were passed through the URL
 # e.g., kano:share:12345:weee, it will be ["12345", "weee"]
-
-import os
-import sys
-
-if __name__ == '__main__' and __package__ is None:
-    dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if dir_path != '/usr':
-        sys.path.insert(1, dir_path)
 
 from kano.logging import logger
 from kano_world.share import download_share, get_share_by_id

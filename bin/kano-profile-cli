@@ -13,7 +13,8 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano_profile.apps import get_app_data_dir, load_app_state_variable
+from kano_profile.apps import get_app_data_dir, load_app_state_variable, \
+    save_app_state_variable_all_users
 from kano_profile.profile import load_profile, get_avatar, get_environment, \
     get_avatar_circ_image_path, recreate_char
 from kano_profile.badges import save_app_state_variable_with_dialog, calculate_xp, \
@@ -82,6 +83,17 @@ elif sys.argv[1] == 'save_app_state_variable_get_xp_diff':
     save_app_state_variable_with_dialog(app_name, variable, value)
     new_xp = calculate_xp()
     sys.stdout.write(str(new_xp - old_xp))
+
+elif sys.argv[1] == 'save_app_state_variable_all_users':
+    check_arg_len(4)
+    app_name = sys.argv[2]
+    variable = sys.argv[3]
+    value = sys.argv[4]
+    if value.isdigit():
+        value = int(value)
+    elif is_number(value):
+        value = float(value)
+    save_app_state_variable_all_users(app_name, variable, value)
 
 elif sys.argv[1] == 'increment_app_state_variable':
     check_arg_len(4)

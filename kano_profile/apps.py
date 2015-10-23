@@ -7,14 +7,12 @@
 #
 
 import os
-import pwd
-import grp
-import json
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, \
     chown_path, run_print_output_error, run_bg
 from kano.logging import logger
-from kano_profile.paths import apps_dir, xp_file, kanoprofile_dir, app_profiles_file
+from kano_profile.paths import apps_dir, xp_file, kanoprofile_dir, \
+    app_profiles_file
 
 
 def get_app_dir(app_name):
@@ -159,6 +157,10 @@ def get_all_users():
 
 
 def save_app_state_variable_all_users(app, variable, value):
+    if os.environ['LOGNAME'] != 'root':
+        logger.error("Error: save_app_state_variable_all_users must be executed with root privileges")
+        return
+
     users = get_all_users()
 
     for user in users:

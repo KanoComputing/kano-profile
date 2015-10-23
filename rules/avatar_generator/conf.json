@@ -9,7 +9,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-faces",
-            "display_order": 1,
+            "display_order": 3,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -33,7 +33,7 @@
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-belts",
-            "display_order": 3,
+            "display_order": 5,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -45,7 +45,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-hair",
-            "display_order": 4,
+            "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -57,7 +57,7 @@
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-suits",
-            "display_order": 5,
+            "display_order": 4,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -69,7 +69,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-stickers",
-            "display_order": 6,
+            "display_order": 8,
             "date_created": "2015-04-14T10:54:14.000Z"
         }
     ],

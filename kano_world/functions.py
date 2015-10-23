@@ -264,3 +264,14 @@ def get_stats_activity():
                                           headers=content_type_json,
                                           session=glob_session.session)
     return success, data
+
+
+def report_share_opened(item_id):
+    success, value = login_using_token()
+    if success:
+        endpoint = '/share/{}/launched'.format(item_id)
+        gs = get_glob_session()
+        if gs:
+            success, text, data = request_wrapper('post',
+                                                  endpoint,
+                                                  session=gs.session)

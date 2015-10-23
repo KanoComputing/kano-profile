@@ -2,8 +2,8 @@
 
 # share.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# Copyright (C) 2014-2015 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
 #
 
 # args is an array of arguments that were passed through the URL
@@ -17,13 +17,11 @@ if __name__ == '__main__' and __package__ is None:
     if dir_path != '/usr':
         sys.path.insert(1, dir_path)
 
-from kano.utils import run_cmd
 from kano.logging import logger
 from kano_world.share import download_share, get_share_by_id
 from kano_profile.apps import launch_project
 from kdesk.hourglass import hourglass_start, hourglass_end
-from kano_world.connection import request_wrapper
-from kano_world.functions import get_glob_session, login_using_token
+from kano_world.functions import report_share_opened
 
 
 def run(args):
@@ -61,14 +59,4 @@ def launch(data):
     logger.info(msg)
 
     launch_project(app, attachment_name, folder)
-    _report_share_opened(item_id)
-
-
-def _report_share_opened(item_id):
-    success, value = login_using_token()
-    if success:
-        endpoint = '/share/{}/installed'.format(item_id)
-        gs = get_glob_session()
-        if gs:
-            success, text, data = request_wrapper('post', endpoint,
-                                                  session=gs.session)
+    report_share_opened(item_id)

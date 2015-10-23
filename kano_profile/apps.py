@@ -164,12 +164,15 @@ def save_app_state_variable_all_users(app, variable, value):
     users = get_all_users()
 
     for user in users:
-        path = os.path.join(
-            "/home", user, ".kanoprofile", "apps", app, "state.json"
+        dir_path = os.path.join(
+            "/home", user, ".kanoprofile", "apps", app
         )
-        if not os.path.exists(path):
-            os.makedirs(os.path.dirname(path))
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+            chown_path(dir_path, user, user)
+
+        state_path = os.path(dir_path, "state.json")
         data = {variable: value}
         data['save_date'] = get_date_now()
-        write_json(path, data)
-        chown_path(path, user, user)
+        write_json(state_path, data)
+        chown_path(state_path, user, user)

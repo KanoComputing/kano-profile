@@ -123,20 +123,29 @@ def get_gamestate_variables(app_name):
 
 
 def launch_project(app, filename, data_dir, background=False):
-    logger.info('launch_project: {} {} {}'.format(app, filename, data_dir))
+    # This is necessary to support the new official names
+    # TODO: once the apps have been renamed this will not be necessary
+    name_translation = {
+        "make-art": "kano-draw",
+        "terminal-quest": "linux-story"
+    }
+
+    app_tr = name_translation.get(app, app)
+
+    logger.info('launch_project: {} {} {}'.format(app_tr, filename, data_dir))
 
     app_profiles = read_json(app_profiles_file)
 
     fullpath = os.path.join(data_dir, filename)
 
     try:
-        cmd = (app_profiles[app]['cmd']
+        cmd = (app_profiles[app_tr]['cmd']
                .format(fullpath=fullpath, filename=filename))
     except KeyError as exc:
         logger.warn(
-            "Can't find app [] in the app profiles - [{}]".format(app, exc)
+            "Can't find app [] in the app profiles - [{}]".format(app_tr, exc)
         )
-        raise ValueError('App "{}" not available'.format(app))
+        raise ValueError('App "{}" not available'.format(app_tr))
 
     if background:
         run_bg(cmd)

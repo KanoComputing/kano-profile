@@ -177,9 +177,9 @@ class BadgeCalc(object):
                 local_value = self._get_variable(app, attr_list)
                 if local_value is None:
                     achieved = False
+                    break
                 if attr_list[-1] == 'level' and threshold_value == -1:
                     threshold_value = self._app_profiles[app]['max_level']
-                    break
 
                 achieved &= local_value >= threshold_value
 

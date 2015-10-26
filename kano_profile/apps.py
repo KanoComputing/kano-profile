@@ -143,7 +143,8 @@ def launch_project(app, filename, data_dir, background=False):
                .format(fullpath=fullpath, filename=filename))
     except KeyError as exc:
         logger.warn(
-            "Can't find app [] in the app profiles - [{}]".format(app_tr, exc)
+            "Can't find app '{}' in the app profiles - [{}]"
+            .format(app_tr, exc)
         )
         raise ValueError('App "{}" not available'.format(app_tr))
 

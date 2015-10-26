@@ -62,6 +62,21 @@
     "operation": "each_greater",
     "targets": [["make-light", "level", 11]],
     "title": "Lightshow Legend"
+  },
+  "summercamp_simple": {
+    "bg_color": "C9E9F6",
+    "desc_locked": "Take a trip to the Kano Summer Camp and become a coding camper",
+    "desc_unlocked": "You camped, you coded, you conquered. Summer is over but your creative camping memories will last a lifetime.",
+    "operation": "each_greater",
+    "targets": [["kano-draw", "groups.summercamp.challengeNo", 22]],
+    "title": "Raise The Flag"
+  },
+  "mischiefweek_2015": {
+    "bg_color": "B9AEBA",
+    "desc_locked": "Use your creepy coding skills to cause mischief and Make Art.",
+    "desc_unlocked": "BOO! You braved the spooky gauntlet, your mischievous hacks will haunt Kano World for decades to come.",
+    "operation": "each_greater",
+    "targets": [["kano-draw", "groups.mischiefweek2015.challengeNo", 7]],
+    "title": "Mischief Maker"
   }
-
 }

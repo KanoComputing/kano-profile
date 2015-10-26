@@ -30,7 +30,7 @@ class FirstScreenTemplate(Gtk.Box):
         kano_button_text = _("Create").upper()
         skip_button_text = _("Skip")
         login_button_text = _("I have a profile")
-        header = _("Now let's make a cool Profile")
+        header = _("Now let's make your online Profile")
         subheader = _("So you can save badges, games, and projects")
         img_width = 590
         img_height = 270

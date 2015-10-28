@@ -78,6 +78,12 @@ class GetData1(DataTemplate):
 
         self._username = LabelledEntry("Username", data["username"])
         self._username.connect("key-release-event", self.validate_username)
+        stay_safe = Gtk.Label("Stay safe, don't use your real name.")
+        stay_safe.get_style_context().add_class("get_data_label")
+        stay_safe.set_alignment(0, 0)
+        stay_safe.set_margin_left(30)
+        stay_safe.set_margin_bottom(10)
+
         logger.debug("Checking for internet")
 
         # Do not fill this in
@@ -102,7 +108,8 @@ class GetData1(DataTemplate):
         self.show_password.set_margin_left(30)
 
         self.bday_widget.connect("bday-key-release-event", self.widgets_full)
-        box.pack_start(self._username, False, False, 15)
+        box.pack_start(self._username, False, False, 5)
+        box.pack_start(stay_safe, False, False, 0)
         box.pack_start(self._password, False, False, 5)
         box.pack_start(self.show_password, False, False, 0)
         box.pack_start(self.bday_widget, False, False, 15)
@@ -137,8 +144,7 @@ class GetData1(DataTemplate):
         if len(username) == 0:
             self._username.label_success("")
         elif check_username(username):
-            # Don't include tick validation inside the entry
-            self._username.label_success(_(""), "")
+            self._username.label_success(_(""), "success")
         else:
             self._username.label_success(_("is invalid"), "fail")
 

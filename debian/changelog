@@ -1,3 +1,9 @@
+kano-profile (2.2.0-5) unstable; urgency=low
+
+  * Added event in character creator to listen for
+
+ -- Team Kano <dev@kano.me>  Wed, 28 Oct 2015 14:51:00 +0100
+
 kano-profile (2.2.0-4) unstable; urgency=low
 
   * Computer Commander badge is not unlocked using kano_level

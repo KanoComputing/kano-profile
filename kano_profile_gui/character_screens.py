@@ -106,8 +106,14 @@ class CharacterEdit(Gtk.EventBox):
         self._win.pack_in_main_content(self.char_creator)
         self.char_creator.reset_selected_menu_items()
 
-        save_changes_button = KanoButton(_("Save changes").upper())
-        save_changes_button.connect("clicked", self.save_changes)
+        self._save_changes_button = KanoButton(_("Save changes").upper())
+        self._save_changes_button.connect("clicked", self.save_changes)
+        self._save_changes_button.set_sensitive(False)
+
+        self.char_creator.connect(
+            "character_changed",
+            self._make_button_sensitive
+        )
 
         discard_changes_button = OrangeButton(_("Discard").upper())
         discard_changes_button.connect("clicked", self.discard)
@@ -116,7 +122,7 @@ class CharacterEdit(Gtk.EventBox):
 
         button_box = Gtk.ButtonBox()
         button_box.pack_start(discard_changes_button, False, False, 0)
-        button_box.pack_start(save_changes_button, False, False, 0)
+        button_box.pack_start(self._save_changes_button, False, False, 0)
         button_box.pack_start(empty_label, False, False, 0)
 
         self._win.pack_in_bottom_bar(button_box)
@@ -140,3 +146,6 @@ class CharacterEdit(Gtk.EventBox):
         self._win.empty_bottom_bar()
         self._win.menu_bar.enable_buttons()
         CharacterDisplay(self._win)
+
+    def _make_button_sensitive(self, widget=None):
+        self._save_changes_button.set_sensitive(True)

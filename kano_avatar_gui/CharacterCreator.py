@@ -7,7 +7,7 @@
 #
 
 import os
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 from kano_avatar.logic import AvatarCreator, get_avatar_conf
 from kano_avatar.paths import AVATAR_DEFAULT_LOC, AVATAR_DEFAULT_NAME
 from kano_avatar_gui.Menu import Menu
@@ -24,6 +24,10 @@ class CharacterCreator(Gtk.EventBox):
     configuration = get_avatar_conf()
     avatar_cr = AvatarCreator(configuration)
     meny_y_pos = 20
+
+    __gsignals__ = {
+        'character_changed': (GObject.SIGNAL_RUN_FIRST, None, ())
+    }
 
     def __init__(self, randomise=False, no_sync=False):
         Gtk.EventBox.__init__(self)
@@ -141,6 +145,9 @@ class CharacterCreator(Gtk.EventBox):
         else:
             displ_img = self.avatar_cr.create_avatar()
             self._imgbox.set_image(displ_img)
+
+        # Emit the character changed signal when the image is updated
+        self.emit('character_changed')
 
     def disable_buttons(self):
         self._menu.disable_all_buttons()

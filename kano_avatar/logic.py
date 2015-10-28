@@ -194,6 +194,11 @@ class AvatarCreator(AvatarConfParser):
 
         return self.randomise_rest(obj_list)
 
+    def sanitised_obj_names(self, obj_names):
+        return [obj_name
+                for obj_name in obj_names
+                if self._sel_char_layer().item(obj_name)]
+
     def obj_select(self, obj_names, clear_existing=True):
         """ Specify the items to be used for the character. if any of the
         items are locked, replace with a different unlocked one from the
@@ -214,7 +219,9 @@ class AvatarCreator(AvatarConfParser):
                 logger.error(
                     'Object "{}" not available for character {}'.format(
                         obj_name, self._sel_char))
-                return False
+                obj_names_cleaned = self.sanitised_obj_names(obj_names)
+                rc = self.randomise_rest(obj_names_cleaned)
+                return rc
             else:
                 obj_inst = self._sel_char_layer().item(obj_name)
                 obj_inst = self._replace_locked(obj_inst)

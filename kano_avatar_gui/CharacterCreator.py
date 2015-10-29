@@ -118,6 +118,9 @@ class CharacterCreator(Gtk.EventBox):
         self._imgbox.set_image(filepath)
         self._menu.select_pop_up_items(selected_item_dict)
 
+        # Emit the character changed signal when the image is randomised
+        self.emit('character_changed')
+
     def reset_selected_menu_items(self):
         self._menu.reset_selected_menu_items()
 

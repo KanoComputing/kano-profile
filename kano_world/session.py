@@ -691,17 +691,25 @@ class KanoWorldSession(object):
 
         return True, None
 
-    def get_users_following(self, user_id):
+    def get_users_following(self, user_id, page=0):
         success, text, data = request_wrapper(
-            'get', '/users/{}/following'.format(user_id), session=self.session
+            'get', '/users/{}/following'.format(user_id), session=self.session,
+            params={'page': page, 'limit': 20}
         )
 
         if not success:
-            print 'failed'
             return False, text
 
-        if 'entries' not in data:
+        if 'entries' not in data or 'pages' not in data:
             return False, 'Get unsuccessful!'
 
+        entries = data['entries']
+        total_pages = data['pages']
 
-        return True, data['entries']
+        if page < total_pages:
+            success, more_entries = self.get_users_following(user_id, page + 1)
+
+            if success:
+                entries += more_entries
+
+        return True, entries

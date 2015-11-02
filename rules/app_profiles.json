@@ -42,6 +42,10 @@
     "max-level": 31,
     "icon": "linux-story.png"
   },
+  "make-light": {
+    "cmd": "$(dpkg -l make-light > /dev/null 2>&1); if [ \"$?\" -eq 0 ] ; then $(make-light {fullpath}); else $(kano-apps install make-light);fi",
+    "ext": "lightcode"
+  },
   "kano-tracker": {
     "private": true
   },

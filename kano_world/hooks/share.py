@@ -44,7 +44,7 @@ def run(args):
 
 
 def launch(data):
-    if not data:
+    if data:
         (title, attachment_path, app, attachment_name, folder, item_id) = data
         msg = 'Downloaded share: {}'.format(title)
         logger.info(msg)

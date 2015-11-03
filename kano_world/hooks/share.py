@@ -44,9 +44,12 @@ def run(args):
 
 
 def launch(data):
-    (title, attachment_path, app, attachment_name, folder, item_id) = data
-    msg = 'Downloaded share: {}'.format(title)
-    logger.info(msg)
+    if not data:
+        (title, attachment_path, app, attachment_name, folder, item_id) = data
+        msg = 'Downloaded share: {}'.format(title)
+        logger.info(msg)
 
-    launch_project(app, attachment_name, folder)
-    report_share_opened(item_id)
+        launch_project(app, attachment_name, folder)
+        report_share_opened(item_id)
+    else:
+        logger.error("Share hook launch failed")

@@ -11,13 +11,14 @@ import json
 
 from .tracker import get_action_event, track_data
 from kano_world.connection import request_wrapper, content_type_json
-from kano.utils import get_rpi_model, detect_kano_keyboard
+from kano.utils import get_rpi_model, detect_kano_keyboard, get_partition_info
 
 
 def _hw_info():
     track_data("hw-info", {
         "keyboard": "kano" if detect_kano_keyboard() else "generic",
-        "model": get_rpi_model()
+        "model": get_rpi_model(),
+        "partitions": get_partition_info()
     })
 
 

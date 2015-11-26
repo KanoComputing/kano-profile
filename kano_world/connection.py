@@ -41,7 +41,7 @@ def _remove_sensitive_data(request_debug):
 def request_wrapper(method, endpoint, data=None, headers=None,
                     session=None, files=None, params=None):
     if method not in ['put', 'get', 'post', 'delete']:
-        return False, 'Wrong method name!'
+        return False, 'Wrong method name!', None
 
     if session:
         req_object = session

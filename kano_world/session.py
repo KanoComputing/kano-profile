@@ -525,8 +525,6 @@ class KanoWorldSession(object):
             '/images/notification/280x170/share-pong.png'
         PONG_SHARE_IMG = media_dir + \
             '/images/notification/280x170/share-minecraft.png'
-        SP_IMG = media_dir + \
-            '/images/notification/280x170/saturday-project.png'
         FOLLOWER_IMG = media_dir + \
             '/images/notification/280x170/follower.png'
         GENERIC_ALERT_IMG = media_dir + \

@@ -27,4 +27,4 @@ if not success:
     if not success:
         sys.exit('Login not possible, error: ' + value)
 
-pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft', False))
+pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft'))

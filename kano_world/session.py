@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # session.py
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
@@ -8,7 +6,8 @@
 
 import requests
 
-# TODO: Remove this statement after upgrading to a friendly Python-requests match
+# TODO: Remove this statement after upgrading to a friendly Python-requests
+# match
 requests.packages.urllib3.disable_warnings()
 
 import json
@@ -319,7 +318,23 @@ class KanoWorldSession(object):
 
         return download_url(file_url, file_path)
 
-    def upload_share(self, file_path, title, app_name, featured):
+    def upload_share(self, file_path, title, app_name):
+        """Upload a share that is stored in a file.
+
+        This function assumes that a media file/other necessary accompanying
+        file shares the same name (but with not extension) with the file to be
+        shared.
+
+        :param file_path: Path to the file that contains the content of the
+                          share.
+        :type file_path: str
+        :param title: Title to be given to the share
+        :type title: str
+        :param app_name: App that this share is made from/associated with
+        :type app_name: str
+        :returns: Success and in case of failure the error message
+        :rtype: tuple of form (boolean, string)
+        """
         if not os.path.exists(file_path):
             return False, 'File path not found: {}'.format(file_path)
 
@@ -331,21 +346,24 @@ class KanoWorldSession(object):
                 'attachment': open(file_path, 'rb'),
             }
 
-            # List of attachments to search for in (name, extension) format
+            # TODO A config file would be better suited for such a structure
+            # List of attachments to search for in (name, [extensions...]) fmt
             attachment_files = [
-                ('cover', 'png'),
-                ('resource', 'tar.gz'),
-                ('sample', 'mp3')
+                ('cover', ['png', 'gif']),
+                ('resource', ['tar.gz']),
+                ('sample', ['mp3', 'ogg'])
             ]
 
             for attachment in attachment_files:
-                key, ext = attachment
-                attachment_path = "{}.{}".format(extensionless_path, ext)
+                key, extensions = attachment
+                for ext in extensions:
+                    attachment_path = "{}.{}".format(extensionless_path, ext)
 
-                if os.path.exists(attachment_path):
-                    logger.debug(
-                        'uploading {}: {}'.format(key, attachment_path))
-                    files[key] = open(attachment_path, 'rb')
+                    if os.path.exists(attachment_path):
+                        logger.debug(
+                            'uploading {}: {}'.format(key, attachment_path))
+                        files[key] = open(attachment_path, 'rb')
+                        break
 
         except IOError as e:
             files = None
@@ -358,7 +376,6 @@ class KanoWorldSession(object):
         # data
         payload = {
             'title': title,
-            'featured': featured
         }
 
         # description
@@ -522,16 +539,14 @@ class KanoWorldSession(object):
             :returns: A dict that can be passed to the notification widget
         """
 
-        MINECRAFT_SHARE_IMG = media_dir + \
-            '/images/notification/280x170/share-pong.png'
-        PONG_SHARE_IMG = media_dir + \
-            '/images/notification/280x170/share-minecraft.png'
-        SP_IMG = media_dir + \
-            '/images/notification/280x170/saturday-project.png'
-        FOLLOWER_IMG = media_dir + \
-            '/images/notification/280x170/follower.png'
-        GENERIC_ALERT_IMG = media_dir + \
-            '/images/notification/280x170/notification.png'
+        notification_dir = os.path.join(
+            media_dir, 'images', 'notification', '280x170'
+        )
+
+        MINECRAFT_SHARE_IMG = os.path.join(notification_dir, 'share-pong.png')
+        PONG_SHARE_IMG = os.path.join(notification_dir, 'share-minecraft.png')
+        FOLLOWER_IMG = os.path.join(notification_dir, 'follower.png')
+        GENERIC_ALERT_IMG = os.path.join(notification_dir, 'notification.png')
 
         n = {
             'id': entry['id'],

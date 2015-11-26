@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # connection.py
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.
@@ -43,7 +41,7 @@ def _remove_sensitive_data(request_debug):
 def request_wrapper(method, endpoint, data=None, headers=None,
                     session=None, files=None, params=None):
     if method not in ['put', 'get', 'post', 'delete']:
-        return False, 'Wrong method name!'
+        return False, 'Wrong method name!', None
 
     if session:
         req_object = session
@@ -62,12 +60,15 @@ def request_wrapper(method, endpoint, data=None, headers=None,
     }
 
     # Provide 2 separate timeouts - for CONNECT and READ, to requests library
-    connect_timeout=5
-    read_timeout=20
+    connect_timeout = 5
+    read_timeout = 20
 
     try:
-        r = method(API_URL + endpoint, data=data, headers=headers,
-                   files=files, params=params, proxies=proxies, timeout=(connect_timeout, read_timeout))
+        r = method(
+            API_URL + endpoint, data=data, headers=headers, files=files,
+            params=params, proxies=proxies,
+            timeout=(connect_timeout, read_timeout)
+        )
         if r.ok:
             return r.ok, None, r.json()
         else:

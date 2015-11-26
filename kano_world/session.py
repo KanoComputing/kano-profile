@@ -521,14 +521,14 @@ class KanoWorldSession(object):
             :returns: A dict that can be passed to the notification widget
         """
 
-        MINECRAFT_SHARE_IMG = media_dir + \
-            '/images/notification/280x170/share-pong.png'
-        PONG_SHARE_IMG = media_dir + \
-            '/images/notification/280x170/share-minecraft.png'
-        FOLLOWER_IMG = media_dir + \
-            '/images/notification/280x170/follower.png'
-        GENERIC_ALERT_IMG = media_dir + \
-            '/images/notification/280x170/notification.png'
+        notification_dir = os.path.join(
+            media_dir, 'images', 'notification', '280x170'
+        )
+
+        MINECRAFT_SHARE_IMG = os.path.join(notification_dir, 'share-pong.png')
+        PONG_SHARE_IMG = os.path.join(notification_dir, 'share-minecraft.png')
+        FOLLOWER_IMG = os.path.join(notification_dir, 'follower.png')
+        GENERIC_ALERT_IMG = os.path.join(notification_dir, 'notification.png')
 
         n = {
             'id': entry['id'],

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # session.py
 #
 # Copyright (C) 2014, 2015 Kano Computing Ltd.

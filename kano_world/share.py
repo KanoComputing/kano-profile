@@ -24,7 +24,9 @@ def list_shares(app_name=None, page=0, featured=False, user_id=None):
     if user_id:
         payload['user_id'] = user_id
 
-    success, text, data = request_wrapper('get', '/share', headers=content_type_json, params=payload)
+    success, text, data = request_wrapper(
+        'get', '/share', headers=content_type_json, params=payload
+    )
     if not success:
         return success, text, None
 
@@ -121,7 +123,9 @@ def delete_share(share_id):
 
 def get_share_by_id(share_id):
     endpoint = '/share/{}'.format(share_id)
-    success, text, data = request_wrapper('get', endpoint, headers=content_type_json)
+    success, text, data = request_wrapper(
+        'get', endpoint, headers=content_type_json
+    )
     if not success:
         return success, text, None
     if 'item' in data:

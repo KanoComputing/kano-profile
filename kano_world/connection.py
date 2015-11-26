@@ -60,12 +60,15 @@ def request_wrapper(method, endpoint, data=None, headers=None,
     }
 
     # Provide 2 separate timeouts - for CONNECT and READ, to requests library
-    connect_timeout=5
-    read_timeout=20
+    connect_timeout = 5
+    read_timeout = 20
 
     try:
-        r = method(API_URL + endpoint, data=data, headers=headers,
-                   files=files, params=params, proxies=proxies, timeout=(connect_timeout, read_timeout))
+        r = method(
+            API_URL + endpoint, data=data, headers=headers, files=files,
+            params=params, proxies=proxies,
+            timeout=(connect_timeout, read_timeout)
+        )
         if r.ok:
             return r.ok, None, r.json()
         else:

@@ -6,7 +6,8 @@
 
 import requests
 
-# TODO: Remove this statement after upgrading to a friendly Python-requests match
+# TODO: Remove this statement after upgrading to a friendly Python-requests
+# match
 requests.packages.urllib3.disable_warnings()
 
 import json

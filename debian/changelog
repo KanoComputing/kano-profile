@@ -1,3 +1,9 @@
+kano-profile (2.3.0-1) unstable; urgency=low
+
+  * Add support for sharing ogg and gif files
+
+ -- Team Kano <dev@kano.me>  Thu, 26 Nov 2015 17:48:00 +0100
+
 kano-profile (2.2.0-5) unstable; urgency=low
 
   * Added event in character creator to listen for

@@ -71,6 +71,30 @@
             "category_id": "judoka-stickers",
             "display_order": 8,
             "date_created": "2015-04-14T10:54:14.000Z"
+        },
+        {
+            "display_name": "Accessories",
+            "character": "judoka",
+            "z_index": 3,
+            "active_icon": "judoka-accessories.png",
+            "inactive_icon": "judoka-accessories.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-accessories",
+            "display_order": 7,
+            "date_created": "2015-12-24T14:04:14.000Z"
+        },
+        {
+            "display_name": "Headwear",
+            "character": "judoka",
+            "z_index": 2.5,
+            "active_icon": "judoka-headwear.png",
+            "inactive_icon": "judoka-headwear.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-headwear",
+            "display_order": 6,
+            "date_created": "2015-12-24T14:05:14.000Z"
         }
     ],
     "special_categories": [
@@ -803,6 +827,30 @@
             "item_id": "Belt_Beige",
             "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-accessories",
+            "item_id": "judoka-accessories-none",
+            "display_order": 1000,
+            "date_created": "2015-12-24T14:07:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-headwear",
+            "item_id": "judoka-headwear-none",
+            "display_order": 1000,
+            "date_created": "2015-12-24T14:07:14.000Z"
         }
     ]
 }

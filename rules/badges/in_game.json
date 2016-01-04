@@ -60,7 +60,7 @@
     "desc_locked": "Complete the eighth challenge in Make Light to unlock this badge.",
     "desc_unlocked": "Wow! You completed all the challenges. You are a Lightshow Legend!",
     "operation": "each_greater",
-    "targets": [["make-light", "level", 11]],
+    "targets": [["make-light", "groups.tutorial_rectangular.challengeNo", 11]],
     "title": "Lightshow Legend"
   },
   "summercamp_simple": {

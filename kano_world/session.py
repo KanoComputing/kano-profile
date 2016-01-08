@@ -433,7 +433,8 @@ class KanoWorldSession(object):
             for entry in data['entries']:
                 if entry['read'] is False:
                     n = self._process_notification(entry)
-                    notifications.append(n)
+                    if n:
+                        notifications.append(n)
 
             try:
                 next_page = data['next']
@@ -557,6 +558,36 @@ class KanoWorldSession(object):
                        entry['id'])
         }
 
+        # Some notifications may have images
+        # If so, we need to download them and resize
+        if 'image_url' in entry and entry['image_url']:
+            filename = os.path.basename(entry['image_url'])
+
+            img_path = "{}/notifications/{}".format(profile_dir, filename)
+            ensure_dir(os.path.dirname(img_path))
+
+            rv, e = download_url(entry['image_url'], img_path)
+            if rv:
+                # Resize image to 280x170
+                # FIXME: We import GdkPixbuf locally to make sure not to
+                # bugger up anything else, but we should move it up to the top.
+                from gi.repository import GdkPixbuf
+
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    img_path, 280, 170)
+                pixbuf.savev(img_path, 'png', [None], [None])
+
+                n['image'] = img_path
+            else:
+                msg = "Notifications image failed to download ({}).".format(e)
+                logger.error(msg)
+
+        # Certain notifications may come with a command as well.
+        # If so, override the default one.
+        cmd = self._get_dict_value(entry, ['meta', 'cmd'])
+        if cmd:
+            n['command'] = cmd
+
         # Customise settings for known types
         if entry['category'] == 'follows':
             n['title'] = 'New follower!'
@@ -587,53 +618,11 @@ class KanoWorldSession(object):
             n['title'] = 'New comment!'
             n['byline'] = entry['title']
 
-            slug = self._get_dict_value(entry, ['meta', 'item', 'slug'])
-            if slug:
-                obj_type = entry['meta']['item']['type']
-                if obj_type == "app":
-                    n['command'] = "kano-world-launcher /apps/{}".format(slug)
-                elif obj_type == "share":
-                    n['command'] = "kano-world-launcher /shared/{}".format(
-                        slug)
-                elif obj_type == "project":
-                    n['command'] = "kano-world-launcher /projects/{}".format(
-                        slug)
-
-        # If a notification has both the title and text, override the default
-        if 'title' in entry and entry['title'] and \
-                'text' in entry and entry['text']:
-            n['title'] = entry['title']
-            n['byline'] = entry['text']
-
-        # Some notifications may have images
-        # If so, we need to download them and resize
-        if 'image_url' in entry and entry['image_url']:
-            filename = os.path.basename(entry['image_url'])
-
-            img_path = "{}/notifications/{}".format(profile_dir, filename)
-            ensure_dir(os.path.dirname(img_path))
-
-            rv, e = download_url(entry['image_url'], img_path)
-            if rv:
-                # Resize image to 280x170
-                # FIXME: We import GdkPixbuf locally to make sure not to
-                # bugger up anything else, but we should move it up to the top.
-                from gi.repository import GdkPixbuf
-
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                    img_path, 280, 170)
-                pixbuf.savev(img_path, 'png', [None], [None])
-
-                n['image'] = img_path
-            else:
-                msg = "Notifications image failed to download ({}).".format(e)
-                logger.error(msg)
-
-        # Certain notifications may come with a command as well.
-        # If so, override the default one.
-        cmd = self._get_dict_value(entry, ['meta', 'cmd'])
-        if cmd:
-            n['command'] = cmd
+        elif entry['category'] == 'likes':
+            n['title'] = 'New like!'
+            n['byline'] = entry['title']
+        else:
+            return None
 
         return n
 

@@ -544,9 +544,17 @@ class KanoWorldSession(object):
             media_dir, 'images', 'notification', '280x170'
         )
 
-        MINECRAFT_SHARE_IMG = os.path.join(notification_dir, 'share-pong.png')
-        PONG_SHARE_IMG = os.path.join(notification_dir, 'share-minecraft.png')
+        FEATURED_SHARE_IMG = os.path.join(notification_dir, 'featured.png')
+        PONG_SHARE_IMG = os.path.join(notification_dir, 'share-pong.png')
+        MUSIC_SHARE_IMG = os.path.join(notification_dir, 'share-music.png')
+        LIGHT_SHARE_IMG = os.path.join(notification_dir, 'share-light.png')
+        ART_SHARE_IMG = os.path.join(notification_dir, 'share-art.png')
+        SNAKE_SHARE_IMG = os.path.join(notification_dir, 'snake-art.png')
+        MINECRAFT_SHARE_IMG = os.path.join(notification_dir,
+                                           'share-minecraft.png')
         FOLLOWER_IMG = os.path.join(notification_dir, 'follower.png')
+        COMMENT_IMG = os.path.join(notification_dir, 'comment.png')
+        LIKE_IMG = os.path.join(notification_dir, 'like.png')
         GENERIC_ALERT_IMG = os.path.join(notification_dir, 'notification.png')
 
         n = {
@@ -595,9 +603,9 @@ class KanoWorldSession(object):
             n['image'] = FOLLOWER_IMG
 
             # Link to whomever followed this user
-            user = self._get_dict_value(entry, ['meta', 'author', 'username'])
-            if user:
-                n['command'] = "kano-world-launcher /users/{}".format(user)
+            #user = self._get_dict_value(entry, ['meta', 'author', 'username'])
+            #if user:
+            #    n['command'] = "kano-world-launcher /users/{}".format(user)
 
         elif entry['category'] in ['share-items', 'shares']:
             n['title'] = 'New share!'
@@ -607,20 +615,31 @@ class KanoWorldSession(object):
                 n['image'] = MINECRAFT_SHARE_IMG
             elif entry['type'] == 'make-pong':
                 n['image'] = PONG_SHARE_IMG
+            elif entry['type'] == 'make-music':
+                n['image'] = MUSIC_SHARE_IMG
+            elif entry['type'] == 'make-light':
+                n['image'] = LIGHT_SHARE_IMG
+            elif entry['type'] == 'kano-draw':
+                n['image'] = ART_SHARE_IMG
+            elif entry['type'] == 'featured':
+                n['title'] = 'Staff picked!'
+                n['image'] = FEATURED_SHARE_IMG
 
             # Link to the share
-            share_id = self._get_dict_value(entry, ['meta', 'item', 'id'])
-            if share_id:
-                n['command'] = "kano-world-launcher /shared/{}".format(
-                    share_id)
+            #share_id = self._get_dict_value(entry, ['meta', 'item', 'id'])
+            #if share_id:
+            #    n['command'] = "kano-world-launcher /shared/{}".format(
+            #        share_id)
 
         elif entry['category'] == 'comments':
             n['title'] = 'New comment!'
             n['byline'] = entry['title']
+            n['image'] = COMMENT_IMG
 
         elif entry['category'] == 'likes':
             n['title'] = 'New like!'
             n['byline'] = entry['title']
+            n['image'] = LIKE_IMG
         else:
             return None
 

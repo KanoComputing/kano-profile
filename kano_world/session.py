@@ -602,11 +602,6 @@ class KanoWorldSession(object):
             n['byline'] = entry['title']
             n['image'] = FOLLOWER_IMG
 
-            # Link to whomever followed this user
-            #user = self._get_dict_value(entry, ['meta', 'author', 'username'])
-            #if user:
-            #    n['command'] = "kano-world-launcher /users/{}".format(user)
-
         elif entry['category'] in ['share-items', 'shares']:
             n['title'] = 'New share!'
             n['byline'] = entry['title']
@@ -624,12 +619,6 @@ class KanoWorldSession(object):
             elif entry['type'] == 'featured':
                 n['title'] = 'Staff picked!'
                 n['image'] = FEATURED_SHARE_IMG
-
-            # Link to the share
-            #share_id = self._get_dict_value(entry, ['meta', 'item', 'id'])
-            #if share_id:
-            #    n['command'] = "kano-world-launcher /shared/{}".format(
-            #        share_id)
 
         elif entry['category'] == 'comments':
             n['title'] = 'New comment!'

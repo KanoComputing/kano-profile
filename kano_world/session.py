@@ -433,7 +433,8 @@ class KanoWorldSession(object):
             for entry in data['entries']:
                 if entry['read'] is False:
                     n = self._process_notification(entry)
-                    notifications.append(n)
+                    if n:
+                        notifications.append(n)
 
             try:
                 next_page = data['next']
@@ -543,9 +544,17 @@ class KanoWorldSession(object):
             media_dir, 'images', 'notification', '280x170'
         )
 
-        MINECRAFT_SHARE_IMG = os.path.join(notification_dir, 'share-pong.png')
-        PONG_SHARE_IMG = os.path.join(notification_dir, 'share-minecraft.png')
+        FEATURED_SHARE_IMG = os.path.join(notification_dir, 'featured.png')
+        PONG_SHARE_IMG = os.path.join(notification_dir, 'share-pong.png')
+        MUSIC_SHARE_IMG = os.path.join(notification_dir, 'share-music.png')
+        LIGHT_SHARE_IMG = os.path.join(notification_dir, 'share-light.png')
+        ART_SHARE_IMG = os.path.join(notification_dir, 'share-art.png')
+        SNAKE_SHARE_IMG = os.path.join(notification_dir, 'snake-art.png')
+        MINECRAFT_SHARE_IMG = os.path.join(notification_dir,
+                                           'share-minecraft.png')
         FOLLOWER_IMG = os.path.join(notification_dir, 'follower.png')
+        COMMENT_IMG = os.path.join(notification_dir, 'comment.png')
+        LIKE_IMG = os.path.join(notification_dir, 'like.png')
         GENERIC_ALERT_IMG = os.path.join(notification_dir, 'notification.png')
 
         n = {
@@ -556,54 +565,6 @@ class KanoWorldSession(object):
             'command': 'kano-world-launcher /notifications/open/{}'.format(
                        entry['id'])
         }
-
-        # Customise settings for known types
-        if entry['category'] == 'follows':
-            n['title'] = 'New follower!'
-            n['byline'] = entry['title']
-            n['image'] = FOLLOWER_IMG
-
-            # Link to whomever followed this user
-            user = self._get_dict_value(entry, ['meta', 'author', 'username'])
-            if user:
-                n['command'] = "kano-world-launcher /users/{}".format(user)
-
-        elif entry['category'] in ['share-items', 'shares']:
-            n['title'] = 'New share!'
-            n['byline'] = entry['title']
-
-            if entry['type'] == 'make-minecraft':
-                n['image'] = MINECRAFT_SHARE_IMG
-            elif entry['type'] == 'make-pong':
-                n['image'] = PONG_SHARE_IMG
-
-            # Link to the share
-            share_id = self._get_dict_value(entry, ['meta', 'item', 'id'])
-            if share_id:
-                n['command'] = "kano-world-launcher /shared/{}".format(
-                    share_id)
-
-        elif entry['category'] == 'comments':
-            n['title'] = 'New comment!'
-            n['byline'] = entry['title']
-
-            slug = self._get_dict_value(entry, ['meta', 'item', 'slug'])
-            if slug:
-                obj_type = entry['meta']['item']['type']
-                if obj_type == "app":
-                    n['command'] = "kano-world-launcher /apps/{}".format(slug)
-                elif obj_type == "share":
-                    n['command'] = "kano-world-launcher /shared/{}".format(
-                        slug)
-                elif obj_type == "project":
-                    n['command'] = "kano-world-launcher /projects/{}".format(
-                        slug)
-
-        # If a notification has both the title and text, override the default
-        if 'title' in entry and entry['title'] and \
-                'text' in entry and entry['text']:
-            n['title'] = entry['title']
-            n['byline'] = entry['text']
 
         # Some notifications may have images
         # If so, we need to download them and resize
@@ -634,6 +595,42 @@ class KanoWorldSession(object):
         cmd = self._get_dict_value(entry, ['meta', 'cmd'])
         if cmd:
             n['command'] = cmd
+
+        # Customise settings for known types
+        if entry['category'] == 'follows':
+            n['title'] = 'New follower!'
+            n['byline'] = entry['title']
+            n['image'] = FOLLOWER_IMG
+
+        elif entry['category'] in ['share-items', 'shares']:
+            n['title'] = 'New share!'
+            n['byline'] = entry['title']
+
+            if entry['type'] == 'make-minecraft':
+                n['image'] = MINECRAFT_SHARE_IMG
+            elif entry['type'] == 'make-pong':
+                n['image'] = PONG_SHARE_IMG
+            elif entry['type'] == 'make-music':
+                n['image'] = MUSIC_SHARE_IMG
+            elif entry['type'] == 'make-light':
+                n['image'] = LIGHT_SHARE_IMG
+            elif entry['type'] == 'kano-draw':
+                n['image'] = ART_SHARE_IMG
+            elif entry['type'] == 'featured':
+                n['title'] = 'Staff picked!'
+                n['image'] = FEATURED_SHARE_IMG
+
+        elif entry['category'] == 'comments':
+            n['title'] = 'New comment!'
+            n['byline'] = entry['title']
+            n['image'] = COMMENT_IMG
+
+        elif entry['category'] == 'likes':
+            n['title'] = 'New like!'
+            n['byline'] = entry['title']
+            n['image'] = LIKE_IMG
+        else:
+            return None
 
         return n
 

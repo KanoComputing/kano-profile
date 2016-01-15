@@ -9,7 +9,7 @@
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, \
-    chown_path, run_print_output_error, run_bg
+    chown_path, run_print_output_error, run_bg, run_cmd
 from kano.logging import logger
 from kano_profile.paths import apps_dir, xp_file, kanoprofile_dir, \
     app_profiles_file
@@ -138,6 +138,7 @@ def launch_project(app, filename, data_dir, background=False):
 
     fullpath = os.path.join(data_dir, filename)
 
+    # Prepare the command line to open the app with the new project
     try:
         cmd = (app_profiles[app_tr]['cmd']
                .format(fullpath=fullpath, filename=filename))
@@ -148,11 +149,19 @@ def launch_project(app, filename, data_dir, background=False):
         )
         raise ValueError('App "{}" not available'.format(app_tr))
 
-    if background:
-        run_bg(cmd)
-    else:
-        _, _, rc = run_print_output_error(cmd)
-        return rc
+    # Try to load the project if the app is already opened, via a signal.
+    project_xmlfile=os.path.join(fullpath, filename)
+    _, _, rc = run_cmd('/usr/bin/kano-signal launch-share {}'.format(project_xmlfile))
+    if rc:
+        # Most likely the app is not running and the signal could not be sent
+        logger.warn('Error sending launch signal, starting the app instead, rc={}'.format(rc))
+        if background:
+            run_bg(cmd)
+        else:
+            _, _, rc = run_print_output_error(cmd)
+            return rc
+
+    return 0
 
 
 def get_app_xp_for_challenge(app, challenge_no):

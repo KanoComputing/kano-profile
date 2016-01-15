@@ -1,3 +1,9 @@
+kano-profile (2.3.0-2) unstable; urgency=low
+
+  * Add challenge progress tracking
+
+ -- Team Kano <dev@kano.me>  Tue, 12 Jan 2016 11:38:00 +0000
+
 kano-profile (2.3.0-1) unstable; urgency=low
 
   * Add support for sharing ogg and gif files

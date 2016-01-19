@@ -136,6 +136,7 @@ def launch_project(app, filename, data_dir, background=False):
 
     app_profiles = read_json(app_profiles_file)
 
+    # XML file with complete pathname
     fullpath = os.path.join(data_dir, filename)
 
     # Prepare the command line to open the app with the new project
@@ -149,17 +150,18 @@ def launch_project(app, filename, data_dir, background=False):
         )
         raise ValueError('App "{}" not available'.format(app_tr))
 
-    # Try to load the project if the app is already opened, via a signal.
-    project_xmlfile=os.path.join(fullpath, filename)
-    _, _, rc = run_cmd('/usr/bin/kano-signal launch-share {}'.format(project_xmlfile))
+    # Try to load the project if the app is already running, via a signal.
+    _, _, rc = run_cmd('/usr/bin/kano-signal launch-share {}'.format(fullpath))
     if rc:
-        # Most likely the app is not running and the signal could not be sent
-        logger.warn('Error sending launch signal, starting the app instead, rc={}'.format(rc))
+        # Likely the app is not running and the signal could not be sent, so start it now
+        logger.warn('Error sending launch signal, starting the app now, rc={}'.format(rc))
         if background:
             run_bg(cmd)
         else:
             _, _, rc = run_print_output_error(cmd)
             return rc
+    else:
+        logger.info('Sent signal to app: {} to open : {}'.format(app_tr, fullpath))
 
     return 0
 

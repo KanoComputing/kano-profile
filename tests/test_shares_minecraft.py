@@ -53,18 +53,15 @@ Signal.launch_share = function(xmlfile) {
 class TestOpenMinecraftShare(unittest.TestCase):
 
     def setUp(self):
-        print 'a'
         with open(fake_html, 'w') as f:
             f.write(fake_html_code)
         os.system('touch {}'.format(fake_xml))
 
     def tearDown(self):
-        print 'b'
         os.unlink(fake_html)
         os.unlink(fake_xml)
                 
     def test_launch_project_api_exists(self):
-        print 'b'
         from kano_profile.apps import launch_project
         self.assertTrue(launch_project)
 

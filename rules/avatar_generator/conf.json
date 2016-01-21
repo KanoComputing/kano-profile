@@ -925,6 +925,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Pixel Hack belt",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-pixelhack.png",
+            "preview_img": "belts/judoka-belt-pixelhack-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "judoka-belt-pixelhack",
+            "display_order": 13,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Binoculars",
             "character": "judoka",
             "img_name": "accessories/judoka-binoculars.png",

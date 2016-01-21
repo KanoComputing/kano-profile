@@ -517,6 +517,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Sticker Summer Camp",
+            "character": "judoka",
+            "img_name": "stickers/judoka-summercamp-survived.png",
+            "preview_img":"stickers/judoka-summercamp-survived-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "Sticker_Summer_Camp_survived",
+            "display_order": 8,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Suit_Pink",
             "character": "judoka",
             "img_name": "suits/suit-pink.png",

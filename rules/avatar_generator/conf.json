@@ -697,6 +697,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Santa suit",
+            "character": "judoka",
+            "img_name": "suits/judoka-suit-santa.png",
+            "preview_img": "suits/judoka-suit-santa-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-suits",
+            "item_id": "judoka-suit-santa",
+            "display_order": 14,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Face_Grumpy",
             "character": "judoka",
             "img_name": "faces/face-grumpy.png",

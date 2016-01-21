@@ -745,6 +745,18 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
+            "display_name": "Halloween face",
+            "character": "judoka",
+            "img_name": "faces/judoka-face-halloween.png",
+            "preview_img": "faces/judoka-face-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-faces",
+            "item_id": "judoka-faces-halloween",
+            "display_order": 8,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Belt_Yellow",
             "character": "judoka",
             "img_name": "belts/belt-yellow.png",

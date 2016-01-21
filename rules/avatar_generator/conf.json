@@ -865,6 +865,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Binoculars",
+            "character": "judoka",
+            "img_name": "accessories/judoka-binoculars.png",
+            "preview_img": "accessories/judoka-binoculars-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-accessories",
+            "item_id": "judoka-accessories-binoculars",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "None",
             "character": "judoka",
             "img_name": "judoka-none.png",

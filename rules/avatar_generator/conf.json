@@ -851,6 +851,18 @@
             "item_id": "judoka-headwear-none",
             "display_order": 1000,
             "date_created": "2015-12-24T14:07:14.000Z"
+        },
+        {
+            "display_name": "Shades",
+            "character": "judoka",
+            "img_name": "headwear/judoka-shades.png",
+            "preview_img": "headwear/judoka-shades-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-headwear",
+            "item_id": "judoka-headwear-shades",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
         }
     ]
 }

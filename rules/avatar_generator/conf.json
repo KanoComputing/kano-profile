@@ -877,6 +877,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Halloween belt",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-halloween.png",
+            "preview_img": "belts/judoka-belt-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "judoka-belts-halloween",
+            "display_order": 12,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Binoculars",
             "character": "judoka",
             "img_name": "accessories/judoka-binoculars.png",

@@ -529,6 +529,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Halloween sticker",
+            "character": "judoka",
+            "img_name": "stickers/judoka-sticker-halloween.png",
+            "preview_img": "stickers/judoka-sticker-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "judoka-sticker-halloween",
+            "display_order": 9,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Suit_Pink",
             "character": "judoka",
             "img_name": "suits/suit-pink.png",

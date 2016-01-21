@@ -1021,6 +1021,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Reindeer antlers",
+            "character": "judoka",
+            "img_name": "hats/judoka-hats-antlers.png",
+            "preview_img": "hats/judoka-hats-antlers-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-hats",
+            "item_id": "judoka-hats-antlers",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Shades",
             "character": "judoka",
             "img_name": "headwear/judoka-shades.png",

@@ -505,6 +505,18 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
+            "display_name": "Sticker_Summercamp_Bird",
+            "character": "judoka",
+            "img_name": "stickers/judoka-sticker-bird.png",
+            "preview_img": "stickers/judoka-sticker-bird-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "Sticker__Summercamp_Bird",
+            "display_order": 7,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Suit_Pink",
             "character": "judoka",
             "img_name": "suits/suit-pink.png",

@@ -625,6 +625,18 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
+            "display_name": "Suit_SummerCamp",
+            "character": "judoka",
+            "img_name": "suits/judoka-suit-summercamp.png",
+            "preview_img": "suits/judoka-suit-summercamp-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-suits",
+            "item_id": "Suit_SummerCamp",
+            "display_order": 11,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Face_Grumpy",
             "character": "judoka",
             "img_name": "faces/face-grumpy.png",
@@ -827,6 +839,18 @@
             "item_id": "Belt_Beige",
             "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"
+        },
+        {
+            "display_name": "Belt_SummerCamp",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-summercamp.png",
+            "preview_img": "belts/judoka-belt-summercamp-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "Belt_SummerCamp",
+            "display_order": 11,
+            "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
             "display_name": "None",

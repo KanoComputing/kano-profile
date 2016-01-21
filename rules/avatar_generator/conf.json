@@ -553,6 +553,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Sticker snowflake",
+            "character": "judoka",
+            "img_name": "stickers/judoka-sticker-snowflake.png",
+            "preview_img":"stickers/judoka-sticker-snowflake-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "snowflake-sticker",
+            "display_order": 10,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Suit_Pink",
             "character": "judoka",
             "img_name": "suits/suit-pink.png",

@@ -69,7 +69,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-stickers",
-            "display_order": 9,
+            "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -94,6 +94,18 @@
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-hats",
             "display_order": 8,
+            "date_created": "2016-01-21T20:04:14.000Z"
+        },
+        {
+            "display_name": "Scarves",
+            "character": "judoka",
+            "z_index": 4,
+            "active_icon": "judoka-scarves-active.png",
+            "inactive_icon": "judoka-scarves-inactive.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-scarves",
+            "display_order": 9,
             "date_created": "2016-01-21T20:04:14.000Z"
         },
         {
@@ -1054,6 +1066,18 @@
             "category": "judoka-hats",
             "item_id": "judoka-hats-antlers",
             "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "judoka-scarves-none",
+            "display_order": 1000,
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {

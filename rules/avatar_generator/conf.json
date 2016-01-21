@@ -973,6 +973,18 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Candy cane belt",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-candy.png",
+            "preview_img": "belts/judoka-belt-candy-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "judoka-belts-candy",
+            "display_order": 14,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Binoculars",
             "character": "judoka",
             "img_name": "accessories/judoka-binoculars.png",

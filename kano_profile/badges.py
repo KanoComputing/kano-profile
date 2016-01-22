@@ -146,10 +146,7 @@ class BadgeCalc(object):
             ret_val = self._app_state[app]
             for k in xrange(len(levels)):
                 ret_val = ret_val[levels[k]]
-        except (TypeError, KeyError) as exc:
-            logger.debug(
-                "Can't find levels {} in app {}, - {}".format(levels, app, exc)
-            )
+        except (TypeError, KeyError):
             ret_val = None
         return ret_val
 

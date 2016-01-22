@@ -21,7 +21,7 @@
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-skins",
-            "display_order": 2,
+            "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -45,7 +45,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-hair",
-            "display_order": 1,
+            "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -81,7 +81,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-accessories",
-            "display_order": 7,
+            "display_order": 9,
             "date_created": "2015-12-24T14:04:14.000Z"
         },
         {
@@ -93,7 +93,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-hats",
-            "display_order": 8,
+            "display_order": 6,
             "date_created": "2016-01-21T20:04:14.000Z"
         },
         {
@@ -105,7 +105,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-scarves",
-            "display_order": 9,
+            "display_order": 8,
             "date_created": "2016-01-21T20:04:14.000Z"
         },
         {
@@ -117,7 +117,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-headwear",
-            "display_order": 6,
+            "display_order": 7,
             "date_created": "2015-12-24T14:05:14.000Z"
         }
     ],

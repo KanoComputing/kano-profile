@@ -4,6 +4,8 @@ kano-profile (2.3.0-2) unstable; urgency=low
   * Add higher level sharing helpers
   * When using the hooks, attempt to install the app through kano apps if it
     is missing
+  * Added many items for the character creator that were previously available
+    only through kano-content
 
  -- Team Kano <dev@kano.me>  Tue, 12 Jan 2016 11:38:00 +0000
 

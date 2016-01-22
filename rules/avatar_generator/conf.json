@@ -21,7 +21,7 @@
             "selected_border": "active-item.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-skins",
-            "display_order": 2,
+            "display_order": 1,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -45,7 +45,7 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-hair",
-            "display_order": 1,
+            "display_order": 2,
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
@@ -69,8 +69,56 @@
             "selected_border": "active-itemBorder.png",
             "hover_border": "active-itemBorder.png",
             "category_id": "judoka-stickers",
-            "display_order": 8,
+            "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"
+        },
+        {
+            "display_name": "Accessories",
+            "character": "judoka",
+            "z_index": 3,
+            "active_icon": "judoka-accessories.png",
+            "inactive_icon": "judoka-accessories.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-accessories",
+            "display_order": 9,
+            "date_created": "2015-12-24T14:04:14.000Z"
+        },
+        {
+            "display_name": "Hats",
+            "character": "judoka",
+            "z_index": 4,
+            "active_icon": "judoka-hats-active.png",
+            "inactive_icon": "judoka-hats-inactive.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-hats",
+            "display_order": 6,
+            "date_created": "2016-01-21T20:04:14.000Z"
+        },
+        {
+            "display_name": "Scarves",
+            "character": "judoka",
+            "z_index": 4,
+            "active_icon": "judoka-scarves-active.png",
+            "inactive_icon": "judoka-scarves-inactive.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-scarves",
+            "display_order": 8,
+            "date_created": "2016-01-21T20:04:14.000Z"
+        },
+        {
+            "display_name": "Headwear",
+            "character": "judoka",
+            "z_index": 2.5,
+            "active_icon": "judoka-headwear.png",
+            "inactive_icon": "judoka-headwear.png",
+            "selected_border": "active-itemBorder.png",
+            "hover_border": "active-itemBorder.png",
+            "category_id": "judoka-headwear",
+            "display_order": 7,
+            "date_created": "2015-12-24T14:05:14.000Z"
         }
     ],
     "special_categories": [
@@ -481,6 +529,54 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
+            "display_name": "Sticker_Summercamp_Bird",
+            "character": "judoka",
+            "img_name": "stickers/judoka-sticker-bird.png",
+            "preview_img": "stickers/judoka-sticker-bird-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "Sticker__Summercamp_Bird",
+            "display_order": 7,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Sticker Summer Camp",
+            "character": "judoka",
+            "img_name": "stickers/judoka-summercamp-survived.png",
+            "preview_img":"stickers/judoka-summercamp-survived-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "Sticker_Summer_Camp_survived",
+            "display_order": 8,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Halloween sticker",
+            "character": "judoka",
+            "img_name": "stickers/judoka-sticker-halloween.png",
+            "preview_img": "stickers/judoka-sticker-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "judoka-sticker-halloween",
+            "display_order": 9,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Sticker snowflake",
+            "character": "judoka",
+            "img_name": "stickers/judoka-sticker-snowflake.png",
+            "preview_img":"stickers/judoka-sticker-snowflake-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-stickers",
+            "item_id": "snowflake-sticker",
+            "display_order": 10,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Suit_Pink",
             "character": "judoka",
             "img_name": "suits/suit-pink.png",
@@ -601,6 +697,54 @@
             "date_created": "2015-04-14T10:54:14.000Z"
         },
         {
+            "display_name": "Suit_SummerCamp",
+            "character": "judoka",
+            "img_name": "suits/judoka-suit-summercamp.png",
+            "preview_img": "suits/judoka-suit-summercamp-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-suits",
+            "item_id": "Suit_SummerCamp",
+            "display_order": 11,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Halloween suit",
+            "character": "judoka",
+            "img_name": "suits/judoka-suit-halloween.png",
+            "preview_img": "suits/judoka-suit-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-suits",
+            "item_id": "judoka-suit-halloween",
+            "display_order": 12,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Pixel Hack suit",
+            "character": "judoka",
+            "img_name": "suits/judoka-suit-pixelhack.png",
+            "preview_img": "suits/judoka-suit-pixelhack-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-suits",
+            "item_id": "judoka-suit-pixelhack",
+            "display_order": 13,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Santa suit",
+            "character": "judoka",
+            "img_name": "suits/judoka-suit-santa.png",
+            "preview_img": "suits/judoka-suit-santa-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-suits",
+            "item_id": "judoka-suit-santa",
+            "display_order": 14,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "Face_Grumpy",
             "character": "judoka",
             "img_name": "faces/face-grumpy.png",
@@ -683,6 +827,18 @@
             "item_id": "Face_Happy",
             "display_order": 7,
             "date_created": "2015-04-14T10:54:14.000Z"
+        },
+        {
+            "display_name": "Halloween face",
+            "character": "judoka",
+            "img_name": "faces/judoka-face-halloween.png",
+            "preview_img": "faces/judoka-face-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-faces",
+            "item_id": "judoka-faces-halloween",
+            "display_order": 8,
+            "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
             "display_name": "Belt_Yellow",
@@ -803,6 +959,210 @@
             "item_id": "Belt_Beige",
             "display_order": 10,
             "date_created": "2015-04-14T10:54:14.000Z"
+        },
+        {
+            "display_name": "Belt_SummerCamp",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-summercamp.png",
+            "preview_img": "belts/judoka-belt-summercamp-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "Belt_SummerCamp",
+            "display_order": 11,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Halloween belt",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-halloween.png",
+            "preview_img": "belts/judoka-belt-halloween-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "judoka-belts-halloween",
+            "display_order": 12,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Pixel Hack belt",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-pixelhack.png",
+            "preview_img": "belts/judoka-belt-pixelhack-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "judoka-belt-pixelhack",
+            "display_order": 13,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Candy cane belt",
+            "character": "judoka",
+            "img_name": "belts/judoka-belt-candy.png",
+            "preview_img": "belts/judoka-belt-candy-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-belts",
+            "item_id": "judoka-belts-candy",
+            "display_order": 14,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Binoculars",
+            "character": "judoka",
+            "img_name": "accessories/judoka-binoculars.png",
+            "preview_img": "accessories/judoka-binoculars-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-accessories",
+            "item_id": "judoka-accessories-binoculars",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-accessories",
+            "item_id": "judoka-accessories-none",
+            "display_order": 1000,
+            "date_created": "2015-12-24T14:07:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-headwear",
+            "item_id": "judoka-headwear-none",
+            "display_order": 1000,
+            "date_created": "2015-12-24T14:07:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-hats",
+            "item_id": "judoka-hats-none",
+            "display_order": 1000,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Reindeer antlers",
+            "character": "judoka",
+            "img_name": "hats/judoka-hats-antlers.png",
+            "preview_img": "hats/judoka-hats-antlers-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-hats",
+            "item_id": "judoka-hats-antlers",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Orange scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-orange.png",
+            "preview_img": "scarves/judoka-scarf-orange.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Orange_Scarf",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Yellow scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-yellow.png",
+            "preview_img": "scarves/judoka-scarf-yellow.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Yellow_Scarf",
+            "display_order": 2,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Green scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-green.png",
+            "preview_img": "scarves/judoka-scarf-green.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Green_Scarf",
+            "display_order": 3,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Gray scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-gray.png",
+            "preview_img": "scarves/judoka-scarf-gray.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Gray_Scarf",
+            "display_order": 4,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Pink scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-pink.png",
+            "preview_img": "scarves/judoka-scarf-pink.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Pink_Scarf",
+            "display_order": 5,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Blue scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-blue.png",
+            "preview_img": "scarves/judoka-scarf-blue.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Blue_Scarf",
+            "display_order": 6,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "None",
+            "character": "judoka",
+            "img_name": "judoka-none.png",
+            "preview_img": "judoka-none-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "judoka-scarves-none",
+            "display_order": 1000,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Shades",
+            "character": "judoka",
+            "img_name": "headwear/judoka-shades.png",
+            "preview_img": "headwear/judoka-shades-preview.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-headwear",
+            "item_id": "judoka-headwear-shades",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
         }
     ]
 }

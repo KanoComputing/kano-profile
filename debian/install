@@ -8,6 +8,8 @@ kano_avatar usr/lib/python2.7/dist-packages
 kano_avatar_gui usr/lib/python2.7/dist-packages
 kano_registration_gui usr/lib/python2.7/dist-packages
 
+kano-content-blacklist/kano-profile.json /usr/share/kano-content/blacklists
+
 media usr/share/kano-profile
 rules usr/share/kano-profile
 quests usr/share/kano-profile

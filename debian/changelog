@@ -1,6 +1,7 @@
 kano-profile (2.3.0-2) unstable; urgency=low
 
   * Add challenge progress tracking
+  * Add higher level sharing helpers
 
  -- Team Kano <dev@kano.me>  Tue, 12 Jan 2016 11:38:00 +0000
 

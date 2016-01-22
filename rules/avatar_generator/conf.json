@@ -1069,6 +1069,78 @@
             "date_created": "2016-01-21T16:07:14.000Z"
         },
         {
+            "display_name": "Orange scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-orange.png",
+            "preview_img": "scarves/judoka-scarf-orange.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Orange_Scarf",
+            "display_order": 1,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Yellow scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-yellow.png",
+            "preview_img": "scarves/judoka-scarf-yellow.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Yellow_Scarf",
+            "display_order": 2,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Green scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-green.png",
+            "preview_img": "scarves/judoka-scarf-green.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Green_Scarf",
+            "display_order": 3,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Gray scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-gray.png",
+            "preview_img": "scarves/judoka-scarf-gray.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Gray_Scarf",
+            "display_order": 4,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Pink scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-pink.png",
+            "preview_img": "scarves/judoka-scarf-pink.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Pink_Scarf",
+            "display_order": 5,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
+            "display_name": "Blue scarf",
+            "character": "judoka",
+            "img_name": "scarves/judoka-scarf-blue.png",
+            "preview_img": "scarves/judoka-scarf-blue.png",
+            "position_x": 0,
+            "position_y": 0,
+            "category": "judoka-scarves",
+            "item_id": "Blue_Scarf",
+            "display_order": 6,
+            "date_created": "2016-01-21T16:07:14.000Z"
+        },
+        {
             "display_name": "None",
             "character": "judoka",
             "img_name": "judoka-none.png",

@@ -8,7 +8,7 @@
 # e.g., kano:launch:app-name, it will be ["app-name"]
 
 from kano.logging import logger
-from kano_profile.apps import launch_project
+from kano_profile.apps import launch_project, check_installed
 
 
 def run(args):
@@ -25,6 +25,7 @@ def run(args):
 def launch(app_name):
     if app_name is not None:
         try:
-            launch_project(app_name, '', '')
+            if check_installed(app_name):
+                launch_project(app_name, '', '')
         except ValueError:
             logger.error('Failed to launch app "{}"'.format(str(app_name)))

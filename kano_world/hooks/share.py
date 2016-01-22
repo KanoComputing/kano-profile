@@ -9,7 +9,7 @@
 
 from kano.logging import logger
 from kano_world.share import download_share, get_share_by_id
-from kano_profile.apps import launch_project
+from kano_profile.apps import launch_project, check_installed
 from kdesk.hourglass import hourglass_start, hourglass_end
 from kano_world.functions import report_share_opened
 
@@ -49,7 +49,8 @@ def launch(data):
         msg = 'Downloaded share: {}'.format(title)
         logger.info(msg)
 
-        launch_project(app, attachment_name, folder)
-        report_share_opened(item_id)
+        if check_installed(app):
+            launch_project(app, attachment_name, folder)
+            report_share_opened(item_id)
     else:
         logger.error("Share hook launch failed")

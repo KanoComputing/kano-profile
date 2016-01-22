@@ -122,6 +122,53 @@ def get_gamestate_variables(app_name):
             return [str(key) for key in rules.keys()]
 
 
+def check_installed(app):
+    """ Check if an app is installed and if not install it through kano apps.
+    *Note* The translation between app and the corresponding kano-apps name is
+    not straight forward. This function uses a mapping between those two.
+    :param app: App name
+    :type app: str
+    :returns: True iff the app is installed and available
+    :rtype: bool
+    """
+    from kano.utils.misc import is_installed
+    from kano.utils.shell import run_cmd
+    cmd_template = 'kano-apps install {app_name}'
+    debpkg_to_kano_appstore = {
+        'make-light': 'powerup'
+    }
+    # Check if is already installed
+    if is_installed(app):
+        return True
+
+    # Check if we know how to install it
+    if app not in debpkg_to_kano_appstore:
+        logger.error(
+            'Do not know how to translate app "{}" to kano-apps'
+            .format(app)
+        )
+        return False
+
+    # Install it using kano apps
+    logger.info(
+        '"{}" not installed will attempt to install it as "{}" using kano apps'
+        .format(app, debpkg_to_kano_appstore[app])
+    )
+    cmd = cmd_template.format(app_name=debpkg_to_kano_appstore[app])
+    run_cmd(cmd)
+
+    # Check whether it has been installed
+    if not is_installed(app):
+        # Something probably went wrong here
+        logger.error(
+            'Attempted to install app "{}" but something went wrong'
+            .format(app)
+        )
+        return False
+
+    return True
+
+
 def launch_project(app, filename, data_dir, background=False):
     # This is necessary to support the new official names
     # TODO: once the apps have been renamed this will not be necessary

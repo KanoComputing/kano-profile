@@ -5,28 +5,28 @@
   "make-minecraft": {
     "dir": "Minecraft-content",
     "ext": "xml",
-    "cmd": "/usr/bin/make-minecraft {fullpath}",
+    "cmd": "/usr/bin/make-minecraft \"{fullpath}\"",
     "max_level": 13,
     "icon": "minecraft.png"
   },
   "make-music": {
     "dir": "Music-content",
     "ext": "spi",
-    "cmd": "/usr/bin/make-music {fullpath}",
+    "cmd": "/usr/bin/make-music \"{fullpath}\"",
     "max_level": 3,
     "icon": "sonicpi.png"
   },
   "make-pong": {
     "dir": "Pong-content",
     "ext": "xml",
-    "cmd": "/usr/bin/make-pong {fullpath}",
+    "cmd": "/usr/bin/make-pong \"{fullpath}\"",
     "max_level": 16,
     "icon": "pong.png"
   },
   "kano-draw": {
     "dir": "Draw-content",
     "ext": "draw",
-    "cmd": "/usr/bin/kano-draw {fullpath}",
+    "cmd": "/usr/bin/kano-draw \"{fullpath}\"",
     "max_level": 9,
     "icon": "draw.png"
   },
@@ -38,13 +38,13 @@
     "icon": "snake.png"
   },
   "linux-story": {
-    "cmd": "/usr/bin/linux-story-gui {fullpath}",
+    "cmd": "/usr/bin/linux-story-gui \"{fullpath}\"",
     "max-level": 31,
     "icon": "linux-story.png"
   },
   "make-light": {
     "dir": "Light-content",
-    "cmd": "$(dpkg -l make-light > /dev/null 2>&1); if [ \"$?\" -eq 0 ] ; then $(make-light {fullpath}); else $(kano-apps install powerup);fi",
+    "cmd": "/usr/bin/make-light \"{fullpath}\"",
     "ext": "lightcode"
   },
   "kano-tracker": {

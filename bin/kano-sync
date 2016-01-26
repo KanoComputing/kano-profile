@@ -70,19 +70,21 @@ def do_login(silent=False, dialog=True):
     if not login_success:
         logger.debug('token login not successful msg: {}'.format(value))
         if silent:
-            logger.debug('exiting because of --silent')
+            logger.debug(
+                "Can't login, exiting gracefully because of the --silent flag"
+            )
             return False
-        else:
-            logger.debug('trying to log in with kano-login')
-            run_cmd(dir_path + '/bin/kano-login')
-            login_success, value = login_using_token()
-            if not login_success:
-                display_msg(
-                    'Login not possible, error: {} error'.format(value),
-                    'error',
-                    dialog=dialog
-                )
-                return False
+
+        logger.debug('trying to log in with kano-login')
+        run_cmd(os.path.join(dir_path, 'bin', 'kano-login'))
+        login_success, value = login_using_token()
+        if not login_success:
+            display_msg(
+                'Login not possible, error: {}'.format(value),
+                'error',
+                dialog=dialog
+            )
+            return False
     return True
 
 
@@ -90,6 +92,25 @@ def _any_notifications_available(profile):
     return ('notifications' in profile and
             type(profile['notifications']) is list and
             len(profile['notifications']) > 0)
+
+
+def _display_notifications():
+    profile = load_profile()
+    if _any_notifications_available(profile):
+        for n in profile['notifications']:
+            image = n["image"] if "image" in n else None
+            command = n["command"] if "command" in n else None
+            sound = n["sound"] if "sound" in n else None
+            display_generic_notification(
+                n["title"], n["byline"], image, command, sound, "world"
+            )
+
+            mark_notification_read(n['id'])
+
+        profile['last_notifications_prompt'] = int(time.time())
+        save_profile(profile, skip_kdesk_refresh=True)
+    else:
+        logger.debug('No notifications to show')
 
 
 def do_sync(skip_kdesk_refresh=False, dialog=True):
@@ -104,30 +125,17 @@ def do_sync(skip_kdesk_refresh=False, dialog=True):
         )
         return False
 
-    if not skip_kdesk_refresh:
-        refresh_kdesk()
-
     # Push notifications
     try:
-        profile = load_profile()
-        if _any_notifications_available(profile):
-            for n in profile['notifications']:
-                image = n["image"] if "image" in n else None
-                command = n["command"] if "command" in n else None
-                sound = n["sound"] if "sound" in n else None
-                display_generic_notification(n["title"], n["byline"],
-                                             image, command, sound,
-                                             "world")
-
-                mark_notification_read(n['id'])
-
-            profile['last_notifications_prompt'] = int(time.time())
-            save_profile(profile)
-        else:
-            logger.debug('No notifications to show')
+        _display_notifications()
     except Exception as e:
-        logger.warn("Unable to display notifications due to an exception "
-                    "({}: {})".format(e.__class__.__name__, str(e)))
+        logger.warn(
+            "Unable to display notifications due to an exception ({})"
+            .format(e)
+        )
+
+    if not skip_kdesk_refresh:
+        refresh_kdesk()
 
     display_msg('Sync OK', 'info', dialog=dialog)
     return True

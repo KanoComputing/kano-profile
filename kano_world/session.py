@@ -204,7 +204,11 @@ class KanoWorldSession(object):
 
         try:
             version_no = data['user']['avatar']['generator']['version']
-            save_profile_variable('version', version_no)
+            save_profile_variable(
+                'version',
+                version_no,
+                skip_kdesk_refresh=True
+            )
         except Exception:
             pass
 
@@ -215,10 +219,14 @@ class KanoWorldSession(object):
             if data['user']['avatar']['generator']['version'] == 2:
                 gen = data['user']['avatar']['generator']
                 avatar_subcat, avatar_item = gen['character']
-                updated_locally = set_avatar(avatar_subcat, avatar_item)
+                updated_locally = set_avatar(
+                    avatar_subcat,
+                    avatar_item,
+                    sync=False
+                )
 
                 environment = gen['environment'][1]
-                updated_locally |= set_environment(environment)
+                updated_locally |= set_environment(environment, sync=False)
 
         except Exception:
             pass

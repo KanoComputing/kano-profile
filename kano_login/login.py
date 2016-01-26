@@ -219,16 +219,20 @@ class Login(Gtk.Box):
             first_sync_done = False
 
         if not first_sync_done:
-            logger.info('running kano-sync --sync && --sync && --restore after first time login')
+            logger.info(
+                'running kano-sync --sync --restore after first time login'
+            )
 
-            # doing first sync and restore
-            cmd1 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-            cmd2 = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
-            cmd3 = '{bin_dir}/kano-sync --restore -s'.format(bin_dir=bin_dir)
-            cmd = "{} && {} && {}".format(cmd1, cmd2, cmd3)
+            # When both --sync and --restore are given as options, sync occurs
+            # before the restore
+            cmd = '{bin_dir}/kano-sync --sync -s --restore'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-            save_profile_variable('first_sync_done', True)
+            save_profile_variable(
+                'first_sync_done',
+                True,
+                skip_kdesk_refresh=True
+            )
 
         else:
             logger.info('running kano-sync --sync after non-first login')

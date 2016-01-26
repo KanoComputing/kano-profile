@@ -35,7 +35,7 @@ def load_profile():
     return data
 
 
-def save_profile(data):
+def save_profile(data, skip_kdesk_refresh=False):
     ''' Write profile data to file
     :param data: JSON serialisable data about the profile
     '''
@@ -52,12 +52,14 @@ def save_profile(data):
         chown_path(profile_dir)
         chown_path(profile_file)
 
-    if os.path.exists('/usr/bin/kdesk') and not is_running('kano-sync'):
+    if (not skip_kdesk_refresh and
+            os.path.exists('/usr/bin/kdesk') and
+            not is_running('kano-sync')):
         logger.info('refreshing kdesk from save_profile')
         run_bg('kdesk -a profile')
 
 
-def save_profile_variable(variable, value):
+def save_profile_variable(variable, value, skip_kdesk_refresh=False):
     ''' Update the file containing the profile data with the item
     variable -> value. This function reads from the file (and can handle the
     case where that doesn't exist) updates or creates the entry and then
@@ -68,7 +70,7 @@ def save_profile_variable(variable, value):
     '''
     profile = load_profile()
     profile[variable] = value
-    save_profile(profile)
+    save_profile(profile, skip_kdesk_refresh=skip_kdesk_refresh)
 
 category_conversion = {
     'Belts': 'judoka-belts',
@@ -178,7 +180,7 @@ def set_avatar(subcat, item, sync=False):
     """
     profile = load_profile()
     if 'version' in profile and profile['version'] == 2:
-        if type(item) != dict:
+        if not isinstance(item, dict):
             logger.error(
                 "Incompatible form of item for this version of the API"
             )
@@ -194,9 +196,9 @@ def set_avatar(subcat, item, sync=False):
     if needs_update:
         # Update the profile structure
         profile['avatar'] = [subcat, item]
+        save_profile(profile, skip_kdesk_refresh=True)
         if sync:
             sync_profile()
-        save_profile(profile)
     return needs_update
 
 
@@ -244,9 +246,9 @@ def set_environment(environment, sync=False):
 
     if needs_update:
         profile['environment'] = environment
+        save_profile(profile, skip_kdesk_refresh=True)
         if sync:
             sync_profile()
-        save_profile(profile)
     return needs_update
 
 

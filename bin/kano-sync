@@ -6,12 +6,30 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+"""
+Sync your local Kano profile to Kano World
+
+Usage:
+    kano-sync [-s ][-d] [--sync] [--backup] [--restore] [--upload-tracking-data] [--skip-kdesk]
+    kano-sync -h | --help
+
+Options:
+    -h, --help    Show this screen
+    -s, --silent  Silent mode, makes failures quiet
+    -d, --dialog  Display dialog
+    --sync        Sync Profile Data
+    --backup      Backup app content
+    --restore     Restore app content
+    --skip-kdesk  Skip kdesk refresh (happens at the end of sync and restore)
+"""
+
 import os
 import sys
-import argparse
 import time
 import tempfile
 from sys import platform as _platform
+
+from docopt import docopt
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -20,8 +38,8 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano_world.functions import sync, login_using_token, backup_content, \
     restore_content, upload_tracking_data, mark_notification_read
-from kano.utils import get_home, ensure_dir, run_cmd, read_json, delete_file, \
-    run_bg, is_gui, delete_dir
+from kano.utils import get_home, run_cmd, read_json, delete_file, run_bg, \
+    is_gui, delete_dir
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 from kano_profile.profile import load_profile, save_profile
@@ -29,25 +47,9 @@ from kano.notifications import display_generic_notification
 
 home_dir = get_home()
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-s', '--silent', action='store_true', help='silent mode')
-parser.add_argument('-d', '--dialog', action='store_true',
-                    help='display dialog')
-parser.add_argument('--sync', action='store_true', help='sync profile data')
-parser.add_argument('--upload-tracking-data', action='store_true',
-                    help='upload tracking data')
-parser.add_argument('--backup', action='store_true', help='backup app content')
-parser.add_argument('--restore', action='store_true',
-                    help='restore app content')
-parser.add_argument('--skip-kdesk', action='store_true',
-                    help='skip kdesk refresh')
-args = parser.parse_args()
 
-enable_dialog = args.dialog and is_gui()
-
-
-def display_msg(msg, level):
-    if enable_dialog:
+def display_msg(msg, level, dialog=True):
+    if dialog and is_gui():
         from kano.gtk3.kano_dialog import KanoDialog
 
         kdialog = KanoDialog(msg, "")
@@ -59,7 +61,7 @@ def display_msg(msg, level):
         logger.error(msg)
 
 
-def do_login():
+def do_login(silent=False, dialog=True):
     logger.debug('do_login')
 
     # login first with token, if not working then try with dialog
@@ -67,31 +69,43 @@ def do_login():
     login_success, value = login_using_token()
     if not login_success:
         logger.debug('token login not successful msg: {}'.format(value))
-        if args.silent:
+        if silent:
             logger.debug('exiting because of --silent')
-            sys.exit()
+            return False
         else:
             logger.debug('trying to log in with kano-login')
             run_cmd(dir_path + '/bin/kano-login')
             login_success, value = login_using_token()
             if not login_success:
-                display_msg('Login not possible, error: ' + value, 'error')
-                sys.exit(1)
+                display_msg(
+                    'Login not possible, error: {} error'.format(value),
+                    'error',
+                    dialog=dialog
+                )
+                return False
+    return True
+
 
 def _any_notifications_available(profile):
     return ('notifications' in profile and
             type(profile['notifications']) is list and
             len(profile['notifications']) > 0)
 
-def do_sync():
+
+def do_sync(skip_kdesk_refresh=False, dialog=True):
     logger.debug('do_sync')
 
     success, value = sync()
     if not success:
-        display_msg('Sync not possible, error: {}'.format(value), 'error')
-        return
+        display_msg(
+            'Sync not possible, error: {}'.format(value),
+            'error',
+            dialog=dialog
+        )
+        return False
 
-    refresh_kdesk()
+    if not skip_kdesk_refresh:
+        refresh_kdesk()
 
     # Push notifications
     try:
@@ -115,10 +129,11 @@ def do_sync():
         logger.warn("Unable to display notifications due to an exception "
                     "({}: {})".format(e.__class__.__name__, str(e)))
 
-    display_msg('Sync OK', 'info')
+    display_msg('Sync OK', 'info', dialog=dialog)
+    return True
 
 
-def do_backup():
+def do_backup(dialog=True):
     logger.debug('do_backup')
 
     os.chdir(home_dir)
@@ -144,22 +159,22 @@ def do_backup():
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with compressing backup data: {}'.format(e)
-        display_msg(msg, 'error')
+        display_msg(msg, 'error', dialog=dialog)
         delete_dir(tmp_dir)
         return
 
     success, error = backup_content(tmp_file)
     if not success:
         msg = 'Error with uploading backup data: {}'.format(e)
-        display_msg(msg, 'error')
+        display_msg(msg, 'error', dialog=dialog)
     else:
-        display_msg('Backup OK', 'info')
+        display_msg('Backup OK', 'info', dialog=dialog)
 
     delete_file(tmp_file)
     delete_dir(tmp_dir)
 
 
-def do_restore():
+def do_restore(skip_kdesk_refresh=False, dialog=True):
     logger.debug('do_restore')
 
     os.chdir(home_dir)
@@ -171,7 +186,7 @@ def do_restore():
     success, error = restore_content(tmp_file)
     if not success:
         msg = 'Error with downloading restore data: ' + error
-        display_msg(msg, 'error')
+        display_msg(msg, 'error', dialog=dialog)
         delete_dir(tmp_dir)
         return
 
@@ -183,49 +198,64 @@ def do_restore():
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with uncompressing restore data: {}'.format(e)
-        display_msg(msg, 'error')
+        display_msg(msg, 'error', dialog=dialog)
 
-    refresh_kdesk()
+    if not skip_kdesk_refresh:
+        refresh_kdesk()
 
     delete_file(tmp_file)
     delete_dir(tmp_dir)
 
-    display_msg('Restore OK', 'info')
+    display_msg('Restore OK', 'info', dialog=dialog)
 
 
-def do_upload_tracking_data():
+def do_upload_tracking_data(dialog=True):
     logger.debug('do_upload_tracking_data')
 
     success, value = upload_tracking_data()
     if not success:
-        display_msg('Upload not possible, error: {}'.format(value), 'error')
+        display_msg(
+            'Upload not possible, error: {}'.format(value),
+            'error',
+            dialog=dialog
+        )
         return
 
 
 def refresh_kdesk():
-    if args.skip_kdesk:
-        return
-
     logger.info('refreshing kdesk from kano-sync')
     if os.path.exists('/usr/bin/kdesk'):
         run_bg('kdesk -a profile ; kdesk -a world')
 
 
+def main(args):
+
+    skip_kdesk_refresh = args['--skip-kdesk']
+    dialog = args['--dialog']
+    silent = args['--silent']
+
+    login_successful = do_login(silent=silent, dialog=dialog)
+    if login_successful:
+        if args['--sync']:
+            do_sync(skip_kdesk_refresh=skip_kdesk_refresh, dialog=dialog)
+
+        if args['--backup']:
+            do_backup(dialog=dialog)
+
+        if args['--restore']:
+            do_restore(skip_kdesk_refresh=skip_kdesk_refresh, dialog=dialog)
+
+        if args['--upload-tracking-data']:
+            do_upload_tracking_data(dialog=dialog)
+        return 0
+    else:
+        # We want to refresh kdesk even if the user is not, or can't log in
+        if not skip_kdesk_refresh:
+            refresh_kdesk()
+        return 1
+
+
 if __name__ == '__main__':
-    if not (args.sync or args.backup or args.restore or args.upload_tracking_data):
-        parser.print_help()
-        sys.exit()
-
-    do_login()
-
-    if args.sync:
-        do_sync()
-
-    if args.backup:
-        do_backup()
-
-    if args.restore:
-        do_restore()
-
-    if args.upload_tracking_data:
-        do_upload_tracking_data()
+    args = docopt(__doc__)
+    rc = main(args)
+    sys.exit(rc)

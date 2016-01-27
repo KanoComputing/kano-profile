@@ -13,7 +13,7 @@
 from kano.webapp import WebApp
 import sys
 
-fake_html='/tmp/fake_minecraft.html'
+fake_html='/tmp/fake_blocks.html'
 
 class FakeWebApp(WebApp):
     def __init__(self, app_name):

@@ -30,15 +30,15 @@ class TestOpenShares(unittest.TestCase):
         apps=os.popen('xwininfo -root -tree | grep {}'.format(app_name)).read()
         return app_name in apps
 
-    def _start_fake_webapp(self, app_name, delay=3):
+    def _start_fake_webapp(self, app_name, delay=8):
         os.system('python fake_blocks.py {} &'.format(app_name))
         time.sleep(delay)
         self.assertTrue(self._find_x11_app(app_name),
                         msg='Could not start fake webapp {}'.format(app_name))
 
-    def _stop_fake_webapp(self):
+    def _stop_fake_webapp(self, delay=5):
         os.system('pkill -f fake_blocks')
-        time.sleep(1)
+        time.sleep(delay)
 
     def test_launch_project_api_exists(self):
         from kano_profile.apps import launch_project

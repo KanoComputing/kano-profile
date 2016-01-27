@@ -175,10 +175,19 @@ def do_restore():
         delete_dir(tmp_dir)
         return
 
+    cmd_temp = 'gtar -{} {} {}'
     if _platform == 'darwin':
-        tar_cmd = 'gtar -xzf {} --skip-old-files'.format(tmp_file)
+        tar_cmd = cmd_temp.format(
+            'xzf',
+            tmp_file,
+            '--skip-old-files --overwrite --overwrite-dir'
+        )
     else:
-        tar_cmd = 'tar -kxzf {}'.format(tmp_file)
+        tar_cmd = cmd_temp.format(
+            'kxzf',
+            tmp_file,
+            '--overwrite --overwrite-dir'
+        )
 
     _, e, _ = run_cmd(tar_cmd)
     if e:

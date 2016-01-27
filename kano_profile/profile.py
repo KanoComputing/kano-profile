@@ -117,12 +117,16 @@ def get_avatar(sync=True):
 def get_default_avatar():
     subcat = 'judoka'
     item = {
+        'judoka-accessories': 'judoka-accessories-none',
         'judoka-belts': 'Belt_Orange',
-        'judoka-suits': 'Suit_White',
         'judoka-faces': 'Face_Happy',
         'judoka-hair': 'Hair_Black',
-        'judoka-stickers': 'Sticker_Code',
+        'judoka-hats': 'judoka-hats-none',
+        'judoka-headwear': 'judoka-headwear-none',
+        'judoka-scarves': 'judoka-scarves-none',
         'judoka-skins': 'Skin_Orange',
+        'judoka-stickers': 'Sticker_Code',
+        'judoka-suits': 'Suit_White',
     }
     return subcat, item
 

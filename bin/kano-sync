@@ -184,7 +184,7 @@ def do_restore():
         )
     else:
         tar_cmd = cmd_temp.format(
-            'kxzf',
+            'xzf',
             tmp_file,
             '--overwrite --overwrite-dir'
         )

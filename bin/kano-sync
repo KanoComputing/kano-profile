@@ -175,20 +175,12 @@ def do_restore():
         delete_dir(tmp_dir)
         return
 
-    cmd_temp = 'gtar -{} {} {}'
     if _platform == 'darwin':
-        tar_cmd = cmd_temp.format(
-            'xzf',
-            tmp_file,
-            '--skip-old-files --overwrite --overwrite-dir'
-        )
+        cmd_temp = 'gtar -xzf {} --skip-old-files --overwrite --overwrite-dir'
     else:
-        tar_cmd = cmd_temp.format(
-            'xzf',
-            tmp_file,
-            '--overwrite --overwrite-dir'
-        )
+        cmd_temp = 'tar -xzf {} --overwrite --overwrite-dir'
 
+    tar_cmd = cmd_temp.format(tmp_file)
     _, e, _ = run_cmd(tar_cmd)
     if e:
         msg = 'Error with uncompressing restore data: {}'.format(e)

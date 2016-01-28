@@ -10,6 +10,7 @@ kano-profile (2.3.0-2) unstable; urgency=low
   * Reduce no of syncs and kdesk refreshes
   * Updated xp allocation for Make Light
   * Add app progress helpers
+  * Add update_upwards app variable helper functions
 
  -- Team Kano <dev@kano.me>  Tue, 12 Jan 2016 11:38:00 +0000
 

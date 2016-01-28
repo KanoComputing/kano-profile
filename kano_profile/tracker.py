@@ -22,6 +22,8 @@ import hashlib
 import subprocess
 import shlex
 
+from uuid import uuid1, uuid5
+
 from kano.utils import get_program_name, is_number, read_file_contents, \
     get_cpu_id, chown_path, ensure_dir
 from kano.logging import logger
@@ -111,6 +113,23 @@ def get_session_file_path(name, pid):
     return "{}/{}-{}.json".format(tracker_dir, pid, name)
 
 
+def get_session_unique_id(name, pid):
+    data = {}
+    tracker_session_file = get_session_file_path(name, pid)
+    try:
+        af = open_locked(tracker_session_file, 'r')
+    except (IOError, OSError) as e:
+        logger.error('Error while opening session file'.format(e))
+    else:
+        with af:
+            try:
+                data = json.load(af)
+            except ValueError as e:
+                logger.error('Session file is not a valid JSON')
+
+    return data.get("session_id", "")
+
+
 def session_start(name, pid=None):
     if not pid:
         pid = os.getpid()
@@ -121,6 +140,7 @@ def session_start(name, pid=None):
         "name": name,
         "started": int(time.time()),
         "elapsed": 0,
+        "app_session_id": str(uuid5(uuid1(), name + str(pid))),
         "finished": False
     }
 

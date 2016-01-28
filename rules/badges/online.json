@@ -24,6 +24,10 @@
       [
         "make-snake",
         "shared"
+      ],
+      [
+        "make-light",
+        "shared"
       ]
     ],
     "title": "Sharing Apprentice",
@@ -54,6 +58,10 @@
       [
         "make-snake",
         "shared"
+      ],
+      [
+        "make-light",
+        "shared"
       ]
     ],
     "title": "Sharing Master",
@@ -83,6 +91,10 @@
       ],
       [
         "make-snake",
+        "shared"
+      ],
+      [
+        "make-light",
         "shared"
       ]
     ],

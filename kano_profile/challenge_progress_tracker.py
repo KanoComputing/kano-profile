@@ -5,10 +5,15 @@
 #
 # Helper functions and classes used for tracking
 
+from os import getpid
 from datetime import datetime
-from uuid import uuid4
 
-from kano_profile import tracker
+from kano.utils.processes import get_program_name
+from kano.logging import logger
+
+
+from . import tracker
+from .tracker import get_session_unique_id
 
 
 class ChallengeProgressTracker(object):
@@ -34,12 +39,20 @@ class ChallengeProgressTracker(object):
         else:
             ChallengeProgressTracker._singleton_instance = self
 
-        self._app_name = ''
+        app_name = get_program_name()
+        session_uuid = get_session_unique_id(app_name, getpid())
+
+        if not session_uuid:
+            logger.warn(
+                "Session id doesn't exist, is there an app session running?"
+            )
+
+        self._app_name = app_name
         self._tracking_mode = None
         self._chal_group = None
         self._chal_no = None
         self._chal_outcome = None
-        self._app_session_id = str(uuid4())
+        self._app_session_id = session_uuid
 
     def set_name(self, app_name):
         if not isinstance(app_name, basestring):
@@ -140,7 +153,7 @@ class ChallengeProgressTracker(object):
                     'playground-session',
                     {
                         'app_name': self._app_name,
-                        'app_session': self._app_session_id,
+                        'app_session_id': self._app_session_id,
                         'hw_ref': self._current_hw_ref,
                         'length_sec': attempt_length.total_seconds()
                     }

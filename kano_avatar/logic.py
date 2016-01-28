@@ -13,7 +13,7 @@ from kano_avatar.paths import (AVATAR_CONF_FILE,
 from kano.logging import logger
 
 from kano_profile.profile import (set_avatar, set_environment,
-                                  save_profile_variable)
+                                  save_profile_variable, sync_profile)
 from kano.utils import get_date_now
 from kano_content.api import ContentManager
 from kano_content.extended_paths import content_dir
@@ -488,9 +488,10 @@ class AvatarCreator(AvatarConfParser):
             items_no_env.pop(self.env_label, None)
             # When saving a new character in the profile, ensure that
             # the right version is used to sync with the API
-            save_profile_variable('version', 2)
-            set_avatar(self._sel_char.get_id(), items_no_env)
-            set_environment(self._sel_env.get_id(), sync=True)
+            save_profile_variable('version', 2, skip_kdesk_refresh=True)
+            set_avatar(self._sel_char.get_id(), items_no_env, sync=False)
+            set_environment(self._sel_env.get_id(), sync=False)
+            sync_profile()
 
         return True
 

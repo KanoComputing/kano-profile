@@ -149,7 +149,11 @@ class RegistrationScreen2(Gtk.Box):
             logger.info('registration successful')
 
             bday_date = str(datetime.date(date_year, date_month, date_day))
-            save_profile_variable('birthdate', bday_date)
+            save_profile_variable(
+                'birthdate',
+                bday_date,
+                skip_kdesk_refresh=True
+            )
 
             # saving hardware info and initial Kano version
             save_hardware_info()

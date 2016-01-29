@@ -46,6 +46,7 @@ from kano_profile.profile import load_profile, save_profile
 from kano.notifications import display_generic_notification
 
 home_dir = get_home()
+MAX_WORLD_NOTIFICATIONS = 5
 
 
 def display_msg(msg, level, dialog=True):
@@ -97,7 +98,7 @@ def _any_notifications_available(profile):
 def _display_notifications():
     profile = load_profile()
     if _any_notifications_available(profile):
-        for n in profile['notifications']:
+        for n in profile['notifications'][0:MAX_WORLD_NOTIFICATIONS]:
             image = n["image"] if "image" in n else None
             command = n["command"] if "command" in n else None
             sound = n["sound"] if "sound" in n else None

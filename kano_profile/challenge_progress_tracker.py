@@ -120,7 +120,7 @@ class ChallengeProgressTracker(object):
                     'challenge-attempt',
                     {
                         'app_name': self._app_name,
-                        'app_session': self._app_session_id,
+                        'app_session_id': self._app_session_id,
                         'challenge_group': self._chal_group,
                         'challenge_no': self._chal_no,
                         'outcome': self._chal_outcome,

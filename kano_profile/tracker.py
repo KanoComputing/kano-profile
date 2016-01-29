@@ -127,7 +127,7 @@ def get_session_unique_id(name, pid):
             except ValueError as e:
                 logger.error('Session file is not a valid JSON')
 
-    return data.get("session_id", "")
+    return data.get("app_session_id", "")
 
 
 def session_start(name, pid=None):

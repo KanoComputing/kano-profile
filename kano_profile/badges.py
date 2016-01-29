@@ -390,6 +390,31 @@ def save_app_state_variable_with_dialog(app_name, variable, value):
     save_app_state_with_dialog(app_name, data)
 
 
+def update_upwards_with_dialog(app_name, variable, value):
+    """ Only update a numeric value in the profile if the one given is higher.
+    Useful for highscores, etc
+
+    :param app_name: The application that this variable is associated with.
+    :type app_name: str
+
+    :param variable: The name of the variable.
+    :type data: str
+
+    :param value: The value to be stored if it is higher that the one already
+                  stored
+    :type data: numeric
+    """
+    msg = "update_increasingly_with_dialog {} {} {}".format(
+        app_name, variable, value
+    )
+    logger.debug(msg)
+    data = load_app_state(app_name)
+    if data.get(variable, 0) < value:
+        data[variable] = value
+
+        save_app_state_with_dialog(app_name, data)
+
+
 def increment_app_state_variable_with_dialog(app_name, variable, value):
     logger.debug(
         'increment_app_state_variable_with_dialog {} {} {}'

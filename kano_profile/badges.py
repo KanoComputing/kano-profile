@@ -69,6 +69,30 @@ def calculate_xp():
     return int(points) + qm.evaluate_xp()
 
 
+def get_group_progress(group_profile):
+    if 'challengeNo' not in group_profile:
+        return 0
+
+    return group_profile['challengeNo']
+
+
+def calculate_app_progress(app_name):
+    app_profile = load_app_state(app_name)
+    progress = 0
+
+    if 'groups' in app_profile and app_profile['groups']:
+        groups_profile = app_profile['groups']
+        for group in groups_profile:
+            progress += get_group_progress(groups_profile[group])
+
+        return progress
+
+    if 'level' in app_profile and app_profile['level']:
+        progress = app_profile['level']
+
+    return progress
+
+
 def calculate_kano_level():
     '''
     Calculates the current level of the user
@@ -140,15 +164,54 @@ class BadgeCalc(object):
     def _parse_target_variable(self, variable):
         return variable.split('.')
 
-    def _get_variable(self, app, levels):
+    def _get_variable(self, app, target_keys):
+        if target_keys == ['level']:
+            return calculate_app_progress(app)
+
         ret_val = None
+
         try:
             ret_val = self._app_state[app]
-            for k in xrange(len(levels)):
-                ret_val = ret_val[levels[k]]
+
+            for key in target_keys:
+                ret_val = ret_val[key]
         except (TypeError, KeyError):
             ret_val = None
+
         return ret_val
+
+    def _are_each_greater(self, targets):
+        for target in targets:
+            app = target[0]
+            attr_list = self._parse_target_variable(target[1])
+            threshold_value = target[2]
+
+            local_value = self._get_variable(app, attr_list)
+
+            if local_value is None:
+                return False
+
+            if attr_list[-1] == 'level' and threshold_value == -1:
+                threshold_value = self._app_profiles[app]['max_level']
+
+            if local_value < threshold_value:
+                return False
+
+        return True
+
+    def _is_sum_greater(self, targets, threshold_value):
+        total = 0
+
+        for target in targets:
+            app = target[0]
+            attr_list = self._parse_target_variable(target[1])
+
+            local_value = self._get_variable(app, attr_list)
+
+            if local_value:
+                total += float(local_value)
+
+        return total >= threshold_value
 
     def _evaluate_rules(self, rules):
         """ Evaluates the rules and returns whether the badge has been unlocked
@@ -157,46 +220,29 @@ class BadgeCalc(object):
                   are malformed it returns None
         :rtype: Boolean or NoneType
         """
-        if 'operation' not in rules:
-            logger.warn(
-                "Malformed badge rules, missing 'operation' - [{}] "
-                .format(rules)
-            )
-            return None
+
+        warn_template = "Malformed badge rules, missing '{}' - [{}]"
+        req_fields = [
+            'operation',
+            'targets'
+        ]
+
+        for field in req_fields:
+            if field not in rules:
+                logger.warn(warn_template.format(field, rules))
+                return None
 
         if rules['operation'] == 'each_greater':
-            achieved = True
-            for target in rules['targets']:
-                app = target[0]
-                attr_list = self._parse_target_variable(target[1])
-                threshold_value = target[2]
+            return self._are_each_greater(rules['targets'])
 
-                local_value = self._get_variable(app, attr_list)
-                if local_value is None:
-                    achieved = False
-                    break
-                if attr_list[-1] == 'level' and threshold_value == -1:
-                    threshold_value = self._app_profiles[app]['max_level']
+        if rules['operation'] == 'sum_greater':
+            if 'value' not in rules:
+                logger.warn(warn_template.format('value', rules))
+                return None
 
-                achieved &= local_value >= threshold_value
+            return self._is_sum_greater(rules['targets'], rules['value'])
 
-        elif rules['operation'] == 'sum_greater':
-            total = 0
-            for target in rules['targets']:
-                app = target[0]
-                attr_list = self._parse_target_variable(target[1])
-
-                local_value = self._get_variable(app, attr_list)
-                if local_value is None:
-                    continue
-
-                total += float(local_value)
-
-            achieved = total >= rules['value']
-        else:
-            achieved = None
-
-        return achieved
+        return None
 
     @staticmethod
     def is_push_back(item):

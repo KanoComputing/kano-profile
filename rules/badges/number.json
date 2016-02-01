@@ -60,6 +60,10 @@
       [
         "linux-story",
         "level"
+      ],
+      [
+        "make-light",
+        "level"
       ]
     ],
     "title": "First Challenge",
@@ -89,6 +93,10 @@
       ],
       [
         "linux-story",
+        "level"
+      ],
+      [
+        "make-light",
         "level"
       ]
     ],
@@ -120,6 +128,10 @@
       [
         "linux-story",
         "level"
+      ],
+      [
+        "make-light",
+        "level"
       ]
     ],
     "title": "10 Challenges",
@@ -150,6 +162,10 @@
       [
         "linux-story",
         "level"
+      ],
+      [
+        "make-light",
+        "level"
       ]
     ],
     "title": "25 Challenges",
@@ -179,6 +195,10 @@
       ],
       [
         "linux-story",
+        "level"
+      ],
+      [
+        "make-light",
         "level"
       ]
     ],

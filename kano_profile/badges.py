@@ -69,13 +69,14 @@ def calculate_xp():
     return int(points) + qm.evaluate_xp()
 
 
+def get_group_progress(group_profile):
+    if 'challengeNo' not in group_profile:
+        return 0
+
+    return group_profile['challengeNo']
+
+
 def calculate_app_progress(app_name):
-    def get_group_progress(group_profile):
-        if 'challengeNo' not in group_profile:
-            return 0
-
-        return group_profile['challengeNo']
-
     app_profile = load_app_state(app_name)
     progress = 0
 

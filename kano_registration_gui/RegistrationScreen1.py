@@ -22,6 +22,7 @@ from kano_profile.tracker import track_data, \
 from kano.utils import run_bg
 
 from kano_registration_gui.GetData import GetData1
+from kano_registration_gui.cache_functions import cache_data
 from kano_profile.paths import bin_dir
 
 
@@ -73,6 +74,35 @@ class RegistrationScreen1(Gtk.Box):
         # if age == -1:
         #     self._show_error_dialog(error[0], error[1])
         #     return
+
+        if not is_internet():
+            kd = KanoDialog(
+                "You don't have internet",
+                "Do you want to connect to WiFi?",
+                [
+                    {
+                        "label": "YES",
+                        "color": "green",
+                        "return_value": 0
+                    },
+                    {
+                        "label": "NO",
+                        "color": "red",
+                        "return_value": 1
+                    }
+                ],
+                parent_window=self.win
+            )
+            response = kd.run()
+
+            # Close the dialog
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+
+            if response == 0:
+                subprocess.Popen("sudo kano-wifi-gui", shell=True)
+
+            return
 
         # Get the username, password and birthday
         data = self.data_screen.get_widget_data()
@@ -215,36 +245,6 @@ class RegistrationScreen1(Gtk.Box):
         if return_value == "SUCCEED":
             Gtk.main_quit()
 
-    def _check_for_internet(self):
-        if not is_internet():
-            kd = KanoDialog(
-                "You don't have internet",
-                "Do you want to connect to WiFi?",
-                [
-                    {
-                        "label": "YES",
-                        "color": "green",
-                        "return_value": 0
-                    },
-                    {
-                        "label": "NO",
-                        "color": "red",
-                        "return_value": 1
-                    }
-                ],
-                parent_window=self.win
-            )
-            response = kd.run()
-
-            # Close the dialog
-            while Gtk.events_pending():
-                Gtk.main_iteration()
-
-            if response == 0:
-                subprocess.Popen("sudo kano-wifi-gui", shell=True)
-
-            return
-
     def create_dialog(self, title, description):
         kdialog = KanoDialog(
             title,
@@ -253,3 +253,37 @@ class RegistrationScreen1(Gtk.Box):
         )
         rv = kdialog.run()
         return rv
+
+    def collect_new_username(self):
+        username_entry = Gtk.Entry()
+
+        kdialog = KanoDialog(
+            title_text=_("Oops, that username has already been taken!"),
+            description_text=_("Try picking another one."),
+            button_dict=[
+                {
+                    "label": _("OK").upper()
+                },
+                {
+                    "label": ("Cancel").upper(),
+                    "return_value": "CANCEL",
+                    "color": "red"
+                }
+            ],
+            widget=username_entry,
+            has_entry=True,
+            parent_window=self.win
+        )
+        rv = kdialog.run()
+        if rv == "CANCEL":
+            # let dialog close, do nothing
+            self.page_control.enable_buttons()
+            self.data_screen.enable_all()
+            self.win.get_window().set_cursor(None)
+        else:
+            # rv will be the entry contents
+            self.win.data["username"] = rv
+
+            # Store this in kano profile straight away
+            cache_data("username", rv)
+            self.register_handler()

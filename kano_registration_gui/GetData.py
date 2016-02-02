@@ -70,11 +70,12 @@ class GetData1(DataTemplate):
         DataTemplate.__init__(self)
 
         # Set the birthday to be False by default
-        self._is_birthday_valid = False
+        # self._is_birthday_valid = False
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         # This data contains the saved username and birthday
         data = self.get_cached_username_and_birthday()
+        email = get_cached_data("email")
 
         self._username = LabelledEntry("Username", data["username"])
         self._username.connect("key-release-event", self.validate_username)
@@ -84,21 +85,21 @@ class GetData1(DataTemplate):
         stay_safe.set_margin_left(30)
         stay_safe.set_margin_bottom(10)
 
-        logger.debug("Checking for internet")
+        # logger.debug("Checking for internet")
 
         # Do not fill this in
         self._password = LabelledEntry(_("Password"))
         self._password.connect("key-release-event", self.validate_password)
 
-        self.bday_widget = BirthdayWidget(
-            data['birthday_day'],
-            data['birthday_month'],
-            data['birthday_year']
-        )
-        self.bday_widget.connect('birthday-valid', self._birthday_valid)
-        self.bday_widget.connect('birthday-invalid', self._birthday_invalid)
+        # self.bday_widget = BirthdayWidget(
+        #     data['birthday_day'],
+        #     data['birthday_month'],
+        #     data['birthday_year']
+        # )
+        # self.bday_widget.connect('birthday-valid', self._birthday_valid)
+        # self.bday_widget.connect('birthday-invalid', self._birthday_invalid)
 
-        self.update_birthday_widget_from_cache()
+        # self.update_birthday_widget_from_cache()
         self.validate_username()
 
         self.show_password = Gtk.CheckButton.new_with_label(_("Show password"))
@@ -107,12 +108,24 @@ class GetData1(DataTemplate):
         self.show_password.set_active(True)
         self.show_password.set_margin_left(30)
 
-        self.bday_widget.connect("bday-key-release-event", self.widgets_full)
+        self.email_entry = LabelledEntry(_("Email Address"), email)
+        self.email_entry.set_placeholder_text('E.g. johndoe@example.com')
+        self.email_entry.connect('key-release-event', self.widgets_full)
+        self.secondary_email_entry = None
+
+        self.t_and_cs = TermsAndConditions()
+        self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
+        self.t_and_cs.connect("t-and-cs-clicked",
+                              self.show_terms_and_conditions)
+
+        # self.bday_widget.connect("bday-key-release-event", self.widgets_full)
         box.pack_start(self._username, False, False, 5)
         box.pack_start(stay_safe, False, False, 0)
         box.pack_start(self._password, False, False, 5)
-        box.pack_start(self.show_password, False, False, 0)
-        box.pack_start(self.bday_widget, False, False, 15)
+        box.pack_start(self.show_password, False, False, 5)
+        # box.pack_start(self.bday_widget, False, False, 15)
+        box.pack_start(self.email_entry, False, False, 5)
+        box.pack_start(self.t_and_cs, False, False, 25)
 
         box.set_margin_top(20)
 
@@ -150,16 +163,16 @@ class GetData1(DataTemplate):
 
         self.widgets_full()
 
-    def _birthday_valid(self, widget=None, event=None):
-        self._is_birthday_valid = True
-        self.widgets_full()
+    # def _birthday_valid(self, widget=None, event=None):
+    #     self._is_birthday_valid = True
+    #     self.widgets_full()
 
-    def _birthday_invalid(self, widget=None, event=None):
-        self._is_birthday_valid = False
-        self.widgets_full()
+    # def _birthday_invalid(self, widget=None, event=None):
+    #     self._is_birthday_valid = False
+    #     self.widgets_full()
 
-    def calculate_age(self):
-        return self.bday_widget.calculate_age()
+    # def calculate_age(self):
+    #     return self.bday_widget.calculate_age()
 
     def enable_all(self):
         self.checkbutton.set_sensitive(True)
@@ -172,13 +185,14 @@ class GetData1(DataTemplate):
 
         data['username'] = self._username.get_text()
         data['password'] = self._password.get_text()
+        data['email'] = self.email_entry.get_text()
 
-        bday_data = self.bday_widget.get_birthday_data()
-        data.update(bday_data)
+        # bday_data = self.bday_widget.get_birthday_data()
+        # data.update(bday_data)
 
-        data['age'] = self.bday_widget.calculate_age()
+        # data['age'] = self.bday_widget.calculate_age()
 
-        logger.debug("data from data screen 1 {}".format(data))
+        # logger.debug("data from data screen 1 {}".format(data))
         return data
 
     # To be passed to the registration screen
@@ -188,41 +202,86 @@ class GetData1(DataTemplate):
         data = self.get_widget_data()
 
         cache_data("username", data['username'])
-        cache_data("birthday_day", data['day'])
-        cache_data("birthday_day_index", data["day_index"])
-        cache_data("birthday_month", data['month'])
-        cache_data("birthday_month_index", data["month_index"])
-        cache_data("birthday_year", data['year'])
-        cache_data("birthday_year_index", data["year_index"])
+        # cache_data("birthday_day", data['day'])
+        # cache_data("birthday_day_index", data["day_index"])
+        # cache_data("birthday_month", data['month'])
+        # cache_data("birthday_month_index", data["month_index"])
+        # cache_data("birthday_year", data['year'])
+        # cache_data("birthday_year_index", data["year_index"])
 
-    def update_birthday_widget_from_cache(self):
-        self.bday_widget.set_birthday_data(
-            get_cached_data("birthday_year_index"),
-            get_cached_data("birthday_month_index"),
-            get_cached_data("birthday_day_index")
-        )
+    # def update_birthday_widget_from_cache(self):
+    #     self.bday_widget.set_birthday_data(
+    #         get_cached_data("birthday_year_index"),
+    #         get_cached_data("birthday_month_index"),
+    #         get_cached_data("birthday_day_index")
+    #     )
+
+    def cache_emails(self):
+        data = self.get_email_entry_data()
+        cache_emails(data["email"])
 
     def get_cached_username_and_birthday(self):
         username = get_cached_data("username")
-        birthday_day = get_cached_data("birthday_day")
-        birthday_month = get_cached_data("birthday_month")
-        birthday_year = get_cached_data("birthday_year")
+        # birthday_day = get_cached_data("birthday_day")
+        # birthday_month = get_cached_data("birthday_month")
+        # birthday_year = get_cached_data("birthday_year")
         return {
             "username": username,
-            "birthday_day": birthday_day,
-            "birthday_month": birthday_month,
-            "birthday_year": birthday_year
+            # "birthday_day": birthday_day,
+            # "birthday_month": birthday_month,
+            # "birthday_year": birthday_year
         }
+
+    def get_email_entry_data(self):
+        '''This is the data that is sent to the main window and the
+        registration
+        '''
+
+        data = {}
+
+        data['email'] = self.email_entry.get_text()
+        # if self.secondary_email_entry:
+        #     data['secondary_email'] = self.secondary_email_entry.get_text()
+        # else:
+        #     data['secondary_email'] = ""
+
+        # data["marketing_enabled"] = self.marketing_checkbutton.get_active()
+
+        # Cache emails if they are retrieved
+        cache_emails(
+            data["email"],
+            # data["secondary_email"],
+            # data["marketing_enabled"]
+        )
+        return data
 
     def widgets_full(self, widget=None, event=None):
         if (self._username.validated and
                 self._password.validated and
-                self._is_birthday_valid):
+                self.t_and_cs.checkbutton.get_active()):  # and
+                # self._is_birthday_valid):
             logger.debug("emitting widgets-full")
             self.emit('widgets-filled')
         else:
             logger.debug("emitting widgets-empty")
             self.emit('widgets-empty')
+
+    def show_terms_and_conditions(self, widget):
+        '''This is the dialog containing the terms and conditions - same as
+        shown before creating an account
+        '''
+        window = widget.get_toplevel()
+
+        # TODO: Figure out how/whether the legal text will be translated
+        legal_text = ''
+        for file in os.listdir(legal_dir):
+            with open(legal_dir + file, 'r') as f:
+                legal_text = legal_text + f.read() + '\n\n\n'
+
+        kdialog = KanoDialog(_("Terms and conditions"), "",
+                             scrolled_text=legal_text,
+                             parent_window=window)
+        kdialog.run()
 
 
 class GetData2(DataTemplate):
@@ -284,7 +343,6 @@ class GetData2(DataTemplate):
 
         self.add(box)
 
-
     def _create_marketing_checkbox(self):
         self.marketing_checkbutton = Gtk.CheckButton()
         self.marketing_checkbutton.get_style_context().add_class(
@@ -336,8 +394,11 @@ class GetData2(DataTemplate):
         data["marketing_enabled"] = self.marketing_checkbutton.get_active()
 
         # Cache emails if they are retrieved
-        cache_emails(data["email"], data["secondary_email"], data["marketing_enabled"])
-
+        cache_emails(
+            data["email"],
+            data["secondary_email"],
+            data["marketing_enabled"]
+        )
         return data
 
     def cache_emails(self):

@@ -83,6 +83,9 @@ class LabelledEntry(Gtk.Box):
     def set_visibility(self, value):
         return self._entry.set_visibility(value)
 
+    def set_placeholder_text(self, text):
+        self._entry.set_placeholder_text(text)
+
     def get_text(self):
         return self._entry.get_text()
 

@@ -29,11 +29,14 @@ def _remove_sensitive_data(request_debug):
        and request_debug['data']:
 
         import ast
-        data = ast.literal_eval(str(request_debug['data']))
+        try:
+            data = ast.literal_eval(str(request_debug['data']))
 
-        if 'password' in data:
-            data['password'] = 'removed'
-            request_debug['data'] = data
+            if 'password' in data:
+                data['password'] = 'removed'
+                request_debug['data'] = data
+        except:
+            logger.warn('Failed to parse request data')
 
     return request_debug
 

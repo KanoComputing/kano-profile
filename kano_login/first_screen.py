@@ -19,7 +19,7 @@ from kano_login.templates.template import Template
 from kano_login.swag_screen import SwagScreen
 from kano.network import is_internet
 from kano_profile_gui.images import get_image
-from kano_registration_gui.RegistrationScreen1 import RegistrationScreen1
+from kano_registration_gui.RegistrationScreen import RegistrationScreen
 
 
 class FirstScreenTemplate(Gtk.Box):
@@ -94,7 +94,7 @@ class FirstScreen(FirstScreenTemplate):
 
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             self.win.remove_main_widget()
-            RegistrationScreen1(self.win)
+            RegistrationScreen(self.win)
 
     def exit_registration(self, widget, event):
         self.win.remove_main_widget()

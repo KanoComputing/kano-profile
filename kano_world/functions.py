@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-
 # functions.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2016 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+
 
 import json
 
@@ -13,6 +12,7 @@ from kano.utils import get_user_unsudoed, is_number
 
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
+
 
 glob_session = None
 
@@ -33,28 +33,17 @@ def login(login_name, password):
         return False, 'Cannot log in, problem: {}'.format(text)
 
 
-# def register(email, username, password, date_year, date_month, date_day,
-#              secondary_email='', marketing_enabled=False):
 def register(email, username, password, marketing_enabled=False):
     email = email.strip()
     username = username.strip()
     password = password.strip()
-    # if secondary_email:
-    #     secondary_email.strip()
-
-    # if not is_number(date_year) or not is_number(date_month) or not is_number(date_day):
-    #     return False, 'Date in bad format!'
 
     payload = {
         'email': email,
         'username': username,
         'password': password,
-        # 'birthdate': '{}-{}-{}'.format(date_year, date_month, date_day),
         'marketing_enabled_primary': str(marketing_enabled).lower()
     }
-
-    # if secondary_email:
-    #     payload['secondary_email'] = secondary_email
 
     success, text, data = request_wrapper('post', '/users', data=json.dumps(payload), headers=content_type_json)
     if success:

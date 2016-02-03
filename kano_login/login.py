@@ -30,7 +30,7 @@ from kano_world.functions import (login as login_, is_registered,
 from kano_login.templates.kano_button_box import KanoButtonBox
 from kano_login.swag_screen import SwagScreen
 
-from kano_registration_gui.RegistrationScreen1 import RegistrationScreen1
+from kano_registration_gui.RegistrationScreen import RegistrationScreen
 
 profile = load_profile()
 force_login = is_registered() and 'kanoworld_username' in profile
@@ -158,7 +158,7 @@ class Login(Gtk.Box):
         '''Go to the first registration screen.
         '''
         self.win.remove_main_widget()
-        RegistrationScreen1(self.win)
+        RegistrationScreen(self.win)
 
     def activate(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:

@@ -194,8 +194,8 @@ elif sys.argv[1] == 'get_world_info':
     check_arg_len(1)
     # Notifications
     try:
-        unread_notifications = load_profile()['notifications']
-        print 'notifications: {}'.format(unread_notifications)
+        total_unread = len(load_profile()['notifications'])
+        print 'notifications_count: {}'.format(total_unread)
     except Exception:
         print 'notifications not found'
     # Stats activity

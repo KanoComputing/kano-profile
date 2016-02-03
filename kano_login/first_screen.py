@@ -1,24 +1,28 @@
-#!/usr/bin/env python
-
 # first_screen.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2016 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # First screen of profile on first run
 # Launched on straight after kano-settings
 # Dependent on internet connection
 
+
 import os
+
 from gi.repository import Gtk
 
 from kano.gtk3.buttons import KanoButton, OrangeButton
 from kano.gtk3.heading import Heading
-from kano_login.login import Login
-from kano_login.templates.template import Template
-from kano_login.swag_screen import SwagScreen
+
 from kano.network import is_internet
+
+from kano_login.login import Login
+from kano_login.swag_screen import SwagScreen
+from kano_login.templates.template import Template
+
 from kano_profile_gui.images import get_image
+
 from kano_registration_gui.RegistrationScreen import RegistrationScreen
 
 

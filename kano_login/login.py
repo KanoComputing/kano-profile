@@ -1,36 +1,37 @@
-#!/usr/bin/env python
-
 # login.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2016 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # UI for login screen
 
-import threading
+
 import sys
-from gi.repository import Gtk, Gdk, GObject
+import threading
 
-from kano.network import is_internet
-from kano.logging import logger
+from gi.repository import GObject, Gdk, Gtk
 
-from kano.utils import run_bg
 from kano.gtk3.buttons import KanoButton
-from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.heading import Heading
+from kano.gtk3.kano_dialog import KanoDialog
 from kano.gtk3.labelled_entries import LabelledEntries
+from kano.logging import logger
+from kano.network import is_internet
+from kano.utils import run_bg
+
+from kano_login.swag_screen import SwagScreen
+from kano_login.templates.kano_button_box import KanoButtonBox
 
 from kano_profile.paths import bin_dir
 from kano_profile.profile import load_profile, save_profile_variable
 from kano_profile.tracker import save_hardware_info, save_kano_version
-from kano_world.functions import (login as login_, is_registered,
-                                  reset_password, get_email,
-                                  get_mixed_username)
-
-from kano_login.templates.kano_button_box import KanoButtonBox
-from kano_login.swag_screen import SwagScreen
 
 from kano_registration_gui.RegistrationScreen import RegistrationScreen
+
+from kano_world.functions import get_email, get_mixed_username, is_registered, \
+    reset_password
+from kano_world.functions import login as login_
+
 
 profile = load_profile()
 force_login = is_registered() and 'kanoworld_username' in profile

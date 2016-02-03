@@ -1,8 +1,9 @@
 # connection.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2016 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
+
 
 import requests
 
@@ -29,11 +30,14 @@ def _remove_sensitive_data(request_debug):
        and request_debug['data']:
 
         import ast
-        data = ast.literal_eval(str(request_debug['data']))
+        try:
+            data = ast.literal_eval(str(request_debug['data']))
 
-        if 'password' in data:
-            data['password'] = 'removed'
-            request_debug['data'] = data
+            if 'password' in data:
+                data['password'] = 'removed'
+                request_debug['data'] = data
+        except:
+            logger.warn('Failed to parse request data')
 
     return request_debug
 

@@ -1,12 +1,12 @@
-#!/usr/bin/env python
-
 # TermsAndConditions.py
 #
-# Copyright (C) 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# Copyright (C) 2015-2016 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
-from gi.repository import Gtk, GObject
+
+from gi.repository import GObject, Gtk
+
 from kano.gtk3.buttons import OrangeButton
 
 
@@ -24,10 +24,6 @@ class TermsAndConditions(Gtk.Box):
 
         self.tc_button = OrangeButton(_("I agree to the terms and conditions"))
         self.tc_button.connect("clicked", self._emit_t_and_c_signal)
-
-        tc_label = self.tc_button.label
-        tc_label.set_max_width_chars(20)
-        tc_label.set_line_wrap(True)
 
         self.pack_start(self.checkbutton, False, False, 0)
         self.pack_start(self.tc_button, False, False, 0)

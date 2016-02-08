@@ -78,5 +78,13 @@
     "operation": "each_greater",
     "targets": [["kano-draw", "groups.mischiefweek2015.challengeNo", 7]],
     "title": "Mischief Maker"
+  },
+  "pixelhack": {
+    "bg_color": "ffc07a",
+    "desc_locked": "Tackle the Pixel Hack challenges in Make Art to unlock this badge...",
+    "desc_unlocked": "You pummelled the pixels, you were victorious over vectors, successfully hacking your way through decades of videogame history.",
+    "operation": "each_greater",
+    "targets": [["kano-draw","groups.pixelhack.challengeNo", 13]],
+    "title": "Pixel Hack"
   }
 }

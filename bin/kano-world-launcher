@@ -19,8 +19,6 @@ from kano_profile.tracker import Tracker
 from kano_profile.apps import save_app_state_variable
 from kano_profile.quests import Quests
 
-chromium_folder = os.path.join(get_home(), '.config/chromium/')
-chromium_local_state = os.path.join(chromium_folder, 'Local State')
 
 kanotracker = Tracker()
 
@@ -28,33 +26,77 @@ kanotracker = Tracker()
 save_app_state_variable('kano-world-launcher', 'opened', True)
 Quests().trigger_event('kano-world-launched')
 
-def modify_local_state():
-    logger.info('modify_local_state')
-    data = read_json(chromium_local_state)
+class epiphany_browser:
+    epiphany_folder = os.path.join(get_home(), '.config/epiphany_world/')
+    default_user_agent = "Mozilla/5.0 (Macintosh; ARM Mac OS X) AppleWebKit/538.15 (KHTML, like Gecko) Safari/538.15 Version/6.0 Raspbian/8.0 (1:3.8.2.0-0rpi27rpi1g) Epiphany/3.8.2"
+    def __init__(self):
+        pass
 
-    try:
-        data['protocol_handler']['excluded_schemes']['kano'] = False
-    except Exception:
-        data['protocol_handler'] = {
-            'excluded_schemes': {
-                'kano': False
+    def ensure_state(self):
+        from gi.repository import GLib
+        from gi.repository import Gio
+        e_settings = Gio.Settings.new("org.gnome.Epiphany")
+        # add armv6l to user agent string so kano world knows we are a pi.
+        e_settings.set_value("user-agent",GLib.Variant('s',self.default_user_agent + " armv6l"))
+
+        ensure_dir(self.epiphany_folder)
+
+    def get_cmd(self, url, token, redirect):
+        # get command to launch browser with no url bar
+        return "epiphany  -a --profile={} {}/login/{}{}".format(self.epiphany_folder, url, token, redirect)
+    
+class chromium_browser:
+
+    chromium_folder = os.path.join(get_home(), '.config/chromium/')
+    chromium_local_state = os.path.join(chromium_folder, 'Local State')
+    
+    def __init__(self):
+        pass
+
+    def ensure_state(self):
+        # Check local state
+        if os.path.exists(self.chromium_local_state):
+            try:
+                self._modify_local_state()
+            except Exception:
+                self._create_local_state()
+            else:
+                self._create_local_state()
+
+
+
+    def _modify_local_state(self):
+        logger.info('modify_local_state')
+        data = read_json(self.chromium_local_state)
+        
+        try:
+            data['protocol_handler']['excluded_schemes']['kano'] = False
+        except Exception:
+            data['protocol_handler'] = {
+                'excluded_schemes': {
+                    'kano': False
+                }
+            }
+
+        write_json(self.chromium_local_state, data)
+            
+
+    def _create_local_state(self):
+        logger.info('create_local_state')
+        ensure_dir(self.chromium_folder)
+        data = {
+            'protocol_handler': {
+                'excluded_schemes': {
+                    'kano': False
+                }
             }
         }
-
-    write_json(chromium_local_state, data)
-
-
-def create_local_state():
-    logger.info('create_local_state')
-    ensure_dir(chromium_folder)
-    data = {
-        'protocol_handler': {
-            'excluded_schemes': {
-                'kano': False
-            }
-        }
-    }
-    write_json(chromium_local_state, data)
+        write_json(self.chromium_local_state, data)
+        
+    def get_cmd(self, url, token, redirect):
+        # get command to launch browser with no url bar
+        return "chromium --window-size=1000,700 --app={}/login/{}{}".format(url, token, redirect)
+        
 
 # Check internet status
 if not is_internet():
@@ -71,23 +113,23 @@ if not is_registered():
     # Launch login screen
     os.system('/usr/bin/kano-login 3')
 
-# Check local state
-if os.path.exists(chromium_local_state):
-    try:
-        modify_local_state()
-    except Exception:
-        create_local_state()
+# Choose browser.
+browser_path = os.readlink('/etc/alternatives/x-www-browser')
+if 'epiphany' in browser_path:
+    browser = epiphany_browser()
 else:
-    create_local_state()
+    browser = chromium_browser()
+browser.ensure_state()
 
 # Check for redirection
 redirect = ""
 if len(sys.argv) >= 2:
     redirect = "?redirect={}".format(sys.argv[1])
 
-# Launch Chromium, and then kano-stop-splash once the window is mapped
-run_cmd("xtoolwait -timeout 5000000 chromium --window-size=1000,700 --app={}/login/{}{}; kano-stop-splash"
-        .format(WORLD_URL, get_token(), redirect))
+# Launch browser, and then kano-stop-splash once the window is mapped
+browser_cmd = browser.get_cmd(WORLD_URL, get_token(), redirect)
+run_cmd("xtoolwait -timeout 5000000 {}; kano-stop-splash"
+        .format(browser_cmd))
 
 # sync
 run_bg('kano-sync --sync -s')

@@ -83,12 +83,26 @@ class AvatarBaseAccessory(AvatarBase):
         """
         return self._asset_fname
 
+    def get_fname_overworld(self):
+        """ Provides the accessory's asset filename for overworld
+        :returns: filename as a string
+        :rtype: string
+        """
+        return self._asset_fname_overworld
+
     def get_img(self):
         """ Get the image instance for the accessory.
         :returns: Image instance (from PIL module)
         :rtype: Image class (from PIL module)
         """
         return self._img
+
+    def get_img_overworld(self):
+        """ Get the image instance for the accessory for overworld.
+        :returns: Image instance (from PIL module)
+        :rtype: Image class (from PIL module)
+        """
+        return self._img_overworld
 
     def set_category(self, cat_obj):
         if not self._category:
@@ -147,6 +161,7 @@ class AvatarAccessory(AvatarBaseAccessory):
         # if an absolute path is given use it instead, so that we can
         # override elements
         self._asset_fname = content_dir.get_file('ITEM_DIR', file_name)
+        self._asset_fname_overworld = content_dir.get_file('ITEM_OVERWORLD_DIR', file_name)
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def __repr__(self):
@@ -158,15 +173,16 @@ class AvatarAccessory(AvatarBaseAccessory):
         externally.
         """
         self._img = Image.open(self.get_fname())
+        self._img_overworld = Image.open(self.get_fname_overworld())
 
-    def paste_over_image(self, img):
+    def paste_over_image(self, img, img_overworld):
         """ Pastes the item's image over a character's base image. The
         position of where the image will be pasted is specified by the x,y
         coordinates given during the class' instantiation. (x,y are distances
         in pixels of the top left corner)
         :param img: PIL Image class on which the pasting will occur
         """
-        if self.get_img() is None:
+        if self.get_img() is None or self.get_img_overworld() is None:
             self.load_image()
         # position of upper left corner
         position = (self._img_position_x, self._img_position_y)
@@ -176,6 +192,13 @@ class AvatarAccessory(AvatarBaseAccessory):
         item = Image.merge('RGB', (r, g, b))
         transp_mask = Image.merge("L", (a,))
         img.paste(item, position, transp_mask)
+
+        # repeat for overworld image, but no offset
+
+        r, g, b, a = self._img_overworld.split()
+        item = Image.merge('RGB', (r, g, b))
+        transp_mask = Image.merge("L", (a,))
+        img_overworld.paste(item, (0, 0), transp_mask)
 
 
 class AvatarCharacter(AvatarBaseAccessory):
@@ -215,6 +238,7 @@ class AvatarCharacter(AvatarBaseAccessory):
             date_created=date_created, unlocked=is_unlocked)
 
         self._asset_fname = content_dir.get_file('CHARACTER_DIR', file_name)
+        self._asset_fname_overworld = content_dir.get_file('CHARACTER_OVERWORLD_DIR', file_name)
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
         self._crop_x = x
@@ -228,6 +252,7 @@ class AvatarCharacter(AvatarBaseAccessory):
         pasting the item over a character.
         """
         self._img = Image.open(self.get_fname())
+        self._img_overworld = Image.open(self.get_fname_overworld())
 
     def save_image(self, file_name):
         """ Save character image (together with items that have been pasted on
@@ -235,6 +260,13 @@ class AvatarCharacter(AvatarBaseAccessory):
         :param file_name: filename to be saved to as a string
         """
         self._img.save(file_name)
+
+    def save_image_overworld(self, file_name):
+        """ Save character image (together with items that have been pasted on
+        it), to a file.
+        :param file_name: filename to be saved to as a string
+        """
+        self._img_overworld.save(file_name)
 
     def generate_circular_assets(self, file_name_plain, file_name_ring):
         """ This function creates the circular assets that are required for the

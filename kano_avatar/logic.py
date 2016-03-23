@@ -9,7 +9,8 @@ import random
 
 from kano_avatar.paths import (AVATAR_CONF_FILE,
                                AVATAR_SCRATCH, AVATAR_DEFAULT_LOC,
-                               AVATAR_DEFAULT_NAME, AVATAR_SELECTED_ITEMS)
+                               AVATAR_DEFAULT_NAME, AVATAR_SELECTED_ITEMS,
+                               AVATAR_OVERWORLD)
 from kano.logging import logger
 
 from kano_profile.profile import (set_avatar, set_environment,
@@ -360,7 +361,7 @@ class AvatarCreator(AvatarConfParser):
         for zindex in sorted(self._sel_objs_per_zindex.keys()):
             items = self._sel_objs_per_zindex[zindex]
             for item in items:
-                item.paste_over_image(self._sel_char.get_img())
+                item.paste_over_image(self._sel_char.get_img(),self._sel_char.get_img_overworld())
 
         # write to specified location
         fname_actual = file_name[:]
@@ -371,6 +372,11 @@ class AvatarCreator(AvatarConfParser):
             fname_actual = AVATAR_SCRATCH
             if not os.path.isdir(os.path.dirname(fname_actual)):
                 os.makedirs(os.path.dirname(fname_actual))
+
+        # save overworld avatar
+        if not os.path.isdir(os.path.dirname(AVATAR_OVERWORLD)):
+            os.makedirs(os.path.dirname(AVATAR_OVERWORLD))
+        self._sel_char.save_image_overworld(AVATAR_OVERWORLD)
 
         if not self._sel_env:
             logger.error("Haven't selected environment, can't save character")
@@ -664,9 +670,11 @@ def get_avatar_conf(aux_files=[]):
     conf = None
 
     cm = ContentManager.from_local()
-    for k in cm.list_local_objects(spec='kano-character'):
+    for k in cm.list_local_objects(spec='kano-character-v2'):
         content_dir.register_path(
             'CHARACTER_DIR', k.get_data('character_base').get_dir())
+        content_dir.register_path(
+            'CHARACTER_OVERWORLD_DIR', k.get_data('character_overworld_base').get_dir())
         content_dir.register_path(
             'PREVIEW_ICONS', k.get_data('character_thumb').get_dir())
         content_dir.register_path(
@@ -677,9 +685,10 @@ def get_avatar_conf(aux_files=[]):
         content_dir.register_path(
             'PREVIEW_ICONS', k.get_data('previews').get_dir())
         content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        content_dir.register_path('ITEM_OVERWORLD_DIR', k.get_data('assets_overworld').get_dir())
         aux_files.append(k.get_data('').get_content()[0])
 
-    for k in cm.list_local_objects(spec='kano-character-category'):
+    for k in cm.list_local_objects(spec='kano-character-category-v2'):
         content_dir.register_path(
             'ACTIVE_CATEGORY_ICONS', k.get_data('active_cat_icon').get_dir())
         content_dir.register_path(
@@ -688,12 +697,14 @@ def get_avatar_conf(aux_files=[]):
         content_dir.register_path(
             'PREVIEW_ICONS', k.get_data('previews').get_dir())
         content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        content_dir.register_path('ITEM_OVERWORLD_DIR', k.get_data('assets_overworld').get_dir())
         aux_files.append(k.get_data('').get_content()[0])
 
-    for k in cm.list_local_objects(spec='kano-character-items'):
+    for k in cm.list_local_objects(spec='kano-character-items-v2'):
         content_dir.register_path(
             'PREVIEW_ICONS', k.get_data('previews').get_dir())
         content_dir.register_path('ITEM_DIR', k.get_data('assets').get_dir())
+        content_dir.register_path('ITEM_OVERWORLD_DIR', k.get_data('assets_overworld').get_dir())
         aux_files.append(k.get_data('').get_content()[0])
 
     with open(AVATAR_CONF_FILE) as f:

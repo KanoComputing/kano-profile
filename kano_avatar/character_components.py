@@ -162,8 +162,6 @@ class AvatarAccessory(AvatarBaseAccessory):
         # override elements
         self._asset_fname = content_dir.get_file('ITEM_DIR', file_name)
         self._asset_fname_overworld = content_dir.get_file('ITEM_OVERWORLD_DIR', file_name)
-        if self._asset_fname_overworld is None:
-            print "Failed to find:", file_name
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def __repr__(self):

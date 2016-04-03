@@ -408,9 +408,12 @@ def save_app_state_with_dialog(app_name, data):
         return
 
     if is_gui():
+        # Open the fifo in append mode, as if it is not
+        # present, notifications are queued in a flat file
+
         fifo = open(
             os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'),
-            'w'
+            'a'
         )
         with fifo:
             for notification in (new_level_str + ' ' + new_items_str).split(' '):

@@ -10,7 +10,7 @@ import random
 from kano_avatar.paths import (AVATAR_CONF_FILE,
                                AVATAR_SCRATCH, AVATAR_DEFAULT_LOC,
                                AVATAR_DEFAULT_NAME, AVATAR_SELECTED_ITEMS,
-                               AVATAR_OVERWORLD)
+                               AVATAR_OVERWORLD, AVATAR_PONG)
 from kano.logging import logger
 
 from kano_profile.profile import (set_avatar, set_environment,
@@ -377,6 +377,10 @@ class AvatarCreator(AvatarConfParser):
         if not os.path.isdir(os.path.dirname(AVATAR_OVERWORLD)):
             os.makedirs(os.path.dirname(AVATAR_OVERWORLD))
         self._sel_char.save_image_overworld(AVATAR_OVERWORLD)
+        # save pong avatar
+        if not os.path.isdir(os.path.dirname(AVATAR_PONG)):
+            os.makedirs(os.path.dirname(AVATAR_PONG))
+        self._sel_char.save_image_overworld(AVATAR_PONG)
 
         if not self._sel_env:
             logger.error("Haven't selected environment, can't save character")

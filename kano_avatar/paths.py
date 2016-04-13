@@ -18,6 +18,7 @@ AVATAR_ENV_SHIFTED = 'character_inc_env_page2.png'
 AVATAR_CIRC_PLAIN_DEFAULT = 'character_circ_plain.png'
 AVATAR_SELECTED_ITEMS = os.path.join(AVATAR_DEFAULT_LOC, 'character_log.json')
 AVATAR_OVERWORLD = os.path.join(get_home(), '.local/share/love/kanoOverworld/res/images/avatar.png')
+AVATAR_PONG = os.path.join(get_home(), '.local/share/love/kanoPong/res/images/avatar.png')
 
 AVATAR_CONF_FILE = '/usr/share/kano-profile/rules/avatar_generator/conf.json'
 PROFILE_IMAGES_FOLDER = '/usr/share/kano-profile/media/images'

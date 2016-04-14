@@ -371,6 +371,27 @@ def load_online_badges():
     return online_badges
 
 
+def write_notifications(filename, notifications):
+    # write badge lines to the fifo. Ignore timeouts
+    # and the other end not having the fifo open.
+    try:
+        fifo = os.open(
+            filename,
+            os.O_WRONLY | os.O_NONBLOCK | os.O_APPEND
+        )
+    except OSError:
+        # probably the other end doesn't have the fifo open
+        return
+    try:
+        for notification in notifications:
+            if len(notification) > 0:
+                logger.debug(
+                    "Showing the {} notification".format(notification)
+                )
+                os.write(fifo,'{}\n'.format(notification))
+    finally:
+        os.close(fifo)
+
 def save_app_state_with_dialog(app_name, data):
     logger.debug('save_app_state_with_dialog {}'.format(app_name))
 
@@ -410,18 +431,13 @@ def save_app_state_with_dialog(app_name, data):
     if is_gui():
         # Open the fifo in append mode, as if it is not
         # present, notifications are queued in a flat file
-
-        fifo = open(
-            os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo'),
-            'a'
-        )
-        with fifo:
-            for notification in (new_level_str + ' ' + new_items_str).split(' '):
-                if len(notification) > 0:
-                    logger.debug(
-                        "Showing the {} notification".format(notification)
-                    )
-                    fifo.write('{}\n'.format(notification))
+        notifications = (new_level_str + ' ' + new_items_str).split(' ')
+        
+        # Write  to both the dashboard and the desktop widget
+        f1 = os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo')
+        f2 = os.path.join(os.path.expanduser('~'), '.kano-notifications-desktop.fifo')
+        write_notifications(f1, notifications)
+        write_notifications(f2, notifications)
 
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)

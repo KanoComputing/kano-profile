@@ -3,6 +3,17 @@
 %:
 	dh $@
 
+.PHONY: override_dh_strip
+override_dh_strip:
+	dh_strip -plibkano-profile --dbg-package=libkano-profile-dbg
+	dh_strip -plibkano-world --dbg-package=libkano-world-dbg
+
 override_dh_auto_build:
 	bash media/images/clean-images.sh
 	cd lxpanel-plugin && make
+
+	cd libs/kano-profile && make
+	cd libs/kano-profile && make debug
+
+	cd libs/kano-world && make
+	cd libs/kano-world && make debug

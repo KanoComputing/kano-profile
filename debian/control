@@ -4,7 +4,8 @@ Section: admin
 Priority: optional
 Standards-Version: 3.9.4
 Build-Depends: debhelper (>= 9), build-essential, pkg-config, libgtk2.0-dev,
-               lxpanel (>= 0.7.0), libfm-dev, libkdesk-dev
+               lxpanel (>= 0.7.0), libfm-dev, libkdesk-dev, libparson-dev,
+               python-dev, libkano-python-dev
 
 Package: kano-profile
 Architecture: all
@@ -17,3 +18,53 @@ Description: Profile app for KANO
 Provides: kano-share
 Conflicts: kano-share
 Replaces: kano-share
+
+Package: libkano-profile
+Architecture: any
+Depends: ${misc:Depends},
+         python,
+         libparson,
+         libkano-python
+Description: Kano Profile functions
+ Libraries to interface with Kano Profile
+
+Package: libkano-profile-dbg
+Architecture: any
+Depends: ${misc:Depends},
+         python,
+         libparson,
+         libkano-python
+Description: Kano Profile functions
+ Libraries to interface with Kano Profile
+
+Package: libkano-profile-dev
+Architecture: any
+Depends: ${misc:Depends},
+         python,
+         libparson-dev,
+         libkano-python,
+         libkano-profile (= ${source:Version})
+Description: Kano Profile functions
+ Libraries to interface with Kano Profile
+
+Package: libkano-world
+Architecture: any
+Depends: ${misc:Depends},
+         libkano-python
+Description: Kano World functions
+ Libraries to interface with Kano World
+
+Package: libkano-world-dbg
+Architecture: any
+Depends: ${misc:Depends},
+         libkano-python
+Description: Kano World functions
+ Libraries to interface with Kano World
+
+Package: libkano-world-dev
+Architecture: any
+Depends: ${misc:Depends},
+         libkano-python,
+         libkano-world (= ${source:Version})
+Description: Kano World functions
+ Libraries to interface with Kano World

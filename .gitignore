@@ -2,6 +2,8 @@
 /kano
 **.DS_Store
 *.swp
+*.so*
+*.dylib
 
 # Ignore tags created by etags, ctags, gtags (GNU global) and cscope
 TAGS

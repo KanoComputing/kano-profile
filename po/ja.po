@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kano-tutorial\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-31 09:01+0900\n"
+"POT-Creation-Date: 2016-05-31 21:22+0900\n"
 "PO-Revision-Date: 2016-05-19 20:29+0900\n"
 "Last-Translator: Choppin Antoine <antoine@japonophile.com>\n"
 "Language-Team: Japanese\n"
@@ -51,7 +51,7 @@ msgstr "君のオンラインプロフィールを作ろう"
 
 #: ../kano_login/first_screen.py:38
 msgid "So you can save badges, games, and projects"
-msgstr "そうすれば、バッジ、ゲーム、プロジェクトなどを保存できるようになる"
+msgstr "バッジ、ゲーム、プロジェクトなどを保存できるようになる"
 
 #: ../kano_login/first_screen.py:121
 msgid "Oops! You need Internet to make a profile"
@@ -109,7 +109,7 @@ msgstr "WiFiかイーサーネットで接続し、やり直して下さい"
 #: ../kano_login/login.py:197
 #: ../kano_registration_gui/RegistrationScreen.py:117
 msgid "Houston, we have a problem"
-msgstr "ヒューストン、問題だ！"
+msgstr "あれあれ、問題発生！"
 
 #: ../kano_login/login.py:245 ../kano_login/login.py:339
 msgid "Success!"
@@ -181,7 +181,7 @@ msgid ""
 "Your profile stores all your rewards, projects, and challenges. But fear not "
 "- we'll save everything for when you have internet."
 msgstr ""
-"君の全ての賞やプロジェクトやチャレンジなどがプロフィールに保存される。"
+"君の全ての賞やプロジェクトやチャレンジがプロフィールに保存される。\n"
 "でも大丈夫。インターネットに繋がるまでに全て取っておくよ。"
 
 #: ../kano_profile_gui/badge_screen.py:45
@@ -213,6 +213,20 @@ msgstr "修正を保存"
 #: ../kano_profile_gui/character_screens.py:118
 msgid "Discard"
 msgstr "修正を破棄"
+
+#: ../kano_profile_gui/MenuBar.py:46 ../kano_profile_gui/MenuBar.py:53
+#: ../kano_profile_gui/MenuBar.py:69 ../kano_profile_gui/MenuBar.py:76
+#: ../kano_profile_gui/MenuBar.py:100
+msgid "CHARACTER"
+msgstr "キャラクター"
+
+#: ../kano_profile_gui/MenuBar.py:53
+msgid "BADGES"
+msgstr "バッジ"
+
+#: ../kano_profile_gui/MenuBar.py:64
+msgid "QUESTS"
+msgstr "クエスト"
 
 #: ../kano_profile_gui/MenuBar.py:164
 msgid "Level {}"
@@ -286,8 +300,43 @@ msgstr "Kanoワールドに参加する"
 msgid ""
 "Now you can share stuff, build your character, and connect with friends."
 msgstr ""
-"これで作品を共有したり、キャラクターを作ったり、仲間と連絡を取り合ったりすることができる。"
+"これで作品を共有したり、キャラクターを作ったり、仲間と連絡を取り合ったりする"
+"ことができる。"
 
 #: ../kano_registration_gui/TermsAndConditions.py:25
 msgid "I agree to the terms and conditions"
 msgstr "規約と条件に同意します"
+
+#: ../kano_world/functions.py:33
+msgid "Cannot log in, problem: {}"
+msgstr "ログイン出来ません： {}"
+
+#: ../kano_world/functions.py:52
+msgid "Cannot register, problem: {}"
+msgstr "登録出来ません： {}"
+
+#: ../kano_world/functions.py:77
+msgid "We cannot reach the Kano server. Try again in a few minutes. Error = {}"
+msgstr "Kanoサーバーに接続できません。数分後に再度やってみてください。 {}"
+
+#: ../kano_world/functions.py:108
+msgid "Not registered!"
+msgstr "登録されていません！"
+
+#: ../kano_world/functions.py:110
+msgid "No token!"
+msgstr "トークンがありません！"
+
+#: ../kano_world/functions.py:122 ../kano_world/functions.py:149
+#: ../kano_world/functions.py:156 ../kano_world/functions.py:163
+#: ../kano_world/functions.py:233 ../kano_world/share.py:57
+#: ../kano_world/share.py:66 ../kano_world/share.py:75
+#: ../kano_world/share.py:84 ../kano_world/share.py:94
+#: ../kano_world/share.py:103 ../kano_world/share.py:111
+#: ../kano_world/share.py:119
+msgid "You are not logged in!"
+msgstr "ログインしていません！"
+
+#: ../kano_world/share_helpers.py:33
+msgid "Cannot login"
+msgstr "ログインできません"

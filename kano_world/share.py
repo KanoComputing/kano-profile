@@ -54,7 +54,7 @@ def post_comment(share_id, comment):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.post_comment(share_id, comment)
 
@@ -63,7 +63,7 @@ def like_share(share_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.like_share(share_id)
 
@@ -72,7 +72,7 @@ def unlike_share(share_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.unlike_share(share_id)
 
@@ -81,7 +81,7 @@ def get_following():
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     user_id = get_kano_world_id()
     return glob_session.get_users_following(user_id)
@@ -91,7 +91,7 @@ def follow_user(user_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.follow_user(user_id)
 
@@ -100,7 +100,7 @@ def unfollow_user(user_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.unfollow_user(user_id)
 
@@ -108,7 +108,7 @@ def unfollow_user(user_id):
 def upload_share(file_path, title, app_name):
     glob_session = get_glob_session()
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.upload_share(file_path, title, app_name)
 
@@ -116,7 +116,7 @@ def upload_share(file_path, title, app_name):
 def delete_share(share_id):
     glob_session = get_glob_session()
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.delete_share(share_id)
 

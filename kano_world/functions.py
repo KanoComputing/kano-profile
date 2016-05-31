@@ -30,7 +30,7 @@ def login(login_name, password):
     if success:
         return login_register_data(data)
     else:
-        return False, 'Cannot log in, problem: {}'.format(text)
+        return False, _('Cannot log in, problem: {}').format(text)
 
 
 def register(email, username, password, marketing_enabled=False):
@@ -49,7 +49,7 @@ def register(email, username, password, marketing_enabled=False):
     if success:
         return login_register_data(data)
     else:
-        return False, 'Cannot register, problem: {}'.format(text)
+        return False, _('Cannot register, problem: {}').format(text)
 
 
 def login_register_data(data):
@@ -74,7 +74,7 @@ def login_register_data(data):
         glob_session = KanoWorldSession(profile['token'])
         return True, None
     except Exception as e:
-        return False, 'We cannot reach the Kano server. Try again in a few minutes. Error = {}'.format(str(e))
+        return False, _('We cannot reach the Kano server. Try again in a few minutes. Error = {}').format(str(e))
 
 
 def is_registered():
@@ -105,9 +105,9 @@ def login_using_token():
     global glob_session
 
     if not is_registered():
-        return False, 'Not registered!'
+        return False, _('Not registered!')
     if not has_token():
-        return False, 'No token!'
+        return False, _('No token!')
 
     try:
         profile = load_profile()
@@ -119,7 +119,7 @@ def login_using_token():
 
 def sync():
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     success, value = glob_session.upload_profile_stats()
     if not success:
@@ -146,21 +146,21 @@ def sync():
 
 def backup_content(file_path):
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.backup_content(file_path)
 
 
 def restore_content(file_path):
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     return glob_session.restore_content(file_path)
 
 
 def upload_tracking_data():
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     success, value = glob_session.upload_tracking_data()
     if not success:
@@ -230,7 +230,7 @@ def reset_password(email):
 
 def mark_notification_read(n_id):
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _('You are not logged in!')
 
     success, text, data = request_wrapper(
         'post',

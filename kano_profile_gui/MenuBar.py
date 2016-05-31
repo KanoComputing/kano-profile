@@ -43,14 +43,14 @@ class MenuBar(Gtk.EventBox):
         # Home button
         self.home_button = HomeButton()
         self.home_button.connect("clicked", self.emit_home_signal)
-        self.home_button.connect("clicked", self.set_selected_wrapper, "CHARACTER")
+        self.home_button.connect("clicked", self.set_selected_wrapper, _("CHARACTER"))
         hbox.pack_start(self.home_button, False, False, 0)
 
         close_button = self._create_cross_button()
         hbox.pack_end(close_button, False, False, 0)
         close_button.connect("clicked", self.close_window)
 
-        name_array = ['BADGES', 'CHARACTER'] # TODO: add 'QUESTS' to enable
+        name_array = [_('BADGES'), _('CHARACTER')] # TODO: add 'QUESTS' to enable
         for name in name_array:
             button = MenuButton(name, self._quests)
             button.connect("clicked", self.emit_menu_signal, name)
@@ -61,19 +61,19 @@ class MenuBar(Gtk.EventBox):
             self.buttons[name] = {}
             self.buttons[name]["button"] = button
 
-            if name == "QUESTS":
+            if name == _("QUESTS"):
                 # check the notification image
                 button.check_for_notification()
 
             # HACKY: avoiding packing the label divider after the last element
-            if name != "CHARACTER":
+            if name != _("CHARACTER"):
                 label = self._create_divider_label()
                 hbox.pack_end(label, False, False, 0)
 
             attach_cursor_events(button)
 
         # initialise with the CHARACTER button selected
-        self.set_selected("CHARACTER")
+        self.set_selected(_("CHARACTER"))
 
     def _create_divider_label(self):
         label = Gtk.Label("|")
@@ -97,7 +97,7 @@ class MenuBar(Gtk.EventBox):
         self.emit("menu-button-clicked", name)
 
     def emit_home_signal(self, widget):
-        self.emit('home-button-clicked', 'CHARACTER')
+        self.emit('home-button-clicked', _('CHARACTER'))
 
     def get_selected_button(self):
         return self.selected

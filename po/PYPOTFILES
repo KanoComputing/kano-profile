@@ -12,3 +12,7 @@
 ../kano_registration_gui/PageControl.py
 ../kano_registration_gui/RegistrationScreen.py
 ../kano_registration_gui/TermsAndConditions.py
+../kano_world/functions.py
+../kano_world/session.py
+../kano_world/share.py
+../kano_world/share_helpers.py

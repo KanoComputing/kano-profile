@@ -30,6 +30,6 @@ def login_and_share(file_path, title, app_name):
         run_cmd('kano-login -r')
         success, unused = login_using_token()
         if not success:
-            return False, 'Cannot login'
+            return False, _('Cannot login')
 
     return upload_share(file_path, title, app_name)

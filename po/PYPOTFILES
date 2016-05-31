@@ -1,0 +1,14 @@
+../kano_login/components/logged_in.py
+../kano_login/first_screen.py
+../kano_login/login.py
+../kano_login/swag_screen.py
+../kano_profile_gui/badge_screen.py
+../kano_profile_gui/character_screens.py
+../kano_profile_gui/MenuBar.py
+../kano_profile_gui/QuestInfo.py
+../kano_profile_gui/projects.py
+../kano_registration_gui/BirthdayWidget.py
+../kano_registration_gui/GetData.py
+../kano_registration_gui/PageControl.py
+../kano_registration_gui/RegistrationScreen.py
+../kano_registration_gui/TermsAndConditions.py

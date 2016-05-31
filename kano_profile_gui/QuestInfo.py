@@ -112,7 +112,7 @@ class QuestInfo(Gtk.EventBox):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         background.add(vbox)
 
-        title = Gtk.Label("Rewards")
+        title = Gtk.Label(_("Rewards"))
         title.set_alignment(xalign=0.5, yalign=0.5)
         title.set_padding(xpad=10, ypad=10)
         title.get_style_context().add_class("reward_title")

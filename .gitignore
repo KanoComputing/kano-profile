@@ -4,6 +4,7 @@
 *.swp
 *.so*
 *.dylib
+*~
 
 # Ignore tags created by etags, ctags, gtags (GNU global) and cscope
 TAGS
@@ -24,3 +25,6 @@ cscope.po.out
 # Ignore locked versions of original files
 media/images/environments/originals/**/*_locked.png
 media/images/badges/originals/**/*_locked.png
+
+.mo
+po/messages.pot

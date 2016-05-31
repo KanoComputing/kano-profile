@@ -146,7 +146,7 @@ class GetData(DataTemplate):
         if len(username) == 0:
             self._username.label_success("")
         elif check_username(username):
-            self._username.label_success(_(""), "success")
+            self._username.label_success("", "success")
         else:
             self._username.label_success(_(" is invalid"), "fail")
 

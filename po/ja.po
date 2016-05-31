@@ -1,0 +1,293 @@
+# Japanese translations for kano-tutorial package.
+# Copyright (C) 2016 Kano Computing Ltd.
+# This file is distributed under the same license as the kano-tutorial package.
+# Choppin Antoine <antoine@japonophile.com>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kano-tutorial\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-31 09:01+0900\n"
+"PO-Revision-Date: 2016-05-19 20:29+0900\n"
+"Last-Translator: Choppin Antoine <antoine@japonophile.com>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../kano_login/components/logged_in.py:24 ../kano_login/login.py:258
+msgid "OK"
+msgstr "了解"
+
+#: ../kano_login/components/logged_in.py:28
+msgid "Logged in!"
+msgstr "ログイン完了！"
+
+#: ../kano_login/components/logged_in.py:28
+msgid "You're already logged in"
+msgstr "すでにログイン中"
+
+#: ../kano_login/components/logged_in.py:46
+msgid "Logged out!"
+msgstr "ログアウト完了！"
+
+#: ../kano_login/first_screen.py:34
+msgid "Create"
+msgstr "作成"
+
+#: ../kano_login/first_screen.py:35
+msgid "Skip"
+msgstr "飛ばす"
+
+#: ../kano_login/first_screen.py:36
+msgid "I have a profile"
+msgstr "すでにプロフィールを持っている"
+
+#: ../kano_login/first_screen.py:37
+msgid "Now let's make your online Profile"
+msgstr "君のオンラインプロフィールを作ろう"
+
+#: ../kano_login/first_screen.py:38
+msgid "So you can save badges, games, and projects"
+msgstr "そうすれば、バッジ、ゲーム、プロジェクトなどを保存できるようになる"
+
+#: ../kano_login/first_screen.py:121
+msgid "Oops! You need Internet to make a profile"
+msgstr "おっと、プロフィールを作るにはインターネットが必要だよ"
+
+#: ../kano_login/first_screen.py:123
+msgid "But you can skip this if you have no connection right now"
+msgstr "でもインターネット接続がなければ、これを飛ばして進められる"
+
+#: ../kano_login/first_screen.py:127
+msgid "Connect"
+msgstr "接続する"
+
+#: ../kano_login/first_screen.py:128
+msgid "Register later"
+msgstr "後で登録する"
+
+#: ../kano_login/login.py:52 ../kano_login/login.py:80
+msgid "Login"
+msgstr "ログイン"
+
+#: ../kano_login/login.py:53
+msgid "Enter your username and password"
+msgstr "ユーザー名とパスワードを入力して下さい"
+
+#: ../kano_login/login.py:64
+msgid "Username"
+msgstr "ユーザー名"
+
+#: ../kano_login/login.py:65 ../kano_login/login.py:127
+#: ../kano_registration_gui/GetData.py:91
+msgid "Password"
+msgstr "パスワード"
+
+#: ../kano_login/login.py:81
+msgid "Create New"
+msgstr "新規作成"
+
+#: ../kano_login/login.py:82
+msgid "Forgotten password?"
+msgstr "パスワード忘れた？"
+
+#: ../kano_login/login.py:108
+msgid " Username:  "
+msgstr " ユーザー名：  "
+
+#: ../kano_login/login.py:176
+msgid "You don't have internet!"
+msgstr "インターネット接続がない！"
+
+#: ../kano_login/login.py:178
+msgid "Connect with wifi or ethernet and try again"
+msgstr "WiFiかイーサーネットで接続し、やり直して下さい"
+
+#: ../kano_login/login.py:197
+#: ../kano_registration_gui/RegistrationScreen.py:117
+msgid "Houston, we have a problem"
+msgstr "ヒューストン、問題だ！"
+
+#: ../kano_login/login.py:245 ../kano_login/login.py:339
+msgid "Success!"
+msgstr "成功！"
+
+#: ../kano_login/login.py:246
+msgid "You're in - online features now enabled."
+msgstr "入れた - オンライン機能が使用可能"
+
+#: ../kano_login/login.py:292
+msgid "Reset your password"
+msgstr "パスワードリセット"
+
+#: ../kano_login/login.py:293
+msgid "We'll send a new password to your email"
+msgstr "新しいパスワードをメールで送ります"
+
+#: ../kano_login/login.py:298
+msgid "Email"
+msgstr "メール"
+
+#: ../kano_login/login.py:315
+msgid "Reset password"
+msgstr "パスワードをリセットする"
+
+#: ../kano_login/login.py:340
+msgid "Sent new password to your email"
+msgstr "新しいパスワードをメールで送りました"
+
+#: ../kano_login/login.py:342
+msgid "Go to login screen"
+msgstr "ログイン画面へ"
+
+#: ../kano_login/login.py:343 ../kano_login/login.py:349
+msgid "Quit"
+msgstr "終了"
+
+#: ../kano_login/login.py:346
+msgid "Something went wrong!"
+msgstr "失敗しました！"
+
+#: ../kano_login/login.py:350
+msgid "Try again"
+msgstr "やり直す"
+
+#: ../kano_login/swag_screen.py:28
+#: ../kano_registration_gui/RegistrationScreen.py:136
+msgid "Profile activated!"
+msgstr "プロフィールが有効です！"
+
+#: ../kano_login/swag_screen.py:30
+msgid ""
+"Now you can share stuff, build your character, and connect with friends! "
+"You've earned some rewards…"
+msgstr ""
+"これで作品を共有したり、キャラクターを作ったり、仲間と連絡を取り合ったりする"
+"ことができる！"
+
+#: ../kano_login/swag_screen.py:35 ../kano_login/swag_screen.py:44
+msgid "Let's go"
+msgstr "レッツゴー"
+
+#: ../kano_login/swag_screen.py:37
+msgid "No online profile - for now."
+msgstr "オンライン・プロフィール無し（今のところ）"
+
+#: ../kano_login/swag_screen.py:39
+msgid ""
+"Your profile stores all your rewards, projects, and challenges. But fear not "
+"- we'll save everything for when you have internet."
+msgstr ""
+"君の全ての賞やプロジェクトやチャレンジなどがプロフィールに保存される。"
+"でも大丈夫。インターネットに繋がるまでに全て取っておくよ。"
+
+#: ../kano_profile_gui/badge_screen.py:45
+msgid "Next page"
+msgstr "次のページへ"
+
+#: ../kano_profile_gui/badge_screen.py:49
+#: ../kano_profile_gui/badge_screen.py:245
+msgid "Previous"
+msgstr "前のページへ"
+
+#: ../kano_profile_gui/badge_screen.py:249
+msgid "Back to grid"
+msgstr "一覧へ戻る"
+
+#: ../kano_profile_gui/badge_screen.py:253
+#: ../kano_registration_gui/PageControl.py:27
+msgid "Next"
+msgstr "次へ"
+
+#: ../kano_profile_gui/character_screens.py:34
+msgid "Edit"
+msgstr "編集"
+
+#: ../kano_profile_gui/character_screens.py:109
+msgid "Save changes"
+msgstr "修正を保存"
+
+#: ../kano_profile_gui/character_screens.py:118
+msgid "Discard"
+msgstr "修正を破棄"
+
+#: ../kano_profile_gui/MenuBar.py:164
+msgid "Level {}"
+msgstr "レベル{}"
+
+#: ../kano_profile_gui/QuestInfo.py:115
+msgid "Rewards"
+msgstr "賞"
+
+#: ../kano_profile_gui/projects.py:86
+msgid "Make"
+msgstr "作成"
+
+#: ../kano_registration_gui/BirthdayWidget.py:65
+msgid "Birthday"
+msgstr "誕生日"
+
+#: ../kano_registration_gui/BirthdayWidget.py:146
+msgid " date is in the future"
+msgstr "　将来の日付"
+
+#: ../kano_registration_gui/BirthdayWidget.py:150
+msgid " year out of range"
+msgstr "　年は範囲外"
+
+#: ../kano_registration_gui/BirthdayWidget.py:152
+msgid " is valid"
+msgstr "　有効"
+
+#: ../kano_registration_gui/GetData.py:96
+msgid "Show password"
+msgstr "パスワードを表示"
+
+#: ../kano_registration_gui/GetData.py:102
+msgid "Email Address"
+msgstr "メールアドレス"
+
+#: ../kano_registration_gui/GetData.py:138
+msgid " looks good!"
+msgstr "　よさそう！"
+
+#: ../kano_registration_gui/GetData.py:140
+msgid " is not valid"
+msgstr "　無効"
+
+#: ../kano_registration_gui/GetData.py:151
+msgid " is invalid"
+msgstr "　無効"
+
+#: ../kano_registration_gui/GetData.py:226
+msgid "Terms and conditions"
+msgstr "規約と条件"
+
+#: ../kano_registration_gui/PageControl.py:26
+msgid "Back"
+msgstr "戻る"
+
+#: ../kano_registration_gui/RegistrationScreen.py:40
+msgid "Kano World"
+msgstr "Kanoワールド"
+
+#: ../kano_registration_gui/RegistrationScreen.py:41
+msgid "Choose a cool name and secure password"
+msgstr "かっこいい名前と難しいパスワードを選ぼう"
+
+#: ../kano_registration_gui/RegistrationScreen.py:50
+msgid "Join Kano World"
+msgstr "Kanoワールドに参加する"
+
+#: ../kano_registration_gui/RegistrationScreen.py:137
+msgid ""
+"Now you can share stuff, build your character, and connect with friends."
+msgstr ""
+"これで作品を共有したり、キャラクターを作ったり、仲間と連絡を取り合ったりすることができる。"
+
+#: ../kano_registration_gui/TermsAndConditions.py:25
+msgid "I agree to the terms and conditions"
+msgstr "規約と条件に同意します"

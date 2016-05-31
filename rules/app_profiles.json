@@ -47,6 +47,9 @@
     "cmd": "/usr/bin/make-light \"{fullpath}\"",
     "ext": "lightcode"
   },
+  "kano-overworld": {
+    "dir": ".local/share/love/kanoOverworld/sync"
+  },
   "kano-tracker": {
     "private": true
   },

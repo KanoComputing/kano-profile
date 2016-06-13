@@ -44,12 +44,12 @@ class epiphany_browser:
     def get_cmd(self, url, token, redirect):
         # get command to launch browser with no url bar
         return "epiphany -a --profile={} {}/login/{}{}".format(self.epiphany_folder, url, token, redirect)
-    
+
 class chromium_browser:
 
     chromium_folder = os.path.join(get_home(), '.config/chromium/')
     chromium_local_state = os.path.join(chromium_folder, 'Local State')
-    
+
     def __init__(self):
         pass
 
@@ -60,15 +60,15 @@ class chromium_browser:
                 self._modify_local_state()
             except Exception:
                 self._create_local_state()
-            else:
-                self._create_local_state()
+        else:
+            self._create_local_state()
 
 
 
     def _modify_local_state(self):
         logger.info('modify_local_state')
         data = read_json(self.chromium_local_state)
-        
+
         try:
             data['protocol_handler']['excluded_schemes']['kano'] = False
         except Exception:
@@ -79,7 +79,7 @@ class chromium_browser:
             }
 
         write_json(self.chromium_local_state, data)
-            
+
 
     def _create_local_state(self):
         logger.info('create_local_state')

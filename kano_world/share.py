@@ -12,6 +12,11 @@ from kano_profile.paths import app_profiles_file
 from kano.logging import logger
 from .connection import request_wrapper, content_type_json
 from .functions import get_glob_session, get_kano_world_id
+import gettext
+
+
+def _(text):
+    return gettext.dgettext('kano-tutorial', text).decode('UTF-8')
 
 
 def list_shares(app_name=None, page=0, featured=False, user_id=None):

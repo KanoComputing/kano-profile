@@ -6,6 +6,11 @@
 from kano.utils.shell import run_cmd
 from .functions import login_using_token
 from .share import upload_share
+import gettext
+
+
+def _(text):
+    return gettext.dgettext('kano-tutorial', text).decode('UTF-8')
 
 
 def login_and_share(file_path, title, app_name):

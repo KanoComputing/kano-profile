@@ -8,10 +8,15 @@
 import json
 
 from kano_profile.profile import load_profile, save_profile
-from kano.utils import get_user_unsudoed, is_number
+from kano.utils import get_user_unsudoed
 
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
+import gettext
+
+
+def _(text):
+    return gettext.dgettext('kano-tutorial', text).decode('UTF-8')
 
 
 glob_session = None

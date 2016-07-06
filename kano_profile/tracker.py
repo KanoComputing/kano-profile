@@ -141,7 +141,8 @@ def session_start(name, pid=None):
         "started": int(time.time()),
         "elapsed": 0,
         "app_session_id": str(uuid5(uuid1(), name + str(pid))),
-        "finished": False
+        "finished": False,
+        "token-system": TOKEN
     }
 
     path = get_session_file_path(data['name'], data['pid'])
@@ -318,6 +319,7 @@ def get_session_event(session):
 
         "name": session['name'],
         "length": session['elapsed'],
+        "token-system": session.get('token-system', '')
     }
 
 

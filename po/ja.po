@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kano-tutorial\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-31 21:22+0900\n"
+"POT-Creation-Date: 2016-07-06 22:09+0900\n"
 "PO-Revision-Date: 2016-05-19 20:29+0900\n"
 "Last-Translator: Choppin Antoine <antoine@japonophile.com>\n"
 "Language-Team: Japanese\n"
@@ -214,19 +214,13 @@ msgstr "修正を保存"
 msgid "Discard"
 msgstr "修正を破棄"
 
-#: ../kano_profile_gui/MenuBar.py:46 ../kano_profile_gui/MenuBar.py:53
-#: ../kano_profile_gui/MenuBar.py:69 ../kano_profile_gui/MenuBar.py:76
-#: ../kano_profile_gui/MenuBar.py:100
-msgid "CHARACTER"
-msgstr "キャラクター"
-
 #: ../kano_profile_gui/MenuBar.py:53
 msgid "BADGES"
 msgstr "バッジ"
 
-#: ../kano_profile_gui/MenuBar.py:64
-msgid "QUESTS"
-msgstr "クエスト"
+#: ../kano_profile_gui/MenuBar.py:53
+msgid "CHARACTER"
+msgstr "キャラクター"
 
 #: ../kano_profile_gui/MenuBar.py:164
 msgid "Level {}"
@@ -255,6 +249,19 @@ msgstr "　年は範囲外"
 #: ../kano_registration_gui/BirthdayWidget.py:152
 msgid " is valid"
 msgstr "　有効"
+
+#: ../kano_registration_gui/BirthdayWidget.py:235
+msgid "Oops!"
+msgstr "おっと！"
+
+#: ../kano_registration_gui/BirthdayWidget.py:236
+msgid "You haven't entered a valid birthday"
+msgstr "有効な誕生日を記入していません"
+
+#: ../kano_registration_gui/BirthdayWidget.py:279
+#, python-brace-format
+msgid "There's a problem - {0}"
+msgstr "問題が発生しました - {0}"
 
 #: ../kano_registration_gui/GetData.py:96
 msgid "Show password"
@@ -340,3 +347,6 @@ msgstr "ログインしていません！"
 #: ../kano_world/share_helpers.py:33
 msgid "Cannot login"
 msgstr "ログインできません"
+
+#~ msgid "QUESTS"
+#~ msgstr "クエスト"

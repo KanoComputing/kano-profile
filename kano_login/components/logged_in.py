@@ -24,7 +24,7 @@ class LoggedIn(Gtk.Window):
         self.ok_button = KanoButton(_("OK"))
         self.ok_button.pack_and_align()
         self.ok_button.set_padding(20, 20, 0, 0)
-        self.ok_button.connect("clicked", Gtk.main_quit)
+        self.ok_button.connect('clicked', Gtk.main_quit)
         self.title = Heading(_("Logged in!"), _("You're already logged in"))
         self.main_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, spacing=0)
@@ -34,7 +34,7 @@ class LoggedIn(Gtk.Window):
 
         # To get a logout button, uncomment out the lines below
         #self.logout_button = OrangeButton(_("Log out?"))
-        #self.logout_button.connect("clicked", self.logout)
+        #self.logout_button.connect('clicked', self.logout)
         #self.main_container.pack_start(self.logout_button, False, False, 0)
 
         self.connect('delete-event', Gtk.main_quit)

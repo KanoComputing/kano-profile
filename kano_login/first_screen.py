@@ -31,7 +31,7 @@ class FirstScreenTemplate(Gtk.Box):
     def __init__(self):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
-        kano_button_text = _("Create").upper()
+        kano_button_text = _("CREATE")
         skip_button_text = _("Skip")
         login_button_text = _("I have a profile")
         header = _("Now let's make your online Profile")
@@ -43,7 +43,7 @@ class FirstScreenTemplate(Gtk.Box):
         self.login_button = OrangeButton(login_button_text)
 
         image_filename = get_image(
-            "login", "", "first-screen", str(img_width) + 'x' + str(img_height)
+            'login', "", 'first-screen', str(img_width) + 'x' + str(img_height)
         )
         self.image = Gtk.Image.new_from_file(image_filename)
         self.pack_start(self.image, False, False, 0)
@@ -71,16 +71,16 @@ class FirstScreen(FirstScreenTemplate):
         self.win.set_decorated(False)
         self.win.set_main_widget(self)
 
-        self.kano_button.connect("button_release_event", self.register_screen)
+        self.kano_button.connect('button_release_event', self.register_screen)
         self.login_button.connect(
-            "button_release_event", self.login_screen
+            'button_release_event', self.login_screen
         )
         self.skip_button.connect(
-            "button_release_event", self.exit_registration
+            'button_release_event', self.exit_registration
         )
 
         self.kano_button.connect(
-            "key_release_event", self.register_screen
+            'key_release_event', self.register_screen
         )
         self.button_box.set_margin_bottom(30)
         self.kano_button.grab_focus()
@@ -122,22 +122,22 @@ class NoInternet(Template):
         subheader = _(
             "But you can skip this if you have no connection right now"
         )
-        image_filename = get_image("login", "", "no-internet",
+        image_filename = get_image('login', "", 'no-internet',
                                    str(img_width) + 'x' + str(img_height))
-        kano_button_label = _("Connect").upper()
+        kano_button_label = _("CONNECT")
         orange_button_label = _("Register later")
 
         Template.__init__(self, image_filename, header, subheader,
                           kano_button_label, orange_button_label)
 
         self.win.set_main_widget(self)
-        self.kano_button.connect("button_release_event", self.connect)
+        self.kano_button.connect('button_release_event', self.connect)
 
         # Since cannot pass with keyboard, set it so it cannot receive
         # keyboard focus
         self.kano_button.set_can_focus(False)
 
-        self.orange_button.connect("button_release_event", self.register_later)
+        self.orange_button.connect('button_release_event', self.register_later)
         self.kano_button.grab_focus()
         self.win.show_all()
 

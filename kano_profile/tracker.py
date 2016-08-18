@@ -57,9 +57,9 @@ def load_token():
 
     if os.path.exists(tracker_token_file):
         try:
-            f = open_locked(tracker_token_file, "r")
+            f = open_locked(tracker_token_file, 'r')
         except IOError as e:
-            logger.error('Error opening tracker token file {}'.format(e))
+            logger.error("Error opening tracker token file {}".format(e))
         else:
             with f:
                 return f.read().strip()
@@ -81,10 +81,10 @@ def generate_tracker_token():
 
     ensure_dir(tracker_dir)
     try:
-        f = open_locked(tracker_token_file, "w")
+        f = open_locked(tracker_token_file, 'w')
     except IOError as e:
         logger.error(
-            'Error opening tracker token file (generate) {}'.format(e))
+            "Error opening tracker token file (generate) {}".format(e))
     else:
         with f:
             f.write(token)
@@ -95,7 +95,7 @@ def generate_tracker_token():
     try:
         f = open(tracker_events_file, 'a')
     except IOError as e:
-        logger.error('Error opening tracker events file {}'.format(e))
+        logger.error("Error opening tracker events file {}".format(e))
     else:
         f.close()
         if 'SUDO_USER' in os.environ:
@@ -119,15 +119,15 @@ def get_session_unique_id(name, pid):
     try:
         af = open_locked(tracker_session_file, 'r')
     except (IOError, OSError) as e:
-        logger.error('Error while opening session file'.format(e))
+        logger.error("Error while opening session file".format(e))
     else:
         with af:
             try:
                 data = json.load(af)
             except ValueError as e:
-                logger.error('Session file is not a valid JSON')
+                logger.error("Session file is not a valid JSON")
 
-    return data.get("app_session_id", "")
+    return data.get('app_session_id', "")
 
 
 def session_start(name, pid=None):
@@ -136,21 +136,21 @@ def session_start(name, pid=None):
     pid = int(pid)
 
     data = {
-        "pid": pid,
-        "name": name,
-        "started": int(time.time()),
-        "elapsed": 0,
-        "app_session_id": str(uuid5(uuid1(), name + str(pid))),
-        "finished": False,
-        "token-system": TOKEN
+        'pid': pid,
+        'name': name,
+        'started': int(time.time()),
+        'elapsed': 0,
+        'app_session_id': str(uuid5(uuid1(), name + str(pid))),
+        'finished': False,
+        'token-system': TOKEN
     }
 
     path = get_session_file_path(data['name'], data['pid'])
 
     try:
-        f = open_locked(path, "w")
+        f = open_locked(path, 'w')
     except IOError as e:
-        logger.error('Error opening tracker session file {}'.format(e))
+        logger.error("Error opening tracker session file {}".format(e))
     else:
         with f:
             json.dump(data, f)
@@ -162,27 +162,27 @@ def session_start(name, pid=None):
 
 def session_end(session_file):
     if not os.path.exists(session_file):
-        msg = "Someone removed the tracker file, the runtime of this " + \
-            "app will not be logged"
+        msg = "Someone removed the tracker file, the runtime of this " \
+              "app will not be logged"
         logger.warn(msg)
         return
 
     try:
-        rf = open_locked(session_file, "r")
+        rf = open_locked(session_file, 'r')
     except IOError as e:
-        logger.error('Error opening the tracker session file {}'.format(e))
+        logger.error("Error opening the tracker session file {}".format(e))
     else:
         with rf:
             data = json.load(rf)
 
-            data["elapsed"] = int(time.time()) - data["started"]
-            data["finished"] = True
+            data['elapsed'] = int(time.time()) - data['started']
+            data['finished'] = True
 
             try:
-                wf = open(session_file, "w")
+                wf = open(session_file, 'w')
             except IOError as e:
                 logger.error(
-                    'Error opening the tracker session file {}'.format(e))
+                    "Error opening the tracker session file {}".format(e))
             else:
                 with wf:
                     json.dump(data, wf)
@@ -206,13 +206,13 @@ def session_log(name, started, length):
     try:
         af = open_locked(tracker_events_file, 'a')
     except IOError as e:
-        logger.error('Error while opening events file'.format(e))
+        logger.error("Error while opening events file".format(e))
     else:
         with af:
             session = {
-                "name": name,
-                "started": int(started),
-                "elapsed": int(length)
+                'name': name,
+                'started': int(started),
+                'elapsed': int(length)
             }
 
             event = get_session_event(session)
@@ -234,21 +234,21 @@ def track_data(name, data):
     """
 
     event = {
-        "type": "data",
-        "time": int(time.time()),
-        "timezone_offset": get_utc_offset(),
-        "os_version": OS_VERSION,
-        "cpu_id": CPU_ID,
-        "token": TOKEN,
+        'type': 'data',
+        'time': int(time.time()),
+        'timezone_offset': get_utc_offset(),
+        'os_version': OS_VERSION,
+        'cpu_id': CPU_ID,
+        'token': TOKEN,
 
-        "name": str(name),
-        "data": data
+        'name': str(name),
+        'data': data
     }
 
     try:
-        af = open_locked(tracker_events_file, "a")
+        af = open_locked(tracker_events_file, 'a')
     except IOError as e:
-        logger.error('Error opening tracker events file {}'.format(e))
+        logger.error("Error opening tracker events file {}".format(e))
     else:
         with af:
             af.write(json.dumps(event) + "\n")
@@ -266,7 +266,7 @@ def track_action(name):
     try:
         af = open_locked(tracker_events_file, 'a')
     except IOError as e:
-        logger.error('Error opening tracker events file {}'.format(e))
+        logger.error("Error opening tracker events file {}".format(e))
     else:
         with af:
             event = get_action_event(name)
@@ -295,14 +295,14 @@ def track_subprocess(name, cmd):
 
 def get_action_event(name):
     return {
-        "type": "action",
-        "time": int(time.time()),
-        "timezone_offset": get_utc_offset(),
-        "os_version": OS_VERSION,
-        "cpu_id": CPU_ID,
-        "token": TOKEN,
+        'type': 'action',
+        'time': int(time.time()),
+        'timezone_offset': get_utc_offset(),
+        'os_version': OS_VERSION,
+        'cpu_id': CPU_ID,
+        'token': TOKEN,
 
-        "name": name
+        'name': name
     }
 
 
@@ -310,16 +310,16 @@ def get_session_event(session):
     """ Construct the event data structure for a session. """
 
     return {
-        "type": "session",
-        "time": session['started'],
-        "timezone_offset": get_utc_offset(),
-        "os_version": OS_VERSION,
-        "cpu_id": CPU_ID,
-        "token": TOKEN,
+        'type': 'session',
+        'time': session['started'],
+        'timezone_offset': get_utc_offset(),
+        'os_version': OS_VERSION,
+        'cpu_id': CPU_ID,
+        'token': TOKEN,
 
-        "name": session['name'],
-        "length": session['elapsed'],
-        "token-system": session.get('token-system', '')
+        'name': session['name'],
+        'length': session['elapsed'],
+        'token-system': session.get('token-system', '')
     }
 
 
@@ -393,9 +393,9 @@ def add_runtime_to_app(app, runtime):
     app_state_file = get_app_state_file('kano-tracker')
 
     try:
-        tracker_store = open_locked(app_state_file, "r")
+        tracker_store = open_locked(app_state_file, 'r')
     except IOError as e:
-        logger.error('Error opening app state file {}'.format(e))
+        logger.error("Error opening app state file {}".format(e))
     else:
         app_stats = load_app_state_variable('kano-tracker', 'app_stats')
         if not app_stats:
@@ -478,9 +478,9 @@ def get_tracker_events(old_only=False):
     data = {'events': []}
 
     try:
-        rf = open_locked(tracker_events_file, "r")
+        rf = open_locked(tracker_events_file, 'r')
     except IOError as e:
-        logger.error('Error opening the tracker events file {}'.format(e))
+        logger.error("Error opening the tracker events file {}".format(e))
     else:
         with rf:
             for event_line in rf.readlines():
@@ -537,9 +537,9 @@ def clear_tracker_events(old_only=True):
         :type old_only: boolean
     """
     try:
-        rf = open_locked(tracker_events_file, "r")
+        rf = open_locked(tracker_events_file, 'r')
     except IOError as e:
-        logger.error('Error opening tracking events file {}'.format(e))
+        logger.error("Error opening tracking events file {}".format(e))
     else:
         with rf:
             events = []
@@ -551,7 +551,7 @@ def clear_tracker_events(old_only=True):
                 except:
                     logger.warn("Found a corrupted event, skipping.")
 
-            with open(tracker_events_file, "w") as wf:
+            with open(tracker_events_file, 'w') as wf:
                 for event_line in events:
                     wf.write(event_line)
             if 'SUDO_USER' in os.environ:

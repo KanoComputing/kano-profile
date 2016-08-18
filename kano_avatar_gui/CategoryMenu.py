@@ -164,16 +164,16 @@ class CategoryMenu(SelectMenu):
         button.add(icon)
         attach_cursor_events(button)
 
-        button.get_style_context().add_class("category_item")
-        button.connect("clicked", self._select_button_wrapper,
+        button.get_style_context().add_class('category_item')
+        button.connect('clicked', self._select_button_wrapper,
                        identifier)
 
         # Replace the grey icon with an orange on when the pointer
         # hovers over the button
-        button.connect("enter-notify-event",
+        button.connect('enter-notify-event',
                        self._add_selected_appearence_wrapper,
                        identifier)
-        button.connect("leave-notify-event",
+        button.connect('leave-notify-event',
                        self._remove_selected_appearence_wrapper,
                        identifier)
         return button

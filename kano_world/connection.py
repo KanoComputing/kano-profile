@@ -37,7 +37,7 @@ def _remove_sensitive_data(request_debug):
                 data['password'] = 'removed'
                 request_debug['data'] = data
         except:
-            logger.warn('Failed to parse request data')
+            logger.warn("Failed to parse request data")
 
     return request_debug
 
@@ -45,7 +45,7 @@ def _remove_sensitive_data(request_debug):
 def request_wrapper(method, endpoint, data=None, headers=None,
                     session=None, files=None, params=None):
     if method not in ['put', 'get', 'post', 'delete']:
-        return False, 'Wrong method name!', None
+        return False, "Wrong method name!", None
 
     if session:
         req_object = session
@@ -76,23 +76,23 @@ def request_wrapper(method, endpoint, data=None, headers=None,
         if r.ok:
             return r.ok, None, r.json()
         else:
-            logger.error('error in request to: {}'.format(API_URL + endpoint))
+            logger.error("error in request to: {}".format(API_URL + endpoint))
             logger.debug(pformat(_remove_sensitive_data(request_debug)))
-            logger.error('response:')
+            logger.error("response:")
             logger.error(r.text)
 
             if '<title>Application Error</title>' in r.text:
-                error_msg = 'We cannot reach the Kano server. Try again in a few minutes.'
+                error_msg = _("We cannot reach the Kano server. Try again in a few minutes.")
             else:
                 error_msg = r.text
             return r.ok, error_msg, None
 
     except requests.exceptions.ReadTimeout as e:
-        logger.error('timeout in response: {}'.format(e))
+        logger.error("timeout in response: {}".format(e))
         logger.debug(pformat(_remove_sensitive_data(request_debug)))
-        return False, 'Timeout waiting for server response, please check your internet connection and try again later.', None
+        return False, _("Timeout waiting for server response, please check your internet connection and try again later."), None
 
     except requests.exceptions.ConnectionError as e:
-        logger.error('connection error: {}'.format(e))
+        logger.error("connection error: {}".format(e))
         logger.debug(pformat(_remove_sensitive_data(request_debug)))
-        return False, 'Error connecting to servers, please check your internet connection and try again later.', None
+        return False, _("Error connecting to servers, please check your internet connection and try again later."), None

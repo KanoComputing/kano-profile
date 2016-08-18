@@ -34,10 +34,10 @@ class ProgressBar(Gtk.Fixed):
         self.total_width = window_width - 60
 
         self.progress = Gtk.EventBox()
-        self.progress.get_style_context().add_class("progress_bar")
+        self.progress.get_style_context().add_class('progress_bar')
 
         self.rest_of_bar = Gtk.EventBox()
-        self.rest_of_bar.get_style_context().add_class("rest_of_bar")
+        self.rest_of_bar.get_style_context().add_class('rest_of_bar')
 
         self.progress_label = Gtk.Label()
         self.progress_label.set_alignment(xalign=0.5, yalign=0.5)
@@ -46,12 +46,12 @@ class ProgressBar(Gtk.Fixed):
         self.endpoint_label.set_alignment(xalign=0.5, yalign=0.5)
 
         self.label_background = Gtk.EventBox()
-        self.label_background.get_style_context().add_class("progress_background")
+        self.label_background.get_style_context().add_class('progress_background')
         self.label_background.set_size_request(self.label_width, self.label_height)
         self.label_background.add(self.progress_label)
 
         self.endpoint_background = Gtk.EventBox()
-        self.endpoint_background.get_style_context().add_class("endpoint_background")
+        self.endpoint_background.get_style_context().add_class('endpoint_background')
         self.endpoint_background.set_size_request(self.label_width, self.label_height)
         self.endpoint_background.add(self.endpoint_label)
 

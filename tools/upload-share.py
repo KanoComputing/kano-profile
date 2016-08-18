@@ -25,6 +25,6 @@ if not success:
     run_cmd(dir_path + '/bin/kano-login')
     success, value = login_using_token()
     if not success:
-        sys.exit('Login not possible, error: ' + value)
+        sys.exit("Login not possible, error: " + value)
 
 pprint(upload_share('kanocastle.xml', 'Kano Castle', 'make-minecraft'))

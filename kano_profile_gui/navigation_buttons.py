@@ -21,14 +21,14 @@ def create_navigation_button(title, position='previous'):
     '''
     hbox = Gtk.Box()
     button = Gtk.Button()
-    button.get_style_context().add_class("navigation_button")
+    button.get_style_context().add_class('navigation_button')
 
     # If the button is at the end, the icon comes after the label
-    if position == "next":
+    if position == 'next':
         # next_icon_path is for forward pointing arrow
         next_icon_path = os.path.join(media_dir, "images/icons/next.png")
         icon = Gtk.Image.new_from_file(next_icon_path)
-        button.get_style_context().add_class("next")
+        button.get_style_context().add_class('next')
         label = Gtk.Label(title)
 
         hbox.pack_start(label, False, False, 0)
@@ -37,17 +37,17 @@ def create_navigation_button(title, position='previous'):
     # Otherwise if the icon is at the middle or start,
     # the icon comes before the text
     else:
-        if position == "previous":
+        if position == 'previous':
             # icon_path is for backwards pointing arrow
             icon_path = os.path.join(media_dir, "images/icons/previous.png")
             label = Gtk.Label(title)
-            button.get_style_context().add_class("back")
+            button.get_style_context().add_class('back')
 
-        elif position == "middle":
+        elif position == 'middle':
             # icon_path is for the grid icon
             icon_path = os.path.join(media_dir, "images/icons/grid.png")
             label = Gtk.Label(title)
-            button.get_style_context().add_class("middle")
+            button.get_style_context().add_class('middle')
 
         icon = Gtk.Image.new_from_file(icon_path)
         hbox.pack_start(icon, False, False, 0)

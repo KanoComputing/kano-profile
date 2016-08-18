@@ -24,7 +24,7 @@ class QuestList(Gtk.EventBox):
 
     def __init__(self, win):
         Gtk.EventBox.__init__(self)
-        self.get_style_context().add_class("quest_screen_background")
+        self.get_style_context().add_class('quest_screen_background')
 
         self.checked_quests = False
         self.win = win
@@ -42,7 +42,7 @@ class QuestList(Gtk.EventBox):
         for quest in self.win.quests.list_active_quests():
             quest_item = QuestListItem(win=self.win, quest_info=quest)
             vbox.pack_start(quest_item, False, False, 10)
-            quest_item.connect("reward_claimed", self.repack_quests)
+            quest_item.connect('reward_claimed', self.repack_quests)
 
         self.show_all()
 
@@ -74,14 +74,14 @@ class QuestListItem(Gtk.Fixed):
         self.set_size_request(self.width, self.height)
 
         self.background = Gtk.EventBox()
-        self.background.get_style_context().add_class("quest")
+        self.background.get_style_context().add_class('quest')
         self.background.set_margin_left(10)
         self.background.set_size_request(self.width, self.height)
         self.put(self.background, 0, 0)
 
         title = quest_info.title
         self.title_widget = Gtk.Label(title)
-        self.title_widget.get_style_context().add_class("quest_item_title")
+        self.title_widget.get_style_context().add_class('quest_item_title')
         self.title_widget.set_alignment(xalign=0, yalign=1)
 
         fulfilled = quest_info.is_fulfilled()
@@ -95,20 +95,20 @@ class QuestListItem(Gtk.Fixed):
             image = Gtk.Image.new_from_pixbuf(pixbuf)
             self.background.add(image)
 
-            self.title_widget.get_style_context().add_class("fulfilled")
-            self.background.get_style_context().add_class("fulfilled")
+            self.title_widget.get_style_context().add_class('fulfilled')
+            self.background.get_style_context().add_class('fulfilled')
             icon_path = self.quest_info.fulfilled_icon
         else:
-            self.background.get_style_context().add_class("not_fulfilled")
+            self.background.get_style_context().add_class('not_fulfilled')
             icon_path = self.quest_info.icon
 
         # This is so the widgets are stacked properly on top of each other
         transparent_background = Gtk.EventBox()
         transparent_background.connect(
-            "enter-notify-event", self.hover_over_effect, True
+            'enter-notify-event', self.hover_over_effect, True
         )
         transparent_background.connect(
-            "leave-notify-event", self.hover_over_effect, False
+            'leave-notify-event', self.hover_over_effect, False
         )
         hbox = Gtk.Box()
         hbox.set_size_request(self.width, self.height)
@@ -124,7 +124,7 @@ class QuestListItem(Gtk.Fixed):
         quest_icon.set_margin_bottom(10)
 
         # Get text for the reward_list_widget
-        reward_text = "Rewards: "
+        reward_text = N_("Rewards: ")
         tick_box = Gtk.Box()
 
         for reward in self.quest_info.rewards:
@@ -143,7 +143,7 @@ class QuestListItem(Gtk.Fixed):
                 tick = Tick(
                     width=tick_width,
                     height=tick_height,
-                    color="gold"
+                    color='gold'
                 )
 
             # If the individual step has been completed,
@@ -152,7 +152,7 @@ class QuestListItem(Gtk.Fixed):
                 tick = Tick(
                     width=tick_width,
                     height=tick_height,
-                    color="orange"
+                    color='orange'
                 )
 
             # uncompleted steps should have a grey tick
@@ -160,17 +160,17 @@ class QuestListItem(Gtk.Fixed):
                 tick = Tick(
                     width=tick_width,
                     height=tick_height,
-                    color="grey"
+                    color='grey'
                 )
             tick_box.pack_start(tick, False, False, 5)
 
         self.reward_list_label = Gtk.Label(reward_text)
         self.reward_list_label.set_alignment(xalign=0, yalign=0)
         self.reward_list_label.get_style_context().add_class(
-            "quest_item_rewards"
+            'quest_item_rewards'
         )
         if fulfilled:
-            self.reward_list_label.get_style_context().add_class("fulfilled")
+            self.reward_list_label.get_style_context().add_class('fulfilled')
 
         quest_text_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         quest_text_vbox.pack_start(self.title_widget, True, True, 0)
@@ -181,7 +181,7 @@ class QuestListItem(Gtk.Fixed):
         hbox.pack_start(quest_text_vbox, True, True, 10)
 
         if fulfilled:
-            self.connect("button-release-event", self.claim_reward)
+            self.connect('button-release-event', self.claim_reward)
 
             # Create a rosette and pack at the end
             path = os.path.join(image_dir, "quests/rosette-complete.svg")
@@ -190,17 +190,17 @@ class QuestListItem(Gtk.Fixed):
             hbox.pack_end(rosette, False, False, 10)
         else:
             tick_box.set_margin_right(20)
-            self.connect("button-release-event", self.go_to_quest_info)
+            self.connect('button-release-event', self.go_to_quest_info)
 
         hbox.pack_end(tick_box, False, False, 10)
 
     def hover_over_effect(self, widget, event, hover):
         if hover:
             style_context = self.background.get_style_context()
-            if "hover" not in style_context.list_classes():
-                style_context.add_class("hover")
+            if 'hover' not in style_context.list_classes():
+                style_context.add_class('hover')
         else:
-            self.background.get_style_context().remove_class("hover")
+            self.background.get_style_context().remove_class('hover')
 
     def claim_reward(self, widget=None, event=None):
         self.quest_info.mark_completed()
@@ -208,13 +208,13 @@ class QuestListItem(Gtk.Fixed):
         # TODO: this feels quite hacky. Should be moved back to the MenuBar
         # class, and maybe use signals instead?
         menu_bar = self.win.menu_bar
-        quest_button = menu_bar.get_button("QUESTS")
+        quest_button = menu_bar.get_button('QUESTS')
 
         # Update the quest button
         quest_button.check_for_notification()
 
         # Unpack current reward and reshow new quests
-        self.emit("reward_claimed")
+        self.emit('reward_claimed')
 
     def go_to_quest_info(self, button=None, event=None):
         self.win.empty_main_content()

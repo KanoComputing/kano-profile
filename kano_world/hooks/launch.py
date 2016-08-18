@@ -28,4 +28,4 @@ def launch(app_name):
             if check_installed(app_name):
                 launch_project(app_name, '', '')
         except ValueError:
-            logger.error('Failed to launch app "{}"'.format(str(app_name)))
+            logger.error("Failed to launch app '{}'".format(str(app_name)))

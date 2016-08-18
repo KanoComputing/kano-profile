@@ -15,10 +15,10 @@ from kano.utils import get_rpi_model, detect_kano_keyboard, get_partition_info
 
 
 def _hw_info():
-    track_data("hw-info", {
-        "keyboard": "kano" if detect_kano_keyboard() else "generic",
-        "model": get_rpi_model(),
-        "partitions": get_partition_info()
+    track_data('hw-info', {
+        'keyboard': 'kano' if detect_kano_keyboard() else 'generic',
+        'model': get_rpi_model(),
+        'partitions': get_partition_info()
     })
 
 
@@ -32,13 +32,13 @@ def _ping():
                                      headers=content_type_json)
 
     if not status:
-        msg = "Failed to send the ping event ({})".format(err)
+        msg = _("Failed to send the ping event ({})").format(err)
         raise RuntimeError(msg)
 
 
 event_templates = {
-    "hw-info": _hw_info,
-    "ping": _ping
+    'hw-info': _hw_info,
+    'ping': _ping
 }
 
 
@@ -53,4 +53,4 @@ def generate_event(event_name):
     if event_name in event_templates:
         event_templates[event_name]()
     else:
-        raise RuntimeError("Unknown event template '{}'.".format(event_name))
+        raise RuntimeError(_("Unknown event template '{}'.").format(event_name))

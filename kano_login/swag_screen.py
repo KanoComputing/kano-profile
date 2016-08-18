@@ -8,6 +8,8 @@
 # Shows profile created
 #
 
+# -*- coding: utf-8 -*-
+
 import sys
 from kano_login.templates.template import Template
 from kano_profile_gui.images import get_image
@@ -27,27 +29,27 @@ class SwagScreen(Template):
         if login:
             header = _("Profile activated!")
             subheader = _(
-                u"Now you can share stuff, build your character, "
-                u"and connect with friends! You've earned some "
-                u"rewards\N{HORIZONTAL ELLIPSIS}"
+                u"Now you can share stuff, build your character, " \
+                u"and connect with friends! You've earned some " \
+                u"rewards…"
             )
-            image_name = "profile-created"
-            button_label = _("Let's go").upper()
+            image_name = 'profile-created'
+            button_label = _("LET'S GO")
         else:
             header = _("No online profile - for now.")
             subheader = _(
-                "Your profile stores all your rewards, projects, and "
-                "challenges. But fear not - we'll save everything for "
+                "Your profile stores all your rewards, projects, and " \
+                "challenges. But fear not - we'll save everything for " \
                 "when you have internet."
             )
-            image_name = "no-profile-new"
-            button_label = _("Let's go").upper()
+            image_name = 'no-profile-new'
+            button_label = _("LET'S GO")
 
         # Set image
         img_width = 590
         img_height = 270
         image_filename = get_image(
-            "login", "", image_name, str(img_width) + 'x' + str(img_height)
+            'login', '', image_name, str(img_width) + 'x' + str(img_height)
         )
 
         # Create template
@@ -55,8 +57,8 @@ class SwagScreen(Template):
                           button_label, "")
 
         self.win.set_main_widget(self)
-        self.kano_button.connect("button_release_event", self.next_screen)
-        self.kano_button.connect("key_release_event", self.next_screen)
+        self.kano_button.connect('button_release_event', self.next_screen)
+        self.kano_button.connect('key_release_event', self.next_screen)
         self.kano_button.grab_focus()
         self.win.show_all()
 

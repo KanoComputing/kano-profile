@@ -23,8 +23,8 @@ class PageControl(Gtk.Alignment):
     def __init__(self,
                  num_of_pages=3,
                  selected_page=1,
-                 back_text=_("Back").upper(),
-                 next_text=_("Next").upper()):
+                 back_text=_("BACK"),
+                 next_text=_("NEXT")):
 
         Gtk.Alignment.__init__(self, xalign=0.5, xscale=0)
         self.num_of_pages = num_of_pages
@@ -37,11 +37,11 @@ class PageControl(Gtk.Alignment):
         # When the back button is disabled, it goes invisible, while
         # the NEXT button goes grey.
         self._back_button = OrangeButton(back_text)
-        self._back_button.connect("clicked", self.back_button_clicked)
+        self._back_button.connect('clicked', self.back_button_clicked)
         attach_cursor_events(self._back_button)
 
         self._next_button = OrangeButton(next_text)
-        self._next_button.connect("clicked", self.next_button_clicked)
+        self._next_button.connect('clicked', self.next_button_clicked)
         attach_cursor_events(self._next_button)
 
         self.dot_box = Gtk.Box()
@@ -55,8 +55,8 @@ class PageControl(Gtk.Alignment):
         if self.selected == self.num_of_pages:
             self._next_button.set_sensitive(False)
 
-        # self.connect("next-button-clicked", self.select_dot)
-        # self.connect("back-button-clicked", self.select_dot)
+        # self.connect('next-button-clicked', self.select_dot)
+        # self.connect('back-button-clicked', self.select_dot)
 
     @property
     def back_button(self):
@@ -132,7 +132,7 @@ class PageControl(Gtk.Alignment):
         '''
 
         grey_dot = Gtk.EventBox()
-        grey_dot.get_style_context().add_class("grey_dot")
+        grey_dot.get_style_context().add_class('grey_dot')
         grey_dot.set_size_request(6, 6)
         return grey_dot
 
@@ -141,7 +141,7 @@ class PageControl(Gtk.Alignment):
         '''
 
         orange_dot = Gtk.EventBox()
-        orange_dot.get_style_context().add_class("orange_dot")
+        orange_dot.get_style_context().add_class('orange_dot')
         orange_dot.set_size_request(10, 10)
         return orange_dot
 

@@ -25,9 +25,9 @@ class BadgeItem(Gtk.Button):
         Gtk.Button.__init__(self)
 
         self.badge_info = badge_info
-        self.title = badge_info["title"]
-        self.unlocked_description = badge_info["desc_unlocked"]
-        self.locked_description = badge_info["desc_locked"]
+        self.title = badge_info['title']
+        self.unlocked_description = badge_info['desc_unlocked']
+        self.locked_description = badge_info['desc_locked']
         background_color = badge_info['bg_color']
         self.locked = not badge_info['achieved']
 
@@ -42,7 +42,7 @@ class BadgeItem(Gtk.Button):
         # Dimensions of the hover over label.
         self.label_height = 44
 
-        self.get_style_context().add_class("badge_item")
+        self.get_style_context().add_class('badge_item')
         self.background_color = unicodedata.normalize(
             'NFKD', '#' + background_color
         ).encode('ascii', 'ignore')
@@ -52,9 +52,9 @@ class BadgeItem(Gtk.Button):
         self.create_hover_box()
 
         self.set_size_request(self.width, self.height)
-        self.connect("enter-notify-event", self.add_hover_style,
+        self.connect('enter-notify-event', self.add_hover_style,
                      self.hover_box)
-        self.connect("leave-notify-event", self.remove_hover_style,
+        self.connect('leave-notify-event', self.remove_hover_style,
                      self.hover_box)
 
         self.fixed = Gtk.Fixed()
@@ -67,9 +67,9 @@ class BadgeItem(Gtk.Button):
 
     def create_hover_box(self):
         self.hover_box = Gtk.EventBox()
-        self.hover_box.get_style_context().add_class("hover_box")
+        self.hover_box.get_style_context().add_class('hover_box')
         self.hover_label = Gtk.Label(self.get_title())
-        self.hover_label.get_style_context().add_class("hover_label")
+        self.hover_label.get_style_context().add_class('hover_label')
         self.hover_box.add(self.hover_label)
         self.hover_box.set_size_request(self.width, self.label_height)
 
@@ -134,7 +134,7 @@ class BadgeItem(Gtk.Button):
 
     def change_locked_style(self):
         if self.locked:
-            self.padlock = icons.set_from_name("padlock")
+            self.padlock = icons.set_from_name('padlock')
             self.fixed.put(self.padlock, 100, 77)
             background_color = self.locked_background_color
         else:
@@ -145,7 +145,7 @@ class BadgeItem(Gtk.Button):
         style_provider.load_from_data(css)
 
         style_context = self.get_style_context()
-        style_context.add_class("badge_background")
+        style_context.add_class('badge_background')
 
         style_context.add_provider(
             style_provider,

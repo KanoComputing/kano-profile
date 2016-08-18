@@ -115,7 +115,7 @@ class AvatarCreator(AvatarConfParser):
             return True
         else:
             logger.error(
-                'Character {} is not in the available char list'.format(
+                "Character {} is not in the available char list".format(
                     char_name))
             return False
 
@@ -142,11 +142,11 @@ class AvatarCreator(AvatarConfParser):
             else:
                 self._sel_env = env_inst
             logger.debug(
-                'Selected Environment: {}'.format(self._sel_env.get_id()))
+                "Selected Environment: {}".format(self._sel_env.get_id()))
             return True
         else:
             logger.error(
-                'Environment {} is not in the available env list'.format(
+                "Environment {} is not in the available env list".format(
                     env_name))
             return False
 
@@ -177,8 +177,8 @@ class AvatarCreator(AvatarConfParser):
         ret = item
         if not item.is_unlocked():
             logger.warn(
-                ('Item {} is locked, replacing with random from '
-                 'its category').format(item))
+                "Item {} is locked, replacing with random from " \
+                "its category".format(item))
             ret = random.choice(
                 [obj for obj in item.category().items() if obj.is_unlocked()]
             )
@@ -218,7 +218,7 @@ class AvatarCreator(AvatarConfParser):
         for obj_name in obj_names:
             if not self._sel_char_layer().item(obj_name):
                 logger.error(
-                    'Object "{}" not available for character {}'.format(
+                    "Object '{}' not available for character {}".format(
                         obj_name, self._sel_char))
                 obj_names_cleaned = self.sanitised_obj_names(obj_names)
                 rc = self.randomise_rest(obj_names_cleaned)
@@ -232,7 +232,7 @@ class AvatarCreator(AvatarConfParser):
                     # the same category
                     if obj_inst.category().get_id() in self._sel_obj_per_cat:
                         logger.error(
-                            'Multiple objects in category {}'.format(
+                            "Multiple objects in category {}".format(
                                 obj_inst.category()))
                         return False
 
@@ -255,8 +255,8 @@ class AvatarCreator(AvatarConfParser):
                         sel_env_flag = True
                     else:
                         logger.error(
-                            ("Provided multiple environments to select "
-                             "{}, {}").format(
+                            "Provided multiple environments to select " \
+                            "{}, {}".format(
                                 self._sel_env.get_id(), obj_name))
                         return False
         return True
@@ -348,7 +348,7 @@ class AvatarCreator(AvatarConfParser):
         :rtype: String or None
         """
         logger.debug(
-            'About to create character with items: {}'.format(
+            "About to create character with items: {}".format(
                 str(self.selected_items()))
         )
         ret = None
@@ -430,8 +430,8 @@ class AvatarCreator(AvatarConfParser):
         rc_c = self.create_circular_assets(fname_plain, fname_circ)
         if not rc_c:
             logger.error(
-                ("Couldn't create circular assets, aborting auxiliary "
-                 "asset generation"))
+                "Couldn't create circular assets, aborting auxiliary " \
+                "asset generation")
             return False
 
         # Environment + avatar
@@ -439,8 +439,8 @@ class AvatarCreator(AvatarConfParser):
         rc_env = self._sel_env.save_image(fname_env)
         if not rc_env:
             logger.error(
-                ("Couldn't create environment asset, aborting auxiliary "
-                 "asset generation"))
+                "Couldn't create environment asset, aborting auxiliary " \
+                "asset generation")
             return False
         # Shifted environment
         fname_env_23 = append_suffix_to_fname(file_name, '_inc_env_page2')
@@ -449,8 +449,8 @@ class AvatarCreator(AvatarConfParser):
                                                    reload_img=True)
         if not rc_23:
             logger.error(
-                ("Couldn't create shifted environment asset, aborting "
-                 "auxiliary asset generation"))
+                "Couldn't create shifted environment asset, aborting " \
+                "auxiliary asset generation")
             return False
 
         return True
@@ -480,7 +480,7 @@ class AvatarCreator(AvatarConfParser):
             rc = self.create_avatar(dn)
             if not rc:
                 logger.error(
-                    'Encountered issue, stopping the creation of final assets'
+                    "Encountered issue, stopping the creation of final assets"
                 )
                 return False
 
@@ -491,7 +491,7 @@ class AvatarCreator(AvatarConfParser):
                 return False
         else:
             logger.info(
-                'Assets for avatar already exist, will skip creating them')
+                "Assets for avatar already exist, will skip creating them")
 
         if sync:
             items_no_env = self.selected_items_per_cat()
@@ -516,12 +516,12 @@ class AvatarCreator(AvatarConfParser):
         """
         if self._sel_char is None:
             logger.warn(
-                'Character not selected, will abandon writing log file')
+                "Character not selected, will abandon writing log file")
             return False
 
         if self._sel_env is None:
             logger.warn(
-                'Environment not selected, will abandon writing log file')
+                "Environment not selected, will abandon writing log file")
             return False
 
         created_file = False
@@ -612,7 +612,7 @@ class AvatarCreator(AvatarConfParser):
         """
         # TODO Return False instead of None in case of error
         if not file_name_plain or not file_name_ring:
-            logger.warn('No filenames given, will not save circular assets')
+            logger.warn("No filenames given, will not save circular assets")
             return None
 
         if not self._sel_char:
@@ -715,15 +715,15 @@ def get_avatar_conf(aux_files=[]):
         conf = load(f)
 
     if conf is None:
-        logger.error('Default Conf file {} not found'.format(AVATAR_CONF_FILE))
+        logger.error("Default Conf file {} not found".format(AVATAR_CONF_FILE))
     else:
         if not is_valid_configuration(conf):
-            logger.error('Default configuration file is not in valid format')
+            logger.error("Default configuration file is not in valid format")
             return dict()
 
     if aux_files:
         logger.debug(
-            'Auxiliary configuration files to be used: {}'.format(aux_files))
+            "Auxiliary configuration files to be used: {}".format(aux_files))
 
         for con_fname in aux_files:
             if os.path.isfile(con_fname):
@@ -732,14 +732,14 @@ def get_avatar_conf(aux_files=[]):
                     f = open(con_fname)
                 except IOError as e:
                     logger.error(
-                        'Error opening the aux conf file {}'.format(e))
+                        "Error opening the aux conf file {}".format(e))
                     continue
                 else:
                     with f:
                         try:
                             aux_conf = load(f)
                         except ValueError as e:
-                            logger.info('Conf file not a JSON {}'.format(e))
+                            logger.info("Conf file not a JSON {}".format(e))
                             continue
 
                 if is_valid_configuration(aux_conf):
@@ -765,7 +765,7 @@ def is_valid_configuration(conf_struct):
     if set(conf_struct.iterkeys()).issubset(allowed_conf):
         pass
     else:
-        logger.error('Conf structure contains invalid objects')
+        logger.error("Conf structure contains invalid objects")
         return False
     return True
 
@@ -781,7 +781,7 @@ def merge_conf_files(conf_base, conf_added):
             if cat in conf_base:
                 if type(conf_base[cat]) != type(conf_added[cat]):
                     logger.error(
-                        'base and auxiliary configuration types mismatch')
+                        "base and auxiliary configuration types mismatch")
                     return None
                 else:
                     if type(conf_base[cat]) == list:

@@ -20,7 +20,7 @@ if os.path.exists(media_local):
 elif os.path.exists(media_usr):
     media_dir = media_usr
 else:
-    raise Exception('Neither local nor usr media dir found!')
+    raise Exception("Neither local nor usr media dir found!")
 
 image_dir = os.path.join(media_dir, 'images')
 css_dir = os.path.join(media_dir, 'CSS')

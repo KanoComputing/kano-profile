@@ -61,8 +61,8 @@ class Login(Gtk.Box):
             self.pack_start(align, False, False, 15)
 
             self.labelled_entries = LabelledEntries([
-                {"heading": _("Username"), "subheading": ""},
-                {"heading": _("Password"), "subheading": ""}
+                {'heading': _("Username"), 'subheading': ""},
+                {'heading': _("Password"), 'subheading': ""}
             ])
             self.labelled_entries.set_spacing(15)
             self.username_entry = self.labelled_entries.get_entry(0)
@@ -73,11 +73,11 @@ class Login(Gtk.Box):
         self.password_entry.set_visibility(False)
 
         for entry in self.labelled_entries.get_entries():
-            entry.connect("key_release_event", self.enable_kano_button)
-            entry.connect("key-release-event", self.activate)
+            entry.connect('key_release_event', self.enable_kano_button)
+            entry.connect('key-release-event', self.activate)
 
         self.button_box = KanoButtonBox(
-            _("Login").upper(),
+            _("LOGIN"),
             _("Create New"),
             _("Forgotten password?")
         )
@@ -87,8 +87,8 @@ class Login(Gtk.Box):
         self.kano_button = self.button_box.kano_button
         self.button_box.set_orange_button_cb(self.go_to_registration)
         self.button_box.set_orange_button2_cb(self.reset_password_screen)
-        self.kano_button.connect("button_release_event", self.activate)
-        self.kano_button.connect("key-release-event", self.activate)
+        self.kano_button.connect('button_release_event', self.activate)
+        self.kano_button.connect('key-release-event', self.activate)
         self.pack_start(self.button_box, False, False, 20)
 
         self.kano_button.set_sensitive(False)
@@ -107,8 +107,8 @@ class Login(Gtk.Box):
         username = get_mixed_username()
         title_label = Gtk.Label(_(" Username:  "))
         self.username_label = Gtk.Label(username)
-        title_label.get_style_context().add_class("bold_label")
-        self.username_label.get_style_context().add_class("desc_label")
+        title_label.get_style_context().add_class('bold_label')
+        self.username_label.get_style_context().add_class('desc_label')
 
         hbox = Gtk.Box()
         hbox.pack_start(title_label, False, False, 0)
@@ -124,7 +124,7 @@ class Login(Gtk.Box):
 
         self.pack_start(align, False, False, 15)
         self.labelled_entries = LabelledEntries(
-            [{"heading": _("Password"), "subheading": ""}]
+            [{'heading': _("Password"), 'subheading': ""}]
         )
         self.password_entry = self.labelled_entries.get_entry(0)
         vbox.pack_start(self.labelled_entries, False, False, 15)
@@ -193,10 +193,10 @@ class Login(Gtk.Box):
         success, text = login_(username_text, password_text)
 
         if not success:
-            logger.info('problem with login: {}'.format(text))
+            logger.info("problem with login: {}".format(text))
             title = _("Houston, we have a problem")
             description = text
-            return_value = "FAIL"
+            return_value = 'FAIL'
 
         else:
             (title, description, return_value) = self.log_in_success()
@@ -221,7 +221,7 @@ class Login(Gtk.Box):
 
         if not first_sync_done:
             logger.info(
-                'running kano-sync --sync --restore after first time login'
+                "running kano-sync --sync --restore after first time login"
             )
 
             # When both --sync and --restore are given as options, sync occurs
@@ -236,7 +236,7 @@ class Login(Gtk.Box):
             )
 
         else:
-            logger.info('running kano-sync --sync after non-first login')
+            logger.info("running kano-sync --sync after non-first login")
 
             # sync on each successful login
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
@@ -244,7 +244,7 @@ class Login(Gtk.Box):
 
         title = _("Success!")
         description = _("You're in - online features now enabled.")
-        return_value = "SUCCESS"
+        return_value = 'SUCCESS'
 
         return (title, description, return_value)
 
@@ -255,11 +255,11 @@ class Login(Gtk.Box):
         the cursor and kano button spinner.
         '''
         kdialog = KanoDialog(title, description,
-                             {_("OK"): {"return_value": return_value}},
+                             {_("OK"): {'return_value': return_value}},
                              parent_window=self.win)
         response = kdialog.run()
 
-        if response == "SUCCESS":
+        if response == 'SUCCESS':
             if self.first_boot:
                 self.win.remove_main_widget()
                 SwagScreen(self.win)
@@ -295,7 +295,7 @@ class ResetPassword(Gtk.Box):
         self.pack_start(self.heading.container, False, False, 10)
 
         self.labelled_entries = LabelledEntries([
-            {"heading": _("Email"), "subheading": ""}
+            {'heading': _("Email"), 'subheading': ""}
         ])
         align = Gtk.Alignment(xscale=0, xalign=0.5)
         self.pack_start(align, False, False, 15)
@@ -310,12 +310,12 @@ class ResetPassword(Gtk.Box):
 
         self.email_entry = self.labelled_entries.get_entry(0)
         self.email_entry.set_text(user_email)
-        self.email_entry.connect("key-release-event", self.activate)
+        self.email_entry.connect('key-release-event', self.activate)
 
-        self.button = KanoButton(_("Reset password").upper())
+        self.button = KanoButton(_("RESET PASSWORD"))
         self.button.pack_and_align()
-        self.button.connect("button-release-event", self.activate)
-        self.button.connect("key-release-event", self.activate)
+        self.button.connect('button-release-event', self.activate)
+        self.button.connect('key-release-event', self.activate)
         self.button.set_padding(30, 30, 0, 0)
 
         self.pack_start(self.button.align, False, False, 0)
@@ -339,15 +339,15 @@ class ResetPassword(Gtk.Box):
             title = _("Success!")
             description = _("Sent new password to your email")
             button_dict = {
-                _("Go to login screen").upper(): {"return_value": 12},
-                _("Quit").upper(): {"return_value": 10, "color": "red"}
+                _("GO TO LOGIN SCREEN"): {'return_value': 12},
+                _("QUIT"): {'return_value': 10, 'color': 'red'}
             }
         else:
             title = _("Something went wrong!")
             description = text
             button_dict = {
-                _("Quit").upper(): {"return_value": 10, "color": "red"},
-                _("Try again").upper(): {"return_value": 11}
+                _("QUIT"): {'return_value': 10, 'color': 'red'},
+                _("TRY AGAIN"): {'return_value': 11}
             }
 
         GObject.idle_add(

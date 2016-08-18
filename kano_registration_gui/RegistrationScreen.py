@@ -37,17 +37,17 @@ class RegistrationScreen(Gtk.Box):
         self.win.set_decorated(True)
 
         title = Heading(
-            _('Kano World'),
-            _('Choose a cool name and secure password')
+            _("Kano World"),
+            _("Choose a cool name and secure password")
         )
         self.pack_start(title.container, False, False, 0)
 
         self.data_screen = GetData()  # TODO: refactor this
-        self.data_screen.connect("widgets-filled", self._enable_register_button)
-        self.data_screen.connect("widgets-empty", self._disable_register_button)
+        self.data_screen.connect('widgets-filled', self._enable_register_button)
+        self.data_screen.connect('widgets-empty', self._disable_register_button)
         self.add(self.data_screen)
 
-        self.register_button = KanoButton(_("Join Kano World").upper())
+        self.register_button = KanoButton(_("JOIN KANO WORLD"))
         self.register_button.set_sensitive(False)
         self.register_button.set_margin_top(10)
         self.register_button.set_margin_left(30)
@@ -77,7 +77,7 @@ class RegistrationScreen(Gtk.Box):
 
         # Get the username, password and birthday
         data = self.data_screen.get_widget_data()
-        username = data["username"]
+        username = data['username']
 
         if not self._is_username_available(username):
             self._show_username_taken_dialog(username)
@@ -94,9 +94,9 @@ class RegistrationScreen(Gtk.Box):
             Gtk.main_iteration()
 
         # Try and register the account on the server
-        email = data["email"]
-        username = data["username"]
-        password = data["password"]
+        email = data['email']
+        username = data['username']
+        password = data['password']
 
         success, text = register_(email, username, password,
                                   marketing_enabled=True)
@@ -105,14 +105,14 @@ class RegistrationScreen(Gtk.Box):
         # screen. However there is a small chance someone could take the
         # username while the user is in the process of registering
         if not success:
-            if text.strip() == "Cannot register, problem: " \
-               "Username already registered":
+            if text.strip() == _("Cannot register, problem: " \
+               "Username already registered"):
 
                 self._show_username_taken_dialog(username)
 
             else:
-                logger.info('problem with registration: {}'.format(text))
-                return_value = "FAIL"
+                logger.info("problem with registration: {}".format(text))
+                return_value = 'FAIL'
                 self._create_dialog(
                     title=_("Houston, we have a problem"),
                     description=str(text)
@@ -120,28 +120,28 @@ class RegistrationScreen(Gtk.Box):
                 track_data('world-registration-failed', {'reason': text})
 
         else:
-            logger.info('registration successful')
+            logger.info("registration successful")
 
             # saving hardware info and initial Kano version
             save_hardware_info()
             save_kano_version()
 
             # running kano-sync after registration
-            logger.info('running kano-sync after successful registration')
+            logger.info("running kano-sync after successful registration")
             cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-            return_value = "SUCCEED"
+            return_value = 'SUCCEED'
             self._create_dialog(
                 title=_("Profile activated!"),
-                description=_("Now you can share stuff, build your character, "
+                description=_("Now you can share stuff, build your character, " \
                               "and connect with friends.")
             )
 
         self.win.get_window().set_cursor(None)
 
         # Close the app if it was successful
-        if return_value == "SUCCEED":
+        if return_value == 'SUCCEED':
             Gtk.main_quit()
 
     def _is_username_available(self, name):
@@ -155,7 +155,7 @@ class RegistrationScreen(Gtk.Box):
             headers=content_type_json
         )
 
-        if not success and text.strip() == "User not found":
+        if not success and text.strip() == _("User not found"):
             return True
         elif success:
             # Username is definitely taken
@@ -185,8 +185,8 @@ class RegistrationScreen(Gtk.Box):
     def _show_username_taken_dialog(self, username):  # TODO: refactor this
         track_data('world-registration-username-taken', {'username': username})
         kd = KanoDialog(
-            "This username is taken!",
-            "Try another one",
+            _("This username is taken!"),
+            _("Try another one"),
             parent_window=self.win
         )
         kd.run()
@@ -197,18 +197,18 @@ class RegistrationScreen(Gtk.Box):
 
     def _show_not_internet_dialog(self):  # TODO: refactor this
         kd = KanoDialog(
-            "You don't have internet",
-            "Do you want to connect to WiFi?",
+            _("You don't have internet"),
+            _("Do you want to connect to WiFi?"),
             [
                 {
-                    "label": "YES",
-                    "color": "green",
-                    "return_value": 0
+                    'label': _("YES"),
+                    'color': 'green',
+                    'return_value': 0
                 },
                 {
-                    "label": "NO",
-                    "color": "red",
-                    "return_value": 1
+                    'label': _("NO"),
+                    'color': 'red',
+                    'return_value': 1
                 }
             ],
             parent_window=self.win

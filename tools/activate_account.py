@@ -23,7 +23,7 @@ if __name__ == '__main__' and __package__ is None:
 from kano_world.connection import api_url
 
 if len(sys.argv) != 2:
-    sys.exit('Wrong usage, needs to supply code')
+    sys.exit("Wrong usage, needs to supply code")
 else:
     code = sys.argv[1]
 

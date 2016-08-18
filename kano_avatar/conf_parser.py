@@ -31,11 +31,10 @@ class AvatarLayer(object):
         self._environment_cat = None
 
     def __repr__(self):
-        return (('Layer; character set "{}"; character category "{}"; '
-                 'environment cat "{}"').format(self._character_set,
-                                                self._character_cat,
-                                                self._environment_cat)
-                )
+        return "Layer; character set '{}'; character category '{}'; " \
+               "environment cat '{}'".format(self._character_set,
+                                               self._character_cat,
+                                               self._environment_cat)
 
     def add_character_set(self, obj):
         if obj:
@@ -55,7 +54,7 @@ class AvatarLayer(object):
                     "Can't add character category '{}' to layer".format(
                         char_cat))
         else:
-            logger.error('Layer already has a character category')
+            logger.error("Layer already has a character category")
 
     def add_envir_cat(self, env_cat):
         if not self._environment_cat:
@@ -66,7 +65,7 @@ class AvatarLayer(object):
                     "Can't add environment category '{}' to layer".format(
                         env_cat))
         else:
-            logger.error('Layer already has a environment category')
+            logger.error("Layer already has a environment category")
 
     def add_category(self, cat):
         self._character_set.add_category(cat)
@@ -85,7 +84,7 @@ class AvatarLayer(object):
             cat.add_item(item_obj)
         else:
             logger.warn(
-                'Category "{}" not available in [{}], skipping "{}"'.format(
+                "Category '{}' not available in [{}], skipping '{}'".format(
                     cat_name, self, item_obj))
 
     def get_categories(self):
@@ -107,8 +106,8 @@ class AvatarLayer(object):
         ret = []
         cat = self.category(cat_name)
         if not cat:
-            logger.error(("Category '{}' not in layer '{}', can't return"
-                          "hover border").format(cat_name, self))
+            logger.error("Category '{}' not in layer '{}', can't return" \
+                         "hover border".format(cat_name, self))
         else:
             ret = [k.get_id() for k in cat.items()]
         return ret
@@ -147,23 +146,23 @@ class AvatarConfParser(object):
         env_cat = None
 
         if self.spec_cat_label not in conf_data:
-            logger.error('{} dict not found'.format(self.spec_cat_label))
+            logger.error("{} dict not found".format(self.spec_cat_label))
         else:
             char_cat, env_cat = \
                 self._populate_special_category_structures(conf_data)
 
         if self.char_label not in conf_data:
-            logger.error('{} dict not found'.format(self.char_label))
+            logger.error("{} dict not found".format(self.char_label))
         else:
             self._populate_layer_structures(conf_data, char_cat, env_cat)
 
         if self.categories_label not in conf_data:
-            logger.error('{} dict not found'.format(self.categories_label))
+            logger.error("{} dict not found".format(self.categories_label))
         else:
             self._populate_cat_structures(conf_data[self.categories_label])
 
         if self.objects_label not in conf_data:
-            logger.error('{} dict not found'.format(self.objects_label))
+            logger.error("{} dict not found".format(self.objects_label))
         else:
             self._populate_object_structures(conf_data)
 
@@ -181,8 +180,8 @@ class AvatarConfParser(object):
                 char_layer.add_category(cat_obj)
             else:
                 logger.warn(
-                    ('Character layer "{}" missing, skipping category '
-                     '"{}"').format(char_name, cat_obj.get_id()))
+                    "Character layer '{}' missing, skipping category " \
+                    "'{}'".format(char_name, cat_obj.get_id()))
 
     def _populate_object_structures(self, conf_data):
         """ Populates internal structures related to items
@@ -195,8 +194,8 @@ class AvatarConfParser(object):
                 char_layer.add_item(cat, obj)
             else:
                 logger.warn(
-                    ('Character layer "{}" missing, skipping item '
-                     '"{}"').format(char, obj.get_id()))
+                    "Character layer '{}' missing, skipping item " \
+                    "'{}'".format(char, obj.get_id()))
 
     def _populate_layer_structures(self, conf_data, char, env):
         """ Populates internal structures related to characters
@@ -281,8 +280,8 @@ class AvatarConfParser(object):
         ret = []
         char = self.layer(character)
         if not char:
-            logger.error(("Character '{}' isn't available in '{}', can't "
-                          "return available categories").format(
+            logger.error("Character '{}' isn't available in '{}', can't " \
+                         "return available categories".format(
                               character, self))
         else:
             ret = [k.get_id() for k in char.get_categories()]
@@ -298,8 +297,8 @@ class AvatarConfParser(object):
         ret = None
         char = self.layer(character)
         if not char:
-            logger.error(("Character '{}' isn't available in '{}', can't "
-                          "return inactive cat icon").format(
+            logger.error("Character '{}' isn't available in '{}', can't " \
+                         "return inactive cat icon".format(
                               character, self))
         else:
             ret = char.category(category_name).get_inactive_icon()
@@ -314,8 +313,8 @@ class AvatarConfParser(object):
         ret = None
         char = self.layer(character)
         if not char:
-            logger.error(("Character '{}' isn't available in '{}', can't "
-                          "return active cat icon").format(
+            logger.error("Character '{}' isn't available in '{}', can't " \
+                         "return active cat icon".format(
                               character, self))
         else:
             ret = char.category(category_name).get_active_icon()
@@ -325,8 +324,8 @@ class AvatarConfParser(object):
         ret = ''
         char = self.layer(character)
         if not char:
-            logger.error(("Character '{}' isn't availabble in '{}', can't "
-                          "return display_name").format(character, self))
+            logger.error("Character '{}' isn't availabble in '{}', can't " \
+                         "return display_name".format(character, self))
         else:
             ret = char.category(category_name).name()
         return ret
@@ -340,8 +339,8 @@ class AvatarConfParser(object):
         ret = None
         char = self.layer(character)
         if not char:
-            logger.error(("Character '{}' isn't available in '{}', can't "
-                          "return selected_border").format(
+            logger.error("Character '{}' isn't available in '{}', can't " \
+                         "return selected_border".format(
                               character, self))
         else:
             ret = char.category(category_name).get_selected_border()
@@ -356,8 +355,8 @@ class AvatarConfParser(object):
         ret = None
         char = self.layer(character)
         if not char:
-            logger.error(("Character '{}' isn't available in '{}', can't "
-                          "return hover border").format(
+            logger.error("Character '{}' isn't available in '{}', can't " \
+                         "return hover border".format(
                               character, self))
         else:
             ret = char.category(category_name).get_hover_border()

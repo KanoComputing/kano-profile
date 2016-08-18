@@ -34,7 +34,7 @@ class TestOpenShares(unittest.TestCase):
         os.system('python fake_blocks.py {} &'.format(app_name))
         time.sleep(delay)
         self.assertTrue(self._find_x11_app(app_name),
-                        msg='Could not start fake webapp {}'.format(app_name))
+                        msg="Could not start fake webapp {}".format(app_name))
 
     def _stop_fake_webapp(self, delay=5):
         os.system('pkill -f fake_blocks')
@@ -55,7 +55,7 @@ class TestOpenShares(unittest.TestCase):
         time.sleep(3)
 
         self._stop_fake_webapp()
-        self.assertFalse(self._find_x11_app(app_name), msg='Minecraft unexpectedly running')
+        self.assertFalse(self._find_x11_app(app_name), msg="Minecraft unexpectedly running")
 
     def test_open_pong_share(self):
         app_name='make-pong'
@@ -68,7 +68,7 @@ class TestOpenShares(unittest.TestCase):
         time.sleep(3)
 
         self._stop_fake_webapp()
-        self.assertFalse(self._find_x11_app(app_name), msg='Pong unexpectedly running')
+        self.assertFalse(self._find_x11_app(app_name), msg="Pong unexpectedly running")
 
 
 if __name__ == '__main__':

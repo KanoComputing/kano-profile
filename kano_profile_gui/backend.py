@@ -47,7 +47,7 @@ def create_item_page_list(max_row, max_column):
 
     for badge_info in badge_list:
 
-        badge_info["row"] = row
+        badge_info['row'] = row
         badge_info['column'] = column
         badge_info['page'] = page
 

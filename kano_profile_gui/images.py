@@ -17,14 +17,14 @@ from kano_profile.paths import online_badges_dir
 def get_image(category, subcategory, name, subfolder_str):
     # The online badge image files are stored in the home directory.
     # The function bellow gets the corrects path.
-    if category == "badges" and subcategory == "online":
+    if category == 'badges' and subcategory == 'online':
         return get_online_badge_path(name)
 
     folder = os.path.join(image_dir, category, subfolder_str, subcategory)
     filename = '{name}.png'.format(name=name)
     fullpath = os.path.join(folder, filename)
     if not os.path.exists(fullpath):
-        logger.error('missing image: {}'.format(fullpath))
+        logger.error("missing image: {}".format(fullpath))
         return os.path.join(image_dir, 'icons/50/_missing.png')
         #ensure_dir(folder)
         #open(fullpath, 'w').close()

@@ -29,14 +29,14 @@ class SelectMenu(Gtk.EventBox):
 
         # This is the selected_identifier
         self._selected = None
-        self.get_style_context().add_class("select_menu")
+        self.get_style_context().add_class('select_menu')
 
     def _set_items(self, list_of_names):
         self._items = {}
 
         for name in list_of_names:
             self._items[name] = {}
-            self._items[name]["selected"] = False
+            self._items[name]['selected'] = False
 
     def set_selected(self, identifier):
         '''Sets the selected element in the dictionary to True,
@@ -76,13 +76,13 @@ class SelectMenu(Gtk.EventBox):
 
     def set_button(self, identifier, button):
         if identifier in self._items:
-            self._items[identifier]["button"] = button
+            self._items[identifier]['button'] = button
         else:
             logger.error(
                 "Trying to set a button for an identifier that is not present")
 
     def unset_button(self, identifier):
-        self._remove_option_from_items(identifier, "button")
+        self._remove_option_from_items(identifier, 'button')
 
     def get_button(self, identifier):
         if identifier in self._items:
@@ -95,17 +95,17 @@ class SelectMenu(Gtk.EventBox):
 
     def _add_selected_css(self, button):
         style = button.get_style_context()
-        style.add_class("selected")
+        style.add_class('selected')
 
     def _remove_selected_css(self, button):
         style = button.get_style_context()
-        style.remove_class("selected")
+        style.remove_class('selected')
 
     def _add_selected_image(self, button, identifier):
         '''Pack the selected image into the button
         '''
         if 'active_path' in self._items[identifier]:
-            path = self._items[identifier]["active_path"]
+            path = self._items[identifier]['active_path']
             image = Gtk.Image.new_from_file(path)
             button.set_image(image)
 
@@ -113,6 +113,6 @@ class SelectMenu(Gtk.EventBox):
         '''Pack the grey unselected image into the button
         '''
         if 'inactive_path' in self._items[identifier]:
-            path = self._items[identifier]["inactive_path"]
+            path = self._items[identifier]['inactive_path']
             image = Gtk.Image.new_from_file(path)
             button.set_image(image)

@@ -70,7 +70,7 @@ class PopUpItemMenu(SelectMenu):
 
     def _create_top_bar(self):
         top_bar = Gtk.EventBox()
-        top_bar.get_style_context().add_class("pop_up_menu_top_bar")
+        top_bar.get_style_context().add_class('pop_up_menu_top_bar')
         label_txt = self._parser.get_category_display_name(self._category)
         label = Gtk.Label(label_txt.title())
         label.set_alignment(0, 0.5)
@@ -176,15 +176,15 @@ class PopUpItemMenu(SelectMenu):
             if selected:
                 # The border_path depends on the image.
                 border = Gtk.Image.new_from_file(self._border_path)
-                self._add_option_to_items(identifier, "selected_border",
+                self._add_option_to_items(identifier, 'selected_border',
                                           border)
-                self._add_option_to_items(identifier, "selected_border_set",
+                self._add_option_to_items(identifier, 'selected_border_set',
                                           True)
             else:
                 border = Gtk.Image.new_from_file(self._hover_path)
-                self._add_option_to_items(identifier, "hover_border",
+                self._add_option_to_items(identifier, 'hover_border',
                                           border)
-                self._add_option_to_items(identifier, "hover_border_set",
+                self._add_option_to_items(identifier, 'hover_border_set',
                                           True)
 
             # Put the selected border on the button
@@ -204,13 +204,13 @@ class PopUpItemMenu(SelectMenu):
             if selected and 'selected_border' in self._items[identifier]:
 
                 # TODO: stop exposing self._items
-                border = self._items[identifier]["selected_border"]
-                self._add_option_to_items(identifier, "selected_border_set",
+                border = self._items[identifier]['selected_border']
+                self._add_option_to_items(identifier, 'selected_border_set',
                                           False)
             elif not selected and 'hover_border' in self._items[identifier]:
                 # TODO: stop exposing self._items
-                border = self._items[identifier]["hover_border"]
-                self._add_option_to_items(identifier, "hover_border_set",
+                border = self._items[identifier]['hover_border']
+                self._add_option_to_items(identifier, 'hover_border_set',
                                           False)
             else:
                 # Neither borders could be found
@@ -236,9 +236,9 @@ class PopUpItemMenu(SelectMenu):
         '''Get if the styling has been applied to the item
         '''
         if selected:
-            return (self.get_option(identifier, "selected_border_set") is True)
+            return (self.get_option(identifier, 'selected_border_set') is True)
         else:
-            return (self.get_option(identifier, "hover_border_set") is True)
+            return (self.get_option(identifier, 'hover_border_set') is True)
 
     def only_style_selected(self, identifier):
         '''Adds the CSS class that shows the image that has been selected.

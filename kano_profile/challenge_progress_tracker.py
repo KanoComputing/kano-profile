@@ -35,7 +35,7 @@ class ChallengeProgressTracker(object):
 
     def __init__(self):
         if ChallengeProgressTracker._singleton_instance:
-            raise Exception('This class is a singleton!')
+            raise Exception("This class is a singleton!")
         else:
             ChallengeProgressTracker._singleton_instance = self
 
@@ -56,18 +56,18 @@ class ChallengeProgressTracker(object):
 
     def set_name(self, app_name):
         if not isinstance(app_name, basestring):
-            raise TypeError('set_name argument must be of type string')
+            raise TypeError("set_name argument must be of type string")
 
         if app_name:
             self._app_name = app_name
         else:
-            raise ValueError('App name must not be empty')
+            raise ValueError("App name must not be empty")
 
     def _check_name_is_set(self):
         if not self._app_name:
             raise RuntimeError(
-                'App name is not set for this instance of {}. '
-                'Please run the set_name method'
+                "App name is not set for this instance of {}. " \
+                "Please run the set_name method"
                 .format(self.__class__.__name__)
             )
 

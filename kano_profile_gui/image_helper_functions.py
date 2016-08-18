@@ -15,7 +15,7 @@ from kano_profile_gui.paths import media_dir
 
 def create_translucent_layer(width, height):
     translucent_layer = Gtk.EventBox()
-    translucent_layer.get_style_context().add_class("locked_translucent")
+    translucent_layer.get_style_context().add_class('locked_translucent')
     translucent_layer.set_size_request(width, height)
     return translucent_layer
 

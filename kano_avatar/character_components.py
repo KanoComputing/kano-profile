@@ -165,7 +165,7 @@ class AvatarAccessory(AvatarBaseAccessory):
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def __repr__(self):
-        return 'Item {} of category {}'.format(self.get_id(), self.category())
+        return "Item {} of category {}".format(self.get_id(), self.category())
 
     def load_image(self):
         """ Loads the asset's image internally. This is necessary before
@@ -190,14 +190,14 @@ class AvatarAccessory(AvatarBaseAccessory):
         # cause a gap on the base layer.
         r, g, b, a = self._img.split()
         item = Image.merge('RGB', (r, g, b))
-        transp_mask = Image.merge("L", (a,))
+        transp_mask = Image.merge('L', (a,))
         img.paste(item, position, transp_mask)
 
         # repeat for overworld image, but no offset
 
         r, g, b, a = self._img_overworld.split()
         item = Image.merge('RGB', (r, g, b))
-        transp_mask = Image.merge("L", (a,))
+        transp_mask = Image.merge('L', (a,))
         img_overworld.paste(item, (0, 0), transp_mask)
 
 
@@ -245,7 +245,7 @@ class AvatarCharacter(AvatarBaseAccessory):
         self._crop_y = y
 
     def __repr__(self):
-        return 'Character {}'.format(self.get_id())
+        return "Character {}".format(self.get_id())
 
     def load_image(self):
         """ Loads the character's image internally. This is necessary before
@@ -309,7 +309,7 @@ class AvatarCharacter(AvatarBaseAccessory):
         mask_img = Image.open(mask)
 
         if ring_img.size != mask_img.size:
-            logger.warn('Mask and ring asset do not have the same size')
+            logger.warn("Mask and ring asset do not have the same size")
             return False
 
         cropped_img = self._get_image_cropped(
@@ -400,7 +400,7 @@ class AvatarEnvironment(AvatarBaseAccessory):
         self._img_preview = content_dir.get_file('PREVIEW_ICONS', preview_img)
 
     def __repr__(self):
-        return 'Environment {}'.format(self.get_id())
+        return "Environment {}".format(self.get_id())
 
     def load_image(self):
         """ Loads the environment image internally.
@@ -432,11 +432,11 @@ class AvatarEnvironment(AvatarBaseAccessory):
             return False
 
         if x < 0 or x >= 1:
-            err_msg = 'Argument x given to attach_char is out of bounds [0,1)'
+            err_msg = "Argument x given to attach_char is out of bounds [0,1)"
             logger.error(err_msg)
             return False
         if y < 0 or y >= 1:
-            err_msg = 'Argument x given to attach_char is out of bounds [0,1)'
+            err_msg = "Argument x given to attach_char is out of bounds [0,1)"
             logger.error(err_msg)
             return False
 
@@ -547,15 +547,15 @@ class AvatarCategory(AvatarBase):
         self._items = {}
 
     def __repr__(self):
-        return 'Category {}, of Character {}'.format(
+        return "Category {}, of Character {}".format(
             self.get_id(), self._character)
 
     def set_character(self, character):
         if not self._character:
             self._character = character
         else:
-            logger.error(("Category '{}' is already bound to a character, "
-                          "can't add {}").format(self, character))
+            logger.error("Category '{}' is already bound to a character, " \
+                         "can't add {}".format(self, character))
 
     def get_zindex(self):
         return self._z_index
@@ -610,7 +610,7 @@ class AvatarCharacterSet(object):
         self._categories = {}
 
     def __repr__(self):
-        return 'Character Set of "{}"; with categories "{}"'.format(
+        return "Character Set of '{}'; with categories '{}'".format(
             self._character,
             self._categories.values())
 

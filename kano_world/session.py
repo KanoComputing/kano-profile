@@ -76,11 +76,11 @@ class KanoWorldSession(object):
         # gender
         try:
             gender = profile['gender']
-            if gender == 'Boy':
+            if gender == _("Boy"):
                 gender = 'm'
-            elif gender == 'Girl':
+            elif gender == _("Girl"):
                 gender = 'f'
-            elif gender == "Wizard":
+            elif gender == _("Wizard"):
                 gender = 'x'
             data['gender'] = gender
         except Exception:
@@ -106,7 +106,7 @@ class KanoWorldSession(object):
             session=self.session)
 
         if not success:
-            logger.error('Uploading of the profile data failed')
+            logger.error("Uploading of the profile data failed")
             return False, text
 
         if files:
@@ -122,7 +122,7 @@ class KanoWorldSession(object):
             self._tidy_up_avatar_files(files)
 
             if not success:
-                logger.error('Uploading of the avatar assets failed')
+                logger.error("Uploading of the avatar assets failed")
                 return False, text
 
         return self.download_profile_stats(response_data)
@@ -165,12 +165,12 @@ class KanoWorldSession(object):
                     'avatar_character': open(path_char, 'rb')
                 }
             except KeyError as e:
-                logger.debug('Attribute {} not found in profile'.format(e))
+                logger.debug("Attribute {} not found in profile".format(e))
             except IOError as e:
                 # There was an error somewhere, do not upload files
                 files = {}
                 logger.error(
-                    'Error opening 1 of the files to upload {}'.format(str(e))
+                    "Error opening 1 of the files to upload {}".format(str(e))
                 )
             except Exception:
                 pass
@@ -235,7 +235,7 @@ class KanoWorldSession(object):
         try:
             app_data = data['user']['profile']['stats']
         except Exception:
-            return False, 'Data missing from payload!'
+            return False, "Data missing from payload!"
 
         for app, values in app_data.iteritems():
             if not values or \
@@ -278,7 +278,7 @@ class KanoWorldSession(object):
         if 'user_data' in data and 'data' in data['user_data']:
             app_data = data['user_data']['data']
         else:
-            return False, 'Data missing missing from payload!'
+            return False, "Data missing missing from payload!"
 
         for app, values in app_data.iteritems():
             if is_private(app):
@@ -287,7 +287,7 @@ class KanoWorldSession(object):
 
     def backup_content(self, file_path):
         if not os.path.exists(file_path):
-            return False, 'File path not found!'
+            return False, "File path not found!"
 
         try:
 
@@ -299,7 +299,7 @@ class KanoWorldSession(object):
         except IOError as e:
             # There was an error somewhere, do not upload files
             files = {}
-            text = 'Error opening 1 of the files to backup {}'.format(str(e))
+            text = "Error opening 1 of the files to backup {}".format(str(e))
             success = False
 
         if not success:
@@ -322,7 +322,7 @@ class KanoWorldSession(object):
             file_url = None
 
         if not file_url:
-            return False, 'backup file not found'
+            return False, "backup file not found"
 
         return download_url(file_url, file_path)
 
@@ -344,7 +344,7 @@ class KanoWorldSession(object):
         :rtype: tuple of form (boolean, string)
         """
         if not os.path.exists(file_path):
-            return False, 'File path not found: {}'.format(file_path)
+            return False, "File path not found: {}".format(file_path)
 
         extensionless_path = os.path.splitext(file_path)[0]
 
@@ -369,13 +369,13 @@ class KanoWorldSession(object):
 
                     if os.path.exists(attachment_path):
                         logger.debug(
-                            'uploading {}: {}'.format(key, attachment_path))
+                            "uploading {}: {}".format(key, attachment_path))
                         files[key] = open(attachment_path, 'rb')
                         break
 
         except IOError as e:
             files = None
-            txt = 'Error opening the files to be shared {}'.format(str(e))
+            txt = "Error opening the files to be shared {}".format(str(e))
 
         # Since we can't open the file, there is no need to continue
         if not files:
@@ -459,7 +459,7 @@ class KanoWorldSession(object):
     def upload_tracking_data(self):
         data = get_tracker_events(old_only=True)
         if len(data['events']) == 0:
-            return True, "No data available"
+            return True, _("No data available")
 
         success, text, response_data = request_wrapper(
             'post',
@@ -473,7 +473,7 @@ class KanoWorldSession(object):
             clear_tracker_events(old_only=True)
             return True, None
 
-        return False, "Upload failed, tracking data not sent."
+        return False, _("Upload failed, tracking data not sent.")
 
     def download_online_badges(self):
         profile = load_profile()
@@ -490,44 +490,43 @@ class KanoWorldSession(object):
         if not success:
             return False, text
 
-        if "user" not in data:
-            return False, "Corrupt response (the 'user' key not found)"
+        if 'user' not in data:
+            return False, _("Corrupt response (the 'user' key not found)")
 
-        if "profile" not in data["user"]:
-            return False, "Corrupt response (the 'user.profile' key not found)"
+        if 'profile' not in data['user']:
+            return False, _("Corrupt response (the 'user.profile' key not found)")
 
-        if "badges" not in data["user"]["profile"]:
-            msg = "Corrupt response (the 'user.profile.badges' key not found)"
-            return False, msg
+        if 'badges' not in data['user']['profile']:
+            return False, _("Corrupt response (the 'user.profile.badges' key not found)")
 
         online_badges_data = {}
 
         ensure_dir(online_badges_dir)
 
-        badges = data["user"]["profile"]["badges"]
+        badges = data['user']['profile']['badges']
         for badge in badges:
-            if "assigned" not in badge or not badge["assigned"]:
+            if 'assigned' not in badge or not badge['assigned']:
                 continue
 
-            if "image_url" not in badge:
-                return False, "Couldn't find an image for the badge"
+            if 'image_url' not in badge:
+                return False, _("Couldn't find an image for the badge")
 
             image_loc = os.path.join(online_badges_dir,
-                                     "{}.png".format(badge["id"]))
-            download_url(badge["image_url"], image_loc)
+                                     "{}.png".format(badge['id']))
+            download_url(badge['image_url'], image_loc)
 
-            online_badges_data[badge["id"]] = {
-                "achieved": True,
-                "bg_color": badge["bg_color"].replace("#", ""),
-                "desc_locked": badge["desc_locked"],
-                "desc_unlocked": badge["desc_unlocked"],
-                "title": badge["title"]
+            online_badges_data[badge['id']] = {
+                'achieved': True,
+                'bg_color': badge['bg_color'].replace("#", ""),
+                'desc_locked': badge['desc_locked'],
+                'desc_unlocked': badge['desc_unlocked'],
+                'title': badge['title']
             }
 
         try:
             may_write = True
             txt = None
-            f = open(online_badges_file, "w")
+            f = open(online_badges_file, 'w')
         except IOError as e:
             may_write = False
             txt = 'Error opening badges file {}'.format(str(e))

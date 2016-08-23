@@ -27,3 +27,4 @@ icon/kano-world.png usr/share/icons/Kano/66x66/apps
 lxpanel-plugin/kano_profile.so usr/lib/arm-linux-gnueabihf/lxpanel/plugins/
 
 xdg/* usr/share/applications
+locale/* /usr/share/locale

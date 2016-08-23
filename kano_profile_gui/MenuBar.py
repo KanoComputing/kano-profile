@@ -156,7 +156,7 @@ class HomeButton(Gtk.Button):
         # Get username here
         username = get_mixed_username()
         if len(username) > 12:
-            username = username[:12] + u'…'
+            username = username[:12] + u'\N{HORIZONTAL ELLIPSIS}'
 
         # Info about the different settings
         title_label = Gtk.Label(username, xalign=0)

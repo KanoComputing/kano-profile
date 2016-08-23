@@ -167,7 +167,7 @@ def check_installed(app):
     # Check if we know how to install it
     if app not in debpkg_to_kano_appstore:
         logger.error(
-            "Do not know how to translate app "{}" to kano-apps"
+            "Do not know how to translate app '{}' to kano-apps"
             .format(app)
         )
         return False
@@ -218,7 +218,7 @@ def launch_project(app, filename, data_dir, background=False):
             "Can't find app '{}' in the app profiles - [{}]"
             .format(app_tr, exc)
         )
-        raise ValueError(_("App \"{}\" not available").format(app_tr))
+        raise ValueError(_("App '{}' not available").format(app_tr))
 
     # Try to load the project if the app is already running, via a signal.
     _, _, rc = run_cmd('/usr/bin/kano-signal launch-share {}'.format(fullpath))

@@ -6,8 +6,6 @@
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
-# -*- coding: utf-8 -*-
-
 import os
 from gi.repository import Gtk
 from kano.utils import get_home, read_json
@@ -96,7 +94,7 @@ class ProjectItem():
         # shorten project name to 20 characters long
         display_name = project['display_name']
         if len(display_name) > 20:
-            display_name = display_name[:20] + u'…'
+            display_name = display_name[:20] + u'\N{HORIZONTAL ELLIPSIS}'
 
         self.title = Gtk.Label(display_name)
         self.title.get_style_context().add_class('project_item_title')

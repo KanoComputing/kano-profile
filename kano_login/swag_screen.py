@@ -8,8 +8,6 @@
 # Shows profile created
 #
 
-# -*- coding: utf-8 -*-
-
 import sys
 from kano_login.templates.template import Template
 from kano_profile_gui.images import get_image
@@ -31,7 +29,7 @@ class SwagScreen(Template):
             subheader = _(
                 u"Now you can share stuff, build your character, " \
                 u"and connect with friends! You've earned some " \
-                u"rewards…"
+                u"rewards\N{HORIZONTAL ELLIPSIS}"
             )
             image_name = 'profile-created'
             button_label = _("LET'S GO")

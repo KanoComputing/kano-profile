@@ -40,6 +40,9 @@ messages.pot:
 	$(run-xgettext)
 	$(clean-up)
 
+en_QQ.po: messages.pot
+	../../kano-i18n/dev_locale/fake_locale messages.pot en_QQ.po
+
 %.po: messages.pot
 	msgmerge -N -U $*.po messages.pot
 	touch $*.po

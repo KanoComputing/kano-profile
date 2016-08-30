@@ -13,6 +13,29 @@ from kano.gtk3.cursor import attach_cursor_events
 from kano.gtk3.scrolled_window import ScrolledWindow
 
 
+# Having to include the translatable strings here for the time being
+# as they are buried in the conf.json file.
+CATEGORIES = [
+    N_("Faces"),
+    N_("Skins"),
+    N_("Belts"),
+    N_("Hair"),
+    N_("Suits"),
+    N_("Stickers"),
+    N_("Accessories"),
+    N_("Hats"),
+    N_("Scarves"),
+    N_("Headwear"),
+]
+SPECIAL_CATEGORIES = [
+    N_("Environments"),
+    N_("Characters"),
+]
+CHARACTERS = [
+    N_("Judoka"),
+]
+
+
 class PopUpItemMenu(SelectMenu):
     '''This creates the pop out menu showing each of the items.
     '''
@@ -72,7 +95,7 @@ class PopUpItemMenu(SelectMenu):
         top_bar = Gtk.EventBox()
         top_bar.get_style_context().add_class('pop_up_menu_top_bar')
         label_txt = self._parser.get_category_display_name(self._category)
-        label = Gtk.Label(label_txt.title())
+        label = Gtk.Label(_(label_txt))
         label.set_alignment(0, 0.5)
         label.set_margin_left(20)
         top_bar.add(label)

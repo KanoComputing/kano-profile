@@ -19,5 +19,5 @@ else:
     LOCALE_PATH = None
 
 import kano_i18n.init
-kano_i18n.init.register_domain('kano-tutorial', LOCALE_PATH)
+kano_i18n.init.register_domain('kano-profile', LOCALE_PATH)
 

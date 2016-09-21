@@ -203,14 +203,14 @@ def set_avatar(subcat, item, sync=False):
 
 
 ENVIRONMENT_REMAP = {
-    _("Arcade Hall"): 'arcade_hall',
-    _("Concert Hall"): 'concert_hall',
-    _("Jungle"): 'jungle',
-    _("Space"): 'space',
-    _("Dojo"): 'dojo',
-    _("Park"): 'park',
-    _("Video Set"): 'video_set',
-    _("Minecraft"): 'minecraft'
+    "Arcade Hall": 'arcade_hall',
+    "Concert Hall": 'concert_hall',
+    "Jungle": 'jungle',
+    "Space": 'space',
+    "Dojo": 'dojo',
+    "Park": 'park',
+    "Video Set": 'video_set',
+    "Minecraft": 'minecraft'
 }
 
 

@@ -61,7 +61,7 @@ def profile_media(media_path):
     path = os.path.join(media_dir, media_path)
 
     if not os.path.exists(path):
-        raise OSError(_("Media file ({}) not found").format(path))
+        raise OSError("Media file ({}) not found".format(path))
     return path
 
 
@@ -84,7 +84,7 @@ def quest_media(quest_conf_path, media_path):
     path = os.path.join(quest_dir, 'media', media_path)
 
     if not os.path.exists(path):
-        raise OSError(_("Media file ({}) not found").format(path))
+        raise OSError("Media file ({}) not found".format(path))
     return path
 
 

@@ -148,7 +148,7 @@ class BadgeCalc(object):
         self._app_profiles = read_json(app_profiles_file)
         if not self._app_profiles:
             logger.error("Error reading app_profiles.json")
-            raise RuntimeError(_("Couldn't read app profiles"))
+            raise RuntimeError("Couldn't read app profiles")
 
         self._app_list = get_app_list() + ['computed']
         self._app_state = dict()

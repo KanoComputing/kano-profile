@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kano-profile\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-30 10:43+0000\n"
+"POT-Creation-Date: 2016-09-23 16:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,156 +49,262 @@ msgstr ""
 msgid "Open WiFi"
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:82 ../kano_login/login.py:64
-msgid "Username"
+#: ../kano_profile/quests.py:352
+msgid "{}XP"
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:84
-msgid "Stay safe, don't use your real name."
+#: ../kano_profile/quests.py:356
+msgid "You gained new XP!"
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:91 ../kano_login/login.py:65
-#: ../kano_login/login.py:127
-msgid "Password"
+#: ../kano_profile/quests.py:468
+msgid "Quest complete!"
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:96
-msgid "Show password"
+#: ../kano_profile/quests.py:469
+msgid "Click here to claim your rewards."
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:102
-msgid "Email Address"
+#: ../kano_profile/quests.py:512
+msgid "Quest not ready to be completed."
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:138
-msgid " looks good!"
+#: ../kano_profile/tracking_events.py:35
+msgid "Failed to send the ping event ({})"
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:140
-msgid " is not valid"
+#: ../kano_profile/tracking_events.py:56
+msgid "Unknown event template '{}'."
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:151
-msgid " is invalid"
+#: ../kano_profile/apps.py:221
+msgid "App '{}' not available"
 msgstr ""
 
-#: ../kano_registration_gui/GetData.py:226
-msgid "Terms and conditions"
+#: ../kano_profile_gui/MenuBar.py:28
+msgid "BADGES"
 msgstr ""
 
-#: ../kano_registration_gui/TermsAndConditions.py:25
-msgid "I agree to the terms and conditions"
+#: ../kano_profile_gui/MenuBar.py:29 ../kano_profile_gui/MenuBar.py:52
+#: ../kano_profile_gui/MenuBar.py:109
+msgid "CHARACTER"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:38
-msgid "Year"
+#: ../kano_profile_gui/MenuBar.py:30
+msgid "QUESTS"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:45
-msgid "Month"
+#: ../kano_profile_gui/MenuBar.py:173
+msgid "Level {}"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:51
-#: ../kano_registration_gui/BirthdayWidget.py:110
-#: ../kano_registration_gui/BirthdayWidget.py:123
-msgid "Day"
+#: ../kano_profile_gui/projects.py:86
+msgid "MAKE"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:65
-msgid "Birthday"
+#: ../kano_profile_gui/QuestInfo.py:115
+msgid "Rewards"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:146
-msgid " date is in the future"
+#: ../kano_profile_gui/QuestList.py:127
+msgid "Rewards: "
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:150
-msgid " year out of range"
+#: ../kano_profile_gui/character_screens.py:34
+msgid "Edit"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:152
-msgid " is valid"
+#: ../kano_profile_gui/character_screens.py:109
+msgid "Save changes"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:235
-msgid "Oops!"
+#: ../kano_profile_gui/character_screens.py:118
+msgid "Discard"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:236
-msgid "You haven't entered a valid birthday"
+#: ../kano_profile_gui/badge_screen.py:45
+msgid "NEXT PAGE"
 msgstr ""
 
-#: ../kano_registration_gui/BirthdayWidget.py:279
-#, python-brace-format
-msgid "There's a problem - {0}"
+#: ../kano_profile_gui/badge_screen.py:49
+#: ../kano_profile_gui/badge_screen.py:245
+msgid "PREVIOUS"
 msgstr ""
 
-#: ../kano_registration_gui/PageControl.py:26
-msgid "BACK"
+#: ../kano_profile_gui/badge_screen.py:249
+msgid "BACK TO GRID"
 msgstr ""
 
-#: ../kano_registration_gui/PageControl.py:27
 #: ../kano_profile_gui/badge_screen.py:253
+#: ../kano_registration_gui/PageControl.py:27
 msgid "NEXT"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:40
-msgid "Kano World"
+#: ../kano_login/first_screen.py:34
+msgid "CREATE"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:41
-msgid "Choose a cool name and secure password"
+#: ../kano_login/first_screen.py:35
+msgid "Skip"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:50
-msgid "JOIN KANO WORLD"
+#: ../kano_login/first_screen.py:36
+msgid "I have a profile"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:108
-msgid "Cannot register, problem: Username already registered"
+#: ../kano_login/first_screen.py:37
+msgid "Now let's make your online Profile"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:117
-#: ../kano_login/login.py:197
-msgid "Houston, we have a problem"
+#: ../kano_login/first_screen.py:38
+msgid "So you can save badges, games, and projects"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:136
+#: ../kano_login/first_screen.py:121
+msgid "Oops! You need Internet to make a profile"
+msgstr ""
+
+#: ../kano_login/first_screen.py:123
+msgid "But you can skip this if you have no connection right now"
+msgstr ""
+
+#: ../kano_login/first_screen.py:127
+msgid "CONNECT"
+msgstr ""
+
+#: ../kano_login/first_screen.py:128
+msgid "Register later"
+msgstr ""
+
+#: ../kano_login/components/logged_in.py:24 ../kano_login/login.py:258
+msgid "OK"
+msgstr ""
+
+#: ../kano_login/components/logged_in.py:28
+msgid "Logged in!"
+msgstr ""
+
+#: ../kano_login/components/logged_in.py:28
+msgid "You're already logged in"
+msgstr ""
+
+#: ../kano_login/components/logged_in.py:46
+msgid "Logged out!"
+msgstr ""
+
 #: ../kano_login/swag_screen.py:28
+#: ../kano_registration_gui/RegistrationScreen.py:136
 msgid "Profile activated!"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:137
+#: ../kano_login/swag_screen.py:30
 msgid ""
-"Now you can share stuff, build your character, and connect with friends."
+"Now you can share stuff, build your character, and connect with friends! "
+"You've earned some rewards…"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:158
-msgid "User not found"
+#: ../kano_login/swag_screen.py:35 ../kano_login/swag_screen.py:44
+msgid "LET'S GO"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:188
-msgid "This username is taken!"
+#: ../kano_login/swag_screen.py:37
+msgid "No online profile - for now."
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:189
-msgid "Try another one"
+#: ../kano_login/swag_screen.py:39
+msgid ""
+"Your profile stores all your rewards, projects, and challenges. But fear not "
+"- we'll save everything for when you have internet."
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:200
-msgid "You don't have internet"
+#: ../kano_login/login.py:52
+msgid "Login"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:201
-msgid "Do you want to connect to WiFi?"
+#: ../kano_login/login.py:53
+msgid "Enter your username and password"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:204
-msgid "YES"
+#: ../kano_login/login.py:64 ../kano_registration_gui/GetData.py:82
+msgid "Username"
 msgstr ""
 
-#: ../kano_registration_gui/RegistrationScreen.py:209
-msgid "NO"
+#: ../kano_login/login.py:65 ../kano_login/login.py:127
+#: ../kano_registration_gui/GetData.py:91
+msgid "Password"
+msgstr ""
+
+#: ../kano_login/login.py:80
+msgid "LOGIN"
+msgstr ""
+
+#: ../kano_login/login.py:81
+msgid "Create New"
+msgstr ""
+
+#: ../kano_login/login.py:82
+msgid "Forgotten password?"
+msgstr ""
+
+#: ../kano_login/login.py:108
+msgid " Username:  "
+msgstr ""
+
+#: ../kano_login/login.py:176
+msgid "You don't have internet!"
+msgstr ""
+
+#: ../kano_login/login.py:178
+msgid "Connect with wifi or ethernet and try again"
+msgstr ""
+
+#: ../kano_login/login.py:197
+#: ../kano_registration_gui/RegistrationScreen.py:117
+msgid "Houston, we have a problem"
+msgstr ""
+
+#: ../kano_login/login.py:245 ../kano_login/login.py:339
+msgid "Success!"
+msgstr ""
+
+#: ../kano_login/login.py:246
+msgid "You're in - online features now enabled."
+msgstr ""
+
+#: ../kano_login/login.py:292
+msgid "Reset your password"
+msgstr ""
+
+#: ../kano_login/login.py:293
+msgid "We'll send a new password to your email"
+msgstr ""
+
+#: ../kano_login/login.py:298
+msgid "Email"
+msgstr ""
+
+#: ../kano_login/login.py:315
+msgid "RESET PASSWORD"
+msgstr ""
+
+#: ../kano_login/login.py:340
+msgid "Sent new password to your email"
+msgstr ""
+
+#: ../kano_login/login.py:342
+msgid "GO TO LOGIN SCREEN"
+msgstr ""
+
+#: ../kano_login/login.py:343 ../kano_login/login.py:349
+msgid "QUIT"
+msgstr ""
+
+#: ../kano_login/login.py:346
+msgid "Something went wrong!"
+msgstr ""
+
+#: ../kano_login/login.py:350
+msgid "TRY AGAIN"
 msgstr ""
 
 #: ../kano_avatar_gui/PopUpItemMenu.py:19
@@ -253,170 +359,132 @@ msgstr ""
 msgid "Judoka"
 msgstr ""
 
-#: ../kano_world/session.py:79
-msgid "Boy"
+#: ../kano_registration_gui/TermsAndConditions.py:25
+msgid "I agree to the terms and conditions"
 msgstr ""
 
-#: ../kano_world/session.py:81
-msgid "Girl"
+#: ../kano_registration_gui/RegistrationScreen.py:40
+msgid "Kano World"
 msgstr ""
 
-#: ../kano_world/session.py:83
-msgid "Wizard"
+#: ../kano_registration_gui/RegistrationScreen.py:41
+msgid "Choose a cool name and secure password"
 msgstr ""
 
-#: ../kano_world/session.py:462
-msgid "No data available"
+#: ../kano_registration_gui/RegistrationScreen.py:50
+msgid "JOIN KANO WORLD"
 msgstr ""
 
-#: ../kano_world/session.py:476
-msgid "Upload failed, tracking data not sent."
+#: ../kano_registration_gui/RegistrationScreen.py:108
+msgid "Cannot register, problem: Username already registered"
 msgstr ""
 
-#: ../kano_world/session.py:494
-msgid "Corrupt response (the 'user' key not found)"
-msgstr ""
-
-#: ../kano_world/session.py:497
-msgid "Corrupt response (the 'user.profile' key not found)"
-msgstr ""
-
-#: ../kano_world/session.py:500
-msgid "Corrupt response (the 'user.profile.badges' key not found)"
-msgstr ""
-
-#: ../kano_world/session.py:512
-msgid "Couldn't find an image for the badge"
-msgstr ""
-
-#: ../kano_world/connection.py:85
-msgid "We cannot reach the Kano server. Try again in a few minutes."
-msgstr ""
-
-#: ../kano_world/connection.py:93
+#: ../kano_registration_gui/RegistrationScreen.py:137
 msgid ""
-"Timeout waiting for server response, please check your internet connection "
-"and try again later."
+"Now you can share stuff, build your character, and connect with friends."
 msgstr ""
 
-#: ../kano_world/connection.py:98
-msgid ""
-"Error connecting to servers, please check your internet connection and try "
-"again later."
+#: ../kano_registration_gui/RegistrationScreen.py:158
+msgid "User not found"
 msgstr ""
 
-#: ../kano_world/functions.py:33
-msgid "Cannot log in, problem: {}"
+#: ../kano_registration_gui/RegistrationScreen.py:188
+msgid "This username is taken!"
 msgstr ""
 
-#: ../kano_world/functions.py:52
-msgid "Cannot register, problem: {}"
+#: ../kano_registration_gui/RegistrationScreen.py:189
+msgid "Try another one"
 msgstr ""
 
-#: ../kano_world/functions.py:77
-msgid "We cannot reach the Kano server. Try again in a few minutes. Error = {}"
+#: ../kano_registration_gui/RegistrationScreen.py:200
+msgid "You don't have internet"
 msgstr ""
 
-#: ../kano_world/functions.py:108
-msgid "Not registered!"
+#: ../kano_registration_gui/RegistrationScreen.py:201
+msgid "Do you want to connect to WiFi?"
 msgstr ""
 
-#: ../kano_world/functions.py:110
-msgid "No token!"
+#: ../kano_registration_gui/RegistrationScreen.py:204
+msgid "YES"
 msgstr ""
 
-#: ../kano_world/functions.py:122 ../kano_world/functions.py:149
-#: ../kano_world/functions.py:156 ../kano_world/functions.py:163
-#: ../kano_world/functions.py:233 ../kano_world/share.py:57
-#: ../kano_world/share.py:66 ../kano_world/share.py:75
-#: ../kano_world/share.py:84 ../kano_world/share.py:94
-#: ../kano_world/share.py:103 ../kano_world/share.py:111
-#: ../kano_world/share.py:119
-msgid "You are not logged in!"
+#: ../kano_registration_gui/RegistrationScreen.py:209
+msgid "NO"
 msgstr ""
 
-#: ../kano_world/share_helpers.py:33
-msgid "Cannot login"
+#: ../kano_registration_gui/GetData.py:84
+msgid "Stay safe, don't use your real name."
 msgstr ""
 
-#: ../kano_world/share.py:36
-msgid "Something wrong with listing shares!"
+#: ../kano_registration_gui/GetData.py:96
+msgid "Show password"
 msgstr ""
 
-#: ../kano_world/share.py:50
-msgid "Something wrong retrieving comments!"
+#: ../kano_registration_gui/GetData.py:102
+msgid "Email Address"
 msgstr ""
 
-#: ../kano_profile/badges.py:151
-msgid "Couldn't read app profiles"
+#: ../kano_registration_gui/GetData.py:138
+msgid " looks good!"
 msgstr ""
 
-#: ../kano_profile/tracking_events.py:35
-msgid "Failed to send the ping event ({})"
+#: ../kano_registration_gui/GetData.py:140
+msgid " is not valid"
 msgstr ""
 
-#: ../kano_profile/tracking_events.py:56
-msgid "Unknown event template '{}'."
+#: ../kano_registration_gui/GetData.py:151
+msgid " is invalid"
 msgstr ""
 
-#: ../kano_profile/profile.py:206
-msgid "Arcade Hall"
+#: ../kano_registration_gui/GetData.py:226
+msgid "Terms and conditions"
 msgstr ""
 
-#: ../kano_profile/profile.py:207
-msgid "Concert Hall"
+#: ../kano_registration_gui/PageControl.py:26
+msgid "BACK"
 msgstr ""
 
-#: ../kano_profile/profile.py:208
-msgid "Jungle"
+#: ../kano_registration_gui/BirthdayWidget.py:38
+msgid "Year"
 msgstr ""
 
-#: ../kano_profile/profile.py:209
-msgid "Space"
+#: ../kano_registration_gui/BirthdayWidget.py:45
+msgid "Month"
 msgstr ""
 
-#: ../kano_profile/profile.py:210
-msgid "Dojo"
+#: ../kano_registration_gui/BirthdayWidget.py:51
+#: ../kano_registration_gui/BirthdayWidget.py:110
+#: ../kano_registration_gui/BirthdayWidget.py:123
+msgid "Day"
 msgstr ""
 
-#: ../kano_profile/profile.py:211
-msgid "Park"
+#: ../kano_registration_gui/BirthdayWidget.py:65
+msgid "Birthday"
 msgstr ""
 
-#: ../kano_profile/profile.py:212
-msgid "Video Set"
+#: ../kano_registration_gui/BirthdayWidget.py:146
+msgid " date is in the future"
 msgstr ""
 
-#: ../kano_profile/profile.py:213
-msgid "Minecraft"
+#: ../kano_registration_gui/BirthdayWidget.py:150
+msgid " year out of range"
 msgstr ""
 
-#: ../kano_profile/apps.py:221
-msgid "App '{}' not available"
+#: ../kano_registration_gui/BirthdayWidget.py:152
+msgid " is valid"
 msgstr ""
 
-#: ../kano_profile/quests.py:64 ../kano_profile/quests.py:87
-msgid "Media file ({}) not found"
+#: ../kano_registration_gui/BirthdayWidget.py:235
+msgid "Oops!"
 msgstr ""
 
-#: ../kano_profile/quests.py:352
-msgid "{}XP"
+#: ../kano_registration_gui/BirthdayWidget.py:236
+msgid "You haven't entered a valid birthday"
 msgstr ""
 
-#: ../kano_profile/quests.py:356
-msgid "You gained new XP!"
-msgstr ""
-
-#: ../kano_profile/quests.py:468
-msgid "Quest complete!"
-msgstr ""
-
-#: ../kano_profile/quests.py:469
-msgid "Click here to claim your rewards."
-msgstr ""
-
-#: ../kano_profile/quests.py:512
-msgid "Quest not ready to be completed."
+#: ../kano_registration_gui/BirthdayWidget.py:279
+#, python-brace-format
+msgid "There's a problem - {0}"
 msgstr ""
 
 #: ../quests/hack-the-internet/quest.py:18
@@ -467,205 +535,84 @@ msgstr ""
 msgid "Travel to Kano World"
 msgstr ""
 
-#: ../kano_profile_gui/QuestInfo.py:115
-msgid "Rewards"
+#: ../kano_world/connection.py:85
+msgid "We cannot reach the Kano server. Try again in a few minutes."
 msgstr ""
 
-#: ../kano_profile_gui/character_screens.py:34
-msgid "Edit"
-msgstr ""
-
-#: ../kano_profile_gui/character_screens.py:109
-msgid "Save changes"
-msgstr ""
-
-#: ../kano_profile_gui/character_screens.py:118
-msgid "Discard"
-msgstr ""
-
-#: ../kano_profile_gui/projects.py:86
-msgid "MAKE"
-msgstr ""
-
-#: ../kano_profile_gui/QuestList.py:127
-msgid "Rewards: "
-msgstr ""
-
-#: ../kano_profile_gui/badge_screen.py:45
-msgid "NEXT PAGE"
-msgstr ""
-
-#: ../kano_profile_gui/badge_screen.py:49
-#: ../kano_profile_gui/badge_screen.py:245
-msgid "PREVIOUS"
-msgstr ""
-
-#: ../kano_profile_gui/badge_screen.py:249
-msgid "BACK TO GRID"
-msgstr ""
-
-#: ../kano_profile_gui/MenuBar.py:48 ../kano_profile_gui/MenuBar.py:55
-#: ../kano_profile_gui/MenuBar.py:71 ../kano_profile_gui/MenuBar.py:78
-#: ../kano_profile_gui/MenuBar.py:102
-msgid "CHARACTER"
-msgstr ""
-
-#: ../kano_profile_gui/MenuBar.py:55
-msgid "BADGES"
-msgstr ""
-
-#: ../kano_profile_gui/MenuBar.py:66
-msgid "QUESTS"
-msgstr ""
-
-#: ../kano_profile_gui/MenuBar.py:166
-msgid "Level {}"
-msgstr ""
-
-#: ../kano_login/swag_screen.py:30
+#: ../kano_world/connection.py:93
 msgid ""
-"Now you can share stuff, build your character, and connect with friends! "
-"You've earned some rewards…"
+"Timeout waiting for server response, please check your internet connection "
+"and try again later."
 msgstr ""
 
-#: ../kano_login/swag_screen.py:35 ../kano_login/swag_screen.py:44
-msgid "LET'S GO"
-msgstr ""
-
-#: ../kano_login/swag_screen.py:37
-msgid "No online profile - for now."
-msgstr ""
-
-#: ../kano_login/swag_screen.py:39
+#: ../kano_world/connection.py:98
 msgid ""
-"Your profile stores all your rewards, projects, and challenges. But fear not "
-"- we'll save everything for when you have internet."
+"Error connecting to servers, please check your internet connection and try "
+"again later."
 msgstr ""
 
-#: ../kano_login/login.py:52
-msgid "Login"
+#: ../kano_world/session.py:462
+msgid "No data available"
 msgstr ""
 
-#: ../kano_login/login.py:53
-msgid "Enter your username and password"
+#: ../kano_world/session.py:476
+msgid "Upload failed, tracking data not sent."
 msgstr ""
 
-#: ../kano_login/login.py:80
-msgid "LOGIN"
+#: ../kano_world/session.py:494
+msgid "Corrupt response (the 'user' key not found)"
 msgstr ""
 
-#: ../kano_login/login.py:81
-msgid "Create New"
+#: ../kano_world/session.py:497
+msgid "Corrupt response (the 'user.profile' key not found)"
 msgstr ""
 
-#: ../kano_login/login.py:82
-msgid "Forgotten password?"
+#: ../kano_world/session.py:500
+msgid "Corrupt response (the 'user.profile.badges' key not found)"
 msgstr ""
 
-#: ../kano_login/login.py:108
-msgid " Username:  "
+#: ../kano_world/session.py:512
+msgid "Couldn't find an image for the badge"
 msgstr ""
 
-#: ../kano_login/login.py:176
-msgid "You don't have internet!"
+#: ../kano_world/functions.py:33
+msgid "Cannot log in, problem: {}"
 msgstr ""
 
-#: ../kano_login/login.py:178
-msgid "Connect with wifi or ethernet and try again"
+#: ../kano_world/functions.py:52
+msgid "Cannot register, problem: {}"
 msgstr ""
 
-#: ../kano_login/login.py:245 ../kano_login/login.py:339
-msgid "Success!"
+#: ../kano_world/functions.py:77
+msgid "We cannot reach the Kano server. Try again in a few minutes. Error = {}"
 msgstr ""
 
-#: ../kano_login/login.py:246
-msgid "You're in - online features now enabled."
+#: ../kano_world/functions.py:108
+msgid "Not registered!"
 msgstr ""
 
-#: ../kano_login/login.py:258 ../kano_login/components/logged_in.py:24
-msgid "OK"
+#: ../kano_world/functions.py:110
+msgid "No token!"
 msgstr ""
 
-#: ../kano_login/login.py:292
-msgid "Reset your password"
+#: ../kano_world/functions.py:122 ../kano_world/functions.py:149
+#: ../kano_world/functions.py:156 ../kano_world/functions.py:163
+#: ../kano_world/functions.py:233 ../kano_world/share.py:57
+#: ../kano_world/share.py:66 ../kano_world/share.py:75
+#: ../kano_world/share.py:84 ../kano_world/share.py:94
+#: ../kano_world/share.py:103 ../kano_world/share.py:111
+#: ../kano_world/share.py:119
+msgid "You are not logged in!"
 msgstr ""
 
-#: ../kano_login/login.py:293
-msgid "We'll send a new password to your email"
+#: ../kano_world/share_helpers.py:33
+msgid "Cannot login"
 msgstr ""
 
-#: ../kano_login/login.py:298
-msgid "Email"
+#: ../kano_world/share.py:36
+msgid "Something wrong with listing shares!"
 msgstr ""
 
-#: ../kano_login/login.py:315
-msgid "RESET PASSWORD"
-msgstr ""
-
-#: ../kano_login/login.py:340
-msgid "Sent new password to your email"
-msgstr ""
-
-#: ../kano_login/login.py:342
-msgid "GO TO LOGIN SCREEN"
-msgstr ""
-
-#: ../kano_login/login.py:343 ../kano_login/login.py:349
-msgid "QUIT"
-msgstr ""
-
-#: ../kano_login/login.py:346
-msgid "Something went wrong!"
-msgstr ""
-
-#: ../kano_login/login.py:350
-msgid "TRY AGAIN"
-msgstr ""
-
-#: ../kano_login/first_screen.py:34
-msgid "CREATE"
-msgstr ""
-
-#: ../kano_login/first_screen.py:35
-msgid "Skip"
-msgstr ""
-
-#: ../kano_login/first_screen.py:36
-msgid "I have a profile"
-msgstr ""
-
-#: ../kano_login/first_screen.py:37
-msgid "Now let's make your online Profile"
-msgstr ""
-
-#: ../kano_login/first_screen.py:38
-msgid "So you can save badges, games, and projects"
-msgstr ""
-
-#: ../kano_login/first_screen.py:121
-msgid "Oops! You need Internet to make a profile"
-msgstr ""
-
-#: ../kano_login/first_screen.py:123
-msgid "But you can skip this if you have no connection right now"
-msgstr ""
-
-#: ../kano_login/first_screen.py:127
-msgid "CONNECT"
-msgstr ""
-
-#: ../kano_login/first_screen.py:128
-msgid "Register later"
-msgstr ""
-
-#: ../kano_login/components/logged_in.py:28
-msgid "Logged in!"
-msgstr ""
-
-#: ../kano_login/components/logged_in.py:28
-msgid "You're already logged in"
-msgstr ""
-
-#: ../kano_login/components/logged_in.py:46
-msgid "Logged out!"
+#: ../kano_world/share.py:50
+msgid "Something wrong retrieving comments!"
 msgstr ""

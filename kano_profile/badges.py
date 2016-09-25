@@ -111,7 +111,7 @@ def calculate_kano_level():
         if level != max_level:
             level_max = level_rules[str(level + 1)] - 1
         else:
-            level_max = float("inf")
+            level_max = float('inf')
 
         if level_min <= xp_now <= level_max:
             reached_level = level
@@ -137,7 +137,7 @@ def calculate_min_current_max_xp():
         if level != max_level:
             level_max = level_rules[str(level + 1)]
         else:
-            level_max = float("inf")
+            level_max = float('inf')
 
         if level_min <= xp_now <= level_max:
             return level_min, xp_now, level_max
@@ -147,7 +147,7 @@ class BadgeCalc(object):
     def __init__(self):
         self._app_profiles = read_json(app_profiles_file)
         if not self._app_profiles:
-            logger.error('Error reading app_profiles.json')
+            logger.error("Error reading app_profiles.json")
             raise RuntimeError("Couldn't read app profiles")
 
         self._app_list = get_app_list() + ['computed']
@@ -329,9 +329,9 @@ def calculate_badges():
         badge_c = BadgeCalc()
         ret_v = badge_c.calculated_badges
     except KeyError as exc:
-        logger.error('Configuration missing some value: [{}]'.format(exc))
+        logger.error("Configuration missing some value: [{}]".format(exc))
     except RuntimeError as exc:
-        logger.error('Error while trying to calculate badges [{}]'.format(exc))
+        logger.error("Error while trying to calculate badges [{}]".format(exc))
 
     return ret_v
 
@@ -360,10 +360,10 @@ def load_online_badges():
 
     online_badges = {}
     try:
-        f = open(online_badges_file, "r")
+        f = open(online_badges_file, 'r')
     except IOError as e:
         logger.error(
-            'Error opening badges file: {}'.format(e))
+            "Error opening badges file: {}".format(e))
     else:
         with f:
             online_badges = json.load(f)
@@ -393,7 +393,7 @@ def write_notifications(filename, notifications):
         os.close(fifo)
 
 def save_app_state_with_dialog(app_name, data):
-    logger.debug('save_app_state_with_dialog {}'.format(app_name))
+    logger.debug("save_app_state_with_dialog {}".format(app_name))
 
     old_level, _, old_xp = calculate_kano_level()
     old_badges = calculate_badges()
@@ -482,7 +482,7 @@ def update_upwards_with_dialog(app_name, variable, value):
 
 def increment_app_state_variable_with_dialog(app_name, variable, value):
     logger.debug(
-        'increment_app_state_variable_with_dialog {} {} {}'
+        "increment_app_state_variable_with_dialog {} {} {}"
         .format(app_name, variable, value)
     )
 
@@ -496,7 +496,7 @@ def increment_app_state_variable_with_dialog(app_name, variable, value):
 
 def load_badge_rules():
     if not os.path.exists(rules_dir):
-        logger.error('rules dir missing')
+        logger.error("rules dir missing")
         return
 
     merged_rules = dict()
@@ -504,13 +504,13 @@ def load_badge_rules():
     for folder in subfolders:
         folder_fullpath = os.path.join(rules_dir, folder)
         if not os.path.exists(folder_fullpath):
-            logger.error('rules subfolder missing: {}'.format(folder_fullpath))
+            logger.error("rules subfolder missing: {}".format(folder_fullpath))
             return
 
         rule_files = os.listdir(folder_fullpath)
         if not rule_files:
             logger.error(
-                'no rule files in subfolder: {}'.format(folder_fullpath)
+                "no rule files in subfolder: {}".format(folder_fullpath)
             )
             return
 
@@ -518,12 +518,12 @@ def load_badge_rules():
             rule_file_fullpath = os.path.join(folder_fullpath, rule_file)
             if os.path.splitext(rule_file_fullpath)[1] != '.json':
                 logger.debug(
-                    'Skipping over non json {}'.format(rule_file_fullpath)
+                    "Skipping over non json {}".format(rule_file_fullpath)
                 )
                 continue
             rule_data = read_json(rule_file_fullpath)
             if not rule_data:
-                logger.error('rule file empty: {}'.format(rule_file_fullpath))
+                logger.error("rule file empty: {}".format(rule_file_fullpath))
                 continue
 
             category = folder

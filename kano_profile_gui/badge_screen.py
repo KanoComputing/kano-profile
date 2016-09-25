@@ -42,13 +42,13 @@ class BadgeScreen(Gtk.EventBox):
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.Box()
 
-        self.next_button = create_navigation_button(_("Next page").upper(),
-                                                    "next")
-        self.next_button.connect("clicked", self._load_page_wrapper, 1)
+        self.next_button = create_navigation_button(_("NEXT PAGE"),
+                                                    'next')
+        self.next_button.connect('clicked', self._load_page_wrapper, 1)
 
-        self.prev_button = create_navigation_button(_("Previous").upper(),
-                                                    "previous")
-        self.prev_button.connect("clicked", self._load_page_wrapper, -1)
+        self.prev_button = create_navigation_button(_("PREVIOUS"),
+                                                    'previous')
+        self.prev_button.connect('clicked', self._load_page_wrapper, -1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)
         bottom_bar.pack_end(self.next_button, False, False, 0)
@@ -89,7 +89,7 @@ class BadgeGrid(Gtk.Grid):
     def __init__(self, win):
         Gtk.Grid.__init__(self)
         self._win = win
-        self.get_style_context().add_class("badge_grid")
+        self.get_style_context().add_class('badge_grid')
         self.row = 2
         self.column = 3
         self.number_on_page = self.row * self.column
@@ -117,7 +117,7 @@ class BadgeGrid(Gtk.Grid):
             # This is the index of the badge in the ordered array of all the
             # badges
             index = page_number * self.number_on_page + i
-            badge_widget.connect("clicked", self._go_to_badge_info_wrapper,
+            badge_widget.connect('clicked', self._go_to_badge_info_wrapper,
                                  index)
             self.attach(badge_widget, column, row, 1, 1)
 
@@ -171,7 +171,7 @@ class BadgeInfoScreen(Gtk.EventBox):
         # TODO: this is repeated.  Fix this.
         locked = not self.item_info['achieved']
         if locked:
-            bg_color = "#dddddd"
+            bg_color = '#dddddd'
         else:
             bg_color = self.background_color = unicodedata.normalize('NFKD', '#' + self.item_info['bg_color']).encode('ascii', 'ignore')
 
@@ -181,7 +181,7 @@ class BadgeInfoScreen(Gtk.EventBox):
         style_provider.load_from_data(css)
 
         style_context = background.get_style_context()
-        style_context.add_class("badge_screen_background")
+        style_context.add_class('badge_screen_background')
 
         style_context.add_provider(
             style_provider,
@@ -204,24 +204,24 @@ class BadgeInfoScreen(Gtk.EventBox):
 
         info_box = Gtk.EventBox()
         info_box.set_size_request(info_width, -1)
-        info_box.get_style_context().add_class("info_box")
+        info_box.get_style_context().add_class('info_box')
         info_box.set_margin_top(20)
         info_box.set_margin_bottom(100)
         info_box.set_margin_right(20)
 
-        title = self.item_info["title"]
+        title = self.item_info['title']
         locked = not self.item_info['achieved']
 
         if locked:
-            description = self.item_info["desc_locked"]
+            description = self.item_info['desc_locked']
         else:
-            description = self.item_info["desc_unlocked"]
+            description = self.item_info['desc_unlocked']
 
         title_label = Gtk.Label(title, xalign=0)
-        title_label.get_style_context().add_class("info_heading")
+        title_label.get_style_context().add_class('info_heading')
 
         description_label = Gtk.Label(description, xalign=0)
-        description_label.get_style_context().add_class("info_paragraph")
+        description_label.get_style_context().add_class('info_paragraph')
         description_label.set_line_wrap(True)
         description_label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)
         description_label.set_size_request(info_width, -1)
@@ -242,16 +242,16 @@ class BadgeInfoScreen(Gtk.EventBox):
     def _create_bottom_navigation_bar(self):
         bottom_bar = Gtk.ButtonBox()
 
-        self.prev_button = create_navigation_button(_("Previous").upper(),
-                                                    "previous")
-        self.prev_button.connect("clicked", self._go_to_other_badge, -1)
+        self.prev_button = create_navigation_button(_("PREVIOUS"),
+                                                    'previous')
+        self.prev_button.connect('clicked', self._go_to_other_badge, -1)
 
-        self.grid_button = create_navigation_button(_("Back to grid").upper(),
-                                                    "middle")
-        self.grid_button.connect("clicked", self._go_to_grid)
+        self.grid_button = create_navigation_button(_("BACK TO GRID"),
+                                                    'middle')
+        self.grid_button.connect('clicked', self._go_to_grid)
 
-        self.next_button = create_navigation_button(_("Next").upper(), "next")
-        self.next_button.connect("clicked", self._go_to_other_badge, 1)
+        self.next_button = create_navigation_button(_("NEXT"), 'next')
+        self.next_button.connect('clicked', self._go_to_other_badge, 1)
 
         bottom_bar.pack_start(self.prev_button, False, False, 0)
         bottom_bar.pack_start(self.grid_button, False, False, 0)

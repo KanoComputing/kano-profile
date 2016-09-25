@@ -61,8 +61,8 @@ class Menu(Gtk.Fixed):
         return self._cat_menu.get_selected()
 
     def get_selected_obj(self, category):
-        if "pop_up" in self.menus[category]:
-            return self.menus[category]["pop_up"].get_selected()
+        if 'pop_up' in self.menus[category]:
+            return self.menus[category]['pop_up'].get_selected()
         else:
             return ""
 
@@ -84,8 +84,8 @@ class Menu(Gtk.Fixed):
         self._initialise_pop_up_menus()
         for cat in self.menus:
             if cat != self._parser.char_label:
-                self.menus[cat]["pop_up"].hide()
-        self.menus[self._parser.char_label]["pop_up"].show()
+                self.menus[cat]['pop_up'].hide()
+        self.menus[self._parser.char_label]['pop_up'].show()
         self._cat_menu.show_all()
         if randomise:
             self.emit('randomise_all')
@@ -99,7 +99,7 @@ class Menu(Gtk.Fixed):
             pop_up.connect('character_selected', self._on_char_select)
 
             self.menus[category] = {}
-            self.menus[category]["pop_up"] = pop_up
+            self.menus[category]['pop_up'] = pop_up
 
             self.put(self.menus[category]['pop_up'],
                      self.pop_up_pos_x, self.pop_up_pos_y)
@@ -157,12 +157,12 @@ class Menu(Gtk.Fixed):
 
             # object_list.append(obj_name)
             self.select_pop_up_in_category(category, obj_name)
-            self.menus[category]["pop_up"].hide()
+            self.menus[category]['pop_up'].hide()
             self.saved_selected_list[category] = obj_name
 
     def select_pop_up_in_category(self, category, obj_name):
-        self.menus[category]["pop_up"].set_selected(obj_name)
-        self.menus[category]["pop_up"].only_style_selected(obj_name)
+        self.menus[category]['pop_up'].set_selected(obj_name)
+        self.menus[category]['pop_up'].only_style_selected(obj_name)
 
     def select_pop_up_items(self, selected_items):
         '''selected_items are of the form
@@ -170,7 +170,7 @@ class Menu(Gtk.Fixed):
         '''
 
         for category, item_dict in selected_items.iteritems():
-            pop_up = self.menus[category]["pop_up"]
+            pop_up = self.menus[category]['pop_up']
             identifier = selected_items[category]
             pop_up.only_style_selected(identifier)
 
@@ -191,8 +191,8 @@ class Menu(Gtk.Fixed):
     def hide_pop_ups(self):
         for category, menu_dict in self.menus.iteritems():
 
-            if "pop_up" in self.menus[category]:
-                self.menus[category]["pop_up"].hide()
+            if 'pop_up' in self.menus[category]:
+                self.menus[category]['pop_up'].hide()
 
     def _emit_signal(self, widget, category):
         '''This is to propagate the signal the signal up a widget.

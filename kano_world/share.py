@@ -33,7 +33,7 @@ def list_shares(app_name=None, page=0, featured=False, user_id=None):
     if 'entries' in data:
         return True, None, data
 
-    return False, 'Something wrong with listing shares!', None
+    return False, _("Something wrong with listing shares!"), None
 
 
 def get_comments(share_id):
@@ -47,14 +47,14 @@ def get_comments(share_id):
     if 'entries' in data:
         return True, None, data['entries']
 
-    return False, 'Something wrong retrieving comments!', None
+    return False, _("Something wrong retrieving comments!"), None
 
 
 def post_comment(share_id, comment):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.post_comment(share_id, comment)
 
@@ -63,7 +63,7 @@ def like_share(share_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.like_share(share_id)
 
@@ -72,7 +72,7 @@ def unlike_share(share_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.unlike_share(share_id)
 
@@ -81,7 +81,7 @@ def get_following():
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     user_id = get_kano_world_id()
     return glob_session.get_users_following(user_id)
@@ -91,7 +91,7 @@ def follow_user(user_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.follow_user(user_id)
 
@@ -100,7 +100,7 @@ def unfollow_user(user_id):
     glob_session = get_glob_session()
 
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.unfollow_user(user_id)
 
@@ -108,7 +108,7 @@ def unfollow_user(user_id):
 def upload_share(file_path, title, app_name):
     glob_session = get_glob_session()
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.upload_share(file_path, title, app_name)
 
@@ -116,7 +116,7 @@ def upload_share(file_path, title, app_name):
 def delete_share(share_id):
     glob_session = get_glob_session()
     if not glob_session:
-        return False, 'You are not logged in!'
+        return False, _("You are not logged in!")
 
     return glob_session.delete_share(share_id)
 
@@ -148,7 +148,7 @@ def download_share(entry):
     app_profiles = read_json(app_profiles_file)
 
     if app not in app_profiles:
-        logger.error('Cannot download share, app not found in app-profiles')
+        logger.error("Cannot download share, app not found in app-profiles")
         return
 
     app_profile = app_profiles[app]
@@ -165,7 +165,7 @@ def download_share(entry):
 
     success, text = download_url(attachment_url, attachment_path)
     if not success:
-        msg = 'Error with downloading share file: {}'.format(text)
+        msg = "Error with downloading share file: {}".format(text)
         logger.error(msg)
         return False, msg
 
@@ -177,7 +177,7 @@ def download_share(entry):
 
         success, text = download_url(cover_url, cover_path)
         if not success:
-            msg = 'Error with downloading cover file: {}'.format(text)
+            msg = "Error with downloading cover file: {}".format(text)
             logger.error(msg)
             return False, msg
 
@@ -185,14 +185,14 @@ def download_share(entry):
     if resource_url:
         resource_ext = resource_url.split('.')[-1]
         # Make sure we don't remove the tar from gz
-        if "tar.gz" in resource_url:
+        if 'tar.gz' in resource_url:
             resource_ext = 'tar.' + resource_ext
         resource_name = '{}.{}'.format(title_slugified, resource_ext)
         resource_path = os.path.join(folder, resource_name)
 
         success, text = download_url(resource_url, resource_path)
         if not success:
-            msg = 'Error with downloading resource file: {}'.format(text)
+            msg = "Error with downloading resource file: {}".format(text)
             logger.error(msg)
             return False, msg
 

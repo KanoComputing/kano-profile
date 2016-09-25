@@ -15,18 +15,18 @@ class HackerBadge(Badge):
         super(HackerBadge, self)._configure()
 
         self._id = 'hack-the-internet'
-        self._title = title = 'Hipster Hacker'
+        self._title = title = _("Hipster Hacker")
         self._icon = quest_media(__file__, 'badge.svg')
 
         self._desc_locked = title
-        self._desc_unlocked = 'You did it!'
+        self._desc_unlocked = _("You did it!")
         self._bg_color = 'ffe591'
         self._image = self._icon
         self._image_locked = self._icon
 
         n = self._notification
         n['title'] = title
-        n['byline'] = 'You made it to Kano World!'
+        n['byline'] = _("You made it to Kano World!")
         n['command'] = 'kano-profile badges'
         n['image'] = quest_media(__file__, 'badge-notification.png')
 
@@ -34,7 +34,7 @@ class HackerBadge(Badge):
 class Step1(Step):
     def _configure(self):
         super(Step1, self)._configure()
-        self._title = 'Hack kano website'
+        self._title = _("Hack kano website")
 
         self._events = [
             'hack-kano-website'
@@ -48,7 +48,7 @@ class Step1(Step):
 class Step2(Step):
     def _configure(self):
         super(Step2, self)._configure()
-        self._title = 'Get the secret code'
+        self._title = _("Get the secret code")
 
         self._events = [
             'hack-code-received'
@@ -63,7 +63,7 @@ class HackInternetQuest(Quest):
     def _configure(self):
         super(HackInternetQuest, self)._configure()
         self._id = 'hack-the-internet'
-        self._title = 'Hack the internet'
+        self._title = _("Hack the internet")
         self._description = """
 Godard distillery bitters dreamcatcher butcher, pop-up irony Austin scenester
 narwhal retro raw denim. Irony pork belly slow-carb seitan Austin. Mlkshk

@@ -59,7 +59,7 @@ class CharacterCreator(Gtk.EventBox):
             self.randomise_button = self._create_random_button()
             self.fixed.put(self.randomise_button, 645, self.meny_y_pos)
 
-        self.connect("button-press-event", self._hide_pop_ups)
+        self.connect('button-press-event', self._hide_pop_ups)
         self._update_img(None, None)
 
     def select_category_button(self, identifier):
@@ -88,12 +88,12 @@ class CharacterCreator(Gtk.EventBox):
         icon_path = os.path.join(media_dir, "images/icons/random.png")
         icon = Gtk.Image.new_from_file(icon_path)
         random_button.set_image(icon)
-        random_button.get_style_context().add_class("random_button")
+        random_button.get_style_context().add_class('random_button')
         random_button.set_size_request(width, height)
-        random_button.connect("clicked", self._randomise_avatar_wrapper)
-        random_button.connect("enter-notify-event",
+        random_button.connect('clicked', self._randomise_avatar_wrapper)
+        random_button.connect('enter-notify-event',
                               self._set_random_orange_icon)
-        random_button.connect("leave-notify-event", self._set_random_grey_icon)
+        random_button.connect('leave-notify-event', self._set_random_grey_icon)
         attach_cursor_events(random_button)
 
         return random_button
@@ -143,7 +143,7 @@ class CharacterCreator(Gtk.EventBox):
         list_of_objs = self._menu.get_all_selected_objs()
         rc = self.avatar_cr.obj_select(list_of_objs)
         if not rc:
-            logger.error('Error processing the list {}'.format(list_of_objs))
+            logger.error("Error processing the list {}".format(list_of_objs))
         else:
             displ_img = self.avatar_cr.create_avatar()
             self._imgbox.set_image(displ_img)

@@ -25,25 +25,25 @@ class LabelledEntry(Gtk.Box):
         # The other is about whether the information is valid
         label_hbox = Gtk.Box()
         self._title_label = Gtk.Label(text, xalign=0)
-        self._title_label.get_style_context().add_class("get_data_label")
+        self._title_label.get_style_context().add_class('get_data_label')
 
         self._validated = False
 
         self._validation_label = Gtk.Label()
-        self._validation_label.get_style_context().add_class("validation_label")
+        self._validation_label.get_style_context().add_class('validation_label')
         label_hbox.pack_start(self._title_label, False, False, 0)
         label_hbox.pack_start(self._validation_label, False, False, 0)
         self.pack_start(label_hbox, False, False, 0)
 
         self._entry = ValidationEntry()
-        self._entry.get_style_context().add_class("get_data_entry")
+        self._entry.get_style_context().add_class('get_data_entry')
         self._entry.set_size_request(250, -1)
 
         if entry_contents:
             self._entry.set_text(entry_contents)
 
         self.pack_start(self._entry, False, False, 0)
-        self._entry.connect("key-release-event", self.emit_signal)
+        self._entry.connect('key-release-event', self.emit_signal)
 
         self.set_margin_right(30)
         self.set_margin_left(30)
@@ -61,8 +61,8 @@ class LabelledEntry(Gtk.Box):
         Fail turns it red
         Otherwise, don't show it.
         '''
-        self._validation_label.get_style_context().remove_class("fail")
-        self._validation_label.get_style_context().remove_class("success")
+        self._validation_label.get_style_context().remove_class('fail')
+        self._validation_label.get_style_context().remove_class('success')
 
         # Change the image - if successful is nothing, then icon
         # is removed
@@ -72,7 +72,7 @@ class LabelledEntry(Gtk.Box):
         if successful:
             self._validation_label.get_style_context().add_class(successful)
             self._validation_label.set_text(text)
-            self._validated = (successful == "success")
+            self._validated = (successful == 'success')
 
         self._validation_label.show_all()
 

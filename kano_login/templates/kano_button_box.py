@@ -38,10 +38,10 @@ class KanoButtonBox(Gtk.Box):
         return self.kano_button
 
     def set_kano_button_cb(self, cb, args=[]):
-        self.kano_button.connect("button-release-event", cb, args)
+        self.kano_button.connect('button-release-event', cb, args)
 
     def set_orange_button_cb(self, cb, args=[]):
-        self.orange_button.connect("button-release-event", cb, args)
+        self.orange_button.connect('button-release-event', cb, args)
 
     def set_orange_button2_cb(self, cb, args=None):
-        self.orange_button2.connect("button-release-event", cb, args)
+        self.orange_button2.connect('button-release-event', cb, args)

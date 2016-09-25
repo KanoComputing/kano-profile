@@ -60,7 +60,7 @@ class DataTemplate(Gtk.EventBox):
         self.width = 250
         self.height = 350
         self.set_size_request(self.width, self.height)
-        self.get_style_context().add_class("data_screen")
+        self.get_style_context().add_class('data_screen')
 
 
 class GetData(DataTemplate):
@@ -77,25 +77,25 @@ class GetData(DataTemplate):
 
         # This data contains the saved username and birthday
         data = self.get_cached_username_and_birthday()
-        email = get_cached_data("email")
+        email = get_cached_data('email')
 
-        self._username = LabelledEntry("Username", data["username"])
-        self._username.connect("key-release-event", self.validate_username)
-        stay_safe = Gtk.Label("Stay safe, don't use your real name.")
-        stay_safe.get_style_context().add_class("get_data_label")
+        self._username = LabelledEntry(_("Username"), data['username'])
+        self._username.connect('key-release-event', self.validate_username)
+        stay_safe = Gtk.Label(_("Stay safe, don't use your real name."))
+        stay_safe.get_style_context().add_class('get_data_label')
         stay_safe.set_alignment(0, 0)
         stay_safe.set_margin_left(30)
         stay_safe.set_margin_bottom(10)
 
         # Do not fill this in
         self._password = LabelledEntry(_("Password"))
-        self._password.connect("key-release-event", self.validate_password)
+        self._password.connect('key-release-event', self.validate_password)
 
         self.validate_username()
 
         self.show_password = Gtk.CheckButton.new_with_label(_("Show password"))
-        self.show_password.get_style_context().add_class("show_password")
-        self.show_password.connect("toggled", self.make_password_entry_visible)
+        self.show_password.get_style_context().add_class('show_password')
+        self.show_password.connect('toggled', self.make_password_entry_visible)
         self.show_password.set_active(True)
         self.show_password.set_margin_left(30)
 
@@ -105,8 +105,8 @@ class GetData(DataTemplate):
         self.secondary_email_entry = None
 
         self.t_and_cs = TermsAndConditions()
-        self.t_and_cs.checkbutton.connect("clicked", self.widgets_full)
-        self.t_and_cs.connect("t-and-cs-clicked", self.show_terms_and_conditions)
+        self.t_and_cs.checkbutton.connect('clicked', self.widgets_full)
+        self.t_and_cs.connect('t-and-cs-clicked', self.show_terms_and_conditions)
 
         box.pack_start(self._username, False, False, 5)
         box.pack_start(stay_safe, False, False, 0)
@@ -135,9 +135,9 @@ class GetData(DataTemplate):
         if len(password) == 0:
             self._password.label_success("")
         elif check_password(password):
-            self._password.label_success(_(" looks good!"), "success")
+            self._password.label_success(_(" looks good!"), 'success')
         else:
-            self._password.label_success(_(" is not valid"), "fail")
+            self._password.label_success(_(" is not valid"), 'fail')
 
         self.widgets_full()
 
@@ -146,9 +146,9 @@ class GetData(DataTemplate):
         if len(username) == 0:
             self._username.label_success("")
         elif check_username(username):
-            self._username.label_success(_(""), "success")
+            self._username.label_success("", 'success')
         else:
-            self._username.label_success(_(" is invalid"), "fail")
+            self._username.label_success(_(" is invalid"), 'fail')
 
         self.widgets_full()
 
@@ -171,16 +171,16 @@ class GetData(DataTemplate):
     def save_username_and_birthday(self):
         # Birthday should not strictly be got in entry data
         data = self.get_widget_data()
-        cache_data("username", data['username'])
+        cache_data('username', data['username'])
 
     def cache_emails(self):
         data = self.get_email_entry_data()
-        cache_emails(data["email"])
+        cache_emails(data['email'])
 
     def get_cached_username_and_birthday(self):
-        username = get_cached_data("username")
+        username = get_cached_data('username')
         return {
-            "username": username,
+            'username': username,
         }
 
     def get_email_entry_data(self):
@@ -193,7 +193,7 @@ class GetData(DataTemplate):
         data['email'] = self.email_entry.get_text()
 
         # Cache emails if they are retrieved
-        cache_emails(data["email"])
+        cache_emails(data['email'])
         return data
 
     def widgets_full(self, widget=None, event=None):

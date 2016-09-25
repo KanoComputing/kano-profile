@@ -349,11 +349,11 @@ class XP(Reward):
     def _configure(self):
         super(XP, self)._configure()
         self._icon = profile_media('images/icons/xp-reward-icon.png')
-        self._title = "{}XP".format(self._xp)
+        self._title = _("{}XP").format(self._xp)
 
         n = self._notification
         n['title'] = self._title
-        n['byline'] = 'You gained new XP!'
+        n['byline'] = _("You gained new XP!")
         n['image'] = profile_media('images/icons/xp-notification.png')
         n['command'] = 'kano-profile profile'
 
@@ -465,8 +465,8 @@ class Quest(object):
             self._save_state()
 
             display_generic_notification(
-                'Quest complete!',
-                'Click here to claim your rewards.',
+                _("Quest complete!"),
+                _("Click here to claim your rewards."),
                 profile_media('images/quests/quest-complete-notification.png'),
                 'kano-profile-gui quests'
             )
@@ -509,7 +509,7 @@ class Quest(object):
                         n['command']
                     )
         else:
-            raise QuestError('Quest not ready to be completed.')
+            raise QuestError(_("Quest not ready to be completed."))
 
     @property
     def id(self):

@@ -26,14 +26,14 @@ def run(args):
 
     success, text, share = get_share_by_id(share_id)
     if not success:
-        msg = 'Error downloading share: {}'.format(text)
+        msg = "Error downloading share: {}".format(text)
         logger.error(msg)
         hourglass_end()
         return
 
     success, data = download_share(share)
     if not success:
-        msg = 'Could not download share, error: {}'.format(data)
+        msg = "Could not download share, error: {}".format(data)
         logger.error(msg)
         hourglass_end()
         return
@@ -46,7 +46,7 @@ def run(args):
 def launch(data):
     if data:
         (title, attachment_path, app, attachment_name, folder, item_id) = data
-        msg = 'Downloaded share: {}'.format(title)
+        msg = "Downloaded share: {}".format(title)
         logger.info(msg)
 
         if check_installed(app):

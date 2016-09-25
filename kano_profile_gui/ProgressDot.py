@@ -17,7 +17,7 @@ class ProgressDot(Gtk.Fixed):
     A filled or unfilled spot.
     '''
 
-    def __init__(self, filled=False, color="orange"):
+    def __init__(self, filled=False, color='orange'):
         '''
         Args:
             color (str): "orange", "green" or "grey"
@@ -27,7 +27,7 @@ class ProgressDot(Gtk.Fixed):
         self.set_size_request(60, 60)
 
         white_ring = Gtk.EventBox()
-        white_ring.get_style_context().add_class("progress_outer_ring")
+        white_ring.get_style_context().add_class('progress_outer_ring')
         white_ring.set_size_request(44, 44)
         self.put(white_ring, 0, 10)
 
@@ -35,7 +35,7 @@ class ProgressDot(Gtk.Fixed):
         white_ring.add(align1)
 
         brown_ring = Gtk.EventBox()
-        brown_ring.get_style_context().add_class("progress_scroll_section")
+        brown_ring.get_style_context().add_class('progress_scroll_section')
         brown_ring.set_size_request(34, 34)
 
         align1.add(brown_ring)
@@ -44,7 +44,7 @@ class ProgressDot(Gtk.Fixed):
         brown_ring.add(align2)
 
         tick_background = Gtk.EventBox()
-        tick_background.get_style_context().add_class("transparent")
+        tick_background.get_style_context().add_class('transparent')
         self.put(tick_background, 5, 0)
 
         if filled:
@@ -57,7 +57,7 @@ class ProgressDot(Gtk.Fixed):
 
 
 class Tick(Gtk.Image):
-    def __init__(self, width, height, color="orange", bold=True):
+    def __init__(self, width, height, color='orange', bold=True):
         Gtk.Image.__init__(self)
 
         if bold:

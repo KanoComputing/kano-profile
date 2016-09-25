@@ -37,10 +37,10 @@ class CharacterDisplay(Gtk.EventBox):
         hbox.pack_start(self.cog_widget_icon, False, False, 0)
         hbox.pack_end(edit_label, False, False, 0)
 
-        launch_char_creator_btn.connect("clicked", self.go_to_edit_character_screen)
-        launch_char_creator_btn.connect("enter-notify-event", self.set_orange_cog)
-        launch_char_creator_btn.connect("leave-notify-event", self.set_grey_cog)
-        launch_char_creator_btn.get_style_context().add_class("character_cog")
+        launch_char_creator_btn.connect('clicked', self.go_to_edit_character_screen)
+        launch_char_creator_btn.connect('enter-notify-event', self.set_orange_cog)
+        launch_char_creator_btn.connect('leave-notify-event', self.set_grey_cog)
+        launch_char_creator_btn.get_style_context().add_class('character_cog')
         launch_char_creator_btn.add(hbox)
 
         # Pack this part of the screen into the window
@@ -52,7 +52,7 @@ class CharacterDisplay(Gtk.EventBox):
         if not os.path.exists(path):
             # Usually we wouldn't be in this state, but just in case
             from kano_profile.profile import recreate_char, block_and_sync
-            logger.warn('Character assets not there, will sync and recreate')
+            logger.warn("Character assets not there, will sync and recreate")
             block_and_sync()
             recreate_char(block=True)
 
@@ -107,16 +107,16 @@ class CharacterEdit(Gtk.EventBox):
         self.char_creator.reset_selected_menu_items()
 
         self._save_changes_button = KanoButton(_("Save changes").upper())
-        self._save_changes_button.connect("clicked", self.save_changes)
+        self._save_changes_button.connect('clicked', self.save_changes)
         self._save_changes_button.set_sensitive(False)
 
         self.char_creator.connect(
-            "character_changed",
+            'character_changed',
             self._make_button_sensitive
         )
 
         discard_changes_button = OrangeButton(_("Discard").upper())
-        discard_changes_button.connect("clicked", self.discard)
+        discard_changes_button.connect('clicked', self.discard)
         discard_changes_button.set_margin_left(100)
         empty_label = Gtk.Label("")
 

@@ -26,9 +26,9 @@ class ValidationEntry(Gtk.Entry):
         Gtk.Entry.__init__(self)
 
     def set_image(self, name=""):
-        if name == "success":
+        if name == 'success':
             filename = os.path.join(media_dir, "images/icons/success.png")
-        elif name == "fail":
+        elif name == 'fail':
             filename = os.path.join(media_dir, "images/icons/error.png")
         else:
             # if name not correct, leave it blank

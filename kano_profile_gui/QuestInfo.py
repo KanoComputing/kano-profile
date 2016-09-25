@@ -21,7 +21,7 @@ class QuestInfo(Gtk.EventBox):
     def __init__(self, **keywords):
         Gtk.EventBox.__init__(self)
         apply_styling_to_screen(self.css_path)
-        self.get_style_context().add_class("quest_screen_background")
+        self.get_style_context().add_class('quest_screen_background')
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(vbox)
@@ -36,8 +36,8 @@ class QuestInfo(Gtk.EventBox):
         vbox.pack_start(self.grid, False, False, 0)
 
         # May be better elsewhere
-        self.win = keywords["win"]
-        self.quest = keywords["quest_info"]
+        self.win = keywords['win']
+        self.quest = keywords['quest_info']
 
         self.win.pack_in_main_content(self)
 
@@ -67,7 +67,7 @@ class QuestInfo(Gtk.EventBox):
         text_background.set_size_request(405, 350)
 
         title_label = Gtk.Label(self.quest.title)
-        title_label.get_style_context().add_class("quest_info_title")
+        title_label.get_style_context().add_class('quest_info_title')
         title_label.set_alignment(yalign=0.5, xalign=0)
 
         quest_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(self.quest.icon, 80, 80)
@@ -90,10 +90,10 @@ class QuestInfo(Gtk.EventBox):
             fulfilled = step.is_fulfilled()
             progress_dot = ProgressDot(fulfilled)
             self.progress_dots.append(progress_dot)
-            quest_step_label.get_style_context().add_class("quest_step_label")
+            quest_step_label.get_style_context().add_class('quest_step_label')
 
             if fulfilled:
-                quest_step_label.get_style_context().add_class("fulfilled")
+                quest_step_label.get_style_context().add_class('fulfilled')
 
             # Pack each section
             hbox = Gtk.Box()
@@ -105,17 +105,17 @@ class QuestInfo(Gtk.EventBox):
 
     def create_reward_section(self):
         background = Gtk.EventBox()
-        background.get_style_context().add_class("quest_section")
-        background.get_style_context().add_class("reward_background")
+        background.get_style_context().add_class('quest_section')
+        background.get_style_context().add_class('reward_background')
         background.set_size_request(140, -1)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         background.add(vbox)
 
-        title = Gtk.Label("Rewards")
+        title = Gtk.Label(_("Rewards"))
         title.set_alignment(xalign=0.5, yalign=0.5)
         title.set_padding(xpad=10, ypad=10)
-        title.get_style_context().add_class("reward_title")
+        title.get_style_context().add_class('reward_title')
         vbox.pack_start(title, False, False, 10)
 
         for reward in self.quest.rewards:
@@ -139,8 +139,8 @@ class RewardItem(Gtk.EventBox):
     def __init__(self, title, path):
         Gtk.EventBox.__init__(self)
         self.set_size_request(self.width, self.height)
-        self.connect("enter-notify-event", self.hover_over_effect)
-        self.connect("leave-notify-event", self.remove_hover_over)
+        self.connect('enter-notify-event', self.hover_over_effect)
+        self.connect('leave-notify-event', self.remove_hover_over)
         self.title = title
         self.fixed = Gtk.Fixed()
         self.add(self.fixed)
@@ -168,11 +168,11 @@ class RewardItem(Gtk.EventBox):
     def hover_over_effect(self, widget, event):
         label = Gtk.Label(self.title)
         label.set_line_wrap(True)
-        label.get_style_context().add_class("reward_hover_label")
+        label.get_style_context().add_class('reward_hover_label')
 
         self.hover_info = Gtk.EventBox()
         self.hover_info.set_size_request(self.width, self.height)
-        self.hover_info.get_style_context().add_class("reward_hover_background")
+        self.hover_info.get_style_context().add_class('reward_hover_background')
         self.hover_info.add(label)
 
         self.fixed.put(self.hover_info, 0, 0)

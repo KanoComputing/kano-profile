@@ -17,18 +17,18 @@ class WorldExplorerBadge(Badge):
         super(WorldExplorerBadge, self)._configure()
 
         self._id = 'world-explorer'
-        self._title = title = 'World Explorer'
+        self._title = title = _("World Explorer")
         self._icon = quest_media(__file__, 'badge.svg')
 
         self._desc_locked = title
-        self._desc_unlocked = 'You discovered Kano World!'
+        self._desc_unlocked = _("You discovered Kano World!")
         self._bg_color = 'ffe591'
         self._image = self._icon
         self._image_locked = self._icon
 
         n = self._notification
         n['title'] = title
-        n['byline'] = 'You made it to Kano World!'
+        n['byline'] = _("You made it to Kano World!")
         n['command'] = 'kano-profile badges'
         n['image'] = quest_media(__file__, 'badge-notification.png')
 
@@ -36,7 +36,7 @@ class WorldExplorerBadge(Badge):
 class Step1(Step):
     def _configure(self):
         super(Step1, self)._configure()
-        self._title = 'Connect to wifi'
+        self._title = _("Connect to wifi")
 
     def is_fulfilled(self):
         return is_internet()
@@ -45,7 +45,7 @@ class Step1(Step):
 class Step2(Step):
     def _configure(self):
         super(Step2, self)._configure()
-        self._title = 'Connect your Kano World account'
+        self._title = _("Connect your Kano World account")
 
     def is_fulfilled(self):
         return is_registered()
@@ -54,7 +54,7 @@ class Step2(Step):
 class Step3(Step):
     def _configure(self):
         super(Step3, self)._configure()
-        self._title = 'Launch the Kano World app'
+        self._title = _("Launch the Kano World app")
         self._events = [
             'kano-world-launched'
         ]
@@ -67,7 +67,7 @@ class KanoWorldQuest(Quest):
     def _configure(self):
         super(KanoWorldQuest, self)._configure()
         self._id = 'travel-to-kano-world'
-        self._title = 'Travel to Kano World'
+        self._title = _("Travel to Kano World")
         self._description = """
 Godard distillery bitters dreamcatcher butcher, pop-up irony Austin scenester
 narwhal retro raw denim. Irony pork belly slow-carb seitan Austin. Mlkshk

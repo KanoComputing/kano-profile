@@ -57,7 +57,7 @@ class ProjectList():
                         self.projects_list.append(project)
 
         self.background = Gtk.EventBox()
-        self.background.get_style_context().add_class("project_list_background")
+        self.background.get_style_context().add_class('project_list_background')
 
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
 
@@ -67,7 +67,7 @@ class ProjectList():
         self.background.add(self.align)
 
         if not self.projects_list:
-            image_no_projects = icons.set_from_name("no_challenges")
+            image_no_projects = icons.set_from_name('no_challenges')
             image_no_projects.set_margin_top(70)
             self.container.pack_start(image_no_projects, False, False, 0)
             return
@@ -81,23 +81,23 @@ class ProjectList():
 class ProjectItem():
     def __init__(self, project):
         self.background = Gtk.EventBox()
-        self.background.get_style_context().add_class("white")
+        self.background.get_style_context().add_class('white')
 
-        self.button = Gtk.Button(_("Make").upper())
-        self.button.connect("clicked", self.load, project['app'], project['file'], project['data_dir'])
-        self.button.get_style_context().add_class("project_make_button")
+        self.button = Gtk.Button(_("MAKE"))
+        self.button.connect('clicked', self.load, project['app'], project['file'], project['data_dir'])
+        self.button.get_style_context().add_class('project_make_button')
         cursor.attach_cursor_events(self.button)
         self.button_padding = Gtk.Alignment(xscale=1, yscale=1, xalign=0.5, yalign=0.5)
         self.button_padding.set_padding(25, 25, 10, 10)
         self.button_padding.add(self.button)
 
         # shorten project name to 20 characters long
-        display_name = project["display_name"]
+        display_name = project['display_name']
         if len(display_name) > 20:
             display_name = display_name[:20] + u'\N{HORIZONTAL ELLIPSIS}'
 
         self.title = Gtk.Label(display_name)
-        self.title.get_style_context().add_class("project_item_title")
+        self.title.get_style_context().add_class('project_item_title')
         self.title.set_alignment(xalign=0, yalign=1)
 
         self.label_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
@@ -108,7 +108,7 @@ class ProjectItem():
         self.label_align.set_padding(0, 0, 10, 0)
 
         self.image = Gtk.Image()
-        self.image.set_from_file(project["icon"])
+        self.image.set_from_file(project['icon'])
 
         self.container = Gtk.Box()
         self.container.pack_start(self.image, False, False, 0)
@@ -124,7 +124,7 @@ class ProjectItem():
             hourglass_end()
 
     def share(self, _button, app, filename):
-        logger.info('share: {} {}'.format(app, filename))
+        logger.info("share: {} {}".format(app, filename))
 
 
 def activate(_win):

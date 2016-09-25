@@ -55,7 +55,7 @@ def save_profile(data, skip_kdesk_refresh=False):
     if (not skip_kdesk_refresh and
             os.path.exists('/usr/bin/kdesk') and
             not is_running('kano-sync')):
-        logger.info('refreshing kdesk from save_profile')
+        logger.info("refreshing kdesk from save_profile")
         run_bg('kdesk -a profile')
 
 
@@ -111,7 +111,7 @@ def get_avatar(sync=True):
             subcat, item = get_avatar(sync=False)
         else:
             # Provide a default set
-            logger.info('Avatar not found in profile, returning default')
+            logger.info("Avatar not found in profile, returning default")
             subcat, item = get_default_avatar()
     return subcat, item
 
@@ -163,7 +163,7 @@ def get_avatar_circ_image_path():
             return os.path.join(direc, circ[0])
     else:
         logger.error(
-            'Unknown profile version: {}'.format(profile['version'])
+            "Unknown profile version: {}".format(profile['version'])
         )
         return ''
 
@@ -203,14 +203,14 @@ def set_avatar(subcat, item, sync=False):
 
 
 ENVIRONMENT_REMAP = {
-    "Arcade Hall": "arcade_hall",
-    "Concert Hall": "concert_hall",
-    "Jungle": "jungle",
-    "Space": "space",
-    "Dojo": "dojo",
-    "Park": "park",
-    "Video Set": "video_set",
-    "Minecraft": "minecraft"
+    "Arcade Hall": 'arcade_hall',
+    "Concert Hall": 'concert_hall',
+    "Jungle": 'jungle',
+    "Space": 'space',
+    "Dojo": 'dojo',
+    "Park": 'park',
+    "Video Set": 'video_set',
+    "Minecraft": 'minecraft'
 }
 
 
@@ -255,7 +255,7 @@ def set_environment(environment, sync=False):
 def sync_profile():
     """ Sync the local profile data with kano_world, without blocking
     """
-    logger.info('sync_profile')
+    logger.info("sync_profile")
     cmd = '{bin_dir}/kano-sync --sync -s'.format(bin_dir=bin_dir)
     run_bg(cmd)
 
@@ -263,7 +263,7 @@ def sync_profile():
 def block_and_sync():
     """ Sync the local profile data with kano_world and block until finished
     """
-    logger.info('block and sync profile')
+    logger.info("block and sync profile")
     cmd = '{bin_dir}/kano-sync --sync -s --skip-kdesk'.format(bin_dir=bin_dir)
     pr = run_bg(cmd)
     pr.wait()
@@ -275,7 +275,7 @@ def recreate_char(block=True):
                   finished
     :type block: Boolean
     """
-    logger.info('recreating character from profile')
+    logger.info("recreating character from profile")
     cmd = '{bin_dir}/kano-character-cli -g'.format(bin_dir=bin_dir)
     pr = run_bg(cmd)
     if block:

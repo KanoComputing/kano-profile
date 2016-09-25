@@ -56,7 +56,7 @@ def save_app_state(app_name, data):
         :type data: dict
     """
 
-    logger.debug('save_app_state {}'.format(app_name))
+    logger.debug("save_app_state {}".format(app_name))
 
     app_state_file = get_app_state_file(app_name)
     data['save_date'] = get_date_now()
@@ -80,7 +80,7 @@ def save_app_state_variable(app_name, variable, value):
         :type data: any
     """
 
-    msg = 'save_app_state_variable {} {} {}'.format(app_name, variable, value)
+    msg = "save_app_state_variable {} {} {}".format(app_name, variable, value)
     logger.debug(msg)
 
     data = load_app_state(app_name)
@@ -114,7 +114,7 @@ def update_upwards(app_name, variable, value):
 
 def increment_app_state_variable(app_name, variable, value):
     logger.debug(
-        'increment_app_state_variable {} {} {}'.format(
+        "increment_app_state_variable {} {} {}".format(
             app_name, variable, value))
 
     data = load_app_state(app_name)
@@ -167,14 +167,14 @@ def check_installed(app):
     # Check if we know how to install it
     if app not in debpkg_to_kano_appstore:
         logger.error(
-            'Do not know how to translate app "{}" to kano-apps'
+            "Do not know how to translate app '{}' to kano-apps"
             .format(app)
         )
         return False
 
     # Install it using kano apps
     logger.info(
-        '"{}" not installed will attempt to install it as "{}" using kano apps'
+        "'{}' not installed will attempt to install it as '{}' using kano apps"
         .format(app, debpkg_to_kano_appstore[app])
     )
     cmd = cmd_template.format(app_name=debpkg_to_kano_appstore[app])
@@ -184,7 +184,7 @@ def check_installed(app):
     if not is_installed(app):
         # Something probably went wrong here
         logger.error(
-            'Attempted to install app "{}" but something went wrong'
+            "Attempted to install app '{}' but something went wrong"
             .format(app)
         )
         return False
@@ -196,13 +196,13 @@ def launch_project(app, filename, data_dir, background=False):
     # This is necessary to support the new official names
     # TODO: once the apps have been renamed this will not be necessary
     name_translation = {
-        "make-art": "kano-draw",
-        "terminal-quest": "linux-story"
+        'make-art': 'kano-draw',
+        'terminal-quest': 'linux-story'
     }
 
     app_tr = name_translation.get(app, app)
 
-    logger.info('launch_project: {} {} {}'.format(app_tr, filename, data_dir))
+    logger.info("launch_project: {} {} {}".format(app_tr, filename, data_dir))
 
     app_profiles = read_json(app_profiles_file)
 
@@ -218,20 +218,20 @@ def launch_project(app, filename, data_dir, background=False):
             "Can't find app '{}' in the app profiles - [{}]"
             .format(app_tr, exc)
         )
-        raise ValueError('App "{}" not available'.format(app_tr))
+        raise ValueError(_("App '{}' not available").format(app_tr))
 
     # Try to load the project if the app is already running, via a signal.
     _, _, rc = run_cmd('/usr/bin/kano-signal launch-share {}'.format(fullpath))
     if rc:
         # Likely the app is not running and the signal could not be sent, so start it now
-        logger.warn('Error sending launch signal, starting the app now, rc={}'.format(rc))
+        logger.warn("Error sending launch signal, starting the app now, rc={}".format(rc))
         if background:
             run_bg(cmd)
         else:
             _, _, rc = run_print_output_error(cmd)
             return rc
     else:
-        logger.info('Sent signal to app: {} to open : {}'.format(app_tr, fullpath))
+        logger.info("Sent signal to app: {} to open : {}".format(app_tr, fullpath))
 
     return 0
 

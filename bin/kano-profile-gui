@@ -32,7 +32,7 @@ if __name__ == '__main__' and __package__ is None:
         LOCALE_PATH = None
 
 import kano_i18n.init
-kano_i18n.init.install('kano-tutorial', LOCALE_PATH)
+kano_i18n.init.install('kano-profile', LOCALE_PATH)
 
 from kano_profile_gui.character_screens import CharacterDisplay
 from kano_profile_gui.badge_screen import BadgeScreen
@@ -128,13 +128,13 @@ class MainWindow(ApplicationWindow):
     def go_to_category(self, button, page):
 
         refs = {
-            'CHARACTER': CharacterDisplay,
-            'BADGES': BadgeScreen,
-            'QUESTS': QuestList,
+            MenuBar.CHARACTER_STR: CharacterDisplay,
+            MenuBar.BADGES_STR: BadgeScreen,
+            MenuBar.QUESTS_STR: QuestList,
         }
 
         if not page:
-            page = "CHARACTER"
+            page = MenuBar.CHARACTER_STR
 
         page = page.upper()
 
@@ -145,7 +145,7 @@ class MainWindow(ApplicationWindow):
         self.empty_main_content()
         self.empty_bottom_bar()
 
-        if page == "QUESTS":
+        if page == MenuBar.QUESTS_STR:
             self.remove_bottom_bar()
         else:
             self.add_bottom_bar()

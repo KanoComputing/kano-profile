@@ -35,21 +35,21 @@ class BirthdayWidget(Gtk.Box):
 
         current_year = datetime.datetime.now().year
         years = [str(i) for i in range(current_year, 1900, -1)]
-        self._year_dropdown = self._create_dropdown(years, "Year")
-        self._year_dropdown.connect("changed", self._update_day_dropdown)
+        self._year_dropdown = self._create_dropdown(years, _("Year"))
+        self._year_dropdown.connect('changed', self._update_day_dropdown)
 
         months = []
         for i in range(1, 13):
             months.append(calendar.month_name[i])
 
-        self._month_dropdown = self._create_dropdown(months, "Month", width=60)
-        self._month_dropdown.connect("changed", self._update_day_dropdown)
+        self._month_dropdown = self._create_dropdown(months, _("Month"), width=60)
+        self._month_dropdown.connect('changed', self._update_day_dropdown)
 
         # When the month gets changed, the day gets changed.
         # At start, shows days 1-31
         days = [str(i) for i in range(1, 32)]
-        self._day_dropdown = self._create_dropdown(days, "Day")
-        self._day_dropdown.connect("changed", self.validate)
+        self._day_dropdown = self._create_dropdown(days, _("Day"))
+        self._day_dropdown.connect('changed', self.validate)
 
         hbox = Gtk.Box()
         hbox.pack_start(self._year_dropdown, False, False, 10)
@@ -63,11 +63,11 @@ class BirthdayWidget(Gtk.Box):
         label_box.set_margin_left(30)
 
         birthday_label = Gtk.Label(_("Birthday"))
-        birthday_label.get_style_context().add_class("get_data_label")
+        birthday_label.get_style_context().add_class('get_data_label')
         label_box.pack_start(birthday_label, False, False, 0)
 
         self._birthday_status = Gtk.Label()
-        self._birthday_status.get_style_context().add_class("validation_label")
+        self._birthday_status.get_style_context().add_class('validation_label')
         label_box.pack_start(self._birthday_status, False, False, 0)
 
         # Container for the validation and title labels
@@ -107,7 +107,7 @@ class BirthdayWidget(Gtk.Box):
             logger.debug("returning as year or month is blank, year = {}, month = {}".format(year, month))
             # Update the days as an empty list
             self._day_dropdown.remove_all()
-            self._day_dropdown.set_text("Day")
+            self._day_dropdown.set_text(_("Day"))
             return
 
         logger.debug("not returning, month = {}, year = {}".format(month, year))
@@ -120,7 +120,7 @@ class BirthdayWidget(Gtk.Box):
         # Unselect the current item
         self._day_dropdown.selected_item_index = -1
         self._day_dropdown.selected_item_text = ""
-        self._day_dropdown.set_text("Day")
+        self._day_dropdown.set_text(_("Day"))
 
     def validate(self, *dummy):
         day = self._str_to_int(self._day_dropdown.get_selected_item_text())
@@ -133,7 +133,7 @@ class BirthdayWidget(Gtk.Box):
         logger.debug("year = {}".format(year))
 
         if self.FIELD_INCOMPLETE in [day, year] or month == 0:
-            return self._set_validation_msg('', False)
+            return self._set_validation_msg("", False)
 
         try:
             birthday = datetime.date(year, month, day)
@@ -143,13 +143,13 @@ class BirthdayWidget(Gtk.Box):
 
         today = datetime.date.today()
         if birthday > today:
-            return self._set_validation_msg(_(' date is in the future'), False)
+            return self._set_validation_msg(_(" date is in the future"), False)
 
         oldest_date = today.replace(year=(today.year - 100))
         if birthday < oldest_date and (birthday.year < 0 or birthday.year > 99):
-            return self._set_validation_msg(_(' year out of range'), False)
+            return self._set_validation_msg(_(" year out of range"), False)
 
-        return self._set_validation_msg(_(' is valid'), True)
+        return self._set_validation_msg(_(" is valid"), True)
 
     def _str_to_int(self, string):
         if len(string) == 0:
@@ -178,12 +178,12 @@ class BirthdayWidget(Gtk.Box):
 
     def get_birthday_data(self):
         bday = {}
-        bday["day"] = self._get_day()
-        bday["month"] = self._get_month()
-        bday["year"] = self._get_year()
-        bday["day_index"] = self._get_day_index()
-        bday["month_index"] = self._get_month_index()
-        bday["year_index"] = self._get_year_index()
+        bday['day'] = self._get_day()
+        bday['month'] = self._get_month()
+        bday['year'] = self._get_year()
+        bday['day_index'] = self._get_day_index()
+        bday['month_index'] = self._get_month_index()
+        bday['year_index'] = self._get_year_index()
 
         return bday
 
@@ -240,14 +240,14 @@ class BirthdayWidget(Gtk.Box):
             # boolean, dictionary
             bday = self.get_birthday_data()
             logger.debug("User birthday = {}".format(bday))
-            bday_date = str(datetime.date(bday["year"],
-                                          bday["month"],
-                                          bday["day"]))
+            bday_date = str(datetime.date(bday['year'],
+                                          bday['month'],
+                                          bday['day']))
 
             # To allow people to enter their year as a two digit number
-            if bday["year"] < 15 and bday["year"] >= 0:
-                bday["year"] = bday["year"] + 2000
-            elif bday["year"] >= 15 and bday["year"] <= 99:
+            if bday['year'] < 15 and bday['year'] >= 0:
+                bday['year'] = bday['year'] + 2000
+            elif bday['year'] >= 15 and bday['year'] <= 99:
                 bday['year'] = bday['year'] + 1900
 
             # Get current date

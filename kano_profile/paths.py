@@ -25,7 +25,7 @@ if os.path.exists(rules_local):
 elif os.path.exists(rules_usr):
     rules_dir = rules_usr
 else:
-    logger.warn('Neither local nor usr rules found!')
+    logger.warn("Neither local nor usr rules found!")
 
 # bin path
 bin_local = os.path.join(dir_path, 'bin')
@@ -35,7 +35,7 @@ if os.path.exists(bin_local):
 elif os.path.exists(bin_usr):
     bin_dir = bin_usr
 else:
-    logger.warn('Neither local nor usr bin found!')
+    logger.warn("Neither local nor usr bin found!")
 
 # legal path - containing terms and conditions of use
 legal_dir = ""
@@ -46,7 +46,7 @@ if os.path.exists(legal_local):
 elif os.path.exists(legal_usr):
     legal_dir = legal_usr
 else:
-    logger.warn('Neither local nor usr legal dir found!')
+    logger.warn("Neither local nor usr legal dir found!")
 
 # constructing paths of directories, files
 kanoprofile_dir_str = '.kanoprofile'

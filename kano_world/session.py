@@ -76,11 +76,11 @@ class KanoWorldSession(object):
         # gender
         try:
             gender = profile['gender']
-            if gender == _("Boy"):
+            if gender == "Boy":
                 gender = 'm'
-            elif gender == _("Girl"):
+            elif gender == "Girl":
                 gender = 'f'
-            elif gender == _("Wizard"):
+            elif gender == "Wizard":
                 gender = 'x'
             data['gender'] = gender
         except Exception:

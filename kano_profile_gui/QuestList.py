@@ -208,7 +208,7 @@ class QuestListItem(Gtk.Fixed):
         # TODO: this feels quite hacky. Should be moved back to the MenuBar
         # class, and maybe use signals instead?
         menu_bar = self.win.menu_bar
-        quest_button = menu_bar.get_button(_("QUESTS"))
+        quest_button = menu_bar.get_button(menu_bar.QUESTS_STR)
 
         # Update the quest button
         quest_button.check_for_notification()

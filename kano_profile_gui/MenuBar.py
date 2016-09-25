@@ -25,6 +25,10 @@ class MenuBar(Gtk.EventBox):
         'menu-button-clicked': (GObject.SIGNAL_RUN_FIRST, None, (str,))
     }
 
+    BADGES_STR = N_("BADGES")
+    CHARACTER_STR = N_("CHARACTER")
+    QUESTS_STR = N_("QUESTS")
+
     def __init__(self, win_width, quests):
 
         Gtk.EventBox.__init__(self)
@@ -52,9 +56,12 @@ class MenuBar(Gtk.EventBox):
         hbox.pack_end(close_button, False, False, 0)
         close_button.connect('clicked', self.close_window)
 
-        name_array = [_("BADGES"), _("CHARACTER")] # TODO: add _("QUESTS") to enable
+        name_array = [
+            MenuBar.BADGES_STR,
+            MenuBar.CHARACTER_STR
+        ] # TODO: add MenuBar.QUESTS_STR to enable
         for name in name_array:
-            button = MenuButton(name, self._quests)
+            button = MenuButton(_(name), self._quests)
             button.connect('clicked', self.emit_menu_signal, name)
             button.connect('clicked', self.set_selected_wrapper, name)
             hbox.pack_end(button, False, False, 0)
@@ -63,19 +70,19 @@ class MenuBar(Gtk.EventBox):
             self.buttons[name] = {}
             self.buttons[name]['button'] = button
 
-            if name == _("QUESTS"):
+            if name == MenuBar.QUESTS_STR:
                 # check the notification image
                 button.check_for_notification()
 
             # HACKY: avoiding packing the label divider after the last element
-            if name != _("CHARACTER"):
+            if name != MenuBar.CHARACTER_STR:
                 label = self._create_divider_label()
                 hbox.pack_end(label, False, False, 0)
 
             attach_cursor_events(button)
 
         # initialise with the CHARACTER button selected
-        self.set_selected(_("CHARACTER"))
+        self.set_selected(self.CHARACTER_STR)
 
     def _create_divider_label(self):
         label = Gtk.Label("|")

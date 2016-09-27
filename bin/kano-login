@@ -34,7 +34,7 @@ if __name__ == '__main__' and __package__ is None:
         LOCALE_PATH = None
 
 import kano_i18n.init
-kano_i18n.init.install('kano-tutorial', LOCALE_PATH)
+kano_i18n.init.install('kano-profile', LOCALE_PATH)
 
 from kano.gtk3.application_window import ApplicationWindow
 from kano.gtk3.apply_styles import apply_styling_to_screen

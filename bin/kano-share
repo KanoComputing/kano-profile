@@ -21,7 +21,7 @@ if __name__ == '__main__' and __package__ is None:
         LOCALE_PATH = None
 
 import kano_i18n.init
-kano_i18n.init.install('kano-tutorial', LOCALE_PATH)
+kano_i18n.init.install('kano-profile', LOCALE_PATH)
 
 from kano.network import is_internet
 from kano.utils import read_json

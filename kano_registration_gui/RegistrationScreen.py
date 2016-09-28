@@ -155,7 +155,7 @@ class RegistrationScreen(Gtk.Box):
             headers=content_type_json
         )
 
-        if not success and text.strip() == _("User not found"):
+        if not success and text.strip() == "User not found":
             return True
         elif success:
             # Username is definitely taken

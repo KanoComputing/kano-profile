@@ -37,6 +37,10 @@ def validate_email(address, verbose=False):
     if len(address) == 0:
         return _("You need to provide a valid email address")
 
+    # two consecutive dots are not allowed
+    if address.find('..') != -1:
+        return _("The email address is not correct,\nplease use the format johndoe@example.com")
+
     # Taken from http://emailregex.com/
     # Make sure to pass the tests if you change this regex
     match=re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", address)

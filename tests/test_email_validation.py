@@ -40,6 +40,30 @@ class TestEmailValidation(unittest.TestCase):
         msg = self._validate('almost.good.but.not')
         self.assertIsNotNone(msg)
 
+    def test_email_many_atsigns(self):
+        msg = self._validate('too@many@at@signs.com')
+        self.assertIsNotNone(msg)
+
+    def test_email_special_chars(self):
+        msg = self._validate('a"b(c)d,e:f;g<h>i[j\k]l@example.com')
+        self.assertIsNotNone(msg)
+
+    def test_email_quoted(self):
+        msg = self._validate('just"not"right@example.com')
+        self.assertIsNotNone(msg)
+
+    def test_email_escaped_quotes(self):
+        msg = self._validate('this\ still\"not\\allowed@example.com')
+        self.assertIsNotNone(msg)
+
+    def test_email_username_two_consecutive_dots(self):
+        msg = self._validate('john..doe@example.com')
+        self.assertIsNotNone(msg)
+
+    def test_email_username_with_dots(self):
+        msg = self._validate('i.am.someone@example.com')
+        self.assertIsNone(msg)
+        
     def test_email_with_tilde(self):
         msg = self._validate('iñaki@mydomain.yeah')
         self.assertIsNotNone(msg)

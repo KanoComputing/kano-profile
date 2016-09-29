@@ -16,46 +16,52 @@ sys.path.insert(1, '..')
 
 from kano_registration_gui.RegistrationScreen import validate_email
 
+# Used to display validated emails on the console
+print_emails=True
+
 class TestEmailValidation(unittest.TestCase):
 
+    def _validate(self, address):
+        return validate_email(address, verbose=print_emails)
+
     def test_email_ok(self):
-        msg = validate_email('someone@somewhere.good')
+        msg = self._validate('someone@somewhere.good')
         self.assertIsNone(msg)
     
     def test_email_empty(self):
-        msg = validate_email('')
+        msg = self._validate('')
         self.assertIsNotNone(msg)
 
     def test_email_no_dot_no_atsign(self):
-        msg = validate_email('notgood')
+        msg = self._validate('notgood')
         self.assertIsNotNone(msg)
 
     def test_email_dots_no_atsign(self):
-        msg = validate_email('almost.good.but.not')
+        msg = self._validate('almost.good.but.not')
         self.assertIsNotNone(msg)
 
     def test_email_with_tilde(self):
-        msg = validate_email('iñaki@mydomain.yeah')
+        msg = self._validate('iñaki@mydomain.yeah')
         self.assertIsNotNone(msg)
 
     def test_email_with_capital_tilde(self):
-        msg = validate_email('IÑAKI@mydomain.yeah')
+        msg = self._validate('IÑAKI@mydomain.yeah')
         self.assertIsNotNone(msg)
 
     def test_email_with_accent(self):
-        msg = validate_email('mercè@mydomain.yeah')
+        msg = self._validate('mercè@mydomain.yeah')
         self.assertIsNotNone(msg)
 
     def test_email_with_spaces(self):
-        msg = validate_email('who on earth are you@nobody.knows')
+        msg = self._validate('who on earth are you@nobody.knows')
         self.assertIsNotNone(msg)
 
     def test_email_with_colons(self):
-        msg = validate_email('i;am,a,bit;silly@home.eu')
+        msg = self._validate('i;am,a,bit;silly@home.eu')
         self.assertIsNotNone(msg)
 
     def test_email_with_many_domains(self):
-        msg = validate_email('paul@i.live.really.very.far.away')
+        msg = self._validate('paul@i.live.really.very.far.away')
         self.assertIsNone(msg)
 
 

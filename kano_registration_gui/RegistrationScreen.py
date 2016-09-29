@@ -27,7 +27,7 @@ from kano_world.functions import content_type_json, request_wrapper
 from kano_world.functions import register as register_
 
 
-def validate_email(address, verbose=True):
+def validate_email(address, verbose=False):
     '''
     Validates email address, returns None if success.
     Otherwise a localized error message string.
@@ -41,7 +41,7 @@ def validate_email(address, verbose=True):
     # Make sure to pass the tests if you change this regex
     match=re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", address)
     if match == None:
-        msg=_("Email address is not correct")
+        msg=_("The email address is not correct, please use the format johndoe@example.com")
 
     if verbose:
         print '>>> {} => {}'.format(address, msg)
@@ -100,7 +100,14 @@ class RegistrationScreen(Gtk.Box):
 
         # Get the username, password and birthday
         data = self.data_screen.get_widget_data()
+        email = data['email']
         username = data['username']
+
+        # Validate that the email address format is correct
+        email_error=validate_email(email)
+        if email_error:
+            self._show_error_dialog(_("Incorrect Email address"), email_error)
+            return
 
         if not self._is_username_available(username):
             self._show_username_taken_dialog(username)
@@ -117,10 +124,7 @@ class RegistrationScreen(Gtk.Box):
             Gtk.main_iteration()
 
         # Try and register the account on the server
-        email = data['email']
-        username = data['username']
         password = data['password']
-
         success, text = register_(email, username, password,
                                   marketing_enabled=True)
 

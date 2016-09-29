@@ -35,13 +35,13 @@ def validate_email(address, verbose=False):
     msg=None
 
     if len(address) == 0:
-        return _("You need to provide an email address")
+        return _("You need to provide a valid email address")
 
     # Taken from http://emailregex.com/
     # Make sure to pass the tests if you change this regex
     match=re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", address)
     if match == None:
-        msg=_("The email address is not correct, please use the format johndoe@example.com")
+        msg=_("The email address is not correct,\nplease use the format johndoe@example.com")
 
     if verbose:
         print '>>> {} => {}'.format(address, msg)

@@ -678,3 +678,11 @@ msgstr "¡Sesión finalizada!"
 
 #~ msgid "Minecraft"
 #~ msgstr "Minecraft"
+
+#: email verification 1
+msgid "You need to provide a valid email address"
+msgstr "Es necesario que ingreses una dirección de correo válida"
+
+#: email verification 2
+msgid "The email address is not correct,\nplease use the format johndoe@example.com"
+msgstr "La dirección de correo no es válida,\npor favor usa la forma johndoe@example.com"

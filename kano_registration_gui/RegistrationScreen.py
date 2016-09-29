@@ -7,6 +7,7 @@
 
 
 import subprocess
+import re
 
 from gi.repository import Gtk
 
@@ -24,6 +25,28 @@ from kano_registration_gui.GetData import GetData
 
 from kano_world.functions import content_type_json, request_wrapper
 from kano_world.functions import register as register_
+
+
+def validate_email(address, verbose=True):
+    '''
+    Validates email address, returns None if success.
+    Otherwise a localized error message string.
+    '''
+    msg=None
+
+    if len(address) == 0:
+        return _("You need to provide an email address")
+
+    # Taken from http://emailregex.com/
+    # Make sure to pass the tests if you change this regex
+    match=re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", address)
+    if match == None:
+        msg=_("Email address is not correct")
+
+    if verbose:
+        print '>>> {} => {}'.format(address, msg)
+
+    return msg
 
 
 class RegistrationScreen(Gtk.Box):

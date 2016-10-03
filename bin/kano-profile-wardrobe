@@ -1,0 +1,51 @@
+#!/usr/bin/kano-splash /usr/share/kano-profile/media/images/splash-profile.png /usr/bin/env python
+
+# kano-profile-wardrobe
+#
+# Copyright (C) 2016 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Open a kano-profile wardrobe screen in edit mode
+# TODO: Merge this functionality into a CLI option to `kano-profile-gui`
+#
+
+import os
+import threading
+from gi.repository import Gtk, GObject, GLib, GdkPixbuf
+
+from kano_init_flow.stages.wardrobe.main import CharacterWindow
+from kano.gtk3.application_window import ApplicationWindow
+
+
+BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if __name__ == '__main__' and __package__ is None:
+    if BASE_PATH == '/usr':
+        BASE_PATH = os.path.join(BASE_PATH, 'share')
+        LOCALE_PATH = os.path.join(BASE_PATH, 'locale')
+    else:
+        LOCALE_PATH = None
+
+import kano_i18n.init
+kano_i18n.init.install('kano-profile', LOCALE_PATH)
+
+
+def clean_up():
+    Gtk.main_quit()
+
+
+def show_wardrobe():
+    win = CharacterWindow(clean_up)
+    win.show_all()
+    win.char_edit.show_pop_up_menu_for_category('judoka-skins')
+    win.char_edit.select_category_button('judoka-skins')
+    os.system('kano-stop-splash')
+
+
+def main():
+    GObject.threads_init()
+    show_wardrobe()
+    Gtk.main()
+
+
+if __name__ == '__main__':
+    main()

@@ -4,18 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 
-#, fuzzy
-
 msgid ""
 msgstr ""
 
 "Project-Id-Version: kano-profile\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: Kano <dev@kano.me>\n"
 "POT-Creation-Date: 2016-09-23 16:28+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-09-29 16:28+0100\n"
+"Last-Translator: Kano <dev@kano.me>\n"
+"Language-Team: Spanish Team <dev@kano.me>\n"
+"Language: es_AR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -678,3 +676,12 @@ msgstr "¡Sesión finalizada!"
 
 #~ msgid "Minecraft"
 #~ msgstr "Minecraft"
+
+msgid "Incorrect Email address"
+msgstr "Dirección de correo inválida"
+
+msgid "You need to provide a valid email address"
+msgstr "Es necesario que ingreses una dirección de correo válida"
+
+msgid "The email address is not correct,\nplease use the format johndoe@example.com"
+msgstr "La dirección de correo no es válida,\npor favor usa el formato johndoe@example.com"

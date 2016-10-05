@@ -13,9 +13,12 @@ kano-login shows the different screens for logging in and registering.
 Usage:
   kano-login [-r]
   kano-login <screen>
+  kano-login [-o] [-g]
 
 Options:
-   -h, --help       Show this message.
+   -h, --help          Show this message.
+   -o, --logout        Logout current Kano World user
+   -g, --registration  Remove registration on logout
    -r, --register
 """
 
@@ -45,6 +48,8 @@ from kano_login.first_screen import FirstScreen
 import kano_profile_gui.components.icons as icons
 from kano_login.login import Login
 from kano.gtk3.kano_dialog import KanoDialog
+
+from kano_world.functions import get_email, remove_token, remove_registration
 
 try:
     from kano_profile.tracker import Tracker
@@ -144,6 +149,14 @@ def close_window(window=None):
 
 def main():
     args = docopt.docopt(__doc__)
+
+    if args['--logout']:
+        print 'Logging out {}'.format(get_email())
+        remove_token()
+        if args['--registration']:
+            print 'Removing user registration data...'
+            remove_registration()
+        sys.exit(0)
 
     if args['--register'] or args['<screen>'] == '3':
         MainWindow("register")

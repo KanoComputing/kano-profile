@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# kano-profile-query
+#
+# Copyright (C) 2016 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Fast query tool for Kano Profile states
+#
+
+
+function print_usage {
+    echo "
+kano-profile-query <app> <param>
+
+Usage:
+    app       - The app to query
+    param     - The profile key
+    "
+}
+
+
+APP=$1
+PARAM=$2
+
+if [ -z "$APP" ] || [ -z "$PARAM" ]; then
+    print_usage
+    exit 1
+fi
+
+STATE_FILE="$HOME/.kanoprofile/apps/$APP/state.json"
+
+if [ ! -e $STATE_FILE ]; then
+    echo "State file $STATE_FILE doesn't exist"
+    exit 2
+fi
+
+jq .$PARAM $STATE_FILE
+
+exit $?

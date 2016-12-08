@@ -9,7 +9,7 @@
     "mime_type": "application/x-kano-profile",
     "packages": [],
     "dependencies": [],
-    "launch_command": "kano-profile",
+    "launch_command": "kano-profile-gui",
     "overrides": [],
     "desktop": false,
     "priority": 0

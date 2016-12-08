@@ -12,5 +12,5 @@
     "launch_command": "kano-profile-gui",
     "overrides": [],
     "desktop": false,
-    "priority": 0
+    "priority": 650
 }

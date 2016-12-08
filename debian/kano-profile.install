@@ -24,6 +24,9 @@ icon/widget-restore.png usr/share/kano-profile/icon
 icon/widget-sync.png usr/share/kano-profile/icon
 icon/kano-world.png usr/share/icons/Kano/66x66/apps
 
+icon/kano-profile.app usr/share/applications
+icon/kano-profile.png usr/share/icons/Kano/66x66/apps
+
 lxpanel-plugin/kano_profile.so usr/lib/arm-linux-gnueabihf/lxpanel/plugins/
 
 xdg/* usr/share/applications

@@ -94,14 +94,11 @@ class chromium_browser:
         write_json(self.chromium_local_state, data)
 
     def get_cmd(self, url, token, redirect):
-        # get command to launch browser with no url bar
-        win = '--window-size=1000,700'
-
-        # If in dashboard mode, maximize
-        if os.getenv('KANO_BLOCKS_SCREEN_HEIGHT'):
-            win = win + ' --start-maximized'
-
-        return "chromium-browser {} --app={}/login/{}{}".format(win, url, token, redirect)
+        return "chromium-browser --start-maximized --app={}/login/{}{}".format(
+            url,
+            token,
+            redirect
+        )
 
 
 # Check internet status

@@ -22,6 +22,7 @@ icon/profile-not-login-widget.png usr/share/kano-profile/icon
 icon/widget-backup.png usr/share/kano-profile/icon
 icon/widget-restore.png usr/share/kano-profile/icon
 icon/widget-sync.png usr/share/kano-profile/icon
+icon/kano-world.app usr/share/applications
 icon/kano-world.png usr/share/icons/Kano/66x66/apps
 
 icon/kano-profile.app usr/share/applications

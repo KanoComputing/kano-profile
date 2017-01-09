@@ -27,6 +27,7 @@ namespace kano_world {
             functions();
             bool is_registered() const;
             std::string get_mixed_username() const;
+            std::string get_token() const;
     };
 }
 

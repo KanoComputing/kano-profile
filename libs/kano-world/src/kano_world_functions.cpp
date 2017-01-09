@@ -53,3 +53,17 @@ std::string kano_world::functions::get_mixed_username() const
 
     return username;
 }
+
+std::string kano_world::functions::get_token() const
+{
+    PyObject *py_token = this->run_func("get_token");
+
+    if (py_token == NULL)
+        return "";
+
+    std::string token = PyString_AsString(py_token);
+
+    Py_CLEAR(py_token);
+
+    return token;
+}

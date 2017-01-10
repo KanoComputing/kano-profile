@@ -2,10 +2,11 @@
 
 # apps.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014, 2015, 2017 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 
+import json
 import os
 
 from kano.utils import read_json, write_json, get_date_now, ensure_dir, \
@@ -40,10 +41,32 @@ def load_app_state(app_name):
     return app_state
 
 
+def load_app_state_encode(app_name):
+    try:
+        data = load_app_state(app_name)
+        if data:
+            encoded_data = json.dumps(data)
+            return encoded_data
+
+    except Exception as e:
+        logger.error("Could not encode and load app state:\n{}".format(e))
+
+
 def load_app_state_variable(app_name, variable):
     data = load_app_state(app_name)
     if variable in data:
         return data[variable]
+
+
+def load_app_state_variable_encode(app_name, variable):
+    try:
+        data = load_app_state_variable(app_name, variable)
+        if data:
+            encoded_data = json.dumps(data)
+            return encoded_data
+
+    except Exception as e:
+        logger.error("Could not encode and load app state var:\n{}".format(e))
 
 
 def save_app_state(app_name, data):
@@ -69,6 +92,23 @@ def save_app_state(app_name, data):
         chown_path(app_state_file)
 
 
+def save_app_state_decode(app_name, data):
+    """ Just like save_app_state, but data is stringified.
+
+        :param app_name: The application that this data are associated with.
+        :type app_name: str
+
+        :param data: The serialized (stringified) data to be stored.
+        :type data: str
+    """
+    try:
+        decoded_data = json.loads(data)
+        save_app_state(app_name, decoded_data)
+
+    except Exception as e:
+        logger.error("Could not decode and save app state:\n{}".format(e))
+
+
 def save_app_state_variable(app_name, variable, value):
     """ Save a state variable to the user's Kano profile.
 
@@ -76,8 +116,8 @@ def save_app_state_variable(app_name, variable, value):
         :type app_name: str
         :param variable: The name of the variable.
         :type data: str
-        :param data: The variable data to be stored.
-        :type data: any
+        :param value: The variable data to be stored.
+        :type value: any
     """
 
     msg = "save_app_state_variable {} {} {}".format(app_name, variable, value)
@@ -87,6 +127,24 @@ def save_app_state_variable(app_name, variable, value):
     data[variable] = value
 
     save_app_state(app_name, data)
+
+
+def save_app_state_variable_decode(app_name, variable, value):
+    """ Just like save_app_state_variable, but the value is stringified.
+
+        :param app_name: The application that this variable is associated with.
+        :type app_name: str
+        :param variable: The name of the variable.
+        :type data: str
+        :param value: The serialized (stringified) variable data to be stored.
+        :type value: str
+    """
+    try:
+        decoded_value = json.loads(value)
+        save_app_state_variable(app_name, variable, decoded_value)
+
+    except Exception as e:
+        logger.error("Could not decode and save app state var:\n{}".format(e))
 
 
 def update_upwards(app_name, variable, value):

@@ -2,7 +2,7 @@
  *
  * kano_profile_bindings.h
  *
- * Copyright (C) 2016 Kano Computing Ltd.
+ * Copyright (C) 2016, 2017 Kano Computing Ltd.
  * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
  *
  * Adds the interface between useful Kano Profile functions and C++
@@ -29,10 +29,22 @@ namespace kano_profile {
     {
         public:
             apps();
+
+            void save_app_state_decode(std::string app, std::string data) const;
+
             void save_app_state_variable(
                 std::string app, std::string variable, long val
             ) const;
+            void save_app_state_variable_decode(
+                std::string app, std::string variable, std::string val
+            ) const;
+
+            std::string load_app_state_encode(std::string app) const;
+
             long load_app_state_variable(
+                std::string app, std::string variable
+            ) const;
+            std::string load_app_state_variable_encode(
                 std::string app, std::string variable
             ) const;
     };

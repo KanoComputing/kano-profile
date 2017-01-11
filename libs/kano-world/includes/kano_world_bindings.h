@@ -25,6 +25,8 @@ namespace kano_world {
     class functions : Binding {
         public:
             functions();
+            void finalise();
+
             bool is_registered() const;
             std::string get_mixed_username() const;
             std::string get_token() const;

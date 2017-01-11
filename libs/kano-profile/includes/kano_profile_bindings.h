@@ -29,6 +29,7 @@ namespace kano_profile {
     {
         public:
             apps();
+            void finalise();
 
             void save_app_state_decode(std::string app, std::string data) const;
 

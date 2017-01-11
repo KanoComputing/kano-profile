@@ -24,6 +24,11 @@ kano_profile::apps::apps():
 }
 
 
+void kano_profile::apps::finalise() {
+    Binding::finalise();
+}
+
+
 void kano_profile::apps::save_app_state_decode(std::string app, std::string data) const
 {
     PyObject *save_var = this->run_func(

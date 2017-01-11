@@ -25,6 +25,11 @@ kano_world::functions::functions():
 }
 
 
+void kano_world::functions::finalise() {
+    Binding::finalise();
+}
+
+
 bool kano_world::functions::is_registered() const
 {
     PyObject *py_registered = this->run_func("is_registered");

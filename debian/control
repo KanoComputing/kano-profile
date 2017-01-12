@@ -42,7 +42,7 @@ Architecture: any
 Depends: ${misc:Depends},
          python,
          libparson-dev,
-         libkano-python,
+         libkano-python-dev,
          libkano-profile (= ${source:Version})
 Description: Kano Profile functions
  Libraries to interface with Kano Profile
@@ -64,7 +64,7 @@ Description: Kano World functions
 Package: libkano-world-dev
 Architecture: any
 Depends: ${misc:Depends},
-         libkano-python,
+         libkano-python-dev,
          libkano-world (= ${source:Version})
 Description: Kano World functions
  Libraries to interface with Kano World

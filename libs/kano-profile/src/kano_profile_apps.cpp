@@ -81,7 +81,7 @@ std::string kano_profile::apps::load_app_state_encode(std::string app) const
         "load_app_state_encode", new_tuple(app)
     );
 
-    std::string var = (py_var == NULL) ? "" : PyString_AsString(py_var);
+    std::string var = (py_var && PyString_Check(py_var)) ? PyString_AsString(py_var) : "";
 
     Py_CLEAR(py_var);
 
@@ -112,7 +112,7 @@ std::string kano_profile::apps::load_app_state_variable_encode(
         "load_app_state_variable_encode", new_tuple(app, variable)
     );
 
-    std::string var = (py_var == NULL) ? "" : PyString_AsString(py_var);
+    std::string var = (py_var && PyString_Check(py_var)) ? PyString_AsString(py_var) : "";
 
     Py_CLEAR(py_var);
 

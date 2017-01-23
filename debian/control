@@ -68,3 +68,10 @@ Depends: ${misc:Depends},
          libkano-world (= ${source:Version})
 Description: Kano World functions
  Libraries to interface with Kano World
+
+
+Package: kano-profile-i18n-orig
+Architecture: armhf
+# not really armhf. See https://github.com/KanoComputing/peldins/wiki/Multiarch-note
+Description: Data for working on translations of kano-profile
+Multi-Arch: foreign

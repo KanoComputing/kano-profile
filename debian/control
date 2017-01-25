@@ -71,7 +71,6 @@ Description: Kano World functions
 
 
 Package: kano-profile-i18n-orig
-Architecture: armhf
-# not really armhf. See https://github.com/KanoComputing/peldins/wiki/Multiarch-note
+Architecture: all
 Description: Data for working on translations of kano-profile
 Multi-Arch: foreign

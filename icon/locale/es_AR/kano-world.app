@@ -14,5 +14,6 @@
     "categories": [
         "code"
     ], 
-    "icon": "kano-world"
+    "icon": "kano-world",
+    "priority": -20
 }

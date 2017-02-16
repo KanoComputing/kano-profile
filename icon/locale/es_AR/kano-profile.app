@@ -5,7 +5,6 @@
     "tagline": "Crear tu Perfil Kano", 
     "colour": "#7BAA64", 
     "desktop": false, 
-    "priority": 500, 
     "dependencies": [], 
     "mime_type": "application/x-kano-profile", 
     "overrides": [], 

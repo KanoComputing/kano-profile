@@ -6,6 +6,8 @@
 *
 */
 
+#define GETTEXT_PACKAGE "kano-profile"
+
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <glib/gi18n.h>
@@ -38,7 +40,7 @@
 #define SYNC_CMD "/usr/bin/kano-sync -d "
 #define SOUND_CMD "/usr/bin/aplay /usr/share/kano-media/sounds/kano_open_app.wav"
 
-#define PLUGIN_TOOLTIP "Profile"
+#define PLUGIN_TOOLTIP Q_("Profile")
 
 #define MINUTE 60
 
@@ -259,7 +261,7 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event,
         return FALSE;
 
     /* Create the menu items */
-    header_item = gtk_menu_item_new_with_label("Profile");
+    header_item = gtk_menu_item_new_with_label(Q_("Profile"));
     gtk_widget_set_sensitive(header_item, FALSE);
     gtk_menu_append(GTK_MENU(menu), header_item);
     gtk_widget_show(header_item);
@@ -268,25 +270,25 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event,
 
     if (log_in) {
         /* Sync */
-        GtkWidget* sync_item = gtk_image_menu_item_new_with_label("Sync");
+        GtkWidget* sync_item = gtk_image_menu_item_new_with_label(Q_("Sync"));
         g_signal_connect(sync_item, "activate", G_CALLBACK(profile_clicked), "--sync");
         gtk_menu_append(GTK_MENU(menu), sync_item);
         gtk_widget_show(sync_item);
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sync_item), get_resized_icon(SYNC_ICON));
         /* Back-up */
-        GtkWidget* backup_item = gtk_image_menu_item_new_with_label("Back Up");
+        GtkWidget* backup_item = gtk_image_menu_item_new_with_label(Q_("Back Up"));
         g_signal_connect(backup_item, "activate", G_CALLBACK(profile_clicked), "--backup");
         gtk_menu_append(GTK_MENU(menu), backup_item);
         gtk_widget_show(backup_item);
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(backup_item), get_resized_icon(BACKUP_ICON));
         /* Restore */
-        GtkWidget* restore_item = gtk_image_menu_item_new_with_label("Restore");
+        GtkWidget* restore_item = gtk_image_menu_item_new_with_label(Q_("Restore"));
         g_signal_connect(restore_item, "activate", G_CALLBACK(profile_clicked), "--restore");
         gtk_menu_append(GTK_MENU(menu), restore_item);
         gtk_widget_show(restore_item);
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(restore_item), get_resized_icon(RESTORE_ICON));
         /* Profile */
-        GtkWidget* profile_item = gtk_image_menu_item_new_with_label("Profile");
+        GtkWidget* profile_item = gtk_image_menu_item_new_with_label(Q_("Profile"));
         g_signal_connect(profile_item, "activate", G_CALLBACK(launch_profile_clicked), NULL);
         gtk_menu_append(GTK_MENU(menu), profile_item);
         gtk_widget_show(profile_item);
@@ -294,7 +296,7 @@ static gboolean show_menu(GtkWidget *widget, GdkEventButton *event,
     }
     else {
         /* Login app */
-        GtkWidget* login_item = gtk_image_menu_item_new_with_label("Log in");
+        GtkWidget* login_item = gtk_image_menu_item_new_with_label(Q_("Log in"));
         g_signal_connect(login_item, "activate", G_CALLBACK(login_clicked), NULL);
         gtk_menu_append(GTK_MENU(menu), login_item);
         gtk_widget_show(login_item);

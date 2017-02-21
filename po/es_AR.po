@@ -3,13 +3,11 @@
 # This file is distributed under the same license as the kano-profile package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-
 msgid ""
 msgstr ""
-
 "Project-Id-Version: kano-profile\n"
-"Report-Msgid-Bugs-To: Kano <dev@kano.me>\n"
-"POT-Creation-Date: 2016-09-23 16:28+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-22 11:18+0000\n"
 "PO-Revision-Date: 2016-09-29 16:28+0100\n"
 "Last-Translator: Kano <dev@kano.me>\n"
 "Language-Team: Spanish Team <dev@kano.me>\n"
@@ -18,19 +16,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../bin/kano-login:124
+#: ../bin/kano-login:129
 msgid "Are you sure?"
 msgstr "¿Estás seguro?"
 
-#: ../bin/kano-login:125
+#: ../bin/kano-login:130
 msgid "You'll miss out on the best features of your Kano"
 msgstr "Te perderás las mejores atracciones de Kano"
 
-#: ../bin/kano-login:128
+#: ../bin/kano-login:133
 msgid "Don't close"
 msgstr "No cierres"
 
-#: ../bin/kano-login:133
+#: ../bin/kano-login:138
 msgid "Close"
 msgstr "Cerrar"
 
@@ -143,64 +141,77 @@ msgstr "ANTERIOR"
 msgid "NEXT"
 msgstr "SIGUIENTE"
 
-#: ../kano_registration_gui/RegistrationScreen.py:40
+#: ../kano_registration_gui/RegistrationScreen.py:38
+msgid "You need to provide a valid email address"
+msgstr "Es necesario que ingreses una dirección de correo válida"
+
+#: ../kano_registration_gui/RegistrationScreen.py:42
+#: ../kano_registration_gui/RegistrationScreen.py:48
+msgid ""
+"The email address is not correct,\n"
+"please use the format johndoe@example.com"
+msgstr ""
+"La dirección de correo no es válida,\n"
+"por favor usa el formato johndoe@example.com"
+
+#: ../kano_registration_gui/RegistrationScreen.py:67
 msgid "Kano World"
 msgstr "Mundo Kano"
 
-#: ../kano_registration_gui/RegistrationScreen.py:41
+#: ../kano_registration_gui/RegistrationScreen.py:68
 msgid "Choose a cool name and secure password"
 msgstr "Elige un nombre atractivo y una contraseña segura"
 
-#: ../kano_registration_gui/RegistrationScreen.py:50
+#: ../kano_registration_gui/RegistrationScreen.py:77
 msgid "JOIN KANO WORLD"
 msgstr "UNIRSE A MUNDO KANO"
 
-#: ../kano_registration_gui/RegistrationScreen.py:108
+#: ../kano_registration_gui/RegistrationScreen.py:113
+msgid "Incorrect Email address"
+msgstr "Dirección de correo inválida"
+
+#: ../kano_registration_gui/RegistrationScreen.py:139
 msgid "Cannot register, problem: Username already registered"
 msgstr "Imposible registrar, problema: el usuario ya existe"
 
-#: ../kano_registration_gui/RegistrationScreen.py:117
+#: ../kano_registration_gui/RegistrationScreen.py:148
 #: ../kano_login/login.py:197
 msgid "Houston, we have a problem"
 msgstr "¡Tenemos un problema!"
 
-#: ../kano_registration_gui/RegistrationScreen.py:136
+#: ../kano_registration_gui/RegistrationScreen.py:167
 #: ../kano_login/swag_screen.py:28
 msgid "Profile activated!"
 msgstr "¡Perfil activado!"
 
-#: ../kano_registration_gui/RegistrationScreen.py:137
+#: ../kano_registration_gui/RegistrationScreen.py:168
 msgid ""
 "Now you can share stuff, build your character, and connect with friends."
 msgstr ""
 "Ahora puedes compartir tus creaciones, crear tu personaje y conectarte con "
 "amigos."
 
-#: ../kano_registration_gui/RegistrationScreen.py:158
-msgid "User not found"
-msgstr "Usuario no encontrado"
-
-#: ../kano_registration_gui/RegistrationScreen.py:188
+#: ../kano_registration_gui/RegistrationScreen.py:219
 msgid "This username is taken!"
 msgstr "¡Este usuario ya existe!"
 
-#: ../kano_registration_gui/RegistrationScreen.py:189
+#: ../kano_registration_gui/RegistrationScreen.py:220
 msgid "Try another one"
 msgstr "Intenta otro"
 
-#: ../kano_registration_gui/RegistrationScreen.py:200
+#: ../kano_registration_gui/RegistrationScreen.py:231
 msgid "You don't have internet"
 msgstr "No tienes internet"
 
-#: ../kano_registration_gui/RegistrationScreen.py:201
+#: ../kano_registration_gui/RegistrationScreen.py:232
 msgid "Do you want to connect to WiFi?"
 msgstr "¿Quieres conectarte al WiFi?"
 
-#: ../kano_registration_gui/RegistrationScreen.py:204
+#: ../kano_registration_gui/RegistrationScreen.py:235
 msgid "YES"
 msgstr "SI"
 
-#: ../kano_registration_gui/RegistrationScreen.py:209
+#: ../kano_registration_gui/RegistrationScreen.py:240
 msgid "NO"
 msgstr "NO"
 
@@ -346,9 +357,6 @@ msgstr "¡Algo anduvo mal con la lista de compartidos!"
 msgid "Something wrong retrieving comments!"
 msgstr "¡Hubo un problema recuperando los comentarios!"
 
-#~ msgid "Youll miss out on the best features of your Kano"
-#~ msgstr "Te perderás las mejores atracciones de Kano"
-
 #: ../kano_profile/tracking_events.py:35
 msgid "Failed to send the ping event ({})"
 msgstr "Falla al enviar el ping ({})"
@@ -357,7 +365,7 @@ msgstr "Falla al enviar el ping ({})"
 msgid "Unknown event template '{}'."
 msgstr "Plantilla de evento desconocida '{}'."
 
-#: ../kano_profile/apps.py:221
+#: ../kano_profile/apps.py:279
 msgid "App '{}' not available"
 msgstr "Aplicación '{}' no disponible"
 
@@ -389,7 +397,7 @@ msgstr "Hipster Hacker"
 msgid "You did it!"
 msgstr "¡Lo hiciste!"
 
-#: ../quests/hack-the-internet/quest.py:29 ../quests/kano-world/quest.py:31
+#: ../quests/kano-world/quest.py:31 ../quests/hack-the-internet/quest.py:29
 msgid "You made it to Kano World!"
 msgstr "Lo hiciste!"
 
@@ -488,8 +496,8 @@ msgid ""
 "Now you can share stuff, build your character, and connect with friends! "
 "You've earned some rewards…"
 msgstr ""
-"¡Ahora puedes compartir tus creaciones, crear un personaje y conectarte "
-"con ammigos! ¡Has ganado algunos premios!"
+"¡Ahora puedes compartir tus creaciones, crear un personaje y conectarte con "
+"ammigos! ¡Has ganado algunos premios!"
 
 #: ../kano_login/swag_screen.py:35 ../kano_login/swag_screen.py:44
 msgid "LET'S GO"
@@ -504,8 +512,8 @@ msgid ""
 "Your profile stores all your rewards, projects, and challenges. But fear not "
 "- we'll save everything for when you have internet."
 msgstr ""
-"Tu perfil guarda todos tus premios, proyectos y desafíos. No temas "
-"- guardaremos todo para cuando tengas internet."
+"Tu perfil guarda todos tus premios, proyectos y desafíos. No temas - "
+"guardaremos todo para cuando tengas internet."
 
 #: ../kano_login/login.py:52
 msgid "Login"
@@ -547,7 +555,7 @@ msgstr "¡Exitoso!"
 msgid "You're in - online features now enabled."
 msgstr "Estás dentro - las funciones en línea están ahora habilitadas."
 
-#: ../kano_login/login.py:258 ../kano_login/components/logged_in.py:24
+#: ../kano_login/components/logged_in.py:24 ../kano_login/login.py:258
 msgid "OK"
 msgstr "OK"
 
@@ -635,26 +643,34 @@ msgstr "¡Ya has iniciado sesión!"
 msgid "Logged out!"
 msgstr "¡Sesión finalizada!"
 
-#~ msgid "Media file ({}) not found"
-#~ msgstr "Archivo Media ({}) no encontrado"
+#: ../lxpanel-plugin/kano_profile.c:43 ../lxpanel-plugin/kano_profile.c:264
+#: ../lxpanel-plugin/kano_profile.c:291
+msgid "Profile"
+msgstr ""
 
-#~ msgid "Are you sure youre connected to the Internet?"
-#~ msgstr "¿Seguro que estás conectado a internet?"
+#: ../lxpanel-plugin/kano_profile.c:273
+msgid "Sync"
+msgstr ""
 
-#~ msgid "Boy"
-#~ msgstr "Varón"
+#: ../lxpanel-plugin/kano_profile.c:279
+msgid "Back Up"
+msgstr ""
 
-#~ msgid "Girl"
-#~ msgstr "Mujer"
+#: ../lxpanel-plugin/kano_profile.c:285
+msgid "Restore"
+msgstr ""
 
-#~ msgid "Wizard"
-#~ msgstr "Mago"
+#: ../lxpanel-plugin/kano_profile.c:299
+msgid "Log in"
+msgstr ""
 
-#~ msgid "Couldn't read app profiles"
-#~ msgstr "No se pudo leer los perfiles de las aplicaciones"
+#: ../lxpanel-plugin/kano_profile.c:382
+msgid "Kano Profile"
+msgstr ""
 
-#~ msgid "Arcade Hall"
-#~ msgstr "Sala de juegos"
+#: ../lxpanel-plugin/kano_profile.c:383
+msgid "Status of your Kano World Connection."
+msgstr ""
 
 #~ msgid "Concert Hall"
 #~ msgstr "Sala de conciertos"
@@ -677,11 +693,29 @@ msgstr "¡Sesión finalizada!"
 #~ msgid "Minecraft"
 #~ msgstr "Minecraft"
 
-msgid "Incorrect Email address"
-msgstr "Dirección de correo inválida"
+#~ msgid "Arcade Hall"
+#~ msgstr "Sala de juegos"
 
-msgid "You need to provide a valid email address"
-msgstr "Es necesario que ingreses una dirección de correo válida"
+#~ msgid "Couldn't read app profiles"
+#~ msgstr "No se pudo leer los perfiles de las aplicaciones"
 
-msgid "The email address is not correct,\nplease use the format johndoe@example.com"
-msgstr "La dirección de correo no es válida,\npor favor usa el formato johndoe@example.com"
+#~ msgid "Wizard"
+#~ msgstr "Mago"
+
+#~ msgid "Girl"
+#~ msgstr "Mujer"
+
+#~ msgid "Boy"
+#~ msgstr "Varón"
+
+#~ msgid "Are you sure youre connected to the Internet?"
+#~ msgstr "¿Seguro que estás conectado a internet?"
+
+#~ msgid "Media file ({}) not found"
+#~ msgstr "Archivo Media ({}) no encontrado"
+
+#~ msgid "Youll miss out on the best features of your Kano"
+#~ msgstr "Te perderás las mejores atracciones de Kano"
+
+#~ msgid "User not found"
+#~ msgstr "Usuario no encontrado"

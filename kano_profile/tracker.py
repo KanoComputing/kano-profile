@@ -107,6 +107,7 @@ def generate_tracker_token():
 OS_VERSION = str(read_file_contents('/etc/kanux_version'))
 CPU_ID = str(get_cpu_id())
 TOKEN = load_token()
+LANGUAGE = (os.getenv('LANG') or '').split('.', 1)[0]
 
 
 def get_session_file_path(name, pid):
@@ -240,7 +241,7 @@ def track_data(name, data):
         'os_version': OS_VERSION,
         'cpu_id': CPU_ID,
         'token': TOKEN,
-
+        'language': LANGUAGE,
         'name': str(name),
         'data': data
     }
@@ -301,7 +302,7 @@ def get_action_event(name):
         'os_version': OS_VERSION,
         'cpu_id': CPU_ID,
         'token': TOKEN,
-
+        'language': LANGUAGE,
         'name': name
     }
 
@@ -316,7 +317,7 @@ def get_session_event(session):
         'os_version': OS_VERSION,
         'cpu_id': CPU_ID,
         'token': TOKEN,
-
+        'language': LANGUAGE,
         'name': session['name'],
         'length': session['elapsed'],
         'token-system': session.get('token-system', '')

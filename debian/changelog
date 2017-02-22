@@ -1,3 +1,9 @@
+kano-profile (3.9.0) unstable; urgency=low
+
+  * Added more data to each tracking event
+
+-- Team Kano <dev@kano.me>  Wed, 22 Feb 2017 17:38:00 +0000
+
 kano-profile (2.3.0-2) unstable; urgency=low
 
   * Add challenge progress tracking

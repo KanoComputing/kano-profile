@@ -105,6 +105,8 @@ def generate_tracker_token():
 
 
 OS_VERSION = str(read_file_contents('/etc/kanux_version'))
+os_variant = read_file_contents('/etc/kanux_version_variant')
+OS_VERSION += '-' + os_variant if os_variant else ''
 CPU_ID = str(get_cpu_id())
 TOKEN = load_token()
 LANGUAGE = (os.getenv('LANG') or '').split('.', 1)[0]

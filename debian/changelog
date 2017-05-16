@@ -1,3 +1,9 @@
+kano-profile (3.9.1-0) unstable; urgency=low
+
+  * Added tracking events for low battery and auto poweroff
+
+ -- Team Kano <dev@kano.me>  Tue, 16 May 2017 17:33:00 +0100
+
 kano-profile (3.9.0-1) unstable; urgency=low
 
   * Added more data to each tracking event

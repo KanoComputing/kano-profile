@@ -35,10 +35,23 @@ def _ping():
         msg = _("Failed to send the ping event ({})").format(err)
         raise RuntimeError(msg)
 
+def _low_battery():
+    track_data('battery', {
+        'status': 'low-charge'
+    })
+
+
+def _auto_poweroff():
+    track_data('battery', {
+        'status': 'automatic-poweroff'
+    })
+
 
 event_templates = {
     'hw-info': _hw_info,
-    'ping': _ping
+    'ping': _ping,
+    'low-battery': _low_battery,
+    'auto-poweroff': _auto_poweroff
 }
 
 

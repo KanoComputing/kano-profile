@@ -34,8 +34,11 @@ class FirstScreenTemplate(Gtk.Box):
         kano_button_text = _("CREATE")
         skip_button_text = _("Skip")
         login_button_text = _("I have a profile")
-        header = _("Now let's make your online Profile")
-        subheader = _("So you can save badges, games, and projects")
+        header = _('Keep your creations safe')
+        subheader = _(
+            'Create a Kano World account so you never lose your progress...\n'
+            'and to get inspired by creations from the community'
+        )
         img_width = 590
         img_height = 270
 

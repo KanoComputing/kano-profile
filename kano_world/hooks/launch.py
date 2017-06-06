@@ -1,6 +1,6 @@
 # launch.py
 #
-# Copyright (C) 2015 Kano Computing Ltd.
+# Copyright (C) 2015-2017 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -22,10 +22,10 @@ def run(args):
     return ret
 
 
-def launch(app_name):
+def launch(app_name, background=False):
     if app_name is not None:
         try:
             if check_installed(app_name):
-                launch_project(app_name, '', '')
+                launch_project(app_name, '', '', background=background)
         except ValueError:
             logger.error("Failed to launch app '{}'".format(str(app_name)))

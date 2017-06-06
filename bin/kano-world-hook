@@ -2,22 +2,30 @@
 
 # kano-world-hook
 #
-# Copyright (C) 2014 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# Copyright (C) 2014, 2017 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # The OS interface for triggereing things on the OS from Kano World.
 # It is normally called by xdg-open from chromium.
 #
-# Usage:
-#   kano-world-hook <kano-scheme-url>
-#
-#     The kano-scheme URL looks something like this:
-#       kano:call_name:param1:param2
-#
+
+'''
+Kano World Hook
+
+Usage:
+  kano-world-hook [--background] <kano-scheme-url>
+
+
+Options:
+    <kano-scheme-url>    The kano-scheme URL looks something like:
+                             kano:call_name:param1:param2
+    -b --background      Launch in the background
+'''
 
 import os
 import sys
 import importlib
+import docopt
 
 if __name__ == '__main__' and __package__ is None:
     dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -26,48 +34,73 @@ if __name__ == '__main__' and __package__ is None:
 
 from kano.logging import logger
 
+
+# TODO: Make these return codes publicly available
+SUCCESS = 0
+E_INVALID_URL = -1
+E_INVALID_SCHEME = -2
+E_SCHEME_NOT_FOUND = -3
+E_SCHEME_EXECUTION_FAILED = -4
+
+
 # TODO: Put kano-dialogs where appropriate
 
-if len(sys.argv) < 2:
-    msg = "{} run with no arguments".format(sys.argv[0])
-    logger.error(msg)
-    sys.exit(0)
+def main(scheme_url, **args):
+    # Parse the URL
+    try:
+        url_data = scheme_url.split(":")
+        if len(url_data) < 3:
+            msg = '{} url data is too short: {}'.format(sys.argv[0], scheme_url)
+            logger.error(msg)
 
-# Parse the URL
-try:
-    url_data = sys.argv[1].split(":")
-    if len(url_data) < 3:
-        print '{} url data is too short: {}'.format(sys.argv[0], sys.argv[1])
+            return E_INVALID_URL
+    except:
+        msg = '{} passed an invalid url: {}'.format(sys.argv[0], scheme_url)
         logger.error(msg)
-        sys.exit(0)
-except:
-    print '{} passed an invalid url: {}'.format(sys.argv[0], sys.argv[1])
-    sys.exit(0)
 
-try:
-    scheme = url_data.pop(0)
-    assert(scheme=='kano')
-except:
-    msg = "Could not recognise the {} scheme".format(scheme)
-    logger.error(msg)
-    sys.exit(0)
+        return E_INVALID_URL
 
-try:
-    module_name = "kano_world.hooks.{}".format(url_data[0])
-    hook_module = importlib.import_module(module_name)
-except:
-    msg = "The requested '{}' hook doesn't exist".format(url_data[0])
-    logger.error(msg)
-    sys.exit(0)
+    # First element is the scheme specifier - should be `kano`
+    try:
+        scheme = url_data.pop(0)
+        assert(scheme=='kano')
+    except:
+        msg = "Could not recognise the {} scheme".format(scheme)
+        logger.error(msg)
 
-try:
-    result = hook_module.run(url_data[1:])
-except Exception as e:
-    msg = "The execution of the {} hook failed ({})".format(sys.argv[1], str(e))
-    logger.error(msg)
-    sys.exit(0)
+        return E_INVALID_SCHEME
 
-if hasattr(hook_module, "launch"):
-    hook_module.launch(result)
+    # Second element is the scheme action (e.g. share, launch, etc)
+    try:
+        module_name = "kano_world.hooks.{}".format(url_data[0])
+        hook_module = importlib.import_module(module_name)
+    except:
+        msg = "The requested '{}' hook doesn't exist".format(url_data[0])
+        logger.error(msg)
 
-sys.exit(0)
+        return E_SCHEME_NOT_FOUND
+
+    # Remaining elements are parameters for scheme action
+    try:
+        result = hook_module.run(url_data[1:])
+    except Exception as e:
+        msg = "The execution of the {} hook failed ({})".format(
+            scheme_url, str(e)
+        )
+        logger.error(msg)
+
+        return E_SCHEME_EXECUTION_FAILED
+
+    if hasattr(hook_module, "launch"):
+        hook_module.launch(result, background=args.get('--background', False))
+
+    return SUCCESS
+
+
+if __name__ == '__main__':
+    ARGS = docopt.docopt(__doc__)
+    SCHEME_URL = ARGS.get('<kano-scheme-url>')
+
+    sys.exit(
+        main(SCHEME_URL, **ARGS)
+    )

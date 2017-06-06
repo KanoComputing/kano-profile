@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Kano URL Scheme
-Exec=kano-world-hook %u
+Exec=kano-world-hook --background %u
 Icon=kano-world
 Type=Application
 Terminal=false

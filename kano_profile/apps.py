@@ -284,7 +284,7 @@ def launch_project(app, filename, data_dir, background=False):
         # Likely the app is not running and the signal could not be sent, so start it now
         logger.warn("Error sending launch signal, starting the app now, rc={}".format(rc))
         if background:
-            run_bg(cmd)
+            run_cmd('systemd-run --user {cmd}'.format(cmd=cmd))
         else:
             _, _, rc = run_print_output_error(cmd)
             return rc

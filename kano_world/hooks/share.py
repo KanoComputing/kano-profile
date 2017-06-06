@@ -1,6 +1,6 @@
 # share.py
 #
-# Copyright (C) 2014-2015 Kano Computing Ltd.
+# Copyright (C) 2014-2017 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
 #
 
@@ -43,14 +43,14 @@ def run(args):
     return data
 
 
-def launch(data):
+def launch(data, background=False):
     if data:
         (title, attachment_path, app, attachment_name, folder, item_id) = data
         msg = "Downloaded share: {}".format(title)
         logger.info(msg)
 
         if check_installed(app):
-            launch_project(app, attachment_name, folder)
+            launch_project(app, attachment_name, folder, background=background)
             report_share_opened(item_id)
     else:
         logger.error("Share hook launch failed")

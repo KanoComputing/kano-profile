@@ -284,7 +284,13 @@ def launch_project(app, filename, data_dir, background=False):
         # Likely the app is not running and the signal could not be sent, so start it now
         logger.warn("Error sending launch signal, starting the app now, rc={}".format(rc))
         if background:
-            run_cmd('systemd-run --user {cmd}'.format(cmd=cmd))
+            # TODO: After migrating to launching apps via systemd, shares for make-snake
+            # stopped launching from KW. Created a special case here to avoid
+            # fixing the make-snake cmd through systemd temporarily. FIX THIS.
+            if app == 'make-snake':
+                run_bg(cmd)
+            else:
+                run_cmd('systemd-run --user {cmd}'.format(cmd=cmd))
         else:
             _, _, rc = run_print_output_error(cmd)
             return rc

@@ -19,3 +19,5 @@ override_dh_auto_build:
 
 	cd libs/kano-world && make
 	cd libs/kano-world && make debug
+
+override_dh_auto_test:

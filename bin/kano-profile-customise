@@ -2,7 +2,7 @@
 
 # kano-profile-wardrobe
 #
-# Copyright (C) 2016 Kano Computing Ltd.
+# Copyright (C) 2016-2017 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Open a kano-profile wardrobe screen in edit mode
@@ -10,17 +10,14 @@
 #
 
 import os
+import sys
 from gi.repository import Gtk, GObject, GLib, GdkPixbuf
 
-from kano_avatar_gui.CharacterCreator import CharacterCreator
-from kano.gtk3.application_window import ApplicationWindow
-from kano.gtk3.buttons import KanoButton
-
-
-BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if __name__ == '__main__' and __package__ is None:
-    if BASE_PATH == '/usr':
-        BASE_PATH = os.path.join(BASE_PATH, 'share')
+    BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+    if BASE_PATH != '/usr':
+        sys.path.insert(1, BASE_PATH)
         LOCALE_PATH = os.path.join(BASE_PATH, 'locale')
     else:
         LOCALE_PATH = None
@@ -28,50 +25,13 @@ if __name__ == '__main__' and __package__ is None:
 import kano_i18n.init
 kano_i18n.init.install('kano-profile', LOCALE_PATH)
 
-
-class CharacterWindow(Gtk.Window):
-    def __init__(self, cb):
-        super(CharacterWindow, self).__init__()
-        self.get_style_context().add_class("character_window")
-        self.set_decorated(False)
-        self.close_cb = cb
-
-        self.char_edit = CharacterCreator(randomise=True, no_sync=True)
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vbox)
-
-        vbox.pack_start(self.char_edit, False, False, 0)
-        button = KanoButton(_("OK"))
-        button.connect("clicked", self.close_window)
-        button.pack_and_align()
-
-        self.connect("delete-event", Gtk.main_quit)
-        self.set_keep_above(True)
-
-        vbox.pack_start(button.align, False, False, 10)
-        self.show_all()
-
-    def close_window(self, widget):
-        self.char_edit.save()
-        self.destroy()
-        GLib.idle_add(self.close_cb)
-
-
-def clean_up():
-    Gtk.main_quit()
-
-
-def show_wardrobe():
-    win = CharacterWindow(clean_up)
-    win.show_all()
-    win.char_edit.show_pop_up_menu_for_category('judoka-skins')
-    win.char_edit.select_category_button('judoka-skins')
-    os.system('kano-stop-splash')
+from kano_avatar_gui.customise import show_wardrobe
 
 
 def main():
     GObject.threads_init()
     show_wardrobe()
+    os.system('kano-stop-splash')
     Gtk.main()
 
 

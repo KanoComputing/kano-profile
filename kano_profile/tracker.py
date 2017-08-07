@@ -21,6 +21,7 @@ import os
 import hashlib
 import subprocess
 import shlex
+import re
 
 from uuid import uuid1, uuid5
 
@@ -30,7 +31,7 @@ from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
 from kano_profile.paths import tracker_dir, tracker_events_file, \
-    tracker_token_file
+    tracker_token_file, PAUSED_SESSION_DIR
 
 
 class open_locked(file):
@@ -111,6 +112,8 @@ CPU_ID = str(get_cpu_id())
 TOKEN = load_token()
 LANGUAGE = (os.getenv('LANG') or '').split('.', 1)[0]
 
+SESSION_FILE_RE = re.compile(r'(\d+)-.*')
+
 
 def get_session_file_path(name, pid):
     return "{}/{}-{}.json".format(tracker_dir, pid, name)
@@ -161,6 +164,98 @@ def session_start(name, pid=None):
             chown_path(path)
 
     return path
+
+
+def list_sessions():
+    return os.listdir(tracker_dir)
+
+
+def is_pid_running(pid):
+    '''
+    Sending a signal 0 to a running process will do nothing. Sending it to a
+    dead process will throw an OSError exception
+    '''
+
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    else:
+        return True
+
+
+def get_open_sessions():
+    open_sessions = []
+
+    for session_file in list_sessions():
+        session_path = os.path.join(tracker_dir, session_file)
+        if not os.path.isfile(session_path):
+            continue
+
+        pid_matches = SESSION_FILE_RE.findall(session_file)
+        if not pid_matches:
+            continue
+
+        session_pid = int(pid_matches[0])
+        if not is_pid_running(session_pid):
+            continue
+
+        open_sessions.append({
+            'pid': session_pid,
+            'file': session_file,
+            'path': session_path,
+        })
+
+    return open_sessions
+
+
+def get_paused_sessions():
+    if os.path.exists(PAUSED_SESSION_DIR):
+        return os.listdir(PAUSED_SESSION_DIR)
+    else:
+        return []
+
+
+def pause_tracking_session(session):
+    '''
+    Close session
+    Copy session file to tmp
+    '''
+
+    print session
+
+    ensure_dir(PAUSED_SESSION_DIR)
+
+
+def unpause_tracking_session(session):
+    '''
+
+    '''
+    print session
+
+
+
+
+def pause_tracking_sessions():
+    '''
+    for file in session files:
+        if not pid is alive:
+            continue
+
+        # session is alive
+        close session
+
+    '''
+    open_sessions = get_open_sessions()
+
+    for session in open_sessions:
+        pause_tracking_session(session)
+
+def unpause_tracking_sessions():
+    '''
+    for file
+    '''
+    pass
 
 
 def session_end(session_file):

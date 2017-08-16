@@ -39,7 +39,7 @@
   },
   "linux-story": {
     "cmd": "/usr/bin/linux-story-gui \"{fullpath}\"",
-    "max-level": 31,
+    "max-level": 46,
     "icon": "linux-story.png"
   },
   "make-light": {

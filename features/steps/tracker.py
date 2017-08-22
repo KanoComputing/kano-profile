@@ -5,8 +5,10 @@ import subprocess
 import signal
 from time import sleep
 from behave import given, when, then
-from behave_pytest.hook import install_pytest_asserts
 
+from kano_profile.paths import tracker_dir
+from kano_profile.tracker import pause_tracking_sessions, \
+    unpause_tracking_sessions
 
 LOCAL_LIB_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),

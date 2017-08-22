@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# tracker.py
+# __init__.py
 #
 # Copyright (C) 2014 - 2017 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
 #
 
 """
@@ -12,311 +12,54 @@ Kano-tracker module
 A small module for tracking various metrics the users do in Kano OS
 """
 
+
+__author__ = 'Kano Computing Ltd.'
+__email__ = 'dev@kano.me'
+
+
 import time
 import atexit
 import datetime
-import fcntl
 import json
 import os
-import hashlib
 import subprocess
 import shlex
-import re
 
 from uuid import uuid1, uuid5
 
-from kano.utils import get_program_name, is_number, read_file_contents, \
-    get_cpu_id, chown_path, ensure_dir
+from kano.utils.file_operations import read_file_contents, chown_path, \
+    ensure_dir
+from kano.utils.hardware import get_cpu_id
+from kano.utils.misc import is_number
 from kano.logging import logger
+
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
 from kano_profile.paths import tracker_dir, tracker_events_file, \
     tracker_token_file, PAUSED_SESSION_DIR
+from kano_profile.tracker.tracker_token import TOKEN, generate_tracker_token, \
+	load_token
+from kano_profile.tracker.tracking_utils import open_locked, \
+    get_nearest_previous_monday
+from kano_profile.tracker.tracking_session import TrackingSession
+from kano_profile.tracker.tracking_sessions import session_start, session_end, \
+    list_sessions, get_open_sessions, get_session_file_path, session_log, \
+	get_session_unique_id
 
-
-class open_locked(file):
-    """ A version of open with an exclusive lock to be used within
-        controlled execution statements.
-    """
-    def __init__(self, *args, **kwargs):
-        super(open_locked, self).__init__(*args, **kwargs)
-        fcntl.flock(self, fcntl.LOCK_EX)
-
-
-def load_token():
-    """
-        Reads the tracker token from the token file. If the file doesn't
-        exists, it regenerates it.
-
-        The token is regenerated on each boot and is inserted into every
-        event to link together events that happened during the same start
-        of the OS.
-
-        :returns: The token.
-        :rtype: str
-    """
-
-    if os.path.exists(tracker_token_file):
-        try:
-            f = open_locked(tracker_token_file, 'r')
-        except IOError as e:
-            logger.error("Error opening tracker token file {}".format(e))
-        else:
-            with f:
-                return f.read().strip()
-    else:
-        return generate_tracker_token()
-
-
-def generate_tracker_token():
-    """
-        Generating the token is a simple md5hash of the current time.
-
-        The token is saved to the `tracker_token_file`.
-
-        :returns: The token.
-        :rtype: str
-    """
-
-    token = hashlib.md5(str(time.time())).hexdigest()
-
-    ensure_dir(tracker_dir)
-    try:
-        f = open_locked(tracker_token_file, 'w')
-    except IOError as e:
-        logger.error(
-            "Error opening tracker token file (generate) {}".format(e))
-    else:
-        with f:
-            f.write(token)
-        if 'SUDO_USER' in os.environ:
-            chown_path(tracker_token_file)
-
-    # Make sure that the events file exist
-    try:
-        f = open(tracker_events_file, 'a')
-    except IOError as e:
-        logger.error("Error opening tracker events file {}".format(e))
-    else:
-        f.close()
-        if 'SUDO_USER' in os.environ:
-            chown_path(tracker_events_file)
-
-    return token
+# Public imports
+from kano_profile.tracker.tracker import Tracker
+from kano_profile.tracker.tracking_sessions import session_start, session_end, \
+    pause_tracking_sessions, unpause_tracking_sessions
 
 
 OS_VERSION = str(read_file_contents('/etc/kanux_version'))
 os_variant = read_file_contents('/etc/kanux_version_variant')
 OS_VERSION += '-' + os_variant if os_variant else ''
 CPU_ID = str(get_cpu_id())
-TOKEN = load_token()
 LANGUAGE = (os.getenv('LANG') or '').split('.', 1)[0]
 
-SESSION_FILE_RE = re.compile(r'(\d+)-.*')
 
 
-def get_session_file_path(name, pid):
-    return "{}/{}-{}.json".format(tracker_dir, pid, name)
-
-
-def get_session_unique_id(name, pid):
-    data = {}
-    tracker_session_file = get_session_file_path(name, pid)
-    try:
-        af = open_locked(tracker_session_file, 'r')
-    except (IOError, OSError) as e:
-        logger.error("Error while opening session file".format(e))
-    else:
-        with af:
-            try:
-                data = json.load(af)
-            except ValueError as e:
-                logger.error("Session file is not a valid JSON")
-
-    return data.get('app_session_id', "")
-
-
-def session_start(name, pid=None):
-    if not pid:
-        pid = os.getpid()
-    pid = int(pid)
-
-    data = {
-        'pid': pid,
-        'name': name,
-        'started': int(time.time()),
-        'elapsed': 0,
-        'app_session_id': str(uuid5(uuid1(), name + str(pid))),
-        'finished': False,
-        'token-system': TOKEN
-    }
-
-    path = get_session_file_path(data['name'], data['pid'])
-
-    try:
-        f = open_locked(path, 'w')
-    except IOError as e:
-        logger.error("Error opening tracker session file {}".format(e))
-    else:
-        with f:
-            json.dump(data, f)
-        if 'SUDO_USER' in os.environ:
-            chown_path(path)
-
-    return path
-
-
-def list_sessions():
-    return os.listdir(tracker_dir)
-
-
-def is_pid_running(pid):
-    '''
-    Sending a signal 0 to a running process will do nothing. Sending it to a
-    dead process will throw an OSError exception
-    '''
-
-    try:
-        os.kill(pid, 0)
-    except OSError:
-        return False
-    else:
-        return True
-
-
-def get_open_sessions():
-    open_sessions = []
-
-    for session_file in list_sessions():
-        session_path = os.path.join(tracker_dir, session_file)
-        if not os.path.isfile(session_path):
-            continue
-
-        pid_matches = SESSION_FILE_RE.findall(session_file)
-        if not pid_matches:
-            continue
-
-        session_pid = int(pid_matches[0])
-        if not is_pid_running(session_pid):
-            continue
-
-        open_sessions.append({
-            'pid': session_pid,
-            'file': session_file,
-            'path': session_path,
-        })
-
-    return open_sessions
-
-
-def get_paused_sessions():
-    if os.path.exists(PAUSED_SESSION_DIR):
-        return os.listdir(PAUSED_SESSION_DIR)
-    else:
-        return []
-
-
-def pause_tracking_session(session):
-    '''
-    Close session
-    Copy session file to tmp
-    '''
-
-    print session
-
-    ensure_dir(PAUSED_SESSION_DIR)
-
-
-def unpause_tracking_session(session):
-    '''
-
-    '''
-    print session
-
-
-
-
-def pause_tracking_sessions():
-    '''
-    for file in session files:
-        if not pid is alive:
-            continue
-
-        # session is alive
-        close session
-
-    '''
-    open_sessions = get_open_sessions()
-
-    for session in open_sessions:
-        pause_tracking_session(session)
-
-def unpause_tracking_sessions():
-    '''
-    for file
-    '''
-    pass
-
-
-def session_end(session_file):
-    if not os.path.exists(session_file):
-        msg = "Someone removed the tracker file, the runtime of this " \
-              "app will not be logged"
-        logger.warn(msg)
-        return
-
-    try:
-        rf = open_locked(session_file, 'r')
-    except IOError as e:
-        logger.error("Error opening the tracker session file {}".format(e))
-    else:
-        with rf:
-            data = json.load(rf)
-
-            data['elapsed'] = int(time.time()) - data['started']
-            data['finished'] = True
-
-            try:
-                wf = open(session_file, 'w')
-            except IOError as e:
-                logger.error(
-                    "Error opening the tracker session file {}".format(e))
-            else:
-                with wf:
-                    json.dump(data, wf)
-        if 'SUDO_USER' in os.environ:
-            chown_path(session_file)
-
-
-def session_log(name, started, length):
-    """ Log a session that was tracked outside of the tracker.
-
-        :param name: The identifier of the session.
-        :type name: str
-
-        :param started: When was the session started (UTC unix timestamp).
-        :type started: int
-
-        :param length: Length of the session in seconds.
-        :param started: int
-    """
-
-    try:
-        af = open_locked(tracker_events_file, 'a')
-    except IOError as e:
-        logger.error("Error while opening events file".format(e))
-    else:
-        with af:
-            session = {
-                'name': name,
-                'started': int(started),
-                'elapsed': int(length)
-            }
-
-            event = get_session_event(session)
-            af.write(json.dumps(event) + "\n")
-        if 'SUDO_USER' in os.environ:
-            chown_path(tracker_events_file)
 
 
 def track_data(name, data):
@@ -432,33 +175,6 @@ def get_utc_offset():
     return -int(time.altzone if is_dst else time.timezone)
 
 
-class Tracker:
-    """Tracker class, used for measuring program run-times,
-    implemented via atexit hooks"""
-
-    def __init__(self):
-        self.path = session_start(get_program_name())
-        atexit.register(self._write_times)
-
-    def _write_times(self):
-        session_end(self.path)
-
-
-# TODO: While it isn't at the moment, this could be useful to have
-#       in the toolset.
-def _get_nearest_previous_monday():
-    """ Returns the timestamp of the nearest past Monday """
-
-    t = time.time()
-    day = 24 * 60 * 60
-    week = 7 * day
-
-    r = (t - (t % week)) - (3 * day)
-    if (t - r) >= week:
-        r += week
-
-    return int(r)
-
 
 def add_runtime_to_app(app, runtime):
     """ Saves the tracking data for a given application.
@@ -512,7 +228,7 @@ def add_runtime_to_app(app, runtime):
         if 'weekly' not in app_stats[app]:
             app_stats[app]['weekly'] = {}
 
-        week = str(_get_nearest_previous_monday())
+        week = str(get_nearest_previous_monday())
         if week not in app_stats[app]['weekly']:
             app_stats[app]['weekly'][week] = {
                 'starts': 0,
@@ -532,7 +248,8 @@ def save_hardware_info():
     """Saves hardware information related to the Raspberry Pi / Kano Kit"""
 
     from kano.logging import logger
-    from kano.utils import get_cpu_id, get_mac_address, detect_kano_keyboard
+    from kano.utils.hardware import get_cpu_id, get_mac_address, \
+        detect_kano_keyboard
 
     logger.info('save_hardware_info')
     state = {

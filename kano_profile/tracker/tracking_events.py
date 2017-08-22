@@ -9,7 +9,7 @@
 
 import json
 
-from .tracker import get_action_event, track_data
+from kano_profile.tracker import get_action_event, track_data
 from kano_world.connection import request_wrapper, content_type_json
 from kano.utils import get_rpi_model, detect_kano_keyboard, get_partition_info
 

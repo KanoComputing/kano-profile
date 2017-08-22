@@ -48,7 +48,8 @@ from kano_profile.tracker import open_locked, session_start, session_end, \
     session_log, generate_tracker_token, load_token, get_utc_offset, \
     track_subprocess
 from kano.logging import logger
-from kano.utils import delete_file, ensure_dir, is_running
+from kano.utils.file_operations import delete_file, ensure_dir
+from kano.utils.processes import is_running
 from kano.colours import decorate_string_only_terminal
 from kano_profile.tracking_events import generate_event
 

@@ -55,6 +55,14 @@
     "targets": [["linux-story", "level", 30]],
     "title": "Eleanor's Saviour"
   },
+  "super_user": {
+    "bg_color": "FCE683",
+    "desc_locked": "Finish Terminal Quest to unlock this badge.",
+    "desc_unlocked": "You used your coding powers to rescue Folderton from the evil bell! You are truly a Super User.",
+    "operation": "each_greater",
+    "targets": [["linux-story", "finished", "challenge_46"]],
+    "title": "Super User"
+  },
   "make_light_winner": {
     "bg_color": "C1C4E8",
     "desc_locked": "Complete the eighth challenge in Make Light to unlock this badge.",

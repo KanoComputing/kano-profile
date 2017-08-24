@@ -9,7 +9,6 @@ import kano_profile.tracker as tracker
     'load_token',
     'generate_tracker_token',
     'OS_VERSION',
-    'os_variant',
     'OS_VERSION',
     'CPU_ID',
     'TOKEN',

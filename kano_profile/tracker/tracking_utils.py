@@ -40,3 +40,14 @@ def get_nearest_previous_monday():
         r += week
 
     return int(r)
+
+
+def get_utc_offset():
+    """ Returns the local UTC offset in seconds.
+
+        :returns: UTC offsed in secconds.
+        :rtype: int
+    """
+
+    is_dst = time.daylight and time.localtime().tm_isdst > 0
+    return -int(time.altzone if is_dst else time.timezone)

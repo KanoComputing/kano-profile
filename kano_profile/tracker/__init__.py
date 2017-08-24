@@ -40,26 +40,16 @@ from kano_profile.paths import tracker_dir, tracker_events_file, \
 from kano_profile.tracker.tracker_token import TOKEN, generate_tracker_token, \
 	load_token
 from kano_profile.tracker.tracking_utils import open_locked, \
-    get_nearest_previous_monday
+    get_nearest_previous_monday, get_utc_offset
 from kano_profile.tracker.tracking_session import TrackingSession
 from kano_profile.tracker.tracking_sessions import session_start, session_end, \
     list_sessions, get_open_sessions, get_session_file_path, session_log, \
-	get_session_unique_id
+	get_session_unique_id, get_session_event, CPU_ID, LANGUAGE, OS_VERSION
 
 # Public imports
 from kano_profile.tracker.tracker import Tracker
 from kano_profile.tracker.tracking_sessions import session_start, session_end, \
     pause_tracking_sessions, unpause_tracking_sessions
-
-
-OS_VERSION = str(read_file_contents('/etc/kanux_version'))
-os_variant = read_file_contents('/etc/kanux_version_variant')
-OS_VERSION += '-' + os_variant if os_variant else ''
-CPU_ID = str(get_cpu_id())
-LANGUAGE = (os.getenv('LANG') or '').split('.', 1)[0]
-
-
-
 
 
 def track_data(name, data):
@@ -145,35 +135,6 @@ def get_action_event(name):
         'language': LANGUAGE,
         'name': name
     }
-
-
-def get_session_event(session):
-    """ Construct the event data structure for a session. """
-
-    return {
-        'type': 'session',
-        'time': session['started'],
-        'timezone_offset': get_utc_offset(),
-        'os_version': OS_VERSION,
-        'cpu_id': CPU_ID,
-        'token': TOKEN,
-        'language': LANGUAGE,
-        'name': session['name'],
-        'length': session['elapsed'],
-        'token-system': session.get('token-system', '')
-    }
-
-
-def get_utc_offset():
-    """ Returns the local UTC offset in seconds.
-
-        :returns: UTC offsed in secconds.
-        :rtype: int
-    """
-
-    is_dst = time.daylight and time.localtime().tm_isdst > 0
-    return -int(time.altzone if is_dst else time.timezone)
-
 
 
 def add_runtime_to_app(app, runtime):

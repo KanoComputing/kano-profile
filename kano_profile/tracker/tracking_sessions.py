@@ -1,19 +1,32 @@
 import os
 import json
+import shutil
 import time
 from uuid import uuid1, uuid5
 
-from kano.utils.file_operations import chown_path, ensure_dir
+from kano.utils.hardware import get_cpu_id
+from kano.utils.file_operations import read_file_contents, chown_path, \
+    ensure_dir
 from kano.logging import logger
 from kano_profile.tracker.tracker_token import TOKEN
 from kano_profile.paths import tracker_dir, tracker_events_file, \
     PAUSED_SESSION_DIR
 from kano_profile.tracker.tracking_session import TrackingSession
-from kano_profile.tracker.tracking_utils import open_locked
+from kano_profile.tracker.tracking_utils import open_locked, get_utc_offset
+
+
+CPU_ID = str(get_cpu_id())
+LANGUAGE = (os.getenv('LANG') or '').split('.', 1)[0]
+OS_VERSION = str(read_file_contents('/etc/kanux_version'))
+os_variant = read_file_contents('/etc/kanux_version_variant')
+OS_VERSION += '-' + os_variant if os_variant else ''
 
 
 def list_sessions():
-    return os.listdir(tracker_dir)
+    return [
+        f for f in os.listdir(tracker_dir)
+        if os.path.isfile(os.path.join(tracker_dir, f))
+    ]
 
 
 def get_open_sessions():
@@ -55,6 +68,10 @@ def get_session_unique_id(name, pid):
 
 
 def session_start(name, pid=None):
+    if is_tracking_paused():
+        # FIXME: Queue for tracking
+        return
+
     if not pid:
         pid = os.getpid()
     pid = int(pid)
@@ -119,45 +136,61 @@ def get_paused_sessions():
         return [
             TrackingSession(session_file=f)
             for f in os.listdir(PAUSED_SESSION_DIR)
+            if os.path.isfile(os.path.join(PAUSED_SESSION_DIR, f))
         ]
     else:
         return []
 
 
+def is_tracking_paused():
+    # FIXME: Fails when the state is paused but there are no paused sessions
+    return len(get_paused_sessions()) != 0
+
+
 def pause_tracking_session(session):
     '''
-    Close session
-    Copy session file to tmp
-
-    # shutil.cp(session.path, os.path.join(PAUSED_SESSION_DIR, session.file))
-    # session.close()
-    # session.rename()
-    # mark new sessions for queue
     '''
 
-    print session
-
     ensure_dir(PAUSED_SESSION_DIR)
+    shutil.copy2(session.path, session.paused_path)
+    session_end(session.path)
+
+    # FIXME: Rename to a better-defined name
+    closed_session = TrackingSession(name=session.name, pid=999999)
+    shutil.move(
+        session.path,
+        '-{}'.format(time.time()).join(
+            os.path.splitext(closed_session.path)
+        )
+    )
+
+    # TODO: mark new sessions for queue
+    # queue_enabled = True
 
 
 
 def unpause_tracking_session(session):
     '''
-
-    # shutil.cp(PAUSED_SESSION_DIR, session.file), session.path)
-    # session.started = now()
-    # session.elapsed = 0
-    # session.app_sessoin_id = ???
-
     '''
-    print session
 
+    if not session.is_open():
+        # TODO: Mark associated session as closed and move on
+        os.remove(session.paused_path)
+        print('skipping path:', session)
+        # shutil.move(session.paused_path, session.path)
+        # session_end(session.paused_path)
+        return
+
+    session_start(session.name, session.pid)
+    os.remove(session.paused_path)
 
 
 def pause_tracking_sessions():
     '''
     '''
     open_sessions = get_open_sessions()
+
+    # FIXME: Mark paused in the event of no sessions
 
     for session in open_sessions:
         pause_tracking_session(session)
@@ -168,6 +201,23 @@ def unpause_tracking_sessions():
     '''
     for session in get_paused_sessions():
         unpause_tracking_session(session)
+
+
+def get_session_event(session):
+    """ Construct the event data structure for a session. """
+
+    return {
+        'type': 'session',
+        'time': session['started'],
+        'timezone_offset': get_utc_offset(),
+        'os_version': OS_VERSION,
+        'cpu_id': CPU_ID,
+        'token': TOKEN,
+        'language': LANGUAGE,
+        'name': session['name'],
+        'length': session['elapsed'],
+        'token-system': session.get('token-system', '')
+    }
 
 
 def session_log(name, started, length):

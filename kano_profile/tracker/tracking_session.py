@@ -2,7 +2,7 @@ import os
 import re
 
 from kano.logging import logger
-from kano_profile.paths import tracker_dir
+from kano_profile.paths import tracker_dir, PAUSED_SESSION_DIR
 from kano_profile.tracker.tracking_utils import is_pid_running, open_locked
 
 
@@ -49,6 +49,9 @@ class TrackingSession(object):
     def __str__(self):
         return self.__repr__()
 
+    def __eq__(self, other):
+        return self.file == other.file
+
     @property
     def file(self):
         return self._file
@@ -56,6 +59,10 @@ class TrackingSession(object):
     @property
     def path(self):
         return os.path.join(tracker_dir, self.file)
+
+    @property
+    def paused_path(self):
+        return os.path.join(PAUSED_SESSION_DIR, self.file)
 
     @property
     def name(self):

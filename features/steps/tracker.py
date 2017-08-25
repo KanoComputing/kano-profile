@@ -17,13 +17,6 @@ LOCAL_LIB_DIR = os.path.join(
     '..'
 )
 sys.path.insert(0, LOCAL_LIB_DIR)
-
-from kano_profile.paths import tracker_dir
-
-def before_all(context):
-    install_pytest_asserts()
-
-
 IDLE_APP = '''
 import sys
 import atexit

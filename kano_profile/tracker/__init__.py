@@ -17,36 +17,36 @@ __email__ = 'dev@kano.me'
 import time
 import atexit
 import datetime
-import fcntl
 import json
 import os
-import hashlib
 import subprocess
 import shlex
 
 from uuid import uuid1, uuid5
 
-from kano.utils.processes import get_program_name
 from kano.utils.file_operations import read_file_contents, chown_path, \
     ensure_dir
 from kano.utils.hardware import get_cpu_id
 from kano.utils.misc import is_number
 from kano.logging import logger
+
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
 from kano_profile.paths import tracker_dir, tracker_events_file, \
     tracker_token_file
-
 from kano_profile.tracker.tracker_token import TOKEN, generate_tracker_token, \
-       load_token
+	load_token
 from kano_profile.tracker.tracking_utils import open_locked, \
     get_nearest_previous_monday, get_utc_offset
+from kano_profile.tracker.tracking_session import TrackingSession
+from kano_profile.tracker.tracking_sessions import session_start, session_end, \
+    list_sessions, get_open_sessions, get_session_file_path, session_log, \
+	get_session_unique_id, get_session_event, CPU_ID, LANGUAGE, OS_VERSION
 
 # Public imports
 from kano_profile.tracker.tracker import Tracker
 from kano_profile.tracker.tracking_sessions import session_start, session_end, \
-    get_session_file_path, session_log, get_session_unique_id, \
-    get_session_event, CPU_ID, LANGUAGE, OS_VERSION
+    pause_tracking_sessions, unpause_tracking_sessions
 
 
 def track_data(name, data):
@@ -206,7 +206,8 @@ def save_hardware_info():
     """Saves hardware information related to the Raspberry Pi / Kano Kit"""
 
     from kano.logging import logger
-    from kano.utils import get_cpu_id, get_mac_address, detect_kano_keyboard
+    from kano.utils.hardware import get_cpu_id, get_mac_address, \
+        detect_kano_keyboard
 
     logger.info('save_hardware_info')
     state = {

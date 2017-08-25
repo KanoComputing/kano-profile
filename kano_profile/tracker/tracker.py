@@ -7,13 +7,14 @@
 # Class for handling tracking sessions
 #
 
+
 import atexit
 
 from kano.utils.processes import get_program_name
 from kano_profile.tracker.tracking_sessions import session_start, session_end
 
 
-class Tracker:
+class Tracker(object):
     """Tracker class, used for measuring program run-times,
     implemented via atexit hooks"""
 

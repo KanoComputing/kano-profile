@@ -7,6 +7,7 @@
 # Utility functions useful for tracking
 #
 
+import os
 import fcntl
 import time
 
@@ -18,6 +19,20 @@ class open_locked(file):
     def __init__(self, *args, **kwargs):
         super(open_locked, self).__init__(*args, **kwargs)
         fcntl.flock(self, fcntl.LOCK_EX)
+
+
+def is_pid_running(pid):
+    '''
+    Sending a signal 0 to a running process will do nothing. Sending it to a
+    dead process will throw an OSError exception
+    '''
+
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    else:
+        return True
 
 
 # TODO: While it isn't at the moment, this could be useful to have

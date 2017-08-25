@@ -10,7 +10,7 @@ from kano.utils.file_operations import read_file_contents, chown_path, \
 from kano.logging import logger
 from kano_profile.tracker.tracker_token import TOKEN
 from kano_profile.paths import tracker_dir, tracker_events_file, \
-    PAUSED_SESSION_DIR
+    PAUSED_SESSIONS_FILE
 from kano_profile.tracker.tracking_session import TrackingSession
 from kano_profile.tracker.tracking_utils import open_locked, get_utc_offset
 
@@ -25,7 +25,8 @@ OS_VERSION += '-' + os_variant if os_variant else ''
 def list_sessions():
     return [
         f for f in os.listdir(tracker_dir)
-        if os.path.isfile(os.path.join(tracker_dir, f))
+        if os.path.isfile(os.path.join(tracker_dir, f)) and
+        os.path.join(tracker_dir, f) != PAUSED_SESSIONS_FILE
     ]
 
 
@@ -67,14 +68,25 @@ def get_session_unique_id(name, pid):
     return data.get('app_session_id', "")
 
 
-def session_start(name, pid=None):
-    if is_tracking_paused():
-        # FIXME: Queue for tracking
-        return
-
+def session_start(name, pid=None, ignore_pause=False):
     if not pid:
         pid = os.getpid()
     pid = int(pid)
+
+    if not ignore_pause and is_tracking_paused():
+        session = TrackingSession(name=name, pid=pid)
+        try:
+            paused_sessions_f = open_locked(PAUSED_SESSIONS_FILE, 'a')
+        except IOError as err:
+            logger.error(
+                'Error while opening the paused sessions file: {}'.format(err)
+            )
+        else:
+            paused_sessions_f.write(
+                '{}\n'.format(session.dumps())
+            )
+
+            return session.path
 
     data = {
         'pid': pid,
@@ -132,30 +144,51 @@ def session_end(session_file):
 
 
 def get_paused_sessions():
-    if os.path.exists(PAUSED_SESSION_DIR):
-        return [
-            TrackingSession(session_file=f)
-            for f in os.listdir(PAUSED_SESSION_DIR)
-            if os.path.isfile(os.path.join(PAUSED_SESSION_DIR, f))
-        ]
-    else:
+    if not os.path.exists(PAUSED_SESSIONS_FILE):
         return []
+
+    try:
+        sessions_f = open_locked(PAUSED_SESSIONS_FILE, 'r')
+    except IOError as err:
+        logger.error('Error opening the paused sessions file: {}'.format(err))
+        return []
+    else:
+        with sessions_f:
+            paused_sessions = []
+            for session in sessions_f:
+                if not session:
+                    continue
+
+                paused_sessions.append(
+                    TrackingSession.loads(session)
+                )
+
+            return paused_sessions
 
 
 def is_tracking_paused():
-    # FIXME: Fails when the state is paused but there are no paused sessions
-    return len(get_paused_sessions()) != 0
+    return os.path.exists(PAUSED_SESSIONS_FILE)
 
 
 def pause_tracking_session(session):
     '''
+    Close session and make a note of the session if it is open so that it can
+    be resumed.
     '''
 
-    ensure_dir(PAUSED_SESSION_DIR)
-    shutil.copy2(session.path, session.paused_path)
+    if session.is_open():
+        try:
+            sessions_f = open_locked(PAUSED_SESSIONS_FILE, 'a')
+        except IOError as err:
+            logger.error('Error opening the paused sessions file: {}'.format(err))
+        else:
+            with sessions_f:
+                sessions_f.write(
+                    '{}\n'.format(session.dumps())
+                )
+
     session_end(session.path)
 
-    # FIXME: Rename to a better-defined name
     closed_session = TrackingSession(name=session.name, pid=999999)
     shutil.move(
         session.path,
@@ -164,33 +197,49 @@ def pause_tracking_session(session):
         )
     )
 
-    # TODO: mark new sessions for queue
-    # queue_enabled = True
-
-
 
 def unpause_tracking_session(session):
     '''
+    Restart the session if the process is still alive and remove record of this
+    paused session.
     '''
 
-    if not session.is_open():
-        # TODO: Mark associated session as closed and move on
-        os.remove(session.paused_path)
-        print('skipping path:', session)
-        # shutil.move(session.paused_path, session.path)
-        # session_end(session.paused_path)
-        return
+    if session.is_open():
+        session_start(session.name, session.pid, ignore_pause=True)
 
-    session_start(session.name, session.pid)
-    os.remove(session.paused_path)
+    paused_sessions = get_paused_sessions()
+
+    try:
+        paused_sessions_f = open_locked(PAUSED_SESSIONS_FILE, 'w')
+    except IOError as e:
+        logger.error("Error while opening events file: {}".format(e))
+    else:
+        with paused_sessions_f:
+            for paused_session in paused_sessions:
+                if paused_session != session:
+                    paused_sessions_f.write(
+                        '{}\n'.format(paused_session.dumps())
+                    )
 
 
 def pause_tracking_sessions():
     '''
+    Loop through all the alive sessions, pausing each one.
     '''
+
     open_sessions = get_open_sessions()
 
-    # FIXME: Mark paused in the event of no sessions
+    # Mark paused in the event of no sessions
+    if len(open_sessions) == 0:
+        try:
+            paused_sessions_f = open_locked(PAUSED_SESSIONS_FILE, 'a')
+        except IOError as err:
+            logger.error(
+                'Error while opening the paused sessions file: {}'.format(err)
+            )
+        else:
+            with paused_sessions_f:
+                pass
 
     for session in open_sessions:
         pause_tracking_session(session)
@@ -198,9 +247,14 @@ def pause_tracking_sessions():
 
 def unpause_tracking_sessions():
     '''
+    Loop through the paused sessions to resume each one. Finally remove the flag
+    indicating that the system is in a paused state.
     '''
+
     for session in get_paused_sessions():
         unpause_tracking_session(session)
+
+    os.remove(PAUSED_SESSIONS_FILE)
 
 
 def get_session_event(session):

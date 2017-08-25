@@ -36,7 +36,7 @@ from kano.logging import logger
 from kano_profile.apps import get_app_state_file, load_app_state_variable, \
     save_app_state_variable
 from kano_profile.paths import tracker_dir, tracker_events_file, \
-    tracker_token_file, PAUSED_SESSION_DIR
+    tracker_token_file
 from kano_profile.tracker.tracker_token import TOKEN, generate_tracker_token, \
 	load_token
 from kano_profile.tracker.tracking_utils import open_locked, \

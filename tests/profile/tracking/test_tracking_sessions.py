@@ -5,7 +5,7 @@ from uuid import uuid1, uuid5
 
 import kano_profile.tracker.tracking_sessions as tracking_sessions
 from kano_profile.tracker.tracking_session import TrackingSession
-from kano_profile.paths import tracker_dir, PAUSED_SESSION_DIR, \
+from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE, \
     tracker_events_file
 
 
@@ -44,9 +44,21 @@ def setup_session_fixtures(directory, sessions):
 def setup_sessions_dir(sessions):
     setup_session_fixtures(tracker_dir, sessions)
 
-def setup_paused_sessions_dir(sessions):
-    setup_session_fixtures(PAUSED_SESSION_DIR, sessions)
+def setup_paused_sessions_file(sessions):
+    if sessions == None:
+        if os.path.exists(PAUSED_SESSIONS_FILE):
+            os.remove(PAUSED_SESSIONS_FILE)
 
+        return
+
+    with open(PAUSED_SESSIONS_FILE, 'w') as sessions_f:
+        for session in sessions:
+            sessions_f.write(
+                '{}\n'.format(json.dumps({
+                    'name': session['name'],
+                    'pid': session['pid']
+                }))
+            )
 
 
 SAMPLE_SESSIONS = [
@@ -60,7 +72,7 @@ SAMPLE_SESSIONS = [
 
 def test_list_sessions():
     setup_sessions_dir(SAMPLE_SESSIONS)
-    setup_paused_sessions_dir([])
+    setup_paused_sessions_file(None)
 
     listed_sessions = tracking_sessions.list_sessions()
 
@@ -81,7 +93,7 @@ def test_get_open_sessions():
     )
     sample_sessions.append(open_session)
     setup_sessions_dir(sample_sessions)
-    setup_paused_sessions_dir([])
+    setup_paused_sessions_file(None)
 
     listed_sessions = tracking_sessions.get_open_sessions()
 
@@ -121,7 +133,7 @@ def test_get_session_file_path(name, pid, expected):
 
 def test_session_start_with_pid():
     setup_sessions_dir([])
-    setup_paused_sessions_dir([])
+    setup_paused_sessions_file(None)
 
     test_session = TrackingSession(name='test', pid=1234)
     session_path = tracking_sessions.session_start(
@@ -139,7 +151,7 @@ def test_session_start_with_pid():
 
 def test_session_start_no_pid():
     setup_sessions_dir([])
-    setup_paused_sessions_dir([])
+    setup_paused_sessions_file(None)
 
     test_session = TrackingSession(name='test', pid=os.getpid())
     session_path = tracking_sessions.session_start(
@@ -160,7 +172,7 @@ def test_session_end():
 
 
 def test_get_paused_sessions():
-    setup_paused_sessions_dir(SAMPLE_SESSIONS)
+    setup_paused_sessions_file(SAMPLE_SESSIONS)
 
     paused_sessions = tracking_sessions.get_paused_sessions()
 
@@ -184,13 +196,14 @@ def test_get_paused_sessions():
 @pytest.mark.parametrize(
     'unpaused_sessions, paused_sessions, expected',
     [
-        (SAMPLE_SESSIONS, [], False),
+        (SAMPLE_SESSIONS, [], True),
+        (SAMPLE_SESSIONS, None, False),
         ([], SAMPLE_SESSIONS, True),
     ]
 )
 def test_is_tracking_paused(unpaused_sessions, paused_sessions, expected):
-    setup_paused_sessions_dir(paused_sessions)
     setup_sessions_dir(unpaused_sessions)
+    setup_paused_sessions_file(paused_sessions)
 
     assert tracking_sessions.is_tracking_paused() == expected
 
@@ -205,17 +218,23 @@ def test_pause_tracking_sessions():
     )
     sample_sessions.append(open_session)
     setup_sessions_dir(sample_sessions)
-    setup_paused_sessions_dir([])
+    setup_paused_sessions_file(None)
+
+    assert tracking_sessions.get_open_sessions() == [open_session_obj]
+    assert tracking_sessions.get_paused_sessions() == []
 
     tracking_sessions.pause_tracking_sessions()
 
     assert tracking_sessions.get_open_sessions() == []
     assert tracking_sessions.get_paused_sessions() == [open_session_obj]
 
-    for path, dummy_dirs, files in os.walk(PAUSED_SESSION_DIR):
-        if path == PAUSED_SESSION_DIR:
-            assert len(files) == 1
-            assert files[0] == open_session_obj.file
+    with open(PAUSED_SESSIONS_FILE, 'r') as paused_sessions_f:
+        sessions = [
+            line for line in paused_sessions_f
+            if line
+        ]
+        assert len(sessions) == 1
+        assert TrackingSession.loads(sessions[0]) == open_session_obj
 
 
 def test_unpause_tracking_sessions():
@@ -228,7 +247,7 @@ def test_unpause_tracking_sessions():
     )
     sample_sessions.append(open_session)
     setup_sessions_dir([])
-    setup_paused_sessions_dir(sample_sessions)
+    setup_paused_sessions_file(sample_sessions)
 
     tracking_sessions.unpause_tracking_sessions()
 

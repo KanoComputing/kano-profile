@@ -73,4 +73,4 @@ tracker_dir = os.path.join(kanoprofile_dir, 'tracker/sessions/')
 tracker_events_file = os.path.join(kanoprofile_dir, 'tracker/events')
 tracker_token_file = os.path.join(kanoprofile_dir, 'tracker/token')
 
-PAUSED_SESSION_DIR = os.path.join(tracker_dir, 'paused')
+PAUSED_SESSIONS_FILE = os.path.join(tracker_dir, 'paused')

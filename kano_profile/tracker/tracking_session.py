@@ -1,8 +1,9 @@
 import os
 import re
+import json
 
 from kano.logging import logger
-from kano_profile.paths import tracker_dir, PAUSED_SESSION_DIR
+from kano_profile.paths import tracker_dir
 from kano_profile.tracker.tracking_utils import is_pid_running, open_locked
 
 
@@ -61,16 +62,12 @@ class TrackingSession(object):
         return os.path.join(tracker_dir, self.file)
 
     @property
-    def paused_path(self):
-        return os.path.join(PAUSED_SESSION_DIR, self.file)
-
-    @property
     def name(self):
-        return self._name
+        return self._name.encode('utf-8')
 
     @property
     def pid(self):
-        return self._pid
+        return self._pid or 0
 
     def is_open(self):
         return is_pid_running(self.pid)
@@ -85,3 +82,17 @@ class TrackingSession(object):
             )
         else:
             yield session_f
+
+    def dumps(self):
+        return json.dumps({
+            'name': self.name,
+            'pid': self.pid
+        })
+
+    @staticmethod
+    def loads(session):
+        session_data = json.loads(session.rstrip().lstrip())
+        return TrackingSession(
+            name=session_data.get('name'),
+            pid=session_data.get('pid')
+        )

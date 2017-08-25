@@ -1,7 +1,7 @@
 import pytest
 
 import kano_profile.tracker as tracker
-# import kano_profile.tracking_events as tracking_events
+import kano_profile.tracking_events as tracking_events
 
 
 @pytest.mark.parametrize('module_export', [

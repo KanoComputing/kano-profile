@@ -38,7 +38,7 @@ def get_session_unique_id(name, pid):
     try:
         af = open_locked(tracker_session_file, 'r')
     except (IOError, OSError) as e:
-        logger.error("Error while opening session file".format(e))
+        logger.error("Error while opening session file: {}".format(e))
     else:
         with af:
             try:
@@ -142,7 +142,7 @@ def session_log(name, started, length):
     try:
         af = open_locked(tracker_events_file, 'a')
     except IOError as e:
-        logger.error("Error while opening events file".format(e))
+        logger.error("Error while opening events file: {}".format(e))
     else:
         with af:
             session = {

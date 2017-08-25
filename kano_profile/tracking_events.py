@@ -1,0 +1,1 @@
+from kano_profile.tracker.tracking_events import generate_event

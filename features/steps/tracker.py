@@ -1,0 +1,200 @@
+import sys
+import os
+import json
+import subprocess
+import signal
+from time import sleep
+from behave import given, when, then
+
+from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE
+from kano_profile.tracker import pause_tracking_sessions, \
+    unpause_tracking_sessions
+from kano_profile.tracker.tracking_session import TrackingSession
+
+LOCAL_LIB_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    '..',
+    '..'
+)
+sys.path.insert(0, LOCAL_LIB_DIR)
+IDLE_APP = '''
+import sys
+import atexit
+from time import sleep
+
+sys.path.insert(0, "{local_lib_dir}")
+from kano_profile.tracker import session_start, session_end
+
+SESSION_FILE = session_start('{{session_id}}')
+
+def cleanup():
+    session_end(SESSION_FILE)
+atexit.register(cleanup)
+
+while True:
+    sleep(1)
+'''.format(local_lib_dir=LOCAL_LIB_DIR)
+SESSION_ID_TEMPLATE = 'test-proc-{id}'
+
+
+def list_tracking_files():
+    return [
+        os.path.join(tracker_dir, f) for f in os.listdir(tracker_dir)
+        if os.path.join(tracker_dir, f) != PAUSED_SESSIONS_FILE
+    ]
+
+def create_app(ctx):
+    if not 'procs' in ctx:
+        ctx.procs = []
+
+
+    session_id=SESSION_ID_TEMPLATE.format(id=len(ctx.procs))
+    proc = subprocess.Popen([
+        'python',
+        '-c',
+        IDLE_APP.format(
+            session_id=session_id
+        ),
+    ])
+    proc.session_id = session_id
+    ctx.procs.append(proc)
+
+    try:
+        assert ctx.procs[-1].poll() != 0
+    except Exception as err:
+        print(
+            'Process failed to run. Return code: {}'
+            .format(ctx.procs[-1].poll())
+        )
+
+        raise err
+
+
+'''
+Given
+'''
+
+
+@given('an app with tracking sessions is launched')
+def given_app_created_step(ctx):
+    create_app(ctx)
+
+
+@given(u'the tracking session is paused')
+def tracking_paused_step(ctx):
+    pause_tracking_sessions()
+
+
+'''
+When
+'''
+
+
+@when('{secs:d} seconds elapse')
+def wait(ctx, secs):
+    sleep(secs)
+
+
+@when('the app closes')
+def app_close(ctx):
+    for proc in ctx.procs:
+        proc.send_signal(signal.SIGINT)
+        proc.wait()
+
+
+def get_session_file(proc, proc_session_id):
+    return '{pid}-{name}.json'.format(
+        pid=proc.pid,
+        name=SESSION_ID_TEMPLATE.format(id=proc_session_id)
+    )
+
+
+def get_session_path(proc, proc_session_id):
+    return os.path.join(tracker_dir, get_session_file(proc, proc_session_id))
+
+
+@when(u'the tracking session is paused')
+def pause_tracking(ctx):
+    pause_tracking_sessions()
+
+
+@when(u'the tracking session is unpaused')
+def unpause_tracking(ctx):
+    unpause_tracking_sessions()
+
+
+@when(u'an app with tracking sessions is launched')
+def launch_app_step(ctx):
+    create_app(ctx)
+
+
+'''
+Then
+'''
+
+
+@then('{num:d} tracking sessions exist')
+def n_tracking_session_exists_step(ctx, num):
+    assert os.path.isdir(tracker_dir)
+
+    tracking_sessions = list_tracking_files()
+    assert len(tracking_sessions) == num
+
+
+@then('a tracking session exists')
+def tracking_session_exists_step(ctx):
+    n_tracking_session_exists_step(ctx, 1)
+
+
+@then('no tracking sessions exist')
+def no_tracking_session_exists_step(ctx):
+    n_tracking_session_exists_step(ctx, 0)
+
+
+'''
+Main check for tracking sessions. Other steps call this.
+'''
+def tracking_session_check(ctx, proc_idx, secs):
+    proc = ctx.procs[proc_idx]
+    session = TrackingSession(name=proc.session_id, pid=proc.pid)
+
+    for session_path in list_tracking_files():
+        with open(session_path, 'r') as session_f:
+            session_data = json.load(session_f)
+
+        if session_data['name'] == session.name and \
+                session_data['pid'] == session.pid:
+            if session_data['elapsed'] == secs:
+                assert True
+                return
+
+    assert False
+
+
+@then('there is a tracking session log for the app running for {secs:d} seconds')
+def tracking_session_check_no_idx_step(ctx, secs):
+    tracking_session_check(ctx, 0, secs)
+
+
+@then('there is a tracking session log for the {proc_no:d}st app running for {secs:d} seconds')
+def tracking_session_check_idx_st_step(ctx, proc_no, secs):
+    tracking_session_check(ctx, proc_no - 1, secs)
+
+
+@then('there is a tracking session log for the {proc_no:d}nd app running for {secs:d} seconds')
+def tracking_session_check_idx_nd_step(ctx, proc_no, secs):
+    tracking_session_check(ctx, proc_no - 1, secs)
+
+
+@then('there is a tracking session log for the {proc_no:d}rd app running for {secs:d} seconds')
+def tracking_session_check_idx_rd_step(ctx, proc_no, secs):
+    tracking_session_check(ctx, proc_no - 1, secs)
+
+
+@then('there is a tracking session log for the {proc_no:d}th app running for {secs:d} seconds')
+def tracking_session_check_idx_th_step(ctx, proc_no, secs):
+    tracking_session_check(ctx, proc_no - 1, secs)
+
+
+def after_feature(ctx, feature):
+    app_close(ctx)

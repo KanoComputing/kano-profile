@@ -40,7 +40,7 @@ from kano_profile.paths import tracker_dir, tracker_events_file, \
 from kano_profile.tracker.tracker_token import TOKEN, generate_tracker_token, \
        load_token
 from kano_profile.tracker.tracking_utils import open_locked, \
-    _get_nearest_previous_monday, get_utc_offset
+    get_nearest_previous_monday, get_utc_offset
 
 # Public imports
 from kano_profile.tracker.tracker import Tracker
@@ -186,7 +186,7 @@ def add_runtime_to_app(app, runtime):
         if 'weekly' not in app_stats[app]:
             app_stats[app]['weekly'] = {}
 
-        week = str(_get_nearest_previous_monday())
+        week = str(get_nearest_previous_monday())
         if week not in app_stats[app]['weekly']:
             app_stats[app]['weekly'][week] = {
                 'starts': 0,

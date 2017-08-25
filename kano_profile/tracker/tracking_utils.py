@@ -22,7 +22,7 @@ class open_locked(file):
 
 # TODO: While it isn't at the moment, this could be useful to have
 #       in the toolset.
-def _get_nearest_previous_monday():
+def get_nearest_previous_monday():
     """ Returns the timestamp of the nearest past Monday """
 
     t = time.time()

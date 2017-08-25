@@ -24,3 +24,6 @@ cscope.po.out
 # Ignore locked versions of original files
 media/images/environments/originals/**/*_locked.png
 media/images/badges/originals/**/*_locked.png
+
+# Test files
+.cache

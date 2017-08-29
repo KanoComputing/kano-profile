@@ -15,6 +15,7 @@ import subprocess
 import signal
 from time import sleep
 from behave import given, when, then
+from textwrap import dedent
 
 from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE
 from kano_profile.tracker import pause_tracking_sessions, \
@@ -27,23 +28,6 @@ LOCAL_LIB_DIR = os.path.join(
     '..'
 )
 sys.path.insert(0, LOCAL_LIB_DIR)
-IDLE_APP = '''
-import sys
-import atexit
-from time import sleep
-
-sys.path.insert(0, "{local_lib_dir}")
-from kano_profile.tracker import session_start, session_end
-
-SESSION_FILE = session_start('{{session_id}}')
-
-def cleanup():
-    session_end(SESSION_FILE)
-atexit.register(cleanup)
-
-while True:
-    sleep(1)
-'''.format(local_lib_dir=LOCAL_LIB_DIR)
 SESSION_ID_TEMPLATE = 'test-proc-{id}'
 
 
@@ -58,11 +42,30 @@ def create_app(ctx):
         ctx.procs = []
 
 
+    # A simple tracked app which does nothing but stays alive.
+    idle_app = dedent('''
+        import sys
+        import atexit
+        from time import sleep
+
+        sys.path.insert(0, "{local_lib_dir}")
+        from kano_profile.tracker import session_start, session_end
+
+        SESSION_FILE = session_start('{{session_id}}')
+
+        def cleanup():
+            session_end(SESSION_FILE)
+        atexit.register(cleanup)
+
+        while True:
+            sleep(1)
+    ''').format(local_lib_dir=LOCAL_LIB_DIR)
+
     session_id=SESSION_ID_TEMPLATE.format(id=len(ctx.procs))
     proc = subprocess.Popen([
         'python',
         '-c',
-        IDLE_APP.format(
+        idle_app.format(
             session_id=session_id
         ),
     ])

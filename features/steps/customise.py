@@ -12,7 +12,7 @@ from avatar_rules import get_category_objects, get_category_id_from_label
 
 
 
-@given('the kano-profile-customise app is loaded')
+@given(u'the kano-profile-customise app is loaded')
 def create_app_step(ctx):
     ctx.win = show_wardrobe()
 
@@ -22,13 +22,13 @@ def after_feature(ctx, feature):
         ctx.win.destroy()
 
 
-@when('the app shows')
+@when(u'the app shows')
 def refresh_gui(ctx):
     while Gtk.events_pending():
         Gtk.main_iteration_do(blocking=True)
 
 
-@then('the "{category}" menu is shown')
+@then(u'the "{category}" menu is shown')
 def shown_menu_step(ctx, category):
     expected_cat_id = get_category_id_from_label(category)
 

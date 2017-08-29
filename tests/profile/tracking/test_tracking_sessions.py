@@ -1,3 +1,14 @@
+#
+# test_tracking_sessions.py
+#
+# Copyright (C) 2017 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Unit tests of session tracking functions:
+#     `kano_profile.tracker.tracking_sessions`
+#
+
+
 import os
 import json
 import pytest
@@ -126,6 +137,7 @@ def test_get_session_file_path(name, pid, expected):
     assert session_file_path == expected
 
 
+# TODO: Populate this test
 # @pytest.mark.parametrize('name, pid', TEST_DATA)
 # def test_get_session_unique_id(name, pid):
 #     pass
@@ -181,16 +193,6 @@ def test_get_paused_sessions():
     for session in SAMPLE_SESSIONS:
         session_obj = TrackingSession(name=session['name'], pid=session['pid'])
         assert session_obj in paused_sessions
-
-
-# @pytest.mark.parametrize('session', TEST_DATA)
-# def test_pause_tracking_session(session):
-#     pass
-#
-#
-# @pytest.mark.parametrize('session', TEST_DATA)
-# def test_unpause_tracking_session(session):
-#     pass
 
 
 @pytest.mark.parametrize(

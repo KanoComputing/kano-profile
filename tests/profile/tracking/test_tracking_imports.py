@@ -1,3 +1,14 @@
+#
+# test_tracking_imports.py
+#
+# Copyright (C) 2017 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Unit tests to ensure that the tracking module exports the
+# interface that its users are expecting.
+#
+
+
 import pytest
 
 import kano_profile.tracker as tracker

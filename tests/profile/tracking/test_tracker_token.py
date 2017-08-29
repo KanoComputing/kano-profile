@@ -1,3 +1,14 @@
+#
+# test_tracker_token.py
+#
+# Copyright (C) 2017 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Unit tests for functions related to the tracking token:
+#     `kano_profile.tracker.tracker_token`
+#
+
+
 import os
 import time
 import hashlib

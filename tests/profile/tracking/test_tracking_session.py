@@ -1,3 +1,14 @@
+#
+# test_tracking_session.py
+#
+# Copyright (C) 2017 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Unit tests pertaining to the tracking session class:
+#     `kano_profile.tracker.tracking_session`
+#
+
+
 import os
 import pytest
 

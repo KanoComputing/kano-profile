@@ -1,3 +1,13 @@
+#
+# tracker.py
+#
+# Copyright (C) 2017 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+#
+# Steps for tracking features
+#
+
+
 import sys
 import os
 import json

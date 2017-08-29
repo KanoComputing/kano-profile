@@ -85,7 +85,7 @@ Given
 '''
 
 
-@given('an app with tracking sessions is launched')
+@given(u'an app with tracking sessions is launched')
 def given_app_created_step(ctx):
     create_app(ctx)
 
@@ -100,12 +100,12 @@ When
 '''
 
 
-@when('{secs:d} seconds elapse')
+@when(u'{secs:d} seconds elapse')
 def wait(ctx, secs):
     sleep(secs)
 
 
-@when('the app closes')
+@when(u'the app closes')
 def app_close(ctx):
     for proc in ctx.procs:
         proc.send_signal(signal.SIGINT)
@@ -143,7 +143,7 @@ Then
 '''
 
 
-@then('{num:d} tracking sessions exist')
+@then(u'{num:d} tracking sessions exist')
 def n_tracking_session_exists_step(ctx, num):
     assert os.path.isdir(tracker_dir)
 
@@ -151,12 +151,12 @@ def n_tracking_session_exists_step(ctx, num):
     assert len(tracking_sessions) == num
 
 
-@then('a tracking session exists')
+@then(u'a tracking session exists')
 def tracking_session_exists_step(ctx):
     n_tracking_session_exists_step(ctx, 1)
 
 
-@then('no tracking sessions exist')
+@then(u'no tracking sessions exist')
 def no_tracking_session_exists_step(ctx):
     n_tracking_session_exists_step(ctx, 0)
 
@@ -181,27 +181,27 @@ def tracking_session_check(ctx, proc_idx, secs):
     assert False
 
 
-@then('there is a tracking session log for the app running for {secs:d} seconds')
+@then(u'there is a tracking session log for the app running for {secs:d} seconds')
 def tracking_session_check_no_idx_step(ctx, secs):
     tracking_session_check(ctx, 0, secs)
 
 
-@then('there is a tracking session log for the {proc_no:d}st app running for {secs:d} seconds')
+@then(u'there is a tracking session log for the {proc_no:d}st app running for {secs:d} seconds')
 def tracking_session_check_idx_st_step(ctx, proc_no, secs):
     tracking_session_check(ctx, proc_no - 1, secs)
 
 
-@then('there is a tracking session log for the {proc_no:d}nd app running for {secs:d} seconds')
+@then(u'there is a tracking session log for the {proc_no:d}nd app running for {secs:d} seconds')
 def tracking_session_check_idx_nd_step(ctx, proc_no, secs):
     tracking_session_check(ctx, proc_no - 1, secs)
 
 
-@then('there is a tracking session log for the {proc_no:d}rd app running for {secs:d} seconds')
+@then(u'there is a tracking session log for the {proc_no:d}rd app running for {secs:d} seconds')
 def tracking_session_check_idx_rd_step(ctx, proc_no, secs):
     tracking_session_check(ctx, proc_no - 1, secs)
 
 
-@then('there is a tracking session log for the {proc_no:d}th app running for {secs:d} seconds')
+@then(u'there is a tracking session log for the {proc_no:d}th app running for {secs:d} seconds')
 def tracking_session_check_idx_th_step(ctx, proc_no, secs):
     tracking_session_check(ctx, proc_no - 1, secs)
 

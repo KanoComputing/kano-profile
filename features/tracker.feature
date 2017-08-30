@@ -79,3 +79,21 @@ Feature: App tracker
          Then 2 tracking sessions exist
           And there is a tracking session log for the 1st app running for 1 seconds
           And there is a tracking session log for the 1st app running for 2 seconds
+
+
+    Scenario: The tracked app has its tracking paused and resumed multiple times
+        Given an app with tracking sessions is launched
+         When 1 seconds elapse
+          And the tracking session is paused
+          And 1 seconds elapse
+          And the tracking session is unpaused
+          And 2 seconds elapse
+          And the tracking session is paused
+          And 1 seconds elapse
+          And the tracking session is unpaused
+          And 3 seconds elapse
+          And the app closes
+         Then 3 tracking sessions exist
+          And there is a tracking session log for the 1st app running for 1 seconds
+          And there is a tracking session log for the 1st app running for 2 seconds
+          And there is a tracking session log for the 1st app running for 3 seconds

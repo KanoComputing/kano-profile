@@ -6,8 +6,8 @@
 #
 
 check:
-	behave
 	pytest
+	behave
 
 
 test: check

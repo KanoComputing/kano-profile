@@ -61,7 +61,7 @@ def create_app(ctx):
             sleep(1)
     ''').format(local_lib_dir=LOCAL_LIB_DIR)
 
-    session_id=SESSION_ID_TEMPLATE.format(id=len(ctx.procs))
+    session_id = SESSION_ID_TEMPLATE.format(id=len(ctx.procs))
     proc = subprocess.Popen([
         'python',
         '-c',

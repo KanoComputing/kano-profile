@@ -54,7 +54,7 @@ parallel(
 
                 // docker.image('kano/python-test').inside('--user kanux:test') {
                 docker.image('kano/python-test').inside() {
-                    sh "cd kano-profile && SUDO_USER=kanux PYTHONPATH=$python_path make check"
+                    sh "cd kano-profile && SUDO_USER=kanux LOGNAME=kanux PYTHONPATH=$python_path make check"
                 }
             }
         }

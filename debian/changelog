@@ -1,3 +1,9 @@
+kano-profile (3.13.0-0) unstable; urgency=low
+
+  * Added kit type and version to the hw-info tracking event
+
+ -- Team Kano <dev@kano.me>  Tue, 26 Sep 2017 12:08:00 +0100
+
 kano-profile (3.11.0-0) unstable; urgency=low
 
   * Changed default character customisation screen

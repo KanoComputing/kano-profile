@@ -1,8 +1,9 @@
 kano-profile (3.13.0-0) unstable; urgency=low
 
   * Added kit type and version to the hw-info tracking event
+  * Reverted change which removed loading text from KW splash
 
- -- Team Kano <dev@kano.me>  Tue, 26 Sep 2017 12:08:00 +0100
+ -- Team Kano <dev@kano.me>  Fri, 28 Sep 2017 18:51:00 +0100
 
 kano-profile (3.11.0-0) unstable; urgency=low
 

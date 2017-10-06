@@ -1,3 +1,9 @@
+kano-profile (3.9.2-0) unstable; urgency=low
+
+  * Fixed launching kano-login localised when attempting to share
+
+ -- Team Kano <dev@kano.me>  Fri, 6 Oct 2017 11:07:00 +0000
+
 kano-profile (3.9.0-1) unstable; urgency=low
 
   * Added more data to each tracking event

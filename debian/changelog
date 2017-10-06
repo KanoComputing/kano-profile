@@ -11,6 +11,12 @@ kano-profile (3.11.0-0) unstable; urgency=low
 
  -- Team Kano <dev@kano.me>  Mon, 31 Jul 2017 14:00:00 +0100
 
+kano-profile (3.9.2-0) unstable; urgency=low
+
+  * Fixed launching kano-login localised when attempting to share
+
+ -- Team Kano <dev@kano.me>  Fri, 6 Oct 2017 11:07:00 +0000
+
 kano-profile (3.9.1-0) unstable; urgency=low
 
   * Added tracking events for low battery and auto poweroff

@@ -267,7 +267,8 @@ def unpause_tracking_sessions():
     for session in get_paused_sessions():
         unpause_tracking_session(session)
 
-    os.remove(PAUSED_SESSIONS_FILE)
+    if os.path.exists(PAUSED_SESSIONS_FILE):
+        os.remove(PAUSED_SESSIONS_FILE)
 
 
 def get_session_event(session):

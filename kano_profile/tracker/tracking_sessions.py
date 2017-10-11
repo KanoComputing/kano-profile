@@ -169,9 +169,12 @@ def get_paused_sessions():
                 if not session:
                     continue
 
-                paused_sessions.append(
-                    TrackingSession.loads(session)
-                )
+                try:
+                    new_session = TrackingSession.loads(session)
+                except TypeError:
+                    logger.warn('Failed to process session: {}'.format(session))
+                    continue
+                paused_sessions.append(new_session)
 
             return paused_sessions
 

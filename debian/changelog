@@ -1,3 +1,9 @@
+kano-profile (3.14.0-0) unstable; urgency=low
+
+  * Applied changes from v3.9.2 es_AR backports to latest
+
+ -- Team Kano <dev@kano.me>  Mon, 16 Oct 2017 15:12:00 +0100
+
 kano-profile (3.13.0-0) unstable; urgency=low
 
   * Added kit type and version to the hw-info tracking event
@@ -13,7 +19,7 @@ kano-profile (3.11.0-0) unstable; urgency=low
 
 kano-profile (3.9.2-0) unstable; urgency=low
 
-  * Fixed launching kano-login localised when attempting to share
+  * Fixed launching kano-login localised when attempting to share (backport)
 
  -- Team Kano <dev@kano.me>  Fri, 6 Oct 2017 11:07:00 +0000
 

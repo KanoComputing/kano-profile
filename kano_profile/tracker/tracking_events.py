@@ -7,11 +7,15 @@
 #
 # A few predefined tracking events
 
+
+import os
 import json
 
-from kano_profile.tracker import get_action_event, track_data
-from kano_world.connection import request_wrapper, content_type_json
 from kano.utils import get_rpi_model, detect_kano_keyboard, get_partition_info
+from kano.utils.file_operations import read_file_contents
+
+from kano_world.connection import request_wrapper, content_type_json
+from kano_profile.tracker import get_action_event, track_data
 
 
 def _hw_info():
@@ -45,6 +49,13 @@ def _hw_info():
     })
 
 
+def _first_boot():
+    track_data('first-boot', {
+        'language': (os.getenv('LANG') or '').split('.', 1)[0],
+        'variant': read_file_contents('/etc/kanux_version_variant')
+    })
+
+
 def _ping():
     """
         The ping event is unauthenticated and is dispatched right away,
@@ -73,6 +84,7 @@ def _auto_poweroff():
 
 event_templates = {
     'hw-info': _hw_info,
+    'first-boot': _first_boot,
     'ping': _ping,
     'low-battery': _low_battery,
     'auto-poweroff': _auto_poweroff

@@ -1,4 +1,4 @@
-#!/usr/bin/kano-splash /usr/share/kano-profile/media/images/splash-profile.png /usr/bin/env python
+#!/usr/bin/kano-splash loader-animation /usr/bin/env python
 
 # kano-profile-gui
 #

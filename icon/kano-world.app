@@ -12,5 +12,5 @@
     "launch_command": "kano-world-launcher",
     "overrides": [],
     "desktop": false,
-    "priority": 650
+    "priority": 400
 }

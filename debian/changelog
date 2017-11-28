@@ -4,8 +4,9 @@ kano-profile (3.14.0-0) unstable; urgency=low
   * Moved 'first-boot' event from kano-updater to kano-tracker-ctl generate
   * Moved 'kano_screen_kit' event from kano-ui-autostart to generate
   * Added Loading animation splash window
+  * Moved Kano World app icon to second page on Dashboard
 
- -- Team Kano <dev@kano.me>  Wed, 15 Nov 2017 16:18:00 +0100
+ -- Team Kano <dev@kano.me>  Tue, 28 Nov 2017 14:48:00 +0100
 
 kano-profile (3.13.0-0) unstable; urgency=low
 

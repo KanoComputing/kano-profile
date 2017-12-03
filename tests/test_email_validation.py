@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# # -*- coding: utf-8 -*- 
+# # -*- coding: utf-8 -*-
 
 # test_email_validation.py
 #
@@ -12,22 +12,26 @@
 import unittest
 
 import sys
+import pytest
 sys.path.insert(1, '..')
 
-from kano_registration_gui.RegistrationScreen import validate_email
 
 # Used to display validated emails on the console
-print_emails=True
+print_emails = True
 
+
+@pytest.mark.gtk
 class TestEmailValidation(unittest.TestCase):
 
     def _validate(self, address):
+        from kano_registration_gui.RegistrationScreen import validate_email
+
         return validate_email(address, verbose=print_emails)
 
     def test_email_ok(self):
         msg = self._validate('someone@somewhere.good')
         self.assertIsNone(msg)
-    
+
     def test_email_empty(self):
         msg = self._validate('')
         self.assertIsNotNone(msg)
@@ -63,7 +67,7 @@ class TestEmailValidation(unittest.TestCase):
     def test_email_username_with_dots(self):
         msg = self._validate('i.am.someone@example.com')
         self.assertIsNone(msg)
-        
+
     def test_email_with_tilde(self):
         msg = self._validate('iñaki@mydomain.yeah')
         self.assertIsNotNone(msg)

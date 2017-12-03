@@ -13,15 +13,14 @@ import os
 import json
 import pytest
 
-from conftest import sample_tracking_sessions
+from tests.conftest import sample_tracking_sessions
 
-import kano_profile.tracker.tracking_sessions as tracking_sessions
-from kano_profile.tracker.tracking_session import TrackingSession
-from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE, \
-    tracker_events_file
+from kano_profile.paths import tracker_dir
 
 
 def test_list_sessions(tracking_session, sample_tracking_sessions):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+
     tracking_session.setup_sessions(sample_tracking_sessions)
     tracking_session.setup_paused_sessions(None)
 
@@ -38,6 +37,8 @@ def test_list_sessions(tracking_session, sample_tracking_sessions):
 
 
 def test_get_open_sessions(tracking_session, sample_tracking_sessions):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+
     sample_sessions = sample_tracking_sessions[:]
     open_session = tracking_session.format_session(
         'active-session', 987654321, os.getpid(), 55, True
@@ -71,6 +72,8 @@ def test_get_open_sessions(tracking_session, sample_tracking_sessions):
     ('test-2', 5830, os.path.join(tracker_dir, '5830-test-2.json')),
 ])
 def test_get_session_file_path(name, pid, expected):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+
     session_file_path = os.path.abspath(
         tracking_sessions.get_session_file_path(name, pid)
     )
@@ -84,6 +87,9 @@ def test_get_session_file_path(name, pid, expected):
 
 
 def test_session_start_with_pid(tracking_session):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+    from kano_profile.tracker.tracking_session import TrackingSession
+
     tracking_session.setup_sessions([])
     tracking_session.setup_paused_sessions(None)
 
@@ -102,6 +108,9 @@ def test_session_start_with_pid(tracking_session):
 
 
 def test_session_start_no_pid(tracking_session):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+    from kano_profile.tracker.tracking_session import TrackingSession
+
     tracking_session.setup_sessions([])
     tracking_session.setup_paused_sessions(None)
 
@@ -124,6 +133,9 @@ def test_session_end():
 
 
 def test_get_paused_sessions(tracking_session, sample_tracking_sessions):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+    from kano_profile.tracker.tracking_session import TrackingSession
+
     tracking_session.setup_paused_sessions(sample_tracking_sessions)
 
     paused_sessions = tracking_sessions.get_paused_sessions()
@@ -144,6 +156,8 @@ def test_get_paused_sessions(tracking_session, sample_tracking_sessions):
     ]
 )
 def test_is_tracking_paused(tracking_session, unpaused_sessions, paused_sessions, expected):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+
     tracking_session.setup_sessions(unpaused_sessions)
     tracking_session.setup_paused_sessions(paused_sessions)
 
@@ -151,6 +165,10 @@ def test_is_tracking_paused(tracking_session, unpaused_sessions, paused_sessions
 
 
 def test_pause_tracking_sessions(tracking_session, sample_tracking_sessions):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+    from kano_profile.tracker.tracking_session import TrackingSession
+    from kano_profile.paths import PAUSED_SESSIONS_FILE
+
     open_session = tracking_session.format_session(
         'active-session', 987654321, os.getpid(), 55, False
     )
@@ -179,6 +197,10 @@ def test_pause_tracking_sessions(tracking_session, sample_tracking_sessions):
 
 
 def test_unpause_tracking_sessions(tracking_session, sample_tracking_sessions):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+    from kano_profile.tracker.tracking_session import TrackingSession
+    from kano_profile.paths import tracker_dir
+
     sample_sessions = sample_tracking_sessions[:]
     open_session = tracking_session.format_session(
         'active-session', 987654321, os.getpid(), 55, False
@@ -208,6 +230,9 @@ def test_unpause_tracking_sessions(tracking_session, sample_tracking_sessions):
     ]
 )
 def test_session_log(name, started, length):
+    import kano_profile.tracker.tracking_sessions as tracking_sessions
+    from kano_profile.paths import tracker_events_file
+
     if os.path.exists(tracker_events_file):
         os.remove(tracker_events_file)
 

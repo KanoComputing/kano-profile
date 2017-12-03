@@ -1,9 +1,9 @@
 import json
 
-from kano_avatar.paths import AVATAR_CONF_FILE
-
 
 def load_config():
+    from kano_avatar.paths import AVATAR_CONF_FILE
+
     with open(AVATAR_CONF_FILE, 'r') as conf_f:
         return json.load(conf_f)
 

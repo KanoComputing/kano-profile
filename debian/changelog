@@ -1,3 +1,10 @@
+kano-toolset (3.15.0-0) unstable; urgency=low
+
+  * Create test coverage report
+  * Run tests on push
+
+ -- Team Kano <dev@kano.me>  Wed, 21 Dec 2017 10:30:00 +0100
+
 kano-profile (3.14.0-0) unstable; urgency=low
 
   * Applied changes from v3.9.2 es_AR backports to latest

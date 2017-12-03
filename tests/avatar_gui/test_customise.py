@@ -4,12 +4,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 import json
 import pytest
-from gi.repository import Gtk
 
-from kano_avatar.paths import AVATAR_CONF_FILE
-from kano_avatar_gui.customise import show_wardrobe
 
 def refresh_gui():
+    from gi.repository import Gtk
+
     while Gtk.events_pending():
         Gtk.main_iteration_do(blocking=False)
 
@@ -19,6 +18,13 @@ class TestCustomise(object):
 
     @classmethod
     def setup_class(cls):
+        try:
+            from kano_avatar.paths import AVATAR_CONF_FILE
+        except ImportError as err:
+            pytest.skip(
+                'Skipping: Failed to import kano_avatar.paths: {}'.format(err)
+            )
+
         with open(AVATAR_CONF_FILE, 'r') as conf_f:
             cls._conf = json.load(conf_f)
 
@@ -27,6 +33,8 @@ class TestCustomise(object):
 
 
     def setup_method(self, method):
+        from kano_avatar_gui.customise import show_wardrobe
+
         self._win = show_wardrobe()
         refresh_gui()
 

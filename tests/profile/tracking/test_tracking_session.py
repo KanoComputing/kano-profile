@@ -9,10 +9,9 @@
 #
 
 
-from kano_profile.tracker.tracking_session import TrackingSession
-
-
 def test_file_init(tracking_session_file_data):
+    from kano_profile.tracker.tracking_session import TrackingSession
+
     session_file = tracking_session_file_data['file']
     session_path = tracking_session_file_data['path']
     session_pid = tracking_session_file_data['pid']
@@ -27,6 +26,8 @@ def test_file_init(tracking_session_file_data):
 
 
 def test_pid_name_init(tracking_session_file_data):
+    from kano_profile.tracker.tracking_session import TrackingSession
+
     session_file = tracking_session_file_data['file']
     session_path = tracking_session_file_data['path']
     session_pid = tracking_session_file_data['pid']

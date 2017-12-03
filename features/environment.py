@@ -10,10 +10,10 @@
 
 import os
 
-from kano_profile.paths import tracker_dir
-
 
 def before_scenario(context, scenario):
+    from kano_profile.paths import tracker_dir
+
     # Clear out tracking sessions
     for path, dirs, files in os.walk(tracker_dir):
         for tracker_f in files:

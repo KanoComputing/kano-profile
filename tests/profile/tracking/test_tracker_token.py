@@ -14,10 +14,6 @@ import time
 import hashlib
 import re
 
-from kano_profile.paths import tracker_token_file
-from kano_profile.tracker.tracker_token import load_token, TOKEN, \
-    generate_tracker_token
-
 
 TOKEN_REGEX = re.compile(r'[0-9a-f]{32}')
 
@@ -32,6 +28,7 @@ TODO: Try to do something smarter here as TOKEN is created on import which may
       be invalidated with the manipulations from the other tests
 '''
 def test_token_var():
+    from kano_profile.tracker.tracker_token import load_token, TOKEN
     token = load_token()
 
     assert token == TOKEN
@@ -39,6 +36,9 @@ def test_token_var():
 
 
 def test_token_cache_load():
+    from kano_profile.paths import tracker_token_file
+    from kano_profile.tracker.tracker_token import load_token
+
     test_token = hashlib.md5(str(time.time())).hexdigest()
 
     with open(tracker_token_file, 'w') as token_f:
@@ -48,6 +48,9 @@ def test_token_cache_load():
 
 
 def test_token_regen_load():
+    from kano_profile.paths import tracker_token_file
+    from kano_profile.tracker.tracker_token import load_token
+
     if os.path.exists(tracker_token_file):
         os.remove(tracker_token_file)
 
@@ -61,6 +64,9 @@ def test_token_regen_load():
 
 
 def test_token_gen():
+    from kano_profile.paths import tracker_token_file
+    from kano_profile.tracker.tracker_token import generate_tracker_token
+
     if os.path.exists(tracker_token_file):
         os.remove(tracker_token_file)
 

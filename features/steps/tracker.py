@@ -14,13 +14,9 @@ import json
 import subprocess
 import signal
 from time import sleep
-from behave import given, when, then
 from textwrap import dedent
+from behave import given, when, then
 
-from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE
-from kano_profile.tracker import pause_tracking_sessions, \
-    unpause_tracking_sessions
-from kano_profile.tracker.tracking_session import TrackingSession
 
 LOCAL_LIB_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -32,6 +28,8 @@ SESSION_ID_TEMPLATE = 'test-proc-{id}'
 
 
 def list_tracking_files():
+    from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE
+
     return [
         os.path.join(tracker_dir, f) for f in os.listdir(tracker_dir)
         if os.path.join(tracker_dir, f) != PAUSED_SESSIONS_FILE
@@ -95,6 +93,8 @@ def given_app_created_step(ctx):
 
 @given(u'the tracking session is paused')
 def tracking_paused_step(ctx):
+    from kano_profile.tracker import pause_tracking_sessions
+
     pause_tracking_sessions()
 
 
@@ -123,16 +123,22 @@ def get_session_file(proc, proc_session_id):
 
 
 def get_session_path(proc, proc_session_id):
+    from kano_profile.paths import tracker_dir
+
     return os.path.join(tracker_dir, get_session_file(proc, proc_session_id))
 
 
 @when(u'the tracking session is paused')
 def pause_tracking(ctx):
+    from kano_profile.tracker import pause_tracking_sessions
+
     pause_tracking_sessions()
 
 
 @when(u'the tracking session is unpaused')
 def unpause_tracking(ctx):
+    from kano_profile.tracker import unpause_tracking_sessions
+
     unpause_tracking_sessions()
 
 
@@ -148,6 +154,8 @@ Then
 
 @then(u'{num:d} tracking sessions exist')
 def n_tracking_session_exists_step(ctx, num):
+    from kano_profile.paths import tracker_dir
+
     assert os.path.isdir(tracker_dir)
 
     tracking_sessions = list_tracking_files()
@@ -168,6 +176,8 @@ def no_tracking_session_exists_step(ctx):
 Main check for tracking sessions. Other steps call this.
 '''
 def tracking_session_check(ctx, proc_idx, secs):
+    from kano_profile.tracker.tracking_session import TrackingSession
+
     proc = ctx.procs[proc_idx]
     session = TrackingSession(name=proc.session_id, pid=proc.pid)
 

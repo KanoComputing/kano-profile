@@ -13,10 +13,6 @@ import json
 from uuid import uuid1, uuid5
 import pytest
 
-from kano.utils.file_operations import ensure_dir
-from kano_profile.tracker.tracking_session import TrackingSession
-from kano_profile.paths import tracker_dir, PAUSED_SESSIONS_FILE
-
 
 class TrackingSessionFixture(object):
     @staticmethod
@@ -32,6 +28,9 @@ class TrackingSessionFixture(object):
 
     @classmethod
     def setup_session_fixtures(cls, directory, sessions):
+        from kano.utils.file_operations import ensure_dir
+        from kano_profile.tracker.tracking_session import TrackingSession
+
         ensure_dir(directory)
         for session_f in os.listdir(directory):
             session_path = os.path.join(directory, session_f)
@@ -51,11 +50,13 @@ class TrackingSessionFixture(object):
 
     @classmethod
     def setup_sessions(cls, sessions):
+        from kano_profile.paths import tracker_dir
         cls.setup_session_fixtures(tracker_dir, sessions)
 
 
     @classmethod
     def setup_paused_sessions(cls, sessions):
+        from kano_profile.paths import PAUSED_SESSIONS_FILE
         if sessions == None:
             if os.path.exists(PAUSED_SESSIONS_FILE):
                 os.remove(PAUSED_SESSIONS_FILE)
@@ -100,6 +101,8 @@ def tracking_session():
 
 @pytest.fixture(scope='module')
 def tracking_session_file_data():
+    from kano_profile.paths import tracker_dir
+
     return {
         'file': '1242-test-file-1.json',
         'path': os.path.join(tracker_dir, '1242-test-file-1.json'),

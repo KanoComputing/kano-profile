@@ -11,9 +11,6 @@
 
 import pytest
 
-import kano_profile.tracker as tracker
-import kano_profile.tracking_events as tracking_events
-
 
 @pytest.mark.parametrize('module_export', [
     'open_locked',
@@ -43,6 +40,8 @@ import kano_profile.tracking_events as tracking_events
     'clear_tracker_events',
     ])
 def test_tracker_module_import(module_export):
+    import kano_profile.tracker as tracker
+
     getattr(tracker, module_export)
 
 
@@ -50,4 +49,6 @@ def test_tracker_module_import(module_export):
     'generate_event',
     ])
 def test_tracking_events_module_import(module_export):
+    import kano_profile.tracking_events as tracking_events
+
     getattr(tracking_events, module_export)

@@ -4,9 +4,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 import pytest
 from behave import given, when, then
-from gi.repository import Gtk
 
-from kano_avatar_gui.customise import show_wardrobe
 
 from avatar_rules import get_category_objects, get_category_id_from_label
 
@@ -14,6 +12,7 @@ from avatar_rules import get_category_objects, get_category_id_from_label
 
 @given(u'the kano-profile-customise app is loaded')
 def create_app_step(ctx):
+    from kano_avatar_gui.customise import show_wardrobe
     ctx.win = show_wardrobe()
 
 
@@ -24,6 +23,7 @@ def after_feature(ctx, feature):
 
 @when(u'the app shows')
 def refresh_gui(ctx):
+    from gi.repository import Gtk
     while Gtk.events_pending():
         Gtk.main_iteration_do(blocking=True)
 

@@ -29,6 +29,7 @@ from kano_avatar_gui.customise import show_wardrobe
 
 
 def main():
+
     GObject.threads_init()
     show_wardrobe()
     os.system('kano-stop-splash')
@@ -36,4 +37,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+
+    try:
+        main()
+    except:
+        os.system('kano-stop-splash')
+        raise

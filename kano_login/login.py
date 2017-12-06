@@ -29,7 +29,7 @@ from kano_profile.tracker import save_hardware_info, save_kano_version
 from kano_registration_gui.RegistrationScreen import RegistrationScreen
 
 from kano_world.functions import get_email, get_mixed_username, is_registered, \
-    reset_password
+    reset_password, recover_username
 from kano_world.functions import login as login_
 
 
@@ -79,14 +79,19 @@ class Login(Gtk.Box):
         self.button_box = KanoButtonBox(
             _("LOGIN"),
             _("Create New"),
-            _("Forgotten password?")
+            _("Forgot your password?"),
+            _("Or your username?")
         )
+
         self.button_box.set_spacing(40)
-        self.button_box.set_margin_left(80)
+        self.button_box.set_margin_left(70)
+        self.button_box.set_margin_right(70)
         self.button_box.set_margin_bottom(30)
+
         self.kano_button = self.button_box.kano_button
         self.button_box.set_orange_button_cb(self.go_to_registration)
         self.button_box.set_orange_button2_cb(self.reset_password_screen)
+        self.button_box.set_orange_button3_cb(self.recover_username_screen)
         self.kano_button.connect('button_release_event', self.activate)
         self.kano_button.connect('key-release-event', self.activate)
         self.pack_start(self.button_box, False, False, 20)
@@ -278,6 +283,10 @@ class Login(Gtk.Box):
         self.win.remove_main_widget()
         ResetPassword(self.win)
 
+    def recover_username_screen(self, button, event, args):
+        self.win.remove_main_widget()
+        RecoverUsername(self.win)
+
 
 class ResetPassword(Gtk.Box):
 
@@ -295,7 +304,7 @@ class ResetPassword(Gtk.Box):
         self.pack_start(self.heading.container, False, False, 10)
 
         self.labelled_entries = LabelledEntries([
-            {'heading': _("Email"), 'subheading': ""}
+            {'heading': _("Username"), 'subheading': ""}
         ])
         align = Gtk.Alignment(xscale=0, xalign=0.5)
         self.pack_start(align, False, False, 15)
@@ -305,12 +314,14 @@ class ResetPassword(Gtk.Box):
 
         align.add(self.labelled_entries)
 
-        # Read email from file
-        user_email = get_email()
+        # Get the currently logged on user, the kid can override it
+        # FIXME: Is this necessary?
+        username = get_mixed_username()
 
-        self.email_entry = self.labelled_entries.get_entry(0)
-        self.email_entry.set_text(user_email)
-        self.email_entry.connect('key-release-event', self.activate)
+        self.username_entry = self.labelled_entries.get_entry(0)
+        self.username_entry.set_text(username)
+        self.username_entry.select_region(0, -1)
+        self.username_entry.connect('key-release-event', self.activate)
 
         self.button = KanoButton(_("RESET PASSWORD"))
         self.button.pack_and_align()
@@ -332,12 +343,114 @@ class ResetPassword(Gtk.Box):
             thread.start()
 
     def send_new_password(self):
-        # User may change email
-        email = self.labelled_entries.get_entry(0).get_text()
-        success, text = reset_password(email)
+        # User may change username
+        username = self.labelled_entries.get_entry(0).get_text()
+        success, text = reset_password(username)
         if success:
             title = _("Success!")
             description = _("Sent new password to your email")
+            button_dict = {
+                _("GO TO LOGIN SCREEN"): {'return_value': 12},
+                _("QUIT"): {'return_value': 10, 'color': 'red'}
+            }
+        else:
+            title = _("Something went wrong!")
+            description = text
+            button_dict = {
+                _("QUIT"): {'return_value': 10, 'color': 'red'},
+                _("TRY AGAIN"): {'return_value': 11}
+            }
+
+        GObject.idle_add(
+            self.finished_thread_cb,
+            title,
+            description,
+            button_dict
+        )
+
+    def finished_thread_cb(self, title, description, button_dict):
+        kdialog = KanoDialog(
+            title,
+            description,
+            button_dict=button_dict,
+            parent_window=self.win
+        )
+        response = kdialog.run()
+
+        self.win.get_window().set_cursor(None)
+        self.button.stop_spinner()
+        self.button.set_sensitive(True)
+
+        if response == 10:
+            Gtk.main_quit()
+        # stay put
+        elif response == 11:
+            pass
+        elif response == 12:
+            self.go_to_login_screen()
+
+    def go_to_login_screen(self):
+        self.win.remove_main_widget()
+        Login(self.win)
+
+
+class RecoverUsername(Gtk.Box):
+
+    def __init__(self, win):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+
+        self.win = win
+        self.win.set_decorated(False)
+        self.win.set_main_widget(self)
+
+        self.heading = Heading(
+            _("Forgotten your username"),
+            _("We'll send a reminder to your email")
+        )
+        self.pack_start(self.heading.container, False, False, 10)
+
+        self.labelled_entries = LabelledEntries([
+            {'heading': _("Email"), 'subheading': ""}
+        ])
+        align = Gtk.Alignment(xscale=0, xalign=0.5)
+        self.pack_start(align, False, False, 15)
+
+        self.labelled_entries.set(0, 0, 1, 1)
+        self.labelled_entries.set_hexpand(True)
+
+        align.add(self.labelled_entries)
+
+        self.email_entry = self.labelled_entries.get_entry(0)
+        self.email_entry.set_text("")
+        self.email_entry.connect('key-release-event', self.activate)
+
+        self.button = KanoButton(_("REQUEST REMINDER"))
+        self.button.pack_and_align()
+        self.button.connect('button-release-event', self.activate)
+        self.button.connect('key-release-event', self.activate)
+        self.button.set_padding(30, 30, 0, 0)
+
+        self.pack_start(self.button.align, False, False, 0)
+        self.email_entry.grab_focus()
+        self.win.show_all()
+
+    def activate(self, widget, event):
+        if not hasattr(event, 'keyval') or event.keyval == 65293:
+            watch_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+            self.win.get_window().set_cursor(watch_cursor)
+            self.button.set_sensitive(False)
+            self.button.start_spinner()
+
+            thread = threading.Thread(target=self.send_new_password)
+            thread.start()
+
+    def send_new_password(self):
+        # User may change email
+        email = self.labelled_entries.get_entry(0).get_text()
+        success, text = recover_username(email)
+        if success:
+            title = _("Success!")
+            description = _("Sent a reminder to your email")
             button_dict = {
                 _("GO TO LOGIN SCREEN"): {'return_value': 12},
                 _("QUIT"): {'return_value': 10, 'color': 'red'}

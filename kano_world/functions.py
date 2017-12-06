@@ -1,7 +1,9 @@
 # functions.py
 #
-# Copyright (C) 2014-2016 Kano Computing Ltd.
+# Copyright (C) 2014-2017 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+# Refer to the Network API documentation: https://github.com/KanoComputing/kano-web-api/wiki/API-accounts
 #
 
 
@@ -212,10 +214,24 @@ def get_kano_world_id():
         kw_id = ''
     return kw_id
 
-
-def reset_password(email):
+def recover_username(email):
     payload = {
-        'email': email,
+        'email': email
+    }
+
+    success, text, _ = request_wrapper('post', '/accounts/username-reminder',
+                                       data=json.dumps(payload),
+                                       headers=content_type_json)
+
+    if success:
+        return success, None
+    else:
+        return success, text
+
+
+def reset_password(username):
+    payload = {
+        'username': username
     }
 
     success, text, _ = request_wrapper('post', '/accounts/reset-password',

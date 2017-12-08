@@ -238,7 +238,7 @@ class KanoWorldSession(object):
             return False, "Data missing from payload!"
 
         for app, values in app_data.iteritems():
-            if not values or \
+            if not values or type(values) != dict or \
                     (len(values.keys()) == 1 and 'save_date' in values):
                 continue
             if not is_private(app):

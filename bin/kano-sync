@@ -42,7 +42,7 @@ from kano.utils import get_home, run_cmd, read_json, delete_file, run_bg, \
     is_gui, delete_dir
 from kano_profile.paths import app_profiles_file
 from kano.logging import logger
-from kano_profile.profile import load_profile, save_profile
+from kano_profile.profile import load_profile, save_profile, save_profile_variable
 from kano.notifications import display_generic_notification
 
 home_dir = get_home()
@@ -138,7 +138,14 @@ def do_sync(skip_kdesk_refresh=False, dialog=True):
     if not skip_kdesk_refresh:
         refresh_kdesk()
 
+    save_profile_variable(
+        'first_sync_done',
+        True,
+        skip_kdesk_refresh=True
+    )
+
     display_msg('Sync OK', 'info', dialog=dialog)
+
     return True
 
 

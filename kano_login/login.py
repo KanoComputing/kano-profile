@@ -234,11 +234,6 @@ class Login(Gtk.Box):
             cmd = '{bin_dir}/kano-sync --sync -s --restore'.format(bin_dir=bin_dir)
             run_bg(cmd)
 
-            save_profile_variable(
-                'first_sync_done',
-                True,
-                skip_kdesk_refresh=True
-            )
 
         else:
             logger.info("running kano-sync --sync after non-first login")

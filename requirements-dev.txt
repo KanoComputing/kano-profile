@@ -1,4 +1,5 @@
 behave
+coverage-badge
 pytest
 pytest-cov
 pytest-tap

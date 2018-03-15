@@ -1,4 +1,4 @@
-kano-toolset (3.15.0-0) unstable; urgency=low
+kano-profile (3.15.0-0) unstable; urgency=low
 
   * Create test coverage report
   * Run tests on push

@@ -61,24 +61,13 @@ def track_data(name, data):
         :type data: dict, list, str, int, float, None
     """
 
-    event = {
-        'type': 'data',
-        'time': int(time.time()),
-        'timezone_offset': get_utc_offset(),
-        'os_version': OS_VERSION,
-        'cpu_id': CPU_ID,
-        'token': TOKEN,
-        'language': LANGUAGE,
-        'name': str(name),
-        'data': data
-    }
-
     try:
         af = open_locked(tracker_events_file, 'a')
     except IOError as e:
         logger.error("Error opening tracker events file {}".format(e))
     else:
         with af:
+            event = get_data_event(name, data)
             af.write(json.dumps(event) + "\n")
         if 'SUDO_USER' in os.environ:
             chown_path(tracker_events_file)
@@ -121,7 +110,25 @@ def track_subprocess(name, cmd):
     session_end(get_session_file_path(name, pid))
 
 
+def get_data_event(name, data):
+    """TODO"""
+
+    return {
+        'type': 'data',
+        'time': int(time.time()),
+        'timezone_offset': get_utc_offset(),
+        'os_version': OS_VERSION,
+        'cpu_id': CPU_ID,
+        'token': TOKEN,
+        'language': LANGUAGE,
+        'name': str(name),
+        'data': data
+    }
+
+
 def get_action_event(name):
+    """TODO"""
+
     return {
         'type': 'action',
         'time': int(time.time()),

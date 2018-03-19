@@ -2,8 +2,9 @@ kano-profile (3.15.0-0) unstable; urgency=low
 
   * Create test coverage report
   * Run tests on push
+  * Implemented namespaced UUIDs for tracking events with data
 
- -- Team Kano <dev@kano.me>  Wed, 21 Dec 2017 10:30:00 +0100
+ -- Team Kano <dev@kano.me>  Tue, 20 Mar 2018 12:30:00 +0100
 
 kano-profile (3.14.0-0) unstable; urgency=low
 

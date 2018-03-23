@@ -79,6 +79,3 @@ def generate_tracker_token():
             chown_path(tracker_events_file)
 
     return token
-
-
-TOKEN = load_token()

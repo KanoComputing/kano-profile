@@ -18,7 +18,6 @@ from kano.utils.hardware import get_cpu_id
 from kano.utils.file_operations import read_file_contents, chown_path, \
     ensure_dir
 from kano.logging import logger
-from kano_profile.tracker.tracker_token import TOKEN
 from kano_profile.paths import tracker_dir, tracker_events_file, \
     PAUSED_SESSIONS_FILE
 from kano_profile.tracker.tracking_session import TrackingSession

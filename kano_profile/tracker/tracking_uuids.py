@@ -45,22 +45,20 @@ def get_tracking_uuid(key, expires=3 * DAY):
         dict: A uuid object. See :func:`._new_tracking_uuid`.
     """
 
-    uuid = str(uuid5(uuid1(), key))
-
     tracking_uuid = _read_tracking_uuid(key)
 
     if not tracking_uuid or _is_uuid_expired(tracking_uuid):
-        tracking_uuid = _new_tracking_uuid(uuid, expires)
+        tracking_uuid = _new_tracking_uuid(key, expires)
         _add_tracking_uuid(key, tracking_uuid)
 
     return tracking_uuid
 
 
-def _new_tracking_uuid(uuid, expires):
+def _new_tracking_uuid(key, expires):
     """Create a new uuid object with the given parameters.
 
     Args:
-        uuid (str): A randomised hash code.
+        key (str): the `name` used in generating the UUID. See :func:`uuid.uuid5`.
         expires (int): See :func:`.get_tracking_uuid`.
 
     Returns:
@@ -70,7 +68,7 @@ def _new_tracking_uuid(uuid, expires):
     timestamp = time.time()
 
     return {
-        'uuid': uuid,
+        'uuid': str(uuid5(uuid1(), key)),
         'timestamp': timestamp,
         'expires': timestamp + expires
     }

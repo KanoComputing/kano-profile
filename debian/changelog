@@ -1,3 +1,9 @@
+kano-profile (4.0.0-0) unstable; urgency=low
+
+  * Fix support for Gtk packages included with Stretch.
+
+ -- Team Kano <dev@kano.me>  Tue, 10 Apr 2018 18:30:00 +0100
+
 kano-profile (3.15.0-0) unstable; urgency=low
 
   * Create test coverage report

@@ -1,3 +1,13 @@
+/**
+ * badge_screen.css
+ *
+ * Copyright (C) 2014 - 2018 Kano Computing Ltd.
+ * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+ *
+ * Styling for the badge screen
+ */
+
+
 /* Badge Grid */
 /* Styling specific to the grid shown on the swag/badges screen */
 
@@ -29,6 +39,7 @@ GtkFixed .hover_box {
 }
 
 .hover_label {
-    font: Bariol bold 13px;
+    font-family: Bariol Bold;
+    font-size: 13px;
     color: #ffffff;
 }

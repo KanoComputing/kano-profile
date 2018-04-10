@@ -1,5 +1,16 @@
+/**
+ * share.css
+ *
+ * Copyright (C) 2014 - 2018 Kano Computing Ltd.
+ * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+ *
+ * Styling for shares
+ */
+
+
 .menu_text {
-    font: Bariol Bold 14px;
+    font-family: Bariol Bold;
+    font-size: 14px;
     color: #323232;
 }
 

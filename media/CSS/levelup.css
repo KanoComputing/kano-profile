@@ -1,3 +1,12 @@
+/**
+ * levelup.css
+ *
+ * Copyright (C) 2014 - 2018 Kano Computing Ltd.
+ * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+ *
+ * Stryling for the level-up screen
+ */
+
 
 /* Level up styling */
 
@@ -24,11 +33,13 @@ GtkWindow {
 }
 
 .alert_title {
-    font: Bariol Bold 20px;
+    font-family: Bariol Bold;
+    font-size: 20px;
     color: @title_color;
 }
 
 .alert_description {
-    font: Bariol 14px;
+    font-family: Bariol;
+    font-size: 14px;
     color: @subheading_color;
 }

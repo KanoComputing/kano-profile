@@ -1,14 +1,14 @@
-/*
+/**
+ * register.css
+ *
+ * Copyright (C) 2014 - 2018 Kano Computing Ltd.
+ * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+ *
+ * Styling specific to the registration screens
+ */
 
-# Copyright (C) 2014 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
-#
-# Styling specific to the registration screens
 
-*/
-
-
-GtkCheckButton:active:insensitive {
+GtkCheckButton:active:disabled {
     color: @kano_grey;
 }
 
@@ -37,21 +37,23 @@ GtkCheckButton:active:insensitive {
     border-width: 2px;
     border-radius: 3px;
     /*padding: 15px; */
-    font: Bariol bold 16;
+    font-family: Bariol Bold;
+    font-size: 16pt;
 }
 
-.get_data_entry:insensitive {
+.get_data_entry:disabled {
     background: #ffffff;
     color: #dddddd;
 }
 
 /* The label above the entries */
 .get_data_label {
-    font: Bariol 13;
+    font-family: Bariol;
+    font-size: 13pt;
     color: #555555;
 }
 
-.get_data_label:insensitive {
+.get_data_label:disabled {
     background: #ffffff;
     color: #bbbbbb;
 }
@@ -62,12 +64,14 @@ GtkCheckButton:active:insensitive {
     border-width: 2px;
     -GtkCheckButton-indicator-spacing: 3;
     color: #555555;
-    font: Bariol 13;
+    font-family: Bariol;
+    font-size: 13pt;
 }
 
-.get_data_checkbutton GtkLabel:insensitive {
+.get_data_checkbutton GtkLabel:disabled {
     color: #555555;
-    font: Bariol 13;
+    font-family: Bariol;
+    font-size: 13pt;
     background: #ffffff;
 }
 
@@ -77,7 +81,8 @@ GtkCheckButton:active:insensitive {
 
 .show_password GtkLabel {
     color: #555555;
-    font: Bariol 13;
+    font-family: Bariol;
+    font-size: 13pt;
 }
 
 .close_button {
@@ -87,7 +92,8 @@ GtkCheckButton:active:insensitive {
 /* Make the default font colour blend in with the background */
 .validation_label {
     color: #ffffff;
-    font: Bariol Bold 15;
+    font-family: Bariol Bold;
+    font-size: 15pt;
 }
 
 .validation_label.success {

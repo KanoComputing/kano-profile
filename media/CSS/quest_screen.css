@@ -1,3 +1,13 @@
+/**
+ * quest_screen.css
+ *
+ * Copyright (C) 2014 - 2018 Kano Computing Ltd.
+ * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+ *
+ * Styling for the quests
+ */
+
+
 /* QuestScreen styling */
 
 /********** Quests screen ********/
@@ -9,7 +19,8 @@
 
 .quest.reward {
     color: #555555;
-    font: Bariol 17px;
+    font-family: Bariol;
+    font-size: 17px;
 }
 
 .quest.completed {
@@ -37,7 +48,8 @@
 }
 
 .quest_item_title {
-    font: Bariol bold 19px;
+    font-family: Bariol Bold;
+    font-size: 19px;
     color: #111111;
 }
 
@@ -46,7 +58,8 @@
 }
 
 .quest_item_rewards {
-    font: Bariol 15px;
+    font-family: Bariol;
+    font-size: 15px;
     color: #777777;
 }
 
@@ -55,12 +68,14 @@
 }
 
 .quest_step_label {
-    font: Bariol bold 15px;
+    font-family: Bariol Bold;
+    font-size: 15px;
     color: #ffffff;
 }
 
 .quest_info_title {
-    font: Bariol Bold 18px;
+    font-family: Bariol Bold;
+    font-size: 18px;
     color: #ffffff;
 }
 /******************************************/
@@ -86,12 +101,14 @@
 /******************************************/
 
 .reward_title {
-    font: Bariol bold 18px;
+    font-family: Bariol Bold;
+    font-size: 18px;
     color: #111111;
 }
 
 .reward_label {
-    font: Bariol 15px;
+    font-family: Bariol;
+    font-size: 15px;
     color: #555555;
 }
 
@@ -102,12 +119,14 @@
 
 .reward_hover_label {
     color: #ffffff;
-    font: Bariol bold 15px;
+    font-family: Bariol Bold;
+    font-size: 15px;
 }
 
 /*******************************************/
 .section_title {
-    font: Bariol Bold 20px;
+    font-family: Bariol Bold;
+    font-size: 20px;
 }
 
 .transparent {

@@ -1,11 +1,12 @@
-/*
+/**
+ * avatar_generator.css
+ *
+ * Copyright (C) 2014 - 2018 Kano Computing Ltd.
+ * License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+ *
+ * This controls the styling of the character creator
+ */
 
-# Copyright (C) 2014 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
-#
-# This controls the styling of the character creator
-
-*/
 
 /* Pop up menu icons */
 /* This is an image that the user can choose */
@@ -27,7 +28,8 @@
 }
 
 .pop_up_menu_top_bar GtkLabel {
-    font: Bariol bold 15;
+    font-family: Bariol Bold;
+    font-size: 15pt;
     color: #555555;
 }
 
@@ -57,5 +59,6 @@
 
 .birthday_separater {
     color: #bbbbbb;
-    font: Bariol 30;
+    font-family: Bariol;
+    font-size: 30pt;
 }

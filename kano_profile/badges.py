@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-
+#
 # badges.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014 - 2018 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -432,7 +431,7 @@ def save_app_state_with_dialog(app_name, data):
         # Open the fifo in append mode, as if it is not
         # present, notifications are queued in a flat file
         notifications = (new_level_str + ' ' + new_items_str).split(' ')
-        
+
         # Write  to both the dashboard and the desktop widget
         f1 = os.path.join(os.path.expanduser('~'), '.kano-notifications.fifo')
         f2 = os.path.join(os.path.expanduser('~'), '.kano-notifications-desktop.fifo')

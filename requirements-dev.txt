@@ -2,4 +2,5 @@ behave
 coverage-badge
 pytest
 pytest-cov
+pytest-flake8
 pytest-tap

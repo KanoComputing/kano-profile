@@ -1,7 +1,7 @@
 #
 # __init__.py
 #
-# Copyright (C) 2014 - 2017 Kano Computing Ltd.
+# Copyright (C) 2014 - 2018 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Kano-tracker module
@@ -35,13 +35,13 @@ from kano_profile.apps import get_app_state_file, load_app_state_variable, \
 from kano_profile.paths import tracker_dir, tracker_events_file, \
     tracker_token_file
 from kano_profile.tracker.tracker_token import TOKEN, generate_tracker_token, \
-	load_token
+    load_token
 from kano_profile.tracker.tracking_utils import open_locked, \
     get_nearest_previous_monday, get_utc_offset
 from kano_profile.tracker.tracking_session import TrackingSession
 from kano_profile.tracker.tracking_sessions import session_start, session_end, \
     list_sessions, get_open_sessions, get_session_file_path, session_log, \
-	get_session_unique_id, get_session_event, CPU_ID, LANGUAGE, OS_VERSION
+    get_session_unique_id, get_session_event, CPU_ID, LANGUAGE, OS_VERSION
 
 # Public imports
 from kano_profile.tracker.tracker import Tracker

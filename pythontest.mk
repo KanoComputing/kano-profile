@@ -50,6 +50,7 @@ BEHAVE_TAGS_FLAG := $(join $(addprefix --tags=-,$(OMITTED_TAGS)), $(space))
 #     - pytest
 #     - behave
 #     - pytest-cov
+#     - pytest-flake8
 #     - pytest-tap
 #
 pythontest:
@@ -59,7 +60,7 @@ pythontest:
 	mkdir -p $(COVERAGE_REPORT_DIR)
 	mkdir -p $(TESTS_REPORT_DIR)
 	# Run the tests
-	-coverage run --module pytest $(PYTEST_TAGS_FLAG) --junitxml=$(TESTS_REPORT_DIR)/pytest_results.xml
+	-coverage run --module pytest --flake8 $(PYTEST_TAGS_FLAG) --junitxml=$(TESTS_REPORT_DIR)/pytest_results.xml
 	-coverage run --append --module behave $(BEHAVE_TAGS_FLAG) --junit --junit-directory=$(TESTS_REPORT_DIR)
 	# Generate reports
 	coverage xml

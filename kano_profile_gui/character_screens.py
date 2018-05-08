@@ -1,14 +1,17 @@
-#!/usr/bin/env python
-
+#
 # character_screens.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# Copyright (C) 2014 - 2018 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
 #
+
 import os
+
 from gi.repository import Gtk
+
 from kano_profile_gui.progress_bar import ProgressBar
 from kano.gtk3.buttons import KanoButton, OrangeButton
+from kano.gtk3.cursor import attach_cursor_events
 from kano_profile_gui.paths import media_dir
 from kano.logging import logger
 
@@ -30,6 +33,7 @@ class CharacterDisplay(Gtk.EventBox):
         self.cog_widget_icon = Gtk.Image.new_from_file(icon_filename)
 
         launch_char_creator_btn = Gtk.Button()
+        attach_cursor_events(launch_char_creator_btn)
         hbox = Gtk.Box()
         edit_label = Gtk.Label(_("Edit").upper())
         edit_label.set_margin_right(7)

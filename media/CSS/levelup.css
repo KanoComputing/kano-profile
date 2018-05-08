@@ -14,21 +14,21 @@
 @define-color title_color #323232;
 @define-color subheading_color #6e6e6e;
 
-/* This is to remove padding */
-GtkBox GtkEventBox,
-GtkBox GtkGrid,
-GtkEventBox GtkImage,
-GtkGrid GtkEventBox,
-GtkFixed GtkImage,
-GtkFixed GtkEventBox,
-GtkWindow GtkImage,
-GtkWindow GtkGrid,
-GtkWindow GtkBox,
-GtkWindow GtkEventBox {
+/* this is to remove padding */
+box eventbox,
+box grid,
+eventbox image,
+grid eventbox,
+fixed image,
+fixed eventbox,
+window image,
+window grid,
+window box,
+window eventbox {
     padding: 0;
 }
 
-GtkWindow {
+window {
     background: #ffffff;
 }
 

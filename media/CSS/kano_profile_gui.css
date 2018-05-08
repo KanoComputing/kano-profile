@@ -20,13 +20,13 @@
     padding: 30px 50px 30px 30px;
 }
 
-.home_button .menu_bar_button GtkLabel {
+.home_button .menu_bar_button label {
     color: @menu_bar_inactive;
 }
-.home_button GtkLabel:disabled {
+.home_button label:disabled {
     background: transparent;
 }
-.home_button_active .menu_bar_button_active GtkLabel {
+.home_button_active .menu_bar_button_active label {
     color: @menu_bar_active;
 }
 .home_button_title {
@@ -52,14 +52,14 @@
     background: #ffffff;
 }
 
-.character_cog GtkLabel {
+.character_cog label {
     background: transparent;
     color: @kano_orange;
     font-family: Bariol Bold;
     font-size: 15pt;
 }
 
-.character_cog GtkLabel:hover {
+.character_cog label:hover {
     background: transparent;
     color: @kano_orange;
     font-family: Bariol Bold;
@@ -78,15 +78,15 @@
     background: transparent;
     padding: 20px 20px 0px 20px;
 }
-.menu_bar_button GtkLabel {
+.menu_bar_button label {
     font-family: Bariol Bold;
     font-size: 13pt;
     color: @menu_bar_inactive;
 }
-.menu_bar_button GtkLabel:disabled {
+.menu_bar_button label:disabled {
     background: transparent;
 }
-.menu_bar_button.selected GtkLabel {
+.menu_bar_button.selected label {
     color: @menu_bar_active;
 }
 .close_button {
@@ -123,7 +123,7 @@
 /*** GtkSwitch styling ****/
 
 /* Custom slider CSS */
-GtkSwitch {
+switch {
     -GtkSwitch-slider-length: 5px;
     -GtkRange-slider-width: 5px;
     -GtkRange-trough-border: 0;
@@ -138,14 +138,14 @@ GtkSwitch {
 
 }
 
-GtkSwitch.trough {
+switch trough {
     border-radius: 20px;
     background: @kano_green;
     color: @kano_green;
     font-family: Bariol;
     font-size: 5pt;
 }
-GtkSwitch.slider {
+switch slider {
     border-radius: 20px;
     background: #ffffff;
     border-color: @kano_green;
@@ -176,7 +176,7 @@ GtkSwitch.slider {
     font-size: 15pt;
     border-radius: 3px;
 }
-.project_make_button GtkLabel {
+.project_make_button label {
     color: #ffffff;
 }
 
@@ -219,17 +219,21 @@ GtkSwitch.slider {
     padding: 0px 0px 25px 0px;
 }
 
-.navigation_button GtkLabel {
+.navigation_button label {
     color: @menu_bar_active;
     font-family: Bariol Bold;
     font-size: 13pt;
 }
 
-.navigation_button GtkLabel:disabled {
+.navigation_button label:disabled {
     color: @menu_bar_inactive;
     font-family: Bariol Bold;
     font-size: 14pt;
     background: #ffffff;
+}
+
+.navigation_button image:disabled {
+    opacity: 0;
 }
 
 .button_divider {

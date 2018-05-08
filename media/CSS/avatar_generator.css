@@ -27,7 +27,7 @@
     background: #ebebeb;
 }
 
-.pop_up_menu_top_bar GtkLabel {
+.pop_up_menu_top_bar label {
     font-family: Bariol Bold;
     font-size: 15pt;
     color: #555555;
@@ -55,6 +55,10 @@
 
 .random_button:hover {
     background: #dedede;
+}
+
+.character_cog, .random_button {
+    box-shadow: none;
 }
 
 .birthday_separater {

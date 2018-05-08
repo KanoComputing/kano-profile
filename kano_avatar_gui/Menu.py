@@ -1,13 +1,16 @@
-#!/usr/bin/env python
-
+#
 # Menu.py
 #
-# Copyright (C) 2015 Kano Computing Ltd.
+# Copyright (C) 2015 - 2018 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 import os
 import sys
+
+from gi import require_version
+require_version('Gtk', '3.0')
+
 from gi.repository import Gtk, GObject
 
 if __name__ == '__main__' and __package__ is None:

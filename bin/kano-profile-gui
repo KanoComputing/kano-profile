@@ -1,8 +1,8 @@
 #!/usr/bin/kano-splash loader-animation /usr/bin/env python
-
+#
 # kano-profile-gui
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014 - 2018 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -18,9 +18,13 @@ Options:
    -s, --screen=<screen-id>  Launch a specific screen by id
 """
 
-import docopt
 import os
 import sys
+import docopt
+
+from gi import require_version
+require_version('Gtk', '3.0')
+
 from gi.repository import Gtk
 
 if __name__ == '__main__' and __package__ is None:

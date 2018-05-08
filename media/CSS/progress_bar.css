@@ -18,7 +18,7 @@
     background: @kano_orange;
     border-radius: 3px;
 }
-.progress_background GtkLabel {
+.progress_background label {
     color: #ffffff;
     font-family: Bariol Bold;
     font-size: 13pt;
@@ -27,7 +27,7 @@
     background: #939087;
     /*color: #939087;*/
 }
-.endpoint_background GtkLabel {
+.endpoint_background label {
     color: #ffffff;
     font-family: Bariol Bold;
     font-size: 13pt;

@@ -8,7 +8,7 @@
  */
 
 
-GtkCheckButton:active:disabled {
+checkbutton:active:disabled {
     color: @kano_grey;
 }
 
@@ -68,7 +68,7 @@ GtkCheckButton:active:disabled {
     font-size: 13pt;
 }
 
-.get_data_checkbutton GtkLabel:disabled {
+.get_data_checkbutton label:disabled {
     color: #555555;
     font-family: Bariol;
     font-size: 13pt;
@@ -79,7 +79,7 @@ GtkCheckButton:active:disabled {
     -GtkCheckButton-indicator-size: 15;
 }
 
-.show_password GtkLabel {
+.show_password label {
     color: #555555;
     font-family: Bariol;
     font-size: 13pt;
@@ -104,7 +104,7 @@ GtkCheckButton:active:disabled {
     color: @kano_red;
 }
 
-.header_bar, .header_bar GtkButton {
+.header_bar, .header_bar button {
     color: transparent;
     background: transparent;
 }

@@ -30,6 +30,8 @@ namespace kano_world {
             bool is_registered() const;
             std::string get_mixed_username() const;
             std::string get_token() const;
+            void set_login_data(std::string id, std::string username,
+            std::string email, std::string token) const;
     };
 }
 

@@ -72,3 +72,18 @@ std::string kano_world::functions::get_token() const
 
     return token;
 }
+
+void kano_world::functions::set_login_data(std::string id,
+std::string username, std::string email, std::string token) const
+{
+    PyObject *ldata = this->run_func(
+        "set_login_data", new_tuple(id, username, email, token)
+    );
+
+    if (ldata == NULL)
+        return;
+
+    Py_CLEAR(ldata);
+
+    return;
+}

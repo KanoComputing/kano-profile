@@ -66,6 +66,12 @@ class FirstScreenTemplate(Gtk.Box):
 
 
 class FirstScreen(FirstScreenTemplate):
+
+    webengine = '/usr/bin/kano-webengine'
+    web_api = 'http://10.49.104.215:8080/'
+    signup = '#/signup'
+    win_size = '-W 590 -H 600'
+
     def __init__(self, win, dummy=None):
 
         FirstScreenTemplate.__init__(self)
@@ -93,18 +99,21 @@ class FirstScreen(FirstScreenTemplate):
         self.win.remove_main_widget()
 
         if is_internet():
-            Login(win=self.win, prev_screen=None, first_boot=True)
+            Gtk.main_quit()
+            os.system('{} {} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.win_size))
         else:
             NoInternet(self.win)
 
     def register_screen(self, widget, event):
-
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             self.win.remove_main_widget()
-            RegistrationScreen(self.win)
+            Gtk.main_quit()
+            os.system('{} {}{} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.signup, \
+                                          FirstScreen.win_size))
 
     def exit_registration(self, widget, event):
         self.win.remove_main_widget()
+        sys.exit(0)
         SwagScreen(self.win)
 
     def repack(self):

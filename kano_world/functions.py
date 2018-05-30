@@ -1,6 +1,6 @@
 # functions.py
 #
-# Copyright (C) 2014-2017 Kano Computing Ltd.
+# Copyright (C) 2014-2018 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # Refer to the Network API documentation: https://github.com/KanoComputing/kano-web-api/wiki/API-accounts
@@ -54,10 +54,47 @@ def register(email, username, password, marketing_enabled=False):
         return False, _("Cannot register, problem: {}").format(text)
 
 
+def set_login_data(id, username, email, token):
+    """ Reverse Engineered Wrapper:
+    Simulates a "payload" JSON dictionary using the login and register data
+    from the WEB API (Qt Interface). Invoked from kano-webengine.
+
+    Args:
+        id (str): numerical ID of the user
+        username (str): user name
+        email (str): user email
+        token (str): a unique login/registration token
+
+    Exception:
+        Error if unable to login
+
+    Returns:
+        bool: True for successful login [through the kano-login backend]
+    """
+
+    data = {
+        'session': {
+            'token': token,
+            'user': {
+                'username': username,
+                'email': email,
+                'id': id
+            },
+        },
+        'success': True  # data are only sent from the WEB API on successful login
+    }
+
+    try:
+        return login_register_data(data)
+    except Exception as e:
+        logger.error("Error with data from the WEB API: {}".format(e))
+
+
 def login_register_data(data):
     global glob_session
 
     profile = load_profile()
+
     profile['token'] = data['session']['token']
     profile['kanoworld_username'] = data['session']['user']['username']
     profile['kanoworld_id'] = data['session']['user']['id']

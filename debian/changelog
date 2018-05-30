@@ -1,8 +1,9 @@
 kano-profile (4.0.0-0) unstable; urgency=low
 
+  * Modify user login & registration process using webengine and new web api
   * Fix support for Gtk packages included with Stretch.
 
- -- Team Kano <dev@kano.me>  Tue, 10 Apr 2018 18:30:00 +0100
+ -- Team Kano <dev@kano.me>  Tue, 30 May 2018 18:30:00 +0100
 
 kano-profile (3.15.0-0) unstable; urgency=low
 

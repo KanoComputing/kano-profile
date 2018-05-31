@@ -87,13 +87,26 @@ class MainWindow(ApplicationWindow):
         css_path = os.path.join(media_dir, "CSS/register.css")
         apply_styling_to_screen(css_path)
 
-        if screen == "register":
-            FirstScreen(self)
-        elif screen == "login":
-            os.system('{} {} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.win_size))
-            self.main_quit()
+        self.select_screen(screen)
 
         self.show_all()
+
+    def select_screen(self, screen):
+        '''
+        Routes the user to the correct screen based on what screen is desired.
+
+        Args:
+            screen (str): The screen to switch to. Options "login" or
+                          "register".
+        '''
+
+        if screen == "register":
+            # Jump to the register/skip/login selection screen
+            FirstScreen(self)
+        elif screen == "login":
+            # Launch the web login screen immediately and exit after
+            os.system('{} {} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.win_size))
+            self.main_quit()
 
     def set_data(self, data_label, data):
         self._data[data_label] = data

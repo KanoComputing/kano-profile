@@ -98,6 +98,7 @@ class FirstScreen(FirstScreenTemplate):
         self.win.remove_main_widget()
 
         if is_internet():
+            # Hand-off from the Gtk to the web view
             Gtk.main_quit()
             os.system('{} {} {}'.format(FirstScreen.webengine, AUTH_URL, FirstScreen.win_size))
         else:
@@ -105,15 +106,16 @@ class FirstScreen(FirstScreenTemplate):
 
     def register_screen(self, widget, event):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
+            # Hand-off from the Gtk to the web view
             self.win.remove_main_widget()
             Gtk.main_quit()
             os.system('{} {}{} {}'.format(FirstScreen.webengine, AUTH_URL, FirstScreen.signup, \
                                           FirstScreen.win_size))
 
     def exit_registration(self, widget, event):
+        # We are done, clean up
         self.win.remove_main_widget()
         sys.exit(0)
-        SwagScreen(self.win)
 
     def repack(self):
         self.win.remove_main_widget()

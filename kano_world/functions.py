@@ -9,6 +9,7 @@
 
 import json
 
+from kano.logging import logger
 from kano_profile.profile import load_profile, save_profile
 from kano.utils import get_user_unsudoed, is_number
 

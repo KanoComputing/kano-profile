@@ -9,6 +9,7 @@
 
 
 import os
+import sys
 
 from gi.repository import Gtk
 
@@ -17,13 +18,11 @@ from kano.gtk3.heading import Heading
 
 from kano.network import is_internet
 
-from kano_login.login import Login
 from kano_login.swag_screen import SwagScreen
 from kano_login.templates.template import Template
 
 from kano_profile_gui.images import get_image
 
-from kano_registration_gui.RegistrationScreen import RegistrationScreen
 
 
 class FirstScreenTemplate(Gtk.Box):

@@ -27,6 +27,9 @@ def load_conf():
     if 'world_url' not in conf:
         conf['world_url'] = 'http://world.kano.me'
 
+    if 'auth_url' not in conf:
+        conf['auth_url'] = 'https://os-auth.kano.me'
+
     return conf
 
 
@@ -34,6 +37,7 @@ CONF = load_conf()
 
 API_URL = CONF['api_url']
 WORLD_URL = CONF['world_url']
+AUTH_URL = CONF['auth_url']
 
 
 def get_world_url(path):

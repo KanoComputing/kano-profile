@@ -23,6 +23,7 @@ from kano_login.templates.template import Template
 
 from kano_profile_gui.images import get_image
 
+from kano_world.config import AUTH_URL
 
 
 class FirstScreenTemplate(Gtk.Box):
@@ -67,7 +68,6 @@ class FirstScreenTemplate(Gtk.Box):
 class FirstScreen(FirstScreenTemplate):
 
     webengine = '/usr/bin/kano-webengine'
-    web_api = 'http://10.49.104.215:8080/'
     signup = '#/signup'
     win_size = '-W 590 -H 600'
 
@@ -99,7 +99,7 @@ class FirstScreen(FirstScreenTemplate):
 
         if is_internet():
             Gtk.main_quit()
-            os.system('{} {} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.win_size))
+            os.system('{} {} {}'.format(FirstScreen.webengine, AUTH_URL, FirstScreen.win_size))
         else:
             NoInternet(self.win)
 
@@ -107,7 +107,7 @@ class FirstScreen(FirstScreenTemplate):
         if not hasattr(event, 'keyval') or event.keyval == 65293:
             self.win.remove_main_widget()
             Gtk.main_quit()
-            os.system('{} {}{} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.signup, \
+            os.system('{} {}{} {}'.format(FirstScreen.webengine, AUTH_URL, FirstScreen.signup, \
                                           FirstScreen.win_size))
 
     def exit_registration(self, widget, event):

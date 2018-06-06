@@ -1,5 +1,6 @@
 kano-profile (4.0.0-0) unstable; urgency=low
 
+  * Move .desktop file to new package
   * Modify user login & registration process using webengine and new web api
   * Fix support for Gtk packages included with Stretch.
   * Add tracking for CKT

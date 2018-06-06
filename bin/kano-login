@@ -50,8 +50,8 @@ from kano_login.first_screen import FirstScreen
 import kano_profile_gui.components.icons as icons
 from kano_login.login import Login
 from kano.gtk3.kano_dialog import KanoDialog
-from kano_login.first_screen import FirstScreen
 
+from kano_world.config import AUTH_URL
 from kano_world.functions import get_email, remove_token, remove_registration
 
 try:
@@ -105,7 +105,7 @@ class MainWindow(ApplicationWindow):
             FirstScreen(self)
         elif screen == "login":
             # Launch the web login screen immediately and exit after
-            os.system('{} {} {}'.format(FirstScreen.webengine, FirstScreen.web_api, FirstScreen.win_size))
+            os.system('{} {} {}'.format(FirstScreen.webengine, AUTH_URL, FirstScreen.win_size))
             self.main_quit()
 
     def set_data(self, data_label, data):

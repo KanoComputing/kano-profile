@@ -22,7 +22,7 @@ def _hw_info():
     # TODO: This import is done here to avoid potential
     #       import loops with kano-peripherals.
     from kano_peripherals.wrappers.detection import is_ck2_lite, is_ck2_pro, \
-        get_ck2_lite_version, get_ck2_pro_version
+        is_ckt, get_ck2_lite_version, get_ck2_pro_version, get_ckt_version
 
     # If CKL/CKCs cannot be detected, defaults to Computer Kits without version.
     kit_type = 'ck'
@@ -37,6 +37,11 @@ def _hw_info():
     elif is_ck2_pro():
         kit_type = 'ckc'
         kit_version = get_ck2_pro_version()
+
+    # Detect CKT via the PowerHat board and EDID.
+    elif is_ckt():
+        kit_type = 'ckt'
+        kit_version = get_ckt_version()
 
     track_data('hw-info', {
         'keyboard': 'kano' if detect_kano_keyboard() else 'generic',

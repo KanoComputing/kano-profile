@@ -1,4 +1,4 @@
-kano-profile (4.0.0-0) unstable; urgency=low
+kano-profile (4.0.0-1) unstable; urgency=low
 
   * Added additional file associations to "click and open" from Home Folder pcmanfm
   * Fixed tracking for apps started through pcmanfm Home folder

@@ -1,5 +1,6 @@
 kano-profile (4.0.0-0) unstable; urgency=low
 
+  * Added additional file associations to "click and open" from Home Folder pcmanfm
   * Fixed tracking for apps started through pcmanfm Home folder
   * Move .desktop file to new package
   * Modify user login & registration process using webengine and new web api

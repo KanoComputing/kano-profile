@@ -1,4 +1,7 @@
 [Default Applications]
+text/plain=chromium-browser.desktop
+image/jpeg=gpicview.desktop
+image/png=gpicview.desktop
 x-scheme-handler/kano=kano-scheme.desktop
 application/x-kano-draw=auto_kano-draw.desktop
 application/x-kano-make-pong=auto_make-pong.desktop

@@ -1,8 +1,0 @@
-icon/kano-share.desktop usr/share/kano-apps/extras
-icon/kano-share.png usr/share/kano-apps/icons
-
-icon/kano-world.app usr/share/applications
-
-icon/kano-profile.app usr/share/applications
-icon/locale/es_AR/*.app /usr/share/applications/locale/es_AR/
-xdg/* usr/share/applications

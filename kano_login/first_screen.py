@@ -68,7 +68,7 @@ class FirstScreenTemplate(Gtk.Box):
 class FirstScreen(FirstScreenTemplate):
 
     webengine = '/usr/bin/kano-webengine'
-    signup = '#/signup'
+    signup = '/#signup'
     win_size = '-W 590 -H 600'
 
     def __init__(self, win, dummy=None):

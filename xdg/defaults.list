@@ -1,4 +1,5 @@
 [Default Applications]
+application/pdf=epdfview.desktop
 text/plain=geany.desktop
 image/jpeg=gpicview.desktop
 image/png=gpicview.desktop

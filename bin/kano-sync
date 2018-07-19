@@ -209,7 +209,7 @@ def do_restore(skip_kdesk_refresh=False, dialog=True):
     if _platform == 'darwin':
         cmd_temp = 'gtar -xzf {} --skip-old-files --overwrite --overwrite-dir'
     else:
-        cmd_temp = 'tar -xzf {} --overwrite --overwrite-dir'
+        cmd_temp = 'tar -xzf {} --overwrite'
 
     tar_cmd = cmd_temp.format(tmp_file)
     _, e, _ = run_cmd(tar_cmd)

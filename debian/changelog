@@ -1,3 +1,9 @@
+kano-profile (3.16.0-0) unstable; urgency=low
+
+  * Fix kano-toolset dependency version
+
+ -- Team Kano <dev@kano.me>  Wed, 5 Sep 2018 14:47:00 +0100
+
 kano-profile (3.15.0-0) unstable; urgency=low
 
   * Create test coverage report

@@ -3,7 +3,7 @@ kano-profile (4.1.0-0) unstable; urgency=low
   * Fixed an issue with kano-sync being unable to unpack a tar file when
     restoring user data from the cloud
 
- -- Team Kano <dev@kano.me>  Tue, 31 Jul 2018 15:39:00 +0100
+ -- Team Kano <dev@kano.me>  Wed, 5 Sep 2018 16:47:00 +0100
 
 kano-profile (4.0.0-1) unstable; urgency=low
 
@@ -14,6 +14,12 @@ kano-profile (4.0.0-1) unstable; urgency=low
   * Add tracking for CKT
 
  -- Team Kano <dev@kano.me>  Tue, 30 May 2018 18:30:00 +0100
+
+kano-profile (3.16.0-0) unstable; urgency=low
+
+  * Fix kano-toolset dependency version
+
+ -- Team Kano <dev@kano.me>  Wed, 5 Sep 2018 14:47:00 +0100
 
 kano-profile (3.15.0-0) unstable; urgency=low
 

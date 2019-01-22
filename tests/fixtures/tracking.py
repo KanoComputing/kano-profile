@@ -73,25 +73,28 @@ class TrackingSessionFixture(object):
                 )
 
 
+TRACKING_SESSIONS = [
+    TrackingSessionFixture.format_session(
+        'test-1', 12345678, 1234, 60, True
+    ),
+    TrackingSessionFixture.format_session(
+        'test-2', 22345678, 1234, 32, True
+    ),
+    TrackingSessionFixture.format_session(
+        'test-3', 32345678, 1234, 288, True
+    ),
+    TrackingSessionFixture.format_session(
+        'test-4', 42345678, 1234, 119, False
+    ),
+    TrackingSessionFixture.format_session(
+        'test-5', 52345678, 1234, 3, False
+    ),
+]
+
+
 @pytest.fixture(scope='function')
 def sample_tracking_sessions():
-    return [
-        TrackingSessionFixture.format_session(
-            'test-1', 12345678, 1234, 60, True
-        ),
-        TrackingSessionFixture.format_session(
-            'test-2', 22345678, 1234, 32, True
-        ),
-        TrackingSessionFixture.format_session(
-            'test-3', 32345678, 1234, 288, True
-        ),
-        TrackingSessionFixture.format_session(
-            'test-4', 42345678, 1234, 119, False
-        ),
-        TrackingSessionFixture.format_session(
-            'test-5', 52345678, 1234, 3, False
-        ),
-    ]
+    return TRACKING_SESSIONS
 
 
 @pytest.fixture(scope='module')

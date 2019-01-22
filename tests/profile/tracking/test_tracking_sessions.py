@@ -13,8 +13,7 @@ import os
 import json
 import pytest
 
-from tests.conftest import sample_tracking_sessions
-
+from tests.fixtures.tracking import TRACKING_SESSIONS
 from kano_profile.paths import tracker_dir
 
 
@@ -150,9 +149,9 @@ def test_get_paused_sessions(tracking_session, sample_tracking_sessions):
 @pytest.mark.parametrize(
     'unpaused_sessions, paused_sessions, expected',
     [
-        (sample_tracking_sessions(), [], True),
-        (sample_tracking_sessions(), None, False),
-        ([], sample_tracking_sessions(), True),
+        (TRACKING_SESSIONS, [], True),
+        (TRACKING_SESSIONS, None, False),
+        ([], TRACKING_SESSIONS, True),
     ]
 )
 def test_is_tracking_paused(tracking_session, unpaused_sessions, paused_sessions, expected):

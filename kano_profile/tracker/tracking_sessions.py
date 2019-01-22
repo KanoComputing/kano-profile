@@ -1,7 +1,7 @@
 #
 # tracking_sessions.py
 #
-# Copyright (C) 2014 - 2017 Kano Computing Ltd.
+# Copyright (C) 2014-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Functions for tracking app session times
@@ -15,8 +15,7 @@ import time
 from uuid import uuid1, uuid5
 
 from kano.utils.hardware import get_cpu_id
-from kano.utils.file_operations import read_file_contents, chown_path, \
-    ensure_dir
+from kano.utils.file_operations import read_file_contents, chown_path
 from kano.logging import logger
 from kano_profile.tracker.tracker_token import TOKEN
 from kano_profile.paths import tracker_dir, tracker_events_file, \
@@ -33,11 +32,11 @@ OS_VERSION += '-' + os_variant if os_variant else ''
 
 
 def list_sessions():
-    return [
-        f for f in os.listdir(tracker_dir)
-        if os.path.isfile(os.path.join(tracker_dir, f)) and
-        os.path.join(tracker_dir, f) != PAUSED_SESSIONS_FILE
-    ]
+    return [  # noqa
+        f for f in os.listdir(tracker_dir)  # noqa
+        if os.path.isfile(os.path.join(tracker_dir, f)) and  # noqa
+        os.path.join(tracker_dir, f) != PAUSED_SESSIONS_FILE  # noqa
+    ]  # noqa
 
 
 def get_open_sessions():

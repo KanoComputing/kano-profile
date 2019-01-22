@@ -1,6 +1,6 @@
 # RegistrationScreen.py
 #
-# Copyright (C) 2015-2016 Kano Computing Ltd.
+# Copyright (C) 2015-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # This is the screen that is shown when you register for Kano World
@@ -32,7 +32,7 @@ def validate_email(address, verbose=False):
     Validates email address, returns None if success.
     Otherwise a localized error message string.
     '''
-    msg=None
+    msg = None
 
     if len(address) == 0:
         return _("You need to provide a valid email address")
@@ -43,8 +43,8 @@ def validate_email(address, verbose=False):
 
     # Taken from http://emailregex.com/
     # Make sure to pass the tests if you change this regex
-    match=re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", address)
-    if match == None:
+    match = re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", address)
+    if match is None:
         msg=_("The email address is not correct,\nplease use the format johndoe@example.com")
 
     if verbose:
@@ -108,7 +108,7 @@ class RegistrationScreen(Gtk.Box):
         username = data['username']
 
         # Validate that the email address format is correct
-        email_error=validate_email(email)
+        email_error = validate_email(email)
         if email_error:
             self._show_error_dialog(_("Incorrect Email address"), email_error)
             return
@@ -136,7 +136,7 @@ class RegistrationScreen(Gtk.Box):
         # screen. However there is a small chance someone could take the
         # username while the user is in the process of registering
         if not success:
-            if text.strip() == _("Cannot register, problem: " \
+            if text.strip() == _("Cannot register, problem: "
                "Username already registered"):
 
                 self._show_username_taken_dialog(username)
@@ -165,7 +165,7 @@ class RegistrationScreen(Gtk.Box):
             return_value = 'SUCCEED'
             self._create_dialog(
                 title=_("Profile activated!"),
-                description=_("Now you can share stuff, build your character, " \
+                description=_("Now you can share stuff, build your character, "
                               "and connect with friends.")
             )
 

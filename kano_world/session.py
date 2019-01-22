@@ -1,7 +1,7 @@
 # session.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+# Copyright (C) 2014-2019 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
 import requests
@@ -129,8 +129,9 @@ class KanoWorldSession(object):
 
     def _prepare_avatar_gen(self, profile_data, data_to_send):
         files = {}
-        if ('version' not in profile_data or
-                profile_data['version'] == 1):
+        if 'version' not in profile_data \
+           or profile_data['version'] == 1:
+
             try:
                 avatar_generator = {
                     'character': profile_data['avatar'],

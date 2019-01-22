@@ -2,7 +2,7 @@
 
 # profile.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 
@@ -52,9 +52,10 @@ def save_profile(data, skip_kdesk_refresh=False):
         chown_path(profile_dir)
         chown_path(profile_file)
 
-    if (not skip_kdesk_refresh and
-            os.path.exists('/usr/bin/kdesk') and
-            not is_running('kano-sync')):
+    if not skip_kdesk_refresh \
+       and os.path.exists('/usr/bin/kdesk') \
+       and not is_running('kano-sync'):
+
         logger.info("refreshing kdesk from save_profile")
         run_bg('kdesk -a profile')
 
@@ -71,6 +72,7 @@ def save_profile_variable(variable, value, skip_kdesk_refresh=False):
     profile = load_profile()
     profile[variable] = value
     save_profile(profile, skip_kdesk_refresh=skip_kdesk_refresh)
+
 
 category_conversion = {
     'Belts': 'judoka-belts',

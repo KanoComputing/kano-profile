@@ -1,6 +1,6 @@
 # GetData.py
 #
-# Copyright (C) 2015-2016 Kano Computing Ltd.
+# Copyright (C) 2015-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
 # This contains the RegistrationScreen form component with all the widgets
@@ -34,7 +34,7 @@ def check_username(username):
     """
     Check username only has letters, numbers, - and _
     """
-    pattern = '^[a-zA-Z0-9_\-.]+$'
+    pattern = r'^[a-zA-Z0-9_\-.]+$'
     match = re.match(pattern, username)
     return match and len(username) >= 3 and len(username) <= 25
 
@@ -43,7 +43,7 @@ def check_password(password):
     """
     Check password contains no whitespace and is minimum
     """
-    pattern = '^\S+$'
+    pattern = r'^\S+$'
     match = re.match(pattern, password)
     return match and len(password) > 5
 

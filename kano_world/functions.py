@@ -16,24 +16,22 @@ from kano.utils import get_user_unsudoed, is_number
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
 
+import mercury
 
 glob_session = None
+http_verbose = False
 
-
-def login(login_name, password):
+def login(login_name, password, verbose=http_verbose):
     login_name = login_name.strip()
     password = password.strip()
 
-    payload = {
-        'email': login_name,
-        'password': password
-    }
-
-    success, text, data = request_wrapper('post', '/auth', data=json.dumps(payload), headers=content_type_json)
+    kw = mercury.KanoWorld()
+    success = kw.login (login_name, password, verbose)
     if success:
-        return login_register_data(data)
+        # TODO: refactor function login_register_data
+        return True, None
     else:
-        return False, _("Cannot log in, problem: {}").format(text)
+        return False, _("Could not login to Kano World Services")
 
 
 def register(email, username, password, marketing_enabled=False):
@@ -122,7 +120,11 @@ def is_registered():
 
 
 def has_token():
-    return 'token' in load_profile()
+    kw = mercury.KanoWorld()
+    if not kw.load_data():
+        return None
+
+    return kw.get_token()
 
 
 def remove_token():
@@ -223,10 +225,7 @@ def get_mixed_username():
 
 
 def get_token():
-    try:
-        return load_profile()['token']
-    except Exception:
-        return ''
+    return has_token()
 
 
 def get_email():

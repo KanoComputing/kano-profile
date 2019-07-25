@@ -13,3 +13,6 @@ REPO:= kano-profile
 include pythontest.mk
 check: pythontest
 test: check
+
+test-rpi:
+	cd tests-rpi && PYTHONPATH=$(shell pwd) python -m pytest

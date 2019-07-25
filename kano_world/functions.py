@@ -133,30 +133,17 @@ def remove_token():
     save_profile(profile)
 
 
-def remove_registration():
-    profile = load_profile()
-    profile.pop('token', None)
-    profile.pop('kanoworld_username', None)
-    profile.pop('kanoworld_id', None)
-    profile.pop('email', None)
-    profile.pop('secondary_email', None)
-    save_profile(profile)
+def remove_registration(verbose=http_verbose):
+    kw = mercury.KanoWorld()
+    return kw.logout()
 
 
 def login_using_token():
-    global glob_session
-
-    if not is_registered():
-        return False, _("Not registered!")
-    if not has_token():
-        return False, _("No token!")
-
-    try:
-        profile = load_profile()
-        glob_session = KanoWorldSession(profile['token'])
+    kw = mercury.KanoWorld()
+    if kw.is_logged_in():
         return True, None
-    except Exception as e:
-        return False, str(e)
+    else:
+        return False, _("User is not logged in")
 
 
 def sync():

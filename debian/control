@@ -14,7 +14,8 @@ Build-Depends:
     lxpanel (>= 0.7.0),
     lxpanel-dev,
     pkg-config,
-    python-dev
+    python-dev,
+    python2-mercury
 
 Package: kano-profile
 Architecture: all

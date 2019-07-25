@@ -1,6 +1,7 @@
 kano-profile (4.2.1-0) unstable; urgency=low
 
   * Removed dependency on kano-settings, fix dependency loop
+  * Added migration to new Kano World Services API
 
  -- Team Kano <dev@kano.me>  Tue, 22 Jan 2019 11:47:00 +0000
 

@@ -20,12 +20,13 @@ import mercury
 
 glob_session = None
 http_verbose = False
+kw_url = 'https://worldapi-dev.kano.me'
 
 def login(login_name, password, verbose=http_verbose):
     login_name = login_name.strip()
     password = password.strip()
 
-    kw = mercury.KanoWorld()
+    kw = mercury.KanoWorld(kw_url)
     success = kw.login (login_name, password, verbose)
     if success:
         # TODO: refactor function login_register_data
@@ -120,7 +121,7 @@ def is_registered():
 
 
 def has_token():
-    kw = mercury.KanoWorld()
+    kw = mercury.KanoWorld(kw_url)
     if not kw.load_data():
         return None
 
@@ -134,16 +135,16 @@ def remove_token():
 
 
 def remove_registration(verbose=http_verbose):
-    kw = mercury.KanoWorld()
+    kw = mercury.KanoWorld(kw_url)
     return kw.logout()
 
 
 def login_using_token():
-    kw = mercury.KanoWorld()
+    kw = mercury.KanoWorld(kw_url)
     if kw.is_logged_in():
         return True, None
-    else:
-        return False, _("User is not logged in")
+
+    return False, _("User is not logged in")
 
 
 def sync():

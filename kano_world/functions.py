@@ -12,6 +12,7 @@ import json
 from kano.logging import logger
 from kano_profile.profile import load_profile, save_profile
 from kano.utils import get_user_unsudoed, is_number
+from kano_world.config import load_conf
 
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
@@ -20,14 +21,14 @@ import mercury
 
 glob_session = None
 http_verbose = False
-kw_url = 'https://worldapi-dev.kano.me'
+kw_url = load_conf()['api_url']
 
 def login(login_name, password, verbose=http_verbose):
     login_name = login_name.strip()
     password = password.strip()
 
     kw = mercury.KanoWorld(kw_url)
-    success = kw.login (login_name, password, verbose)
+    success = kw.login(login_name, password, verbose)
     if success:
         # TODO: refactor function login_register_data
         return True, None

@@ -123,10 +123,10 @@ def is_registered():
 
 def has_token():
     kw = mercury.KanoWorld(kw_url)
-    if not kw.load_data():
-        return None
+    if not kw.load_data() or not kw.get_token():
+        return False
 
-    return kw.get_token()
+    return True
 
 
 def remove_token():
@@ -214,7 +214,11 @@ def get_mixed_username():
 
 
 def get_token():
-    return has_token()
+    kw = mercury.KanoWorld(kw_url)
+    if not kw.load_data():
+        return None
+
+    return kw.get_token()
 
 
 def get_email():

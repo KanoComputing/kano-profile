@@ -1,4 +1,4 @@
-kano-profile (4.2.1-0) unstable; urgency=low
+kano-profile (4.3.0-0) unstable; urgency=low
 
   * Removed dependency on kano-settings, fix dependency loop
   * Added migration to new Kano World Services API

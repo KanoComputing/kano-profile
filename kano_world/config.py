@@ -31,7 +31,7 @@ def load_conf():
         conf['auth_url'] = 'https://os.auth.kano.me'
        
     if 'store_url' not in conf:
-        conf['store_url'] = 'https://apps-directory.kano.me'
+        conf['store_url'] = 'https://apps-directory.os.kano.me'
 
     
     return conf

@@ -1,3 +1,10 @@
+kano-profile (4.3.2-0) unstable; urgency=low
+
+  * Lazy import mercury to avoid dynamically linking against
+    the library when importing the module but not calling funcs
+
+ -- Team Kano <dev@kano.me>  Thu, 22 Aug 2019 11:47:00 +0100
+
 kano-profile (4.3.0-0) unstable; urgency=low
 
   * Removed dependency on kano-settings, fix dependency loop

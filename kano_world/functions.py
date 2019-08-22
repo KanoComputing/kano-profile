@@ -17,13 +17,15 @@ from kano_world.config import load_conf
 from .connection import request_wrapper, content_type_json
 from .session import KanoWorldSession
 
-import mercury
 
 glob_session = None
 http_verbose = False
 kw_url = load_conf()['api_url']
 
+
 def login(login_name, password, verbose=http_verbose):
+    import mercury  # Lazy import to avoid dynamically linking with global import
+
     login_name = login_name.strip()
     password = password.strip()
 
@@ -122,6 +124,8 @@ def is_registered():
 
 
 def has_token():
+    import mercury  # Lazy import to avoid dynamically linking with global import
+
     kw = mercury.KanoWorld(kw_url)
     if not kw.load_data() or not kw.get_token():
         return False
@@ -136,11 +140,13 @@ def remove_token():
 
 
 def remove_registration(verbose=http_verbose):
+    import mercury  # Lazy import to avoid dynamically linking with global import
     kw = mercury.KanoWorld(kw_url)
     return kw.logout()
 
 
 def login_using_token():
+    import mercury  # Lazy import to avoid dynamically linking with global import
     kw = mercury.KanoWorld(kw_url)
     if kw.is_logged_in():
         return True, None
@@ -214,6 +220,7 @@ def get_mixed_username():
 
 
 def get_token():
+    import mercury  # Lazy import to avoid dynamically linking with global import
     kw = mercury.KanoWorld(kw_url)
     if not kw.load_data():
         return None

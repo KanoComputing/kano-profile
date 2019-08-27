@@ -11,7 +11,7 @@ import json
 
 from kano.logging import logger
 from kano_profile.profile import load_profile, save_profile
-from kano.utils import get_user_unsudoed, is_number
+from kano.utils import get_user_unsudoed
 from kano_world.config import load_conf
 
 from .connection import request_wrapper, content_type_json

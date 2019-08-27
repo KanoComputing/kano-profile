@@ -2,9 +2,9 @@
 
 # config.py
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
-# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
-#
+# Copyright (C) 2014-2019 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
+
 
 import os
 import yaml
@@ -22,18 +22,17 @@ def load_conf():
         conf = {}
 
     if 'api_url' not in conf:
-        conf['api_url'] = 'https://worldapi.kano.me'
+        conf['api_url'] = 'https://worldapi.kes.kano.me'
 
     if 'world_url' not in conf:
         conf['world_url'] = 'https://world.kano.me'
 
     if 'auth_url' not in conf:
         conf['auth_url'] = 'https://os.auth.kano.me'
-       
+
     if 'store_url' not in conf:
         conf['store_url'] = 'https://apps-directory.os.kano.me'
 
-    
     return conf
 
 
@@ -43,6 +42,7 @@ API_URL = CONF['api_url']
 WORLD_URL = CONF['world_url']
 AUTH_URL = CONF['auth_url']
 STORE_URL = CONF['store_url']
+
 
 def get_world_url(path):
     return "{}/{}".format(WORLD_URL, path)

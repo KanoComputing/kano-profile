@@ -112,7 +112,19 @@ def wait(ctx, secs):
 def app_close(ctx):
     for proc in ctx.procs:
         proc.send_signal(signal.SIGINT)
-        proc.wait()
+        sleep(1)
+        if proc.poll() == 0:
+            continue
+        print("WARNING: proc did not listen to SIGINT")
+        proc.send_signal(signal.SIGKILL)
+        sleep(1)
+        if proc.poll() == 0:
+            continue
+        print("WARNING: proc did not listen to SIGKILL")
+        proc.terminate()
+        sleep(1)
+        if proc.poll() != 0:
+            print("ERROR: proc does not want to DIIEEE, skipping...")
 
 
 def get_session_file(proc, proc_session_id):

@@ -1,7 +1,7 @@
 #
 # tracker.py
 #
-# Copyright (C) 2017 Kano Computing Ltd.
+# Copyright (C) 2017-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
 # Steps for tracking features
@@ -35,10 +35,10 @@ def list_tracking_files():
         if os.path.join(tracker_dir, f) != PAUSED_SESSIONS_FILE
     ]
 
-def create_app(ctx):
-    if not 'procs' in ctx:
-        ctx.procs = []
 
+def create_app(ctx):
+    if 'procs' not in ctx:
+        ctx.procs = []
 
     # A simple tracked app which does nothing but stay alive.
     idle_app = dedent('''
@@ -172,10 +172,11 @@ def no_tracking_session_exists_step(ctx):
     n_tracking_session_exists_step(ctx, 0)
 
 
-'''
-Main check for tracking sessions. Other steps call this.
-'''
 def tracking_session_check(ctx, proc_idx, secs):
+    '''
+    Main check for tracking sessions. Other steps call this.
+    '''
+
     from kano_profile.tracker.tracking_session import TrackingSession
 
     proc = ctx.procs[proc_idx]

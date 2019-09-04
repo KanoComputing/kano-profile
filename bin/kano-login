@@ -180,6 +180,11 @@ def main():
         MainWindow('login')
 
     Gtk.main()
+
+    # FIXME: refresh desktop only when login returns success and in classic mode.
+    # this will redraw the top-right corner icon to display the new logged_in status
+    os.system('kdesk -r')
+
     return 0
 
 

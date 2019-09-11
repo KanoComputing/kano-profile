@@ -10,21 +10,18 @@
 
 import os
 import sys
-from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
-from kano_world.functions import get_token, is_registered
-from kano_world.config import WORLD_URL
+
 from kano.logging import logger
 from kano.network import is_internet
-from kano_profile.tracker import Tracker
+from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
 from kano_profile.apps import save_app_state_variable
-from kano_profile.quests import Quests
+from kano_profile.tracker import Tracker
+from kano_world.config import WORLD_URL
+from kano_world.functions import get_token, is_registered
 
 
 kanotracker = Tracker()
-
-# Trigger a quest event
 save_app_state_variable('kano-world-launcher', 'opened', True)
-Quests().trigger_event('kano-world-launched')
 
 
 class EpiphanyBrowser(object):

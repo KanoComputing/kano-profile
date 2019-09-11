@@ -2,11 +2,11 @@
 
 # kano-world-launcher
 #
-# Copyright (C) 2014, 2015 Kano Computing Ltd.
+# Copyright (C) 2014-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL v2
 #
-#
 # This is here only in case we'd like to track something here
+
 
 import os
 import sys
@@ -26,9 +26,12 @@ kanotracker = Tracker()
 save_app_state_variable('kano-world-launcher', 'opened', True)
 Quests().trigger_event('kano-world-launched')
 
-class epiphany_browser:
+
+class EpiphanyBrowser(object):
+
     epiphany_folder = os.path.join(get_home(), '.config/epiphany_world/')
     default_user_agent = "Mozilla/5.0 (Macintosh; ARM Mac OS X) AppleWebKit/538.15 (KHTML, like Gecko) Safari/538.15 Version/6.0 Raspbian/8.0 (1:3.8.2.0-0rpi27rpi1g) Epiphany/3.8.2"
+
     def __init__(self):
         pass
 
@@ -37,15 +40,20 @@ class epiphany_browser:
         from gi.repository import Gio
         e_settings = Gio.Settings.new("org.gnome.Epiphany")
         # add armv6l to user agent string so kano world knows we are a pi.
-        e_settings.set_value("user-agent",GLib.Variant('s',self.default_user_agent + " armv6l"))
-
+        e_settings.set_value(
+            "user-agent",
+            GLib.Variant('s', self.default_user_agent + " armv6l")
+        )
         ensure_dir(self.epiphany_folder)
 
     def get_cmd(self, url, token, redirect):
         # get command to launch browser with no url bar
-        return "epiphany -a --profile={} {}/login/{}{}".format(self.epiphany_folder, url, token, redirect)
+        return "epiphany -a --profile={} {}/login/{}{}".format(
+            self.epiphany_folder, url, token, redirect
+        )
 
-class chromium_browser:
+
+class ChromiumBrowser(object):
 
     chromium_folder = os.path.join(get_home(), '.config/chromium/')
     chromium_local_state = os.path.join(chromium_folder, 'Local State')
@@ -63,8 +71,6 @@ class chromium_browser:
         else:
             self._create_local_state()
 
-
-
     def _modify_local_state(self):
         logger.info('modify_local_state')
         data = read_json(self.chromium_local_state)
@@ -79,7 +85,6 @@ class chromium_browser:
             }
 
         write_json(self.chromium_local_state, data)
-
 
     def _create_local_state(self):
         logger.info('create_local_state')
@@ -101,38 +106,44 @@ class chromium_browser:
         )
 
 
-# Check internet status
-if not is_internet():
-    # Close splash before launching settings
-    os.system('kano-stop-splash')
-    # Launch WiFi config
-    os.system('sudo /usr/bin/kano-settings 12')
-    sys.exit()
+def main():
+    # Check internet status
+    if not is_internet():
+        # Close splash before launching settings
+        os.system('kano-stop-splash')
+        # Launch WiFi config
+        os.system('sudo /usr/bin/kano-settings 12')
+        sys.exit()
 
-# Check for Kano World login
-if not is_registered():
-    # Close splash before launching login screen
-    os.system('kano-stop-splash')
-    # Launch login screen
-    os.system('/usr/bin/kano-login 3')
+    # Check for Kano World login
+    if not is_registered():
+        # Close splash before launching login screen
+        os.system('kano-stop-splash')
+        # Launch login screen
+        os.system('/usr/bin/kano-login 3')
 
-# Choose browser.
-browser_path = os.readlink('/etc/alternatives/x-www-browser')
-if 'epiphany' in browser_path:
-    browser = epiphany_browser()
-else:
-    browser = chromium_browser()
-browser.ensure_state()
+    # Choose browser.
+    browser_path = os.readlink('/etc/alternatives/x-www-browser')
+    if 'epiphany' in browser_path:
+        browser = EpiphanyBrowser()
+    else:
+        browser = ChromiumBrowser()
+    browser.ensure_state()
 
-# Check for redirection
-redirect = ""
-if len(sys.argv) >= 2:
-    redirect = "?redirect={}".format(sys.argv[1])
+    # Check for redirection
+    redirect = ""
+    if len(sys.argv) >= 2:
+        redirect = "?redirect={}".format(sys.argv[1])
 
-# Launch browser, and then kano-stop-splash once the window is mapped
-browser_cmd = browser.get_cmd(WORLD_URL, get_token(), redirect)
-run_cmd("xtoolwait -timeout 5000000 {}; kano-stop-splash"
-        .format(browser_cmd))
+    # Launch browser, and then kano-stop-splash once the window is mapped
+    browser_cmd = browser.get_cmd(WORLD_URL, get_token(), redirect)
+    run_cmd("xtoolwait -timeout 5000000 {}; kano-stop-splash".format(
+        browser_cmd)
+    )
 
-# sync
-run_bg('kano-sync --sync -s')
+    # sync
+    run_bg('kano-sync --sync -s')
+
+
+if __name__ == '__main__':
+    sys.exit(main() or 0)

@@ -1,10 +1,10 @@
 # functions.py
 #
-# Copyright (C) 2014-2018 Kano Computing Ltd.
+# Copyright (C) 2014-2019 Kano Computing Ltd.
 # License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
 #
-# Refer to the Network API documentation: https://github.com/KanoComputing/kano-web-api/wiki/API-accounts
-#
+# Refer to the Network API documentation:
+# https://github.com/KanoComputing/kano-web-api/wiki/API-accounts
 
 
 import json
@@ -120,7 +120,9 @@ def login_register_data(data):
 
 
 def is_registered():
-    return 'kanoworld_id' in load_profile()
+    import mercury  # Lazy import to avoid dynamically linking with global import
+    kw = mercury.KanoWorld(kw_url)
+    return kw.is_logged_in()
 
 
 def has_token():
@@ -146,11 +148,8 @@ def remove_registration(verbose=http_verbose):
 
 
 def login_using_token():
-    import mercury  # Lazy import to avoid dynamically linking with global import
-    kw = mercury.KanoWorld(kw_url)
-    if kw.is_logged_in():
+    if is_registered():
         return True, None
-
     return False, _("User is not logged in")
 
 

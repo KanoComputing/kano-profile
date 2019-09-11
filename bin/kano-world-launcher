@@ -16,8 +16,8 @@ from kano.network import is_internet
 from kano.utils import run_cmd, run_bg, get_home, read_json, write_json, ensure_dir
 from kano_profile.apps import save_app_state_variable
 from kano_profile.tracker import Tracker
-from kano_world.config import WORLD_URL
-from kano_world.functions import get_token, is_registered
+from kano_world.config import WORLD_URL, API_URL
+from mercury import KanoWorld
 
 
 kanotracker = Tracker()
@@ -112,8 +112,10 @@ def main():
         os.system('sudo /usr/bin/kano-settings 12')
         sys.exit()
 
+    kano_world_client = KanoWorld(API_URL)
+
     # Check for Kano World login
-    if not is_registered():
+    if not kano_world_client.is_logged_in():
         # Close splash before launching login screen
         os.system('kano-stop-splash')
         # Launch login screen
@@ -133,7 +135,9 @@ def main():
         redirect = "?redirect={}".format(sys.argv[1])
 
     # Launch browser, and then kano-stop-splash once the window is mapped
-    browser_cmd = browser.get_cmd(WORLD_URL, get_token(), redirect)
+    browser_cmd = browser.get_cmd(
+        WORLD_URL, kano_world_client.get_token(), redirect
+    )
     run_cmd("xtoolwait -timeout 5000000 {}; kano-stop-splash".format(
         browser_cmd)
     )

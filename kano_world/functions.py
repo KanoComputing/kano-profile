@@ -127,12 +127,8 @@ def is_registered():
 
 def has_token():
     import mercury  # Lazy import to avoid dynamically linking with global import
-
     kw = mercury.KanoWorld(kw_url)
-    if not kw.load_data() or not kw.get_token():
-        return False
-
-    return True
+    return bool(kw.get_token())
 
 
 def remove_token():
@@ -221,9 +217,6 @@ def get_mixed_username():
 def get_token():
     import mercury  # Lazy import to avoid dynamically linking with global import
     kw = mercury.KanoWorld(kw_url)
-    if not kw.load_data():
-        return None
-
     return kw.get_token()
 
 
@@ -249,6 +242,7 @@ def get_kano_world_id():
     except Exception:
         kw_id = ''
     return kw_id
+
 
 def recover_username(email):
     payload = {

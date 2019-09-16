@@ -207,8 +207,9 @@ def get_glob_session():
 
 def get_mixed_username():
     if is_registered():
-        profile = load_profile()
-        username = profile['kanoworld_username']
+        import mercury  # Lazy import to avoid dynamically linking with global import
+        kw = mercury.KanoWorld(kw_url)
+        username = kw.get_username()
     else:
         username = get_user_unsudoed()
     return username

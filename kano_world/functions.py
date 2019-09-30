@@ -250,9 +250,11 @@ def recover_username(email):
         'email': email
     }
 
-    success, text, _ = request_wrapper('post', '/accounts/username-reminder',
-                                       data=json.dumps(payload),
-                                       headers=content_type_json)
+    success, text, _ = request_wrapper(
+        'post', '/accounts/username-reminder',
+        data=json.dumps(payload),
+        headers=content_type_json
+    )
 
     if success:
         return success, None
@@ -265,9 +267,11 @@ def reset_password(username):
         'username': username
     }
 
-    success, text, _ = request_wrapper('post', '/accounts/reset-password',
-                                       data=json.dumps(payload),
-                                       headers=content_type_json)
+    success, text, _ = request_wrapper(
+        'post', '/accounts/reset-password',
+        data=json.dumps(payload),
+        headers=content_type_json
+    )
 
     if success:
         return success, None
@@ -280,8 +284,7 @@ def mark_notification_read(n_id):
         return False, _("You are not logged in!")
 
     success, text, data = request_wrapper(
-        'post',
-        '/notifications/read/{}'.format(n_id),
+        'post', '/notifications/read/{}'.format(n_id),
         session=glob_session.session
     )
 
@@ -295,9 +298,16 @@ def get_stats_activity():
     if not success:
         return False, text
 
-    success, text, data = request_wrapper('get', '/stats/activity',
-                                          headers=content_type_json,
-                                          session=glob_session.session)
+    gs = get_glob_session()
+    if not gs:
+        return False, _("You are not logged in!")
+
+    success, text, data = request_wrapper(
+        'get', '/stats/activity',
+        headers=content_type_json,
+        session=gs.session
+    )
+
     return success, data
 
 
@@ -307,6 +317,6 @@ def report_share_opened(item_id):
         endpoint = '/share/{}/launched'.format(item_id)
         gs = get_glob_session()
         if gs:
-            success, text, data = request_wrapper('post',
-                                                  endpoint,
-                                                  session=gs.session)
+            success, text, data = request_wrapper(
+                'post', endpoint, session=gs.session
+            )

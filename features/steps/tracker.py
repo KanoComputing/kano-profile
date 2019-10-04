@@ -112,7 +112,7 @@ def wait(ctx, secs):
 def app_close(ctx):
     for proc in ctx.procs:
         proc.send_signal(signal.SIGINT)
-        proc.wait()
+        # proc.wait()
 
 
 def get_session_file(proc, proc_session_id):

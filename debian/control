@@ -23,6 +23,7 @@ Depends:
     ${shlibs:Depends},
     ${misc:Depends},
     gir1.2-gtk-3.0,
+    herald (>= 4.3.3),
     jq,
     kano-content,
     kano-i18n,

@@ -34,3 +34,5 @@ lxpanel-plugin/kano_profile.so usr/lib/arm-linux-gnueabihf/lxpanel/plugins/
 
 xdg/* usr/share/applications
 locale/* /usr/share/locale
+
+systemd/user/* /usr/lib/systemd/user

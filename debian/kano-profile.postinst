@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# kano-profile.postinst
+#
+# Copyright (C) 2019 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+#
+# Post debian package install script.
+
+
+case "$1" in
+    configure)
+        # Enable user systemd services for all users.
+        systemctl --global enable kano-sync.service
+        ;;
+esac

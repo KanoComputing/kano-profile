@@ -1,0 +1,23 @@
+#
+# kano-sync.service
+#
+# Copyright (C) 2019 Kano Computing Ltd.
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU GPLv2
+#
+# This systemd service will run kano-sync as the current
+# interactive logged in user.
+#
+# DHCP hooks are responsible for triggering
+# the internet-available-user.target
+#
+
+[Unit]
+Description=Kano Sync
+Before=internet-available-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/kano-sync --upload-tracking-data --silent
+
+[Install]
+RequiredBy=internet-available-user.target
